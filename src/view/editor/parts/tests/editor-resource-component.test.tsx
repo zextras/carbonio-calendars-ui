@@ -36,6 +36,13 @@ describe('EditorResourceComponent', () => {
 		}
 	]);
 
+	const defaultErrorLabels = {
+		singleResourceUnavailable: 'Resource unavailable',
+		multipleResourcesUnavailable: 'Multiple resources unavailable',
+		invalidResource: 'Invalid input',
+		duplicateResources: 'Duplicate input'
+	};
+
 	beforeEach(() => {
 		store = configureStore({ reducer: combineReducers(reducers) });
 		editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -52,10 +59,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={() => Promise.resolve([])}
 					resourcesValue={[defaultResource]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -75,10 +79,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -130,10 +131,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions2}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -164,10 +162,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={() => new Promise((resolve) => setTimeout(() => resolve([]), 1000))}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -190,10 +185,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -216,10 +208,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -238,10 +227,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource, defaultResource]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -259,10 +245,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[{ label: 'chip101', email: '' }, defaultResource, defaultResource]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -282,10 +265,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -321,10 +301,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={() => Promise.resolve([])}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -351,10 +328,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -387,10 +361,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -413,10 +384,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -455,10 +423,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					warningLabel=""
-					singleWarningLabel=""
-					invalidInputErrorLabel="Invalid input"
-					duplicateChipsErrorLabel={'Duplicate input'}
+					errorLabels={defaultErrorLabels}
 				/>,
 				{ store }
 			);
@@ -499,10 +464,12 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[invalidResource]}
-					warningLabel="Multiple resources unavailable"
-					singleWarningLabel="Resource unavailable"
-					invalidInputErrorLabel="Invalid input detected"
-					duplicateChipsErrorLabel="Duplicate resources detected"
+					errorLabels={{
+						singleResourceUnavailable: 'Resource unavailable',
+						multipleResourcesUnavailable: 'Multiple resources unavailable',
+						invalidResource: 'Invalid input detected',
+						duplicateResources: 'Duplicate resources detected'
+					}}
 				/>,
 				{ store }
 			);
@@ -522,10 +489,12 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource, defaultResource]}
-					warningLabel="Multiple resources unavailable"
-					singleWarningLabel="Resource unavailable"
-					invalidInputErrorLabel="Invalid input detected"
-					duplicateChipsErrorLabel="Duplicate resources detected"
+					errorLabels={{
+						singleResourceUnavailable: 'Resource unavailable',
+						multipleResourcesUnavailable: 'Multiple resources unavailable',
+						invalidResource: 'Invalid input detected',
+						duplicateResources: 'Duplicate resources detected'
+					}}
 				/>,
 				{ store }
 			);
@@ -561,10 +530,12 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[availableResource]}
-					warningLabel="Multiple resources unavailable"
-					singleWarningLabel="Resource unavailable"
-					invalidInputErrorLabel="Invalid input detected"
-					duplicateChipsErrorLabel="Duplicate resources detected"
+					errorLabels={{
+						singleResourceUnavailable: 'Resource unavailable',
+						multipleResourcesUnavailable: 'Multiple resources unavailable',
+						invalidResource: 'Invalid input detected',
+						duplicateResources: 'Duplicate resources detected'
+					}}
 				/>,
 				{ store }
 			);
