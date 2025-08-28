@@ -68,7 +68,10 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		) {
 			return {
 				isSendDisabled: true,
-				disabledTooltipLabel: t('label.no_recipients', 'Add event attendees or resources to send')
+				disabledTooltipLabel: t(
+					'label.no_recipients',
+					'Add at least one attendee or resource to send'
+				)
 			};
 		}
 
