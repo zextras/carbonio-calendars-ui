@@ -367,14 +367,14 @@ export const EditorResourceComponent = ({
 	}, [resourcesValue, attendeesAvailabilityList, start, end, allDay]);
 
 	const chipInputDescription = useMemo(() => {
+		if (hasUnavailableResources) {
+			return resourcesValue.length === 1 ? singleWarningLabel : warningLabel;
+		}
 		if (hasError) {
 			return invalidInputErrorLabel;
 		}
 		if (hasDuplicateValidChips) {
 			return duplicateChipsErrorLabel;
-		}
-		if (hasUnavailableResources) {
-			return resourcesValue.length === 1 ? singleWarningLabel : warningLabel;
 		}
 		return undefined;
 	}, [

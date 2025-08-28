@@ -13,8 +13,9 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { reducers } from '../../../../store/redux';
 import { Resource } from '../../../../types/editor';
-import { EditorResourceComponent } from '../editor-resource-component';
 import { setupTest } from '@test-setup';
+
+import { EditorResourceComponent } from '../editor-resource-component';
 
 describe('EditorResourceComponent', () => {
 	let store: ReturnType<typeof configureStore>;
@@ -472,6 +473,110 @@ describe('EditorResourceComponent', () => {
 			await user.keyboard('{Control>}{Enter}{/Control}');
 
 			expect(dropDownItem).not.toBeInTheDocument();
+		});
+	});
+
+	describe('Unified Error Reporting', () => {
+		const availableResource: Resource = {
+			id: 'available-room',
+			label: 'Available Room',
+			email: 'availableroom@example.com',
+			type: 'Location'
+		};
+
+		const invalidResource: Resource = {
+			id: '',
+			label: 'Invalid Resource',
+			email: '',
+			type: 'Location'
+		};
+
+		it('shows validation error with highest priority when resource is invalid', async () => {
+			setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[invalidResource]}
+					warningLabel="Multiple resources unavailable"
+					singleWarningLabel="Resource unavailable"
+					invalidInputErrorLabel="Invalid input detected"
+					duplicateChipsErrorLabel="Duplicate resources detected"
+				/>,
+				{ store }
+			);
+
+			await waitFor(() => {
+				expect(screen.getByText('Invalid input detected')).toBeInTheDocument();
+				expect(screen.queryByText('Multiple resources unavailable')).not.toBeInTheDocument();
+				expect(screen.queryByText('Duplicate resources detected')).not.toBeInTheDocument();
+			});
+		});
+
+		it('shows duplicate error when no validation errors exist', async () => {
+			setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[defaultResource, defaultResource]}
+					warningLabel="Multiple resources unavailable"
+					singleWarningLabel="Resource unavailable"
+					invalidInputErrorLabel="Invalid input detected"
+					duplicateChipsErrorLabel="Duplicate resources detected"
+				/>,
+				{ store }
+			);
+
+			await waitFor(() => {
+				expect(screen.getByText('Duplicate resources detected')).toBeInTheDocument();
+				expect(screen.queryByText('Invalid input detected')).not.toBeInTheDocument();
+				expect(screen.queryByText('Multiple resources unavailable')).not.toBeInTheDocument();
+			});
+		});
+
+		it('shows no error when all resources are valid and available', async () => {
+			const mockUseAttendeesAvailability = jest.fn();
+
+			jest.mock('../../../../hooks/use-attendees-availability', () => ({
+				useAttendeesAvailability: () => mockUseAttendeesAvailability()
+			}));
+
+			mockUseAttendeesAvailability.mockReturnValue([
+				{
+					id: availableResource.id,
+					email: availableResource.email,
+					b: [],
+					f: [{ s: 1640995200000, e: 1641081600000 }],
+					t: []
+				}
+			]);
+
+			setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[availableResource]}
+					warningLabel="Multiple resources unavailable"
+					singleWarningLabel="Resource unavailable"
+					invalidInputErrorLabel="Invalid input detected"
+					duplicateChipsErrorLabel="Duplicate resources detected"
+				/>,
+				{ store }
+			);
+
+			await waitFor(() => {
+				expect(screen.queryByText('Multiple resources unavailable')).not.toBeInTheDocument();
+				expect(screen.queryByText('Resource unavailable')).not.toBeInTheDocument();
+				expect(screen.queryByText('Invalid input detected')).not.toBeInTheDocument();
+				expect(screen.queryByText('Duplicate resources detected')).not.toBeInTheDocument();
+			});
+
+			jest.unmock('../../../../hooks/use-attendees-availability');
 		});
 	});
 });
