@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import {
 	Accordion,
@@ -11,10 +11,18 @@ import {
 	ModalManager,
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
-import { SecondaryBarComponentProps } from '@zextras/carbonio-shell-ui';
-import { useRootsMap } from '@zextras/carbonio-ui-commons';
+import { SecondaryBarComponentProps, useUserAccount } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDERS,
+	useRootsMap,
+	useSortedTagsArray,
+	ZIMBRA_STANDARD_COLORS
+} from '@zextras/carbonio-ui-commons';
+import { useTranslation } from 'react-i18next';
 
 const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
+	const [t] = useTranslation();
+
 	const onCalendarSelected = (calendarId: string) => {
 		// Handle calendar selection
 	};
@@ -27,22 +35,53 @@ const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
 		// Handle tag selection
 	};
 
+	const { name: primaryAccountName } = useUserAccount();
+
 	// Obtain the accounts list
-	const accounts = useRootsMap();
+	const allAccounts = useRootsMap();
+
+	// Obtain the primary account root
+	const primaryAccountRoot = useMemo(() => allAccounts[FOLDERS.USER_ROOT], [allAccounts]);
+
+	// Obtain the shared accounts roots
+	const sharedAccountsRoots = useMemo(
+		() => Object.values(allAccounts).filter((account) => account.id !== FOLDERS.USER_ROOT),
+		[allAccounts]
+	);
 
 	// Obtain the calendars list for each account
 
 	// Obtain the calendars groups for the primary account
 
 	// Obtain the tags list for the primary account
+	const tags = useSortedTagsArray();
 
-	// Generate tags accordion item for the primary account
+	// Generate tags accordion items for the primary account
+	const tagsItems = useMemo(
+		() =>
+			tags.map(
+				(tag) =>
+					({
+						id: `tags-${tag.id}`,
+						icon: 'Tag',
+						iconColor: ZIMBRA_STANDARD_COLORS[tag.color || 0].hex,
+						label: tag.name
+					}) satisfies AccordionItemType
+			),
+		[tags]
+	);
 
 	// Generate calendar groups accordion item for the primary account
 
-	// Generate "Calendar" aggregator accordion item
+	// Generate "Calendar" aggregator accordion item for the primary account
 
 	// Generate "Tags" aggregator accordion item
+	const tagsAggregatorItem = {
+		id: `tags-${FOLDERS.USER_ROOT}`,
+		label: t('label.tags', 'Tags'),
+		icon: 'TagsMoreOutline',
+		items: tagsItems
+	} satisfies AccordionItemType;
 
 	// Generate "Calendar groups" aggregator accordion item
 
@@ -50,27 +89,36 @@ const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
 
 	// Generate "Create group" custom accordion item
 
-	const rootItems: Array<AccordionItemType> = [];
+	// Generate calendars accordion items for primary account
+	const primaryAccountItem = {
+		id: `calendars-${FOLDERS.USER_ROOT}`,
+		label: primaryAccountName
+	} satisfies AccordionItemType;
 
-	const accountsItems = Object.values(accounts).map((account) => ({
-		id: `calendars-${account.id}`,
-		label: account.name
-	}));
-
-	// Generate calendars accordion items for each account
-	Object.values(accounts).forEach((account) => {
-		rootItems.push({
-			id: `calendars-${account.id}`,
-			label: account.name
-		} satisfies AccordionItemType);
-	});
+	// Generate calendars accordion items for each shared account
+	const sharedAccountsItems = sharedAccountsRoots.map(
+		(account) =>
+			({
+				id: `calendars-${account.id}`,
+				label: account.name
+			}) satisfies AccordionItemType
+	);
 
 	// Compose the accordion items
+	const accordionItems = useMemo<Array<AccordionItemType>>(
+		() => [
+			primaryAccountItem,
+			...sharedAccountsItems,
+			{ id: '-', divider: true },
+			tagsAggregatorItem
+		],
+		[primaryAccountItem, sharedAccountsItems, tagsAggregatorItem]
+	);
 
 	return (
 		<ModalManager>
 			<SnackbarManager>
-				<Accordion items={rootItems} />
+				<Accordion items={accordionItems} />
 			</SnackbarManager>
 		</ModalManager>
 	);
