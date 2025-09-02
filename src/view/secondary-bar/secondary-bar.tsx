@@ -20,6 +20,8 @@ import {
 } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
+import { TagsAggregatorAccordionItem } from './custom-accordion-components/tags-aggregator-accordion-item';
+
 const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
 	const [t] = useTranslation();
 
@@ -76,12 +78,13 @@ const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
 	// Generate "Calendar" aggregator accordion item for the primary account
 
 	// Generate "Tags" aggregator accordion item
-	const tagsAggregatorItem = {
-		id: `tags-${FOLDERS.USER_ROOT}`,
-		label: t('label.tags', 'Tags'),
-		icon: 'TagsMoreOutline',
-		items: tagsItems
-	} satisfies AccordionItemType;
+	const tagsAggregatorItem: AccordionItemType = useMemo(
+		() => ({
+			id: 'tags-aggregator',
+			CustomComponent: TagsAggregatorAccordionItem
+		}),
+		[]
+	);
 
 	// Generate "Calendar groups" aggregator accordion item
 

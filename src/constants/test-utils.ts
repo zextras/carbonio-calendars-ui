@@ -14,7 +14,9 @@ export const TEST_SELECTORS = {
 		closeChip: 'icon: Close',
 		addCalendar: 'icon: Plus',
 		calendarChipAvatar: 'icon: Square2',
-		shareUrlButton: 'icon: Copy'
+		shareUrlButton: 'icon: Copy',
+		tags: 'icon: TagsMoreOutline',
+		tag: 'icon: Tag'
 	}
 };
 
