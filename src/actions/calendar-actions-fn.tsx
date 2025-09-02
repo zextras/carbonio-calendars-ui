@@ -48,7 +48,10 @@ export const newCalendar =
 					<StoreProvider>
 						<NewModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
 			},
 			true
 		);
@@ -75,7 +78,10 @@ export const createGroup =
 					<StoreProvider>
 						<CreateGroupModal onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
 			},
 			true
 		);
@@ -177,7 +183,10 @@ export const editCalendar =
 					</StoreProvider>
 				),
 				maxHeight: '90vh',
-				size: 'medium'
+				size: 'medium',
+				onClose: () => {
+					closeModal(modalId);
+				}
 			},
 			true
 		);
@@ -205,7 +214,10 @@ export const deleteCalendar =
 					<StoreProvider>
 						<DeleteModal folder={item} onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
 			},
 			true
 		);
@@ -270,7 +282,10 @@ export const sharesInfo =
 							<StoreProvider>
 								<SharesInfoModal onClose={(): void => closeModal(modalId)} folder={res.link[0]} />
 							</StoreProvider>
-						)
+						),
+						onClose: () => {
+							closeModal(modalId);
+						}
 					},
 					true
 				);
@@ -335,7 +350,10 @@ export const findShares =
 							<StoreProvider>
 								<SharesModal calendars={resCalendars} onClose={(): void => closeModal(modalId)} />
 							</StoreProvider>
-						)
+						),
+						onClose: () => {
+							closeModal(modalId);
+						}
 					},
 					true
 				);
