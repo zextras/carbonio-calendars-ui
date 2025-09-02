@@ -56,7 +56,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		if (!title?.length) {
 			return {
 				isSendDisabled: true,
-				disabledTooltipLabel: t('label.missing_title', 'Add event title to send')
+				disabledTooltipLabel: t('label.add_event_title_to_send', 'Add event title to send')
 			};
 		}
 

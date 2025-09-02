@@ -7,7 +7,6 @@
 import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
-import { setupTest } from '@test-setup';
 import { screen, waitFor } from '@testing-library/react';
 import { combineReducers } from 'redux';
 
@@ -15,6 +14,7 @@ import { generateEditor } from '../../../../commons/editor-generator';
 import { onSend } from '../../../../commons/editor-save-send-fns';
 import { reducers } from '../../../../store/redux';
 import { EditorSendButton } from '../editor-send-button';
+import { setupTest } from '@test-setup';
 
 jest.mock('../../../../commons/editor-save-send-fns', () => ({
 	onSend: jest.fn()
@@ -104,5 +104,52 @@ describe('EditorSendButton', () => {
 		await user.hover(button);
 
 		expect(await screen.findByText('Sending is disabled for this event')).toBeInTheDocument();
+	});
+
+	it('should disable send button and show tooltip when no attendees or resources are provided', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				title: 'Team Meeting',
+				attendees: [],
+				optionalAttendees: []
+			}
+		});
+
+		const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+
+		const button = screen.getByRole('button', { name: /send/i });
+		expect(button).toBeDisabled();
+
+		await user.hover(button);
+
+		expect(
+			await screen.findByText('Add at least one attendee or resource to send')
+		).toBeInTheDocument();
+	});
+
+	it('should disable send button and show tooltip when title is missing', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				title: '',
+				attendees: [{ email: 'user@test.com' }]
+			}
+		});
+
+		const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+
+		const button = screen.getByRole('button', { name: /send/i });
+		expect(button).toBeDisabled();
+
+		await user.hover(button);
+
+		expect(await screen.findByText('Add event title to send')).toBeInTheDocument();
 	});
 });
