@@ -66,6 +66,24 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		[]
 	);
 
+	const errorLabels = {
+		singleResourceUnavailable: t(
+			'attendee_room_unavailable',
+			'Room not available at the selected time of the event'
+		),
+		multipleResourcesUnavailable: t(
+			'attendees_rooms_unavailable',
+			'One or more Meeting Rooms are not available at the selected time of the event'
+		),
+		invalidResource: t(
+			'rooms_invalid',
+			'One or more Meeting rooms are invalid. Try editing them or entering a new one.'
+		),
+		duplicateResources: t(
+			'duplicate_rooms_error',
+			'One or more Meeting rooms were selected multiple times. Consider removing the duplicates.'
+		)
+	};
 	return (
 		<EditorResourceComponent
 			onChange={onChange}
@@ -73,23 +91,8 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			onSearchOptions={onSearchOptions}
 			placeholder={t('label.meeting_room', 'Meeting room')}
 			resourcesValue={meetingRoomsChipValue ?? []}
-			warningLabel={t(
-				'attendees_rooms_unavailable',
-				'One or more Meeting Rooms are not available at the selected time of the event'
-			)}
 			disabled={disabled?.equipment}
-			singleWarningLabel={t(
-				'attendee_room_unavailable',
-				'Room not available at the selected time of the event'
-			)}
-			invalidInputErrorLabel={t(
-				'rooms_invalid',
-				'One or more Meeting rooms are invalid. Try editing them or entering a new one.'
-			)}
-			duplicateChipsErrorLabel={t(
-				'duplicate_rooms_error',
-				'One or more Meeting rooms were selected multiple times. Consider removing the duplicates.'
-			)}
+			errorLabels={errorLabels}
 		/>
 	);
 };
