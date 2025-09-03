@@ -12,14 +12,10 @@ import {
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
 import { SecondaryBarComponentProps, useUserAccount } from '@zextras/carbonio-shell-ui';
-import {
-	FOLDERS,
-	useRootsMap,
-	useSortedTagsArray,
-	ZIMBRA_STANDARD_COLORS
-} from '@zextras/carbonio-ui-commons';
+import { FOLDERS, useRootsMap, useSortedTagsArray } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
+import { TagAccordionItem } from './custom-accordion-components/tag-accordion-item';
 import { TagsAggregatorAccordionItem } from './custom-accordion-components/tags-aggregator-accordion-item';
 
 const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
@@ -64,10 +60,8 @@ const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
 			tags.map(
 				(tag) =>
 					({
-						id: `tags-${tag.id}`,
-						icon: 'Tag',
-						iconColor: ZIMBRA_STANDARD_COLORS[tag.color || 0].hex,
-						label: tag.name
+						id: tag.id,
+						CustomComponent: TagAccordionItem
 					}) satisfies AccordionItemType
 			),
 		[tags]
@@ -81,9 +75,10 @@ const SecondaryBar: FC<SecondaryBarComponentProps> = ({ expanded }) => {
 	const tagsAggregatorItem: AccordionItemType = useMemo(
 		() => ({
 			id: 'tags-aggregator',
+			items: tagsItems,
 			CustomComponent: TagsAggregatorAccordionItem
 		}),
-		[]
+		[tagsItems]
 	);
 
 	// Generate "Calendar groups" aggregator accordion item
