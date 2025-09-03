@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import { Button, Tooltip, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { closeBoard, useBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
@@ -45,23 +45,50 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const dispatch = useAppDispatch();
 	const { replaceHistory } = useHistoryNavigation();
 
-	const isDisabled = useMemo(
-		() =>
-			disabled?.sendButton ||
-			(!attendees?.length &&
-				!optionalAttendees?.length &&
-				!meetingRooms?.length &&
-				!equipments?.length) ||
-			!title?.length,
-		[
-			attendees?.length,
-			disabled?.sendButton,
-			equipments?.length,
-			meetingRooms?.length,
-			optionalAttendees?.length,
-			title?.length
-		]
-	);
+	const { isSendDisabled, disabledTooltipLabel } = useMemo(() => {
+		if (disabled?.sendButton) {
+			return {
+				isSendDisabled: true,
+				disabledTooltipLabel: t('label.cannot_send', 'Sending is disabled for this event')
+			};
+		}
+
+		if (!title?.length) {
+			return {
+				isSendDisabled: true,
+				disabledTooltipLabel: t('label.add_event_title_to_send', 'Add event title to send')
+			};
+		}
+
+		if (
+			!attendees?.length &&
+			!optionalAttendees?.length &&
+			!meetingRooms?.length &&
+			!equipments?.length
+		) {
+			return {
+				isSendDisabled: true,
+				disabledTooltipLabel: t(
+					'label.no_recipients',
+					'Add at least one attendee or resource to send'
+				)
+			};
+		}
+
+		return {
+			isSendDisabled: false,
+			disabledTooltipLabel: ''
+		};
+	}, [
+		disabled?.sendButton,
+		title?.length,
+		attendees?.length,
+		optionalAttendees?.length,
+		meetingRooms?.length,
+		equipments?.length,
+		t
+	]);
+
 	const onClick = useCallback(() => {
 		if (editor.isSeries && !isNew && !editor.isInstance) {
 			const modalId = 'series-edit-warning';
@@ -120,11 +147,13 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	]);
 
 	return (
-		<Button
-			label={t('action.send', 'Send')}
-			icon="PaperPlane"
-			disabled={isDisabled}
-			onClick={onClick}
-		/>
+		<Tooltip label={disabledTooltipLabel} disabled={!isSendDisabled}>
+			<Button
+				label={t('action.send', 'Send')}
+				icon="PaperPlane"
+				disabled={isSendDisabled}
+				onClick={onClick}
+			/>
+		</Tooltip>
 	);
 };
