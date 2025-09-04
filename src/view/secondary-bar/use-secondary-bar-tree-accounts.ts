@@ -3,11 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useMemo } from 'react';
+
 import { AccordionItemType } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { useRootsArray } from '@zextras/carbonio-ui-commons';
 
 import { AccountAccordionItem } from './custom-accordion-components/account-accordion-item';
+import { useSecondaryBarTreeGroups } from './use-secondary-bar-tree-groups';
+import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 
 export const useSecondaryBarTreeAccounts = (): Array<AccordionItemType> => {
 	const account = useUserAccount();
@@ -15,28 +19,35 @@ export const useSecondaryBarTreeAccounts = (): Array<AccordionItemType> => {
 	const primaryAccountRoot = accountRoots?.[0];
 	const sharedAccountRoots = accountRoots.slice(1);
 
-	const result: Array<AccordionItemType> = [];
+	const groupsItems = useSecondaryBarTreeGroups();
 
-	// Add primary account first if exists
-	if (primaryAccountRoot) {
-		result.push({
-			id: primaryAccountRoot.id,
-			label: account?.name,
-			CustomComponent: AccountAccordionItem,
-			items: []
-		});
-	}
+	return useMemo(() => {
+		const result: Array<AccordionItemType> = [];
 
-	// Then add shared accounts, if any
-	if (sharedAccountRoots.length > 0) {
-		const sharedAccountsItems = sharedAccountRoots.map((account) => ({
-			id: account.id,
-			label: account.name,
-			CustomComponent: AccountAccordionItem,
-			items: []
-		}));
-		result.push(...sharedAccountsItems);
-	}
+		// Add primary account first if exists
+		if (primaryAccountRoot) {
+			result.push({
+				id: primaryAccountRoot.id,
+				label: account?.name,
+				CustomComponent: AccountAccordionItem,
+				items: [
+					{ id: SIDEBAR_ROOT_SUBSECTION.CALENDARS, label: 'Calendars', items: [] },
+					{ id: SIDEBAR_ROOT_SUBSECTION.GROUPS, label: 'Groups', items: groupsItems }
+				]
+			});
+		}
 
-	return result;
+		// Then add shared accounts, if any
+		if (sharedAccountRoots.length > 0) {
+			const sharedAccountsItems = sharedAccountRoots.map((sharedAccount) => ({
+				id: sharedAccount.id,
+				label: sharedAccount.name,
+				CustomComponent: AccountAccordionItem,
+				items: []
+			}));
+			result.push(...sharedAccountsItems);
+		}
+
+		return result;
+	}, [account, primaryAccountRoot, sharedAccountRoots, groupsItems]);
 };
