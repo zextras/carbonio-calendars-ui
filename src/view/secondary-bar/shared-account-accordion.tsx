@@ -7,12 +7,13 @@ export type SharedAccountAccordionProps = {
 	rootId: string;
 };
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { Accordion, AccordionItemType } from '@zextras/carbonio-design-system';
 import { useRoot } from '@zextras/carbonio-ui-commons';
 
 import { AccountAccordionItem } from './custom-accordion-components/account-accordion-item';
+import { useAccordionItemOpenStatusStorage } from './use-accordion-item-open-status-storage';
 import { useSecondaryBarTreeCalendars } from './use-secondary-bar-tree-calendars';
 
 export const SharedAccountAccordion = ({
@@ -20,17 +21,29 @@ export const SharedAccountAccordion = ({
 }: SharedAccountAccordionProps): React.JSX.Element => {
 	const root = useRoot(rootId);
 	const calendarsItems = useSecondaryBarTreeCalendars(rootId);
+	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage(rootId);
+
+	const onAccordionItemOpen = useCallback(() => {
+		setOpenStatus(true);
+	}, [setOpenStatus]);
+
+	const onAccordionItemClose = useCallback(() => {
+		setOpenStatus(false);
+	}, [setOpenStatus]);
 
 	const items = useMemo<Array<AccordionItemType>>(
 		() => [
 			{
 				id: rootId,
 				label: root?.name,
+				open: isOpen,
+				onOpen: onAccordionItemOpen,
+				onClose: onAccordionItemClose,
 				CustomComponent: AccountAccordionItem,
 				items: calendarsItems
 			}
 		],
-		[calendarsItems, root?.name, rootId]
+		[calendarsItems, isOpen, onAccordionItemClose, onAccordionItemOpen, root?.name, rootId]
 	);
 
 	return <Accordion items={items} />;

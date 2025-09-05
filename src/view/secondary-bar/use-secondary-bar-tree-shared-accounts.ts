@@ -6,16 +6,11 @@
 import { useMemo } from 'react';
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
-import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { useRootsArray } from '@zextras/carbonio-ui-commons';
 
 import { AccountAccordionItem } from './custom-accordion-components/account-accordion-item';
-import { useSecondaryBarTreeGroups } from './use-secondary-bar-tree-groups';
-import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
-import { useSecondaryBarTreeCalendars } from './use-secondary-bar-tree-calendars';
 
 export const useSecondaryBarTreeSharedAccounts = (): Array<AccordionItemType> => {
-
 	const accountRoots = useRootsArray();
 	const sharedAccountRoots = accountRoots.slice(1);
 
@@ -36,5 +31,5 @@ export const useSecondaryBarTreeSharedAccounts = (): Array<AccordionItemType> =>
 		}
 
 		return result;
-	}, [account, primaryAccountRoot, sharedAccountRoots, groupsItems]);
+	}, [sharedAccountRoots]);
 };

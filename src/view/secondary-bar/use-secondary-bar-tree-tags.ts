@@ -3,13 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
 import { useSortedTagsArray } from '@zextras/carbonio-ui-commons';
 
 import { TagAccordionItem } from './custom-accordion-components/tag-accordion-item';
 import { TagsAggregatorAccordionItem } from './custom-accordion-components/tags-aggregator-accordion-item';
+import { useAccordionItemOpenStatusStorage } from './use-accordion-item-open-status-storage';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 
 export const useSecondaryBarTreeTags = (): Array<AccordionItemType> => {
@@ -29,15 +30,28 @@ export const useSecondaryBarTreeTags = (): Array<AccordionItemType> => {
 		[tags]
 	);
 
+	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage(SIDEBAR_ITEMS.TAGS);
+
+	const onAccordionItemOpen = useCallback(() => {
+		setOpenStatus(true);
+	}, [setOpenStatus]);
+
+	const onAccordionItemClose = useCallback(() => {
+		setOpenStatus(false);
+	}, [setOpenStatus]);
+
 	// Generate and return the "Tags" aggregator accordion item
 	return useMemo(
 		() => [
 			{
 				id: SIDEBAR_ITEMS.TAGS,
+				open: isOpen,
+				onOpen: onAccordionItemOpen,
+				onClose: onAccordionItemClose,
 				items: tagsItems,
 				CustomComponent: TagsAggregatorAccordionItem
 			}
 		],
-		[tagsItems]
+		[isOpen, onAccordionItemClose, onAccordionItemOpen, tagsItems]
 	);
 };
