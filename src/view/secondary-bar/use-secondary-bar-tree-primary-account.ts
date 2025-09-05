@@ -10,14 +10,14 @@ import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
 import { AccountAccordionItem } from './custom-accordion-components/account-accordion-item';
-import { useSecondaryBarTreeCalendars } from './use-secondary-bar-tree-calendars';
 import { useSecondaryBarTreeGroups } from './use-secondary-bar-tree-groups';
+import { useSecondaryBarTreePrimaryCalendars } from './use-secondary-bar-tree-primary-account-calendars';
 import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 
 export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
 	const account = useUserAccount();
 	const groupsItems = useSecondaryBarTreeGroups();
-	const calendarsItems = useSecondaryBarTreeCalendars(FOLDERS.USER_ROOT);
+	const calendarsItems = useSecondaryBarTreePrimaryCalendars(FOLDERS.USER_ROOT);
 
 	return useMemo(
 		() => ({
