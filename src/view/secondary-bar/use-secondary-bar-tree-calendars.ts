@@ -12,6 +12,7 @@ import { map, sortBy } from 'lodash';
 
 import { getCalendarSortCriteria } from './calendar-sort-criteria';
 import { CalendarAccordionItem } from './custom-accordion-components/calendar-accordion-item';
+import { FindSharesAccordionItem } from './custom-accordion-components/find-shares-accordion-item';
 
 export const useSecondaryBarTreeCalendars = (rootId: string): Array<AccordionItemType> => {
 	const root = useRoot(rootId);
@@ -24,8 +25,17 @@ export const useSecondaryBarTreeCalendars = (rootId: string): Array<AccordionIte
 	// Sort calendars
 	const sortedCalendars = sortBy(validCalendars, getCalendarSortCriteria);
 
-	return map(sortedCalendars, (calendar) => ({
+	// Generate calendar items
+	const calendarsItems = map(sortedCalendars, (calendar) => ({
 		id: calendar.id,
 		CustomComponent: CalendarAccordionItem
 	}));
+
+	// Generate find shares button item
+	const findSharesItem = {
+		id: 'find-shares',
+		CustomComponent: FindSharesAccordionItem
+	};
+
+	return [...calendarsItems, findSharesItem];
 };
