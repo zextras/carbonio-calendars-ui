@@ -21,10 +21,7 @@ import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
 
-import {
-	EditorAvailabilityWarningRow,
-	getIsBusyAtTimeOfTheEvent
-} from './editor-availability-warning-row';
+import { getIsBusyAtTimeOfTheEvent } from './editor-availability-warning-row';
 import { generateResourceId, getDuplicateResourceIds, isValidResource } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
@@ -89,16 +86,29 @@ export const normalizeResources = (r: Contact): Resource => ({
 });
 
 interface EditorResourceComponentProps {
+	/** The unique identifier for the editor instance */
 	editorId: string;
+	/** Callback fired when the resource selection changes */
 	onChange: (items: Array<Resource>) => void;
+	/** Function to search for resource options based on input string */
 	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
+	/** Placeholder text for the input field */
 	placeholder: string;
+	/** Currently selected resources */
 	resourcesValue: Array<Resource>;
-	warningLabel: string;
+	/** Whether the component is disabled */
 	disabled?: boolean;
-	singleWarningLabel: string;
-	invalidInputErrorLabel: string;
-	duplicateChipsErrorLabel: string;
+	/** Error message labels for different scenarios */
+	errorLabels: {
+		/** Label shown when a single resource is unavailable */
+		singleResourceUnavailable: string;
+		/** Label shown when multiple resources are unavailable */
+		multipleResourcesUnavailable: string;
+		/** Label shown when resources have invalid data */
+		invalidResource: string;
+		/** Label shown when duplicate resources are selected */
+		duplicateResources: string;
+	};
 }
 
 type ResourceChipItem = ChipItem<Resource> & {
@@ -114,11 +124,8 @@ export const EditorResourceComponent = ({
 	placeholder,
 	resourcesValue,
 	onSearchOptions,
-	warningLabel,
-	disabled,
-	singleWarningLabel,
-	invalidInputErrorLabel,
-	duplicateChipsErrorLabel
+	errorLabels,
+	disabled
 }: EditorResourceComponentProps): JSX.Element | null => {
 	const [t] = useTranslation();
 
@@ -309,7 +316,7 @@ export const EditorResourceComponent = ({
 
 					actions.unshift({
 						id: 'unavailable',
-						label: singleWarningLabel,
+						label: errorLabels.singleResourceUnavailable,
 						color: 'error',
 						type: 'icon',
 						icon: 'AlertTriangle'
@@ -330,7 +337,7 @@ export const EditorResourceComponent = ({
 		editingResource,
 		end,
 		resourcesValue,
-		singleWarningLabel,
+		errorLabels.singleResourceUnavailable,
 		start
 	]);
 
@@ -357,15 +364,41 @@ export const EditorResourceComponent = ({
 
 	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
+	const hasUnavailableResources = useMemo(() => {
+		if (!resourcesValue?.length || !attendeesAvailabilityList) return false;
+
+		return resourcesValue.some((resource) => {
+			const roomInList = find(attendeesAvailabilityList, ['email', resource.email]);
+			return (
+				roomInList &&
+				getIsBusyAtTimeOfTheEvent(roomInList, start, end, attendeesAvailabilityList, allDay)
+			);
+		});
+	}, [resourcesValue, attendeesAvailabilityList, start, end, allDay]);
+
 	const chipInputDescription = useMemo(() => {
+		if (hasUnavailableResources) {
+			return resourcesValue.length === 1
+				? errorLabels.singleResourceUnavailable
+				: errorLabels.multipleResourcesUnavailable;
+		}
 		if (hasError) {
-			return invalidInputErrorLabel;
+			return errorLabels.invalidResource;
 		}
 		if (hasDuplicateValidChips) {
-			return duplicateChipsErrorLabel;
+			return errorLabels.duplicateResources;
 		}
 		return undefined;
-	}, [hasError, hasDuplicateValidChips, invalidInputErrorLabel, duplicateChipsErrorLabel]);
+	}, [
+		hasError,
+		hasDuplicateValidChips,
+		hasUnavailableResources,
+		errorLabels.invalidResource,
+		errorLabels.duplicateResources,
+		errorLabels.singleResourceUnavailable,
+		errorLabels.multipleResourcesUnavailable,
+		resourcesValue.length
+	]);
 
 	return (
 		<Container width="100%" height="100%">
@@ -385,14 +418,8 @@ export const EditorResourceComponent = ({
 					{ code: 'NumpadEnter', ctrlKey: false }
 				]}
 				onInputType={handleInputType}
-				hasError={hasError || hasDuplicateValidChips}
+				hasError={hasError || hasDuplicateValidChips || hasUnavailableResources}
 				description={chipInputDescription}
-			/>
-			<EditorAvailabilityWarningRow
-				label={warningLabel}
-				list={attendeesAvailabilityList}
-				items={resourceAvailability}
-				editorId={editorId}
 			/>
 		</Container>
 	);

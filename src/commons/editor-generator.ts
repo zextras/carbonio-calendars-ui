@@ -126,7 +126,8 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 		richText: '',
 		plainText: '',
 		disabled: disabledFields,
-		id
+		id,
+		compNum: 0
 	};
 };
 

@@ -419,7 +419,7 @@ export const normalizeSoapMessageFromEditor = (msg: Editor): any =>
 		{
 			echo: '1',
 			id: msg?.inviteId,
-			comp: '0',
+			comp: msg?.compNum,
 			m: omitBy(
 				{
 					attach: msg?.attach
