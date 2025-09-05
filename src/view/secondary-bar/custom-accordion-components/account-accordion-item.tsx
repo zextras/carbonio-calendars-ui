@@ -23,7 +23,12 @@ export const AccountAccordionItem: FC<AccordionItemProps> = (props) => {
 	};
 
 	return (
-		<Container gap="0.25rem" orientation="horizontal" mainAlignment="flex-start">
+		<Container
+			gap="0.25rem"
+			orientation="horizontal"
+			mainAlignment="flex-start"
+			padding={{ vertical: 'extrasmall' }}
+		>
 			<Avatar label={label ?? ''} colorLabel={item.iconColor} size="medium" />
 			<Tooltip label={label}>
 				<AccordionItem {...props} item={item} />
