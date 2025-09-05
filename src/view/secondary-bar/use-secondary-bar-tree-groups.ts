@@ -9,6 +9,7 @@ import { AccordionItemType } from '@zextras/carbonio-design-system';
 import { compact, map, reject, sortBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { CreateGroupAccordionItem } from './custom-accordion-components/create-group-accordion-item';
 import { GroupAccordionItem } from './custom-accordion-components/group-accordion-item';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import { useCalendarGroups } from '../../store/zustand/calendar-group-store';
@@ -24,20 +25,25 @@ export const useSecondaryBarTreeGroups = (): Array<AccordionItemType> => {
 		[allCalendars, otherGroups]
 	);
 
-	return useMemo(
-		() =>
-			map(sortedGroups, (group) => {
-				const label =
-					group.id === SIDEBAR_ITEMS.ALL_CALENDAR
-						? t('label.all_calendars', 'All calendars')
-						: group.name;
+	return useMemo(() => {
+		const groupsItems = map(sortedGroups, (group) => {
+			const label =
+				group.id === SIDEBAR_ITEMS.ALL_CALENDAR
+					? t('label.all_calendars', 'All calendars')
+					: group.name;
 
-				return {
-					id: group.id,
-					label,
-					CustomComponent: GroupAccordionItem
-				};
-			}),
-		[sortedGroups, t]
-	);
+			return {
+				id: group.id,
+				label,
+				CustomComponent: GroupAccordionItem
+			};
+		});
+
+		const createGroupItem = {
+			id: 'add-group',
+			CustomComponent: CreateGroupAccordionItem
+		};
+
+		return [...groupsItems, createGroupItem];
+	}, [sortedGroups, t]);
 };

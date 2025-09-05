@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { CreateGroupAccordionItem } from './custom-accordion-components/create-group-accordion-item';
 import { GroupAccordionItem } from './custom-accordion-components/group-accordion-item';
 import { useSecondaryBarTreeGroups } from './use-secondary-bar-tree-groups';
 import { generateFolder } from '../../__test__/mocks/folders/folders-generator';
@@ -56,6 +57,10 @@ describe('useSecondaryBarTreeGroups', () => {
 				id: groups[0].id,
 				label: groups[0].name,
 				CustomComponent: GroupAccordionItem
+			},
+			{
+				id: 'add-group',
+				CustomComponent: CreateGroupAccordionItem
 			}
 		];
 		expect(result).toEqual(expectedResult);
