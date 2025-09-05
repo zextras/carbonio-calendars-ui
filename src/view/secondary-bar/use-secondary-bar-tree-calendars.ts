@@ -17,25 +17,40 @@ import { FindSharesAccordionItem } from './custom-accordion-components/find-shar
 export const useSecondaryBarTreeCalendars = (rootId: string): Array<AccordionItemType> => {
 	const root = useRoot(rootId);
 
+	// Get all the calendars under the specified root
 	const calendars = useMemo(() => root?.children ?? [], [root]);
 
 	// Filter out broken links
-	const validCalendars = calendars.filter((calendar) => !(calendar.isLink && calendar.broken));
+	const validCalendars = useMemo(
+		() => calendars.filter((calendar) => !(calendar.isLink && calendar.broken)),
+		[calendars]
+	);
 
 	// Sort calendars
-	const sortedCalendars = sortBy(validCalendars, getCalendarSortCriteria);
+	const sortedCalendars = useMemo(
+		() => sortBy(validCalendars, getCalendarSortCriteria),
+		[validCalendars]
+	);
 
 	// Generate calendar items
-	const calendarsItems = map(sortedCalendars, (calendar) => ({
-		id: calendar.id,
-		CustomComponent: CalendarAccordionItem
-	}));
+	const calendarsItems = useMemo(
+		() =>
+			map(sortedCalendars, (calendar) => ({
+				id: calendar.id,
+				CustomComponent: CalendarAccordionItem
+			})),
+		[sortedCalendars]
+	);
 
-	// Generate find shares button item
-	const findSharesItem = {
-		id: 'find-shares',
-		CustomComponent: FindSharesAccordionItem
-	};
-
-	return [...calendarsItems, findSharesItem];
+	return useMemo(
+		() => [
+			...calendarsItems,
+			// Append "find shares" button item
+			{
+				id: 'find-shares',
+				CustomComponent: FindSharesAccordionItem
+			}
+		],
+		[calendarsItems]
+	);
 };
