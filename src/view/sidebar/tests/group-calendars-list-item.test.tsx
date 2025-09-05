@@ -11,7 +11,6 @@ import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { generateGroupCalendar } from '../../../test/generators/group';
 import { GroupCalendarsListItem } from '../group-calendars-list-item';
 import { setupTest, screen } from '@test-setup';
-import 'jest-styled-components';
 
 describe('Group calendars list item', () => {
 	it('should render the name of the calendar', () => {

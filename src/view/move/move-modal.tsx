@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useState } from 'react';
 
-import { Container, Text } from '@zextras/carbonio-design-system';
+import { Container, Text, useTheme } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import {
 	ModalFooter,

@@ -8,7 +8,7 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { size } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { ModifyStandardMessageModal } from './modify-standard-message-modal';
 import { useFoldersMap } from '@zextras/carbonio-ui-commons';
