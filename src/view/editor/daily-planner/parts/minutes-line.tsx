@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { calculatePosition } from '../utils';
 

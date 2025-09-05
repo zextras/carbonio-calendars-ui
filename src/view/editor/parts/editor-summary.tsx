@@ -16,7 +16,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
 import { useGetDateRangeConvertedToTimezone } from '../../../hooks/use-get-date-range-converted-to-timezone';

@@ -11,7 +11,6 @@ import { times } from 'lodash';
 import { generateGroupCalendar } from '../../../test/generators/group';
 import { GroupCalendarsList } from '../group-calendars-list';
 import { setupTest } from '@test-setup';
-import 'jest-styled-components';
 
 describe('Group calendars list', () => {
 	it('should render a placeholder text when there is no calendar', () => {

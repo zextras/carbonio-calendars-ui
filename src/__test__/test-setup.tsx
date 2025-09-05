@@ -21,6 +21,7 @@ import {
 	renderHook,
 	RenderHookOptions
 } from '@testing-library/react';
+import { matchers } from '@emotion/jest';
 import userEvent, { UserEvent as RTLUserEvent } from '@testing-library/user-event';
 import { ModalManager, SnackbarManager, ThemeProvider } from '@zextras/carbonio-design-system';
 import { I18nextProvider } from 'react-i18next';
@@ -30,6 +31,7 @@ import { Store } from 'redux';
 
 import { getAppI18n } from './i18n/i18n-test-factory';
 import { previewContextMock, PreviewsManagerContext } from '@test-utils/carbonio-ui-preview';
+import { themeMuiExtension } from '@zextras/carbonio-ui-commons';
 
 type ByRoleWithIconOptions = ByRoleOptions & {
 	icon: string | RegExp;
@@ -77,6 +79,8 @@ const customQueries = {
 	findByRoleWithIcon
 };
 
+expect.extend(matchers);
+
 const queriesExtended = { ...queries, ...customQueries };
 
 export function within(
@@ -110,7 +114,7 @@ export const ProvidersWrapper = ({
 	const i18n = useMemo(() => getAppI18n(), []);
 
 	return (
-		<ThemeProvider>
+		<ThemeProvider extension={themeMuiExtension}>
 			<MemoryRouter
 				future={{ v7_startTransition: false, v7_relativeSplatPath: false }}
 				initialEntries={initialEntries}

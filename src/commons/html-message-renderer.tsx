@@ -6,7 +6,7 @@
 
 import React, { useMemo } from 'react';
 
-import { useTheme } from 'styled-components';
+import { useTheme } from '@zextras/carbonio-design-system';
 
 import { ShadowDomWrapper } from './shadow-dom-wrapper';
 import { replaceLinkToAnchor } from './utilities';
