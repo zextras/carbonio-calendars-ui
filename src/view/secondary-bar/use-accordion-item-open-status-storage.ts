@@ -3,32 +3,33 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { useLocalStorage } from '@zextras/carbonio-shell-ui';
 
-export const useAccordionItemOpenStatusStorage = (
-	accordionItemId: string
-): { isOpen: boolean; setOpenStatus: (isOpen: boolean) => void } => {
+export const useAccordionItemOpenStatusStorage = (): {
+	isOpen: (accordionItemId: string) => boolean;
+	setOpenStatus: (accordionItemId: string, isOpen: boolean) => void;
+} => {
 	const [openAccordionItems, setOpenAccordionItems] = useLocalStorage<Array<string>>(
 		'open_calendars_folders',
 		[]
 	);
 
-	const isOpen = useMemo(
-		() => openAccordionItems.includes(accordionItemId),
-		[openAccordionItems, accordionItemId]
+	const isOpen = useCallback(
+		(accordionItemId: string) => openAccordionItems.includes(accordionItemId),
+		[openAccordionItems]
 	);
 
 	const setOpenStatus = useCallback(
-		(status: boolean): void => {
+		(accordionItemId: string, status: boolean): void => {
 			if (status) {
 				setOpenAccordionItems([...openAccordionItems, accordionItemId]);
 			} else {
 				setOpenAccordionItems(openAccordionItems.filter((id) => id !== accordionItemId));
 			}
 		},
-		[setOpenAccordionItems, openAccordionItems, accordionItemId]
+		[setOpenAccordionItems, openAccordionItems]
 	);
 
 	return { isOpen, setOpenStatus };

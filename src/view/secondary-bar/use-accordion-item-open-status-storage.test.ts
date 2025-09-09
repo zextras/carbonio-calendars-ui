@@ -9,15 +9,15 @@ import { useLocalStorage } from '../../__test__/mocks/carbonio-shell-ui/carbonio
 import { setupHook } from '../../__test__/test-setup';
 
 describe('useAccordionItemOpenStatusStorage', () => {
-	it('should return an object with the status function to update it', () => {
+	it('should return an object with 2 functions to get and set the open status', () => {
 		useLocalStorage.mockReturnValue([[], jest.fn()]);
 
 		const {
 			result: { current: result }
-		} = setupHook(useAccordionItemOpenStatusStorage, { initialProps: ['1'] });
+		} = setupHook(useAccordionItemOpenStatusStorage);
 
 		expect(result).toEqual({
-			isOpen: false,
+			isOpen: expect.any(Function),
 			setOpenStatus: expect.any(Function)
 		});
 	});
@@ -27,13 +27,12 @@ describe('useAccordionItemOpenStatusStorage', () => {
 		useLocalStorage.mockReturnValue([['1'], jest.fn()]);
 
 		const {
-			result: { current: result }
-		} = setupHook(useAccordionItemOpenStatusStorage, { initialProps: ['1'] });
+			result: {
+				current: { isOpen }
+			}
+		} = setupHook(useAccordionItemOpenStatusStorage);
 
-		expect(result).toEqual({
-			isOpen: true,
-			setOpenStatus: expect.any(Function)
-		});
+		expect(isOpen('1')).toEqual(true);
 	});
 
 	it('should update the open status in localStorage when setOpenStatus is called', () => {
@@ -44,10 +43,10 @@ describe('useAccordionItemOpenStatusStorage', () => {
 			result: {
 				current: { setOpenStatus }
 			}
-		} = setupHook(useAccordionItemOpenStatusStorage, { initialProps: ['1'] });
+		} = setupHook(useAccordionItemOpenStatusStorage);
 
 		// Call the setOpenStatus function to update the open status
-		setOpenStatus(true);
+		setOpenStatus('1', true);
 
 		// Assert that the localStorage mock was updated with the correct arguments
 		expect(setLocalStorageMock).toHaveBeenCalledWith(expect.arrayContaining(['2', '1']));
@@ -58,13 +57,13 @@ describe('useAccordionItemOpenStatusStorage', () => {
 		useLocalStorage.mockReturnValue([['1', '2'], setLocalStorageMock]);
 
 		const {
-			result: { current: result }
-		} = setupHook(useAccordionItemOpenStatusStorage, { initialProps: ['1'] });
-
-		const { setOpenStatus } = result;
+			result: {
+				current: { setOpenStatus }
+			}
+		} = setupHook(useAccordionItemOpenStatusStorage);
 
 		// Call the setOpenStatus function to update the open status to false
-		setOpenStatus(false);
+		setOpenStatus('1', false);
 
 		// Assert that the localStorage mock was updated with the correct arguments
 		expect(setLocalStorageMock).toHaveBeenCalledWith(['2']);
