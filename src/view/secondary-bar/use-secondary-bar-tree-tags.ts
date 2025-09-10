@@ -30,14 +30,14 @@ export const useSecondaryBarTreeTags = (): Array<AccordionItemType> => {
 		[tags]
 	);
 
-	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage(SIDEBAR_ITEMS.TAGS);
+	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage();
 
-	const onAccordionItemOpen = useCallback(() => {
-		setOpenStatus(true);
+	const onTagsAggregatorOpen = useCallback(() => {
+		setOpenStatus(SIDEBAR_ITEMS.TAGS, true);
 	}, [setOpenStatus]);
 
-	const onAccordionItemClose = useCallback(() => {
-		setOpenStatus(false);
+	const onTagsAggregatorClose = useCallback(() => {
+		setOpenStatus(SIDEBAR_ITEMS.TAGS, false);
 	}, [setOpenStatus]);
 
 	// Generate and return the "Tags" aggregator accordion item
@@ -45,13 +45,13 @@ export const useSecondaryBarTreeTags = (): Array<AccordionItemType> => {
 		() => [
 			{
 				id: SIDEBAR_ITEMS.TAGS,
-				open: isOpen,
-				onOpen: onAccordionItemOpen,
-				onClose: onAccordionItemClose,
+				open: isOpen(SIDEBAR_ITEMS.TAGS),
+				onOpen: onTagsAggregatorOpen,
+				onClose: onTagsAggregatorClose,
 				items: tagsItems,
 				CustomComponent: TagsAggregatorAccordionItem
 			}
 		],
-		[isOpen, onAccordionItemClose, onAccordionItemOpen, tagsItems]
+		[isOpen, onTagsAggregatorClose, onTagsAggregatorOpen, tagsItems]
 	);
 };

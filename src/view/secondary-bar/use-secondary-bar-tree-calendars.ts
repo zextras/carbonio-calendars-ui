@@ -4,16 +4,19 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
-import { useRoot } from '@zextras/carbonio-ui-commons';
+import { Folder, useRoot } from '@zextras/carbonio-ui-commons';
 import { map, sortBy } from 'lodash';
 
 import { getCalendarSortCriteria } from './calendar-sort-criteria';
 import { CalendarAccordionItem } from './custom-accordion-components/calendar-accordion-item';
+import { useAccordionItemOpenStatusStorage } from './use-accordion-item-open-status-storage';
 
 export const useSecondaryBarTreeCalendars = (rootId: string): Array<AccordionItemType> => {
+	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage();
+
 	const root = useRoot(rootId);
 
 	// Get all the calendars under the specified root
@@ -31,13 +34,41 @@ export const useSecondaryBarTreeCalendars = (rootId: string): Array<AccordionIte
 		[validCalendars]
 	);
 
+	const onCalendarOpen = useCallback(
+		(calendarId: string): AccordionItemType['onOpen'] =>
+			() =>
+				setOpenStatus(calendarId, true),
+		[setOpenStatus]
+	);
+
+	const onCalendarClose = useCallback(
+		(calendarId: string): AccordionItemType['onClose'] =>
+			() =>
+				setOpenStatus(calendarId, false),
+		[setOpenStatus]
+	);
+
+	/*
+	 * Create a callback to generate a single calendar item
+	 * and if the calendar contains sub-calendars, they will be
+	 * generated recursively
+	 */
+	const createCalendarItem = useCallback(
+		(calendar: Folder): AccordionItemType =>
+			({
+				id: calendar.id,
+				open: isOpen(calendar.id),
+				onOpen: onCalendarOpen(calendar.id),
+				onClose: onCalendarClose(calendar.id),
+				CustomComponent: CalendarAccordionItem,
+				items: map(calendar.children, (subCalendar) => createCalendarItem(subCalendar))
+			}) satisfies AccordionItemType,
+		[isOpen, onCalendarClose, onCalendarOpen]
+	);
+
 	// Generate and return calendar items
 	return useMemo(
-		() =>
-			map(sortedCalendars, (calendar) => ({
-				id: calendar.id,
-				CustomComponent: CalendarAccordionItem
-			})),
-		[sortedCalendars]
+		() => map(sortedCalendars, (calendar) => createCalendarItem(calendar)),
+		[createCalendarItem, sortedCalendars]
 	);
 };

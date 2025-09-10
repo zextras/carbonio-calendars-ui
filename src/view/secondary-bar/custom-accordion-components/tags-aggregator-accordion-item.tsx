@@ -14,6 +14,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
+import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
 import { createTag } from '../../tags/tag-actions';
 
 export const TagsAggregatorAccordionItem: FC<AccordionItemProps> = (props) => {
@@ -21,7 +22,7 @@ export const TagsAggregatorAccordionItem: FC<AccordionItemProps> = (props) => {
 	const { createModal, closeModal } = useModal();
 	const actions = [createTag({ createModal, closeModal })];
 	const item: AccordionItemType = {
-		id: 'tags-aggregator',
+		id: SIDEBAR_ITEMS.TAGS,
 		icon: 'TagsMoreOutline',
 		label: t('label.tags', 'Tags')
 	};

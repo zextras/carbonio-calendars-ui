@@ -21,29 +21,31 @@ export const SharedAccountAccordion = ({
 }: SharedAccountAccordionProps): React.JSX.Element => {
 	const root = useRoot(rootId);
 	const calendarsItems = useSecondaryBarTreeCalendars(rootId);
-	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage(rootId);
+	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage();
 
-	const onAccordionItemOpen = useCallback(() => {
-		setOpenStatus(true);
-	}, [setOpenStatus]);
+	const onSharedAccountOpen = useCallback(
+		() => setOpenStatus(rootId, true),
+		[rootId, setOpenStatus]
+	);
 
-	const onAccordionItemClose = useCallback(() => {
-		setOpenStatus(false);
-	}, [setOpenStatus]);
+	const onSharedAccountClose = useCallback(
+		() => setOpenStatus(rootId, false),
+		[rootId, setOpenStatus]
+	);
 
 	const items = useMemo<Array<AccordionItemType>>(
 		() => [
 			{
 				id: rootId,
 				label: root?.name,
-				open: isOpen,
-				onOpen: onAccordionItemOpen,
-				onClose: onAccordionItemClose,
+				open: isOpen(rootId),
+				onOpen: onSharedAccountOpen,
+				onClose: onSharedAccountClose,
 				CustomComponent: AccountAccordionItem,
 				items: calendarsItems
 			}
 		],
-		[calendarsItems, isOpen, onAccordionItemClose, onAccordionItemOpen, root?.name, rootId]
+		[calendarsItems, isOpen, onSharedAccountClose, onSharedAccountOpen, root?.name, rootId]
 	);
 
 	return <Accordion items={items} />;
