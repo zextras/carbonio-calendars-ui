@@ -36,7 +36,7 @@ import {
 } from '@zextras/carbonio-ui-commons';
 import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';

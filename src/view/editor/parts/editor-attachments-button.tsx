@@ -8,7 +8,7 @@ import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'rea
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { getIntegratedFunction, t } from '@zextras/carbonio-shell-ui';
 import { map, union } from 'lodash';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { ResizedIconCheckbox } from './editor-styled-components';
 import { uploadParts } from '../../../commons/upload-parts';

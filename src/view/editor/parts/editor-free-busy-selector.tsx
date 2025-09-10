@@ -19,7 +19,7 @@ import {
 import { FOLDERS, useFolder } from '@zextras/carbonio-ui-commons';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { ColorContainer, LabelText, TextUpperCase } from './select-label-factory';
 import { EVENT_DISPLAY_STATUS } from '../../../constants/api';

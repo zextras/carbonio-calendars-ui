@@ -6,14 +6,14 @@
 
 import React, { FC, useMemo, useState } from 'react';
 
-import { ThemeProvider } from '@mui/material';
 import {
 	Accordion,
 	AccordionItemType,
 	Container,
 	Divider,
 	ModalManager,
-	SnackbarManager
+	SnackbarManager,
+	ThemeProvider
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import {
@@ -22,11 +22,11 @@ import {
 	FOLDERS,
 	useInitializeFolders,
 	useRootsArray,
-	themeMui,
 	Folder,
 	LinkFolder,
 	SidebarProps,
-	hasId
+	hasId,
+	themeMuiExtension
 } from '@zextras/carbonio-ui-commons';
 import { compact, find, map, reject, sortBy } from 'lodash';
 
@@ -171,7 +171,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	return (
 		<ModalManager>
 			<SnackbarManager>
-				<ThemeProvider theme={themeMui}>
+				<ThemeProvider extension={themeMuiExtension}>
 					{expanded ? (
 						<MemoSidebar
 							foldersAccordionItems={fullFolderTree}
