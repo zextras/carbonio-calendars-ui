@@ -5,6 +5,7 @@
  */
 import React, { FC, useRef, useCallback, useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	AccordionItemProps,
 	useSnackbar,
@@ -33,7 +34,6 @@ import {
 	useRoot
 } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 
 import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
 import { recursiveToggleCheck, getFolderIcon, isLinkChild } from '../../../commons/utilities';

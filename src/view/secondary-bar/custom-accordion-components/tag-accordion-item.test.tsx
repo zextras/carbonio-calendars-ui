@@ -17,7 +17,6 @@ import {
 import { TagAccordionItem } from './tag-accordion-item';
 import { setupTest, screen } from '../../../__test__/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
-import 'jest-styled-components';
 
 const generateTag = (model: Partial<Tag> = {}): Tag => ({
 	id: model.id || faker.string.uuid(),
