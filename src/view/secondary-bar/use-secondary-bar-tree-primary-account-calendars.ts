@@ -14,12 +14,13 @@ import { useSecondaryBarTreeCalendars } from './use-secondary-bar-tree-calendars
 export const useSecondaryBarTreePrimaryCalendars = (rootId: string): Array<AccordionItemType> => {
 	const calendarsItems = useSecondaryBarTreeCalendars(rootId);
 
-	return useMemo(
+	return useMemo<Array<AccordionItemType>>(
 		() => [
 			...calendarsItems,
 			// Append "find shares" button item
 			{
 				id: 'find-shares',
+				disableHover: true,
 				CustomComponent: FindSharesAccordionItem
 			}
 		],

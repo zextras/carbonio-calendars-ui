@@ -39,8 +39,9 @@ export const useSecondaryBarTreeGroups = (): Array<AccordionItemType> => {
 			};
 		});
 
-		const createGroupItem = {
+		const createGroupItem: AccordionItemType = {
 			id: 'add-group',
+			disableHover: true,
 			CustomComponent: CreateGroupAccordionItem
 		};
 
