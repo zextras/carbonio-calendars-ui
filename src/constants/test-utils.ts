@@ -17,7 +17,9 @@ export const TEST_SELECTORS = {
 		calendarChipAvatar: 'icon: Square2',
 		shareUrlButton: 'icon: Copy',
 		tags: 'icon: TagsMoreOutline',
-		tag: 'icon: Tag'
+		tag: 'icon: Tag',
+		selectedCalendar: 'icon: Calendar2',
+		unSelectedCalendar: 'icon: CalendarOutline'
 	}
 };
 
