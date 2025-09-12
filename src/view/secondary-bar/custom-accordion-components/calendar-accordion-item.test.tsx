@@ -22,102 +22,115 @@ import { populateFoldersStore } from '@test-utils/store/folders';
 describe('CalendarAccordionItem', () => {
 	const store = configureStore({ reducer: combineReducers(reducers) });
 
-	it('renders nothing if calendar folder is not found', () => {
-		const item = {
-			id: 'non-existent-folder-id'
-		};
+	const setupCalendarAccordionItem = (
+		item: { id: string },
+		customFolders?: Folder[]
+	): ReturnType<typeof setupTest> => {
+		populateFoldersStore({ customFolders });
+		return setupTest(<CalendarAccordionItem item={item} />, { store });
+	};
 
-		setupTest(<CalendarAccordionItem item={item} />, { store });
+	describe('Rendering behavior', () => {
+		it('renders nothing if calendar folder is not found', () => {
+			const item = { id: 'non-existent-folder-id' };
 
-		expect(screen.queryByTestId('calendar-accordion-item')).not.toBeInTheDocument();
-	});
+			setupCalendarAccordionItem(item);
 
-	it('renders the accordion item with correct label', () => {
-		populateFoldersStore();
-		const item = { id: FOLDERS.CALENDAR };
-
-		setupTest(<CalendarAccordionItem item={item} />, { store });
-
-		expect(screen.getByText('Calendar')).toBeVisible();
-	});
-
-	it('renders the accordion item with toggled icon, when folder is selected (checked)', () => {
-		const customFolder = generateFolder({
-			view: 'appointment',
-			id: '2345',
-			name: 'CustomCalendar'
+			expect(screen.queryByTestId('calendar-accordion-item')).not.toBeInTheDocument();
 		});
-		populateFoldersStore({ customFolders: [{ ...customFolder, checked: true }] });
-		const item = { id: customFolder.id };
 
-		setupTest(<CalendarAccordionItem item={item} />, { store });
+		it('renders the accordion item with correct label for default calendar', () => {
+			const item = { id: FOLDERS.CALENDAR };
 
-		expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
-	});
+			setupCalendarAccordionItem(item);
 
-	it('renders the accordion item with un-toggled icon, when folder is not selected(checked)', () => {
-		const customFolder = generateFolder({
-			view: 'appointment',
-			id: '2345',
-			name: 'CustomCalendar'
+			expect(screen.getByText('Calendar')).toBeVisible();
 		});
-		populateFoldersStore({ customFolders: [{ ...customFolder, checked: false }] });
-		const item = { id: customFolder.id };
-
-		setupTest(<CalendarAccordionItem item={item} />, { store });
-
-		expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
 	});
 
-	it('calls recursiveToggleCheck when row is clicked', async () => {
-		getSetupServer().use(
-			http.post('/service/soap/BatchRequest', () => HttpResponse.json({ Body: {} }))
-		);
-		populateFoldersStore();
-		const item = { id: FOLDERS.CALENDAR };
-		const recursiveToggleCheckMock = jest.spyOn(utilities, 'recursiveToggleCheck');
+	describe('Selection state', () => {
+		it('renders with toggled icon when folder is selected (checked)', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'CustomCalendar',
+				checked: true
+			});
+			const item = { id: customFolder.id };
 
-		const { user } = setupTest(<CalendarAccordionItem item={item} />, { store });
+			setupCalendarAccordionItem(item, [customFolder]);
 
-		const accordionLabel = screen.getByText('Calendar');
-		await user.click(accordionLabel);
-
-		expect(recursiveToggleCheckMock).toHaveBeenCalled();
-	});
-
-	it('shows shared status icon when calendar is shared', () => {
-		const grant: Grant = {
-			zid: '8296bac8-8749-42c0-be86-f3dfa02c6719',
-			gt: 'usr',
-			perm: 'r',
-			d: 'foo@test.com'
-		};
-		const customFolder: Folder = generateFolder({
-			view: 'appointment',
-			id: '2345',
-			name: 'CustomCalendar',
-			acl: { grant: [grant] }
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
 		});
-		populateFoldersStore({ customFolders: [{ ...customFolder, checked: false }] });
-		const item = { id: customFolder.id };
 
-		setupTest(<CalendarAccordionItem item={item} />, { store });
+		it('renders with un-toggled icon when folder is not selected (unchecked)', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'CustomCalendar',
+				checked: false
+			});
+			const item = { id: customFolder.id };
 
-		expect(screen.getByTestId(TEST_SELECTORS.ICONS.shared)).toBeVisible();
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
+		});
 	});
 
-	it('shows linked status icon when calendar is a link', () => {
-		const customFolder: Folder = generateFolder({
-			view: 'appointment',
-			id: '2345',
-			name: 'CustomCalendar',
-			isLink: true
+	describe('Interaction', () => {
+		it('calls recursiveToggleCheck when row is clicked', async () => {
+			getSetupServer().use(
+				http.post('/service/soap/BatchRequest', () => HttpResponse.json({ Body: {} }))
+			);
+
+			const item = { id: FOLDERS.CALENDAR };
+			const recursiveToggleCheckMock = jest.spyOn(utilities, 'recursiveToggleCheck');
+
+			const { user } = setupCalendarAccordionItem(item);
+
+			const accordionLabel = screen.getByText('Calendar');
+			await user.click(accordionLabel);
+
+			expect(recursiveToggleCheckMock).toHaveBeenCalled();
 		});
-		populateFoldersStore({ customFolders: [{ ...customFolder, checked: false }] });
-		const item = { id: customFolder.id };
+	});
 
-		setupTest(<CalendarAccordionItem item={item} />, { store });
+	describe('Calendar status indicators', () => {
+		it('shows shared status icon when calendar is shared', () => {
+			const grant: Grant = {
+				zid: '8296bac8-8749-42c0-be86-f3dfa02c6719',
+				gt: 'usr',
+				perm: 'r',
+				d: 'foo@test.com'
+			};
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'CustomCalendar',
+				acl: { grant: [grant] },
+				checked: false
+			});
+			const item = { id: customFolder.id };
 
-		expect(screen.getByTestId(TEST_SELECTORS.ICONS.linked)).toBeVisible();
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.shared)).toBeVisible();
+		});
+
+		it('shows linked status icon when calendar is a link', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'CustomCalendar',
+				isLink: true,
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.linked)).toBeVisible();
+		});
 	});
 });
