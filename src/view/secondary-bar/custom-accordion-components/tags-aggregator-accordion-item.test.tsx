@@ -9,12 +9,13 @@ import { AccordionItemType } from '@zextras/carbonio-design-system';
 
 import { TagsAggregatorAccordionItem } from './tags-aggregator-accordion-item';
 import { setupTest, screen } from '../../../__test__/test-setup';
+import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 
 describe('TagsAggregatorAccordionItem', () => {
 	it('should render correctly', () => {
 		const item: AccordionItemType = {
-			id: 'tags-aggregator'
+			id: SIDEBAR_ITEMS.TAGS
 		};
 
 		setupTest(<TagsAggregatorAccordionItem item={item} />);
