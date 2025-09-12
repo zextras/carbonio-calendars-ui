@@ -3,51 +3,90 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
+import React from 'react';
+
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { http, HttpResponse } from 'msw';
+
+import { CalendarAccordionItem } from './calendar-accordion-item';
+import * as utilities from '../../../commons/utilities';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
+import { reducers } from '../../../store/redux';
+import { getSetupServer } from '@jest-setup';
+import { setupTest, screen } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { populateFoldersStore } from '@test-utils/store/folders';
+
 describe('CalendarAccordionItem', () => {
-	// it('should render the tag accordion item with the correct label and icon', () => {
-	//     const tag = generateTag();
-	//     const tags = {
-	//         [tag.id]: tag
-	//     };
-	//     useTagStore.setState({ tags });
-	//     const item: AccordionItemType = {
-	//         id: tag.id,
-	//         label: tag.name
-	//     };
-	//     setupTest(<TagAccordionItem item={item} />);
-	//     expect(screen.getByText(tag.name)).toBeVisible();
-	//     expect(screen.getByTestId(TEST_SELECTORS.ICONS.tag)).toBeVisible();
-	//     expect(screen.getByTestId(TEST_SELECTORS.ICONS.tag)).toHaveStyleRule(
-	//         'color',
-	//         ZIMBRA_STANDARD_COLORS[tag.color ?? 0].hex
-	//     );
-	// });
-	// it('should trigger the search when the tag is clicked', async () => {
-	//     const runSearchSpy = jest.fn();
-	//     jest.mocked(useRunSearchIntegration).mockReturnValue(runSearchSpy);
-	//     const tag = generateTag();
-	//     const tags = {
-	//         [tag.id]: tag
-	//     };
-	//     useTagStore.setState({ tags });
-	//     const item: AccordionItemType = {
-	//         id: tag.id,
-	//         label: tag.name
-	//     };
-	//     const { user } = setupTest(<TagAccordionItem item={item} />);
-	//     await user.click(screen.getByText(tag.name));
-	//     expect(runSearchSpy).toHaveBeenCalledWith(
-	//         expect.arrayContaining([
-	//             {
-	//                 avatarBackground: ZIMBRA_STANDARD_COLORS[tag.color || 0].hex,
-	//                 avatarIcon: 'Tag',
-	//                 background: 'gray2',
-	//                 hasAvatar: true,
-	//                 label: `tag:${tag.name}`,
-	//                 value: `tag:"${tag.name}"`
-	//             }
-	//         ]),
-	//         'calendars'
-	//     );
-	// });
+	const store = configureStore({ reducer: combineReducers(reducers) });
+
+	it('renders nothing if calendar folder is not found', () => {
+		const item = {
+			id: 'non-existent-folder-id'
+		};
+
+		setupTest(<CalendarAccordionItem item={item} />, { store });
+
+		expect(screen.queryByTestId('calendar-accordion-item')).not.toBeInTheDocument();
+	});
+
+	it('renders the accordion item with correct label', () => {
+		populateFoldersStore();
+		const item = { id: FOLDERS.CALENDAR };
+
+		setupTest(<CalendarAccordionItem item={item} />, { store });
+
+		expect(screen.getByText('Calendar')).toBeVisible();
+	});
+
+	it('renders the accordion item with toggled icon, when folder is selected (checked)', () => {
+		const customFolder = generateFolder({
+			view: 'appointment',
+			id: '2345',
+			name: 'CustomCalendar'
+		});
+
+		populateFoldersStore({ customFolders: [{ ...customFolder, checked: true }] });
+
+		const item = { id: customFolder.id };
+
+		setupTest(<CalendarAccordionItem item={item} />, { store });
+
+		expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
+	});
+
+	it('renders the accordion item with un-toggled icon, when folder is not selected(checked)', () => {
+		const customFolder = generateFolder({
+			view: 'appointment',
+			id: '2345',
+			name: 'CustomCalendar'
+		});
+
+		populateFoldersStore({ customFolders: [{ ...customFolder, checked: false }] });
+
+		const item = { id: customFolder.id };
+
+		setupTest(<CalendarAccordionItem item={item} />, { store });
+
+		expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
+	});
+
+	it('calls recursiveToggleCheck when row is clicked', async () => {
+		getSetupServer().use(
+			http.post('/service/soap/BatchRequest', () => HttpResponse.json({ Body: {} }))
+		);
+
+		populateFoldersStore();
+		const item = { id: FOLDERS.CALENDAR };
+		const recursiveToggleCheckMock = jest.spyOn(utilities, 'recursiveToggleCheck');
+
+		const { user } = setupTest(<CalendarAccordionItem item={item} />, { store });
+
+		const accordionLabel = screen.getByText('Calendar');
+		await user.click(accordionLabel);
+
+		expect(recursiveToggleCheckMock).toHaveBeenCalled();
+	});
 });
