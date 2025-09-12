@@ -19,7 +19,9 @@ export const TEST_SELECTORS = {
 		tags: 'icon: TagsMoreOutline',
 		tag: 'icon: Tag',
 		selectedCalendar: 'icon: Calendar2',
-		unSelectedCalendar: 'icon: CalendarOutline'
+		unSelectedCalendar: 'icon: CalendarOutline',
+		shared: 'icon: Shared',
+		linked: 'icon: Linked'
 	}
 };
 
