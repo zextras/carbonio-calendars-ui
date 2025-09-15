@@ -13,6 +13,10 @@ import { setupTest, screen, setupHook } from '../../../__test__/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { reducers } from '../../../store/redux';
 import { generateGroup, populateGroupsStore } from '../../../test/generators/group';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { populateFoldersStore } from '@test-utils/store/folders';
+import { generateSoapErrorResponseBody } from 'test/generators/utils';
 
 describe('GroupAccordionItem', () => {
 	it('renders nothing if group is not found', () => {
@@ -51,9 +55,8 @@ describe('GroupAccordionItem', () => {
 			setupTest(<GroupAccordionItem item={item} />, { store });
 
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
-			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toHaveStyleRule(
-				'color',
-				theme.palette.text.disabled
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toHaveStyle(
+				`color: ${theme.palette.text.disabled}`
 			);
 		});
 
@@ -79,9 +82,85 @@ describe('GroupAccordionItem', () => {
 		});
 	});
 
-	it.todo('should display the icon outlined if the group is not active');
+	it('should display the icon outlined if the group is not active', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const calendar = generateFolder({ view: 'appointment', checked: false });
+		const groups = [generateGroup({ calendarId: [calendar.id] })];
+		populateGroupsStore({
+			groups
+		});
+		const item = { id: groups[0].id };
 
-	it.todo('should display the icon filled if the group is active');
+		setupTest(<GroupAccordionItem item={item} />, { store });
 
-	it.todo('should call the onClick callback when clicked');
+		expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
+	});
+
+	it('should display the icon filled if the group is active', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const calendar = generateFolder({ view: 'appointment', checked: true });
+		const groups = [generateGroup({ calendarId: [calendar.id] })];
+
+		populateFoldersStore({ customFolders: [calendar] });
+		populateGroupsStore({
+			groups
+		});
+		const item = { id: groups[0].id };
+
+		setupTest(<GroupAccordionItem item={item} />, { store });
+
+		expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
+	});
+
+	it('should call the onClick callback when clicked on active group', async () => {
+		const apiInterceptor = createSoapAPIInterceptor('Batch', generateSoapErrorResponseBody());
+
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const calendar = generateFolder({ view: 'appointment', checked: true });
+		const groups = [generateGroup({ calendarId: [calendar.id] })];
+
+		populateFoldersStore({ customFolders: [calendar] });
+		populateGroupsStore({
+			groups
+		});
+		const item = { id: groups[0].id };
+
+		const { user } = setupTest(<GroupAccordionItem item={item} />, { store });
+		user.click(screen.getByText(groups[0].name));
+		const paramsSent = await apiInterceptor;
+
+		expect(paramsSent).toEqual({
+			FolderActionRequest: [
+				{ _jsns: 'urn:zimbraMail', action: { id: calendar.id, op: '!check' }, requestId: 0 }
+			],
+			_jsns: 'urn:zimbra',
+			onerror: 'continue'
+		});
+	});
+
+	it('should call the onClick callback when clicked on not active group', async () => {
+		const apiInterceptor = createSoapAPIInterceptor('Batch', generateSoapErrorResponseBody());
+
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const calendar = generateFolder({ view: 'appointment', checked: false });
+		const groups = [generateGroup({ calendarId: [calendar.id] })];
+
+		populateFoldersStore({ customFolders: [calendar] });
+		populateGroupsStore({
+			groups
+		});
+		const item = { id: groups[0].id };
+
+		const { user } = setupTest(<GroupAccordionItem item={item} />, { store });
+		user.click(screen.getByText(groups[0].name));
+		const paramsSent = await apiInterceptor;
+
+		expect(paramsSent).toEqual({
+			FolderActionRequest: [
+				{ _jsns: 'urn:zimbraMail', action: { id: calendar.id, op: 'check' }, requestId: 0 }
+			],
+			_jsns: 'urn:zimbra',
+			onerror: 'continue'
+		});
+	});
 });
