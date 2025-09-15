@@ -196,6 +196,32 @@ const generateSharedAccountSystemFolders = (
 			children: [],
 			parent: undefined,
 			depth: 1
+		},
+		{
+			id: `${contextIdentity.identity.id}:${FOLDERS.CALENDAR}`,
+			uuid: faker.string.uuid(),
+			name: 'Calendar',
+			absFolderPath: '/Calendar',
+			l: `${contextIdentity.identity.id}:${FOLDERS.USER_ROOT}`,
+			luuid: contextIdentity.userRootId,
+			checked: false,
+			f: 'b#i',
+			color: 6,
+			view: 'appointment' as FolderView,
+			rev: 1,
+			ms: 33272,
+			n: 159,
+			s: 0,
+			i4ms: 33640,
+			i4next: 17193,
+			activesyncdisabled: false,
+			webOfflineSyncDays: 0,
+			recursive: false,
+			deletable: false,
+			isLink: false,
+			children: [],
+			parent: undefined,
+			depth: 1
 		}
 	];
 };
