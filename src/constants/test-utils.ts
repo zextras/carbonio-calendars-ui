@@ -20,6 +20,7 @@ export const TEST_SELECTORS = {
 		tag: 'icon: Tag',
 		selectedCalendar: 'icon: Calendar2',
 		unSelectedCalendar: 'icon: CalendarOutline',
+		emptyGroupWarning: 'icon: AlertCircleOutline',
 		shared: 'icon: Shared',
 		linked: 'icon: Linked'
 	}
