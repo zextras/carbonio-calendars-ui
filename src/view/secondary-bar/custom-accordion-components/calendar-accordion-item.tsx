@@ -257,7 +257,13 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 					{sharedStatusIcon}
 				</Row>
 			</CalendarContextMenuItem>
-			<FileInput data-testid="icsFileInput" type="file" ref={inputRef} onChange={onFileInputChange} accept=".ics" />
+			<FileInput
+				data-testid="icsFileInput"
+				type="file"
+				ref={inputRef}
+				onChange={onFileInputChange}
+				accept=".ics"
+			/>
 		</>
 	);
 };
