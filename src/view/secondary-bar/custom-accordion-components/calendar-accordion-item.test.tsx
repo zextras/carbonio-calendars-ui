@@ -11,6 +11,7 @@ import { Folder, FOLDERS, Grant } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
 import { CalendarAccordionItem } from './calendar-accordion-item';
+import * as calendarActions from '../../../actions/calendar-actions-fn';
 import * as utilities from '../../../commons/utilities';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { reducers } from '../../../store/redux';
@@ -131,6 +132,36 @@ describe('CalendarAccordionItem', () => {
 			setupCalendarAccordionItem(item, [customFolder]);
 
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.linked)).toBeVisible();
+		});
+	});
+
+	describe('Paste ics file', () => {
+		it('handles ics file import via file input', async () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'CustomCalendar',
+				checked: true
+			});
+			const item = { id: customFolder.id };
+
+			// Mock importCalendarICSFn to resolve with a success status
+			const importMock = jest
+				.spyOn(calendarActions, 'importCalendarICSFn')
+				.mockResolvedValue([{ status: 200 }]);
+
+			const { user } = setupCalendarAccordionItem(item, [customFolder]);
+
+			// Find the file input (by role or type)
+			const fileInput = screen.getByTestId('icsFileInput');
+
+			// Create a mock .ics file
+			const file = new File(['BEGIN:VCALENDAR...'], 'test.ics', { type: 'text/calendar' });
+
+			user.upload(fileInput, file);
+
+			// Assert that the modal or snackbar appears, or importCalendarICSFn is called
+			expect(importMock).toHaveBeenCalled();
 		});
 	});
 });
