@@ -8,7 +8,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
-import { FOLDER_VIEW, getRootsArray } from '@zextras/carbonio-ui-commons';
+import { getRootsArray } from '@zextras/carbonio-ui-commons';
 
 import { SharedAccountAccordion } from './shared-account-accordion';
 import { reducers } from '../../store/redux';
@@ -23,7 +23,7 @@ function setupSharedAccountTest(): {
 	email: string;
 	sharedAccount: { id: string; name: string };
 } {
-	populateFoldersStore({ view: FOLDER_VIEW.appointment });
+	populateFoldersStore();
 	const mocksContext = getMocksContext();
 	useLocalStorage.mockReturnValue([[], jest.fn()]);
 
