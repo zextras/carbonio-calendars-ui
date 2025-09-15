@@ -7,11 +7,11 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { waitFor } from '@testing-library/react';
 import { Folder, FOLDERS, Grant } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
 import { CalendarAccordionItem } from './calendar-accordion-item';
-import * as calendarActions from '../../../actions/calendar-actions-fn';
 import * as utilities from '../../../commons/utilities';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { reducers } from '../../../store/redux';
@@ -135,33 +135,54 @@ describe('CalendarAccordionItem', () => {
 		});
 	});
 
-	describe('Paste ics file', () => {
-		it('handles ics file import via file input', async () => {
-			const customFolder = generateFolder({
-				view: 'appointment',
-				id: '2345',
-				name: 'CustomCalendar',
-				checked: true
-			});
-			const item = { id: customFolder.id };
+	describe('ICS File import functionality', () => {
+		it('renders hidden file input for ICS import', () => {
+			const item = { id: FOLDERS.CALENDAR };
 
-			// Mock importCalendarICSFn to resolve with a success status
-			const importMock = jest
-				.spyOn(calendarActions, 'importCalendarICSFn')
-				.mockResolvedValue([{ status: 200 }]);
+			setupCalendarAccordionItem(item);
 
-			const { user } = setupCalendarAccordionItem(item, [customFolder]);
-
-			// Find the file input (by role or type)
 			const fileInput = screen.getByTestId('icsFileInput');
+			expect(fileInput).toBeInTheDocument();
+			expect(fileInput).toHaveAttribute('type', 'file');
+			expect(fileInput).toHaveAttribute('accept', '.ics');
+			expect(fileInput).toHaveStyle({ display: 'none' });
+		});
 
-			// Create a mock .ics file
-			const file = new File(['BEGIN:VCALENDAR...'], 'test.ics', { type: 'text/calendar' });
+		it('opens import confirmation modal when file is selected', async () => {
+			const item = { id: FOLDERS.CALENDAR };
+			const { user } = setupCalendarAccordionItem(item);
 
-			user.upload(fileInput, file);
+			const fileInput = screen.getByTestId('icsFileInput');
+			const file = new File(['calendar content'], 'test-calendar.ics', { type: 'text/calendar' });
 
-			// Assert that the modal or snackbar appears, or importCalendarICSFn is called
-			expect(importMock).toHaveBeenCalled();
+			await user.upload(fileInput, file);
+
+			await waitFor(() => {
+				expect(screen.getByText('Import appointments')).toBeVisible();
+			});
+			expect(
+				screen.getByText(/The appointments contained within test-calendar.ics will be imported/)
+			).toBeVisible();
+			expect(screen.getByRole('button', { name: 'Import' })).toBeVisible();
+		});
+
+		it('closes modal when cancel is clicked', async () => {
+			const item = { id: FOLDERS.CALENDAR };
+			const { user } = setupCalendarAccordionItem(item);
+
+			const fileInput = screen.getByTestId('icsFileInput');
+			const file = new File(['calendar content'], 'test-calendar.ics', { type: 'text/calendar' });
+
+			await user.upload(fileInput, file);
+
+			// eslint-disable-next-line testing-library/no-node-access
+			const closeButton = screen.getByTestId('icon: Close').closest('button');
+			expect(closeButton).not.toBeNull();
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			await user.click(closeButton);
+
+			expect(screen.queryByText('Import appointments')).not.toBeInTheDocument();
 		});
 	});
 });
