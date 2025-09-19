@@ -29,9 +29,11 @@ const defaultParticipant: InviteParticipant = {
 };
 
 const generateMockState = ({
-	organizer = defaultOrganizer
+	organizer = defaultOrganizer,
+	compNum = 0
 }: {
 	organizer?: InviteOrganizer;
+	compNum?: number;
 }): Partial<RootState> => ({
 	invites: {
 		invites: {
@@ -40,7 +42,8 @@ const generateMockState = ({
 				organizer,
 				participants: {
 					AC: [defaultParticipant]
-				}
+				},
+				compNum
 			}
 		},
 		status: ''
@@ -124,7 +127,26 @@ describe('moveAppointmentToTrash', () => {
 		);
 	});
 
-	it.todo(
-		'should call CancelAppointmentRequest with the correct comp number when invite has compNum defined'
-	);
+	it('should call CancelAppointmentRequest with the correct comp number when invite has compNum defined', async () => {
+		const mockStateWithCompNum: Partial<RootState> = generateMockState({
+			organizer: {
+				...defaultOrganizer
+			},
+			compNum: 42
+		});
+		const mockDispatch = jest.fn();
+		const mockGetState = jest.fn(() => mockStateWithCompNum as RootState);
+
+		const thunk = moveAppointmentToTrash(moveAppointmentToTrashParam);
+
+		const cancelAppointmentAPIInterceptor = createSoapAPIInterceptor('CancelAppointment', {});
+		await thunk(mockDispatch, mockGetState, undefined);
+		const request = await cancelAppointmentAPIInterceptor;
+		expect(request).toEqual(
+			expect.objectContaining({
+				id: defaultInviteId,
+				comp: 42
+			})
+		);
+	});
 });
