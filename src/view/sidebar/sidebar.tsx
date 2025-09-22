@@ -30,7 +30,7 @@ import {
 } from '@zextras/carbonio-ui-commons';
 import { compact, find, map, reject, sortBy } from 'lodash';
 
-import { CollapsedSidebarItem } from './collapsed-sidebar-items';
+import { CollapsedSidebarItem } from '../secondary-bar/collapsed-sidebar-items';
 import { CreateGroupComponent } from './custom-components/create-group-component';
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';

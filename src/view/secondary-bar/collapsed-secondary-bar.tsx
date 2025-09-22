@@ -8,7 +8,7 @@ import React from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { useRootsArray } from '@zextras/carbonio-ui-commons';
 
-import { CollapsedSidebarItem } from '../sidebar/collapsed-sidebar-items';
+import { CollapsedSidebarItem } from './collapsed-sidebar-items';
 
 export const CollapsedSecondaryBar = (): React.JSX.Element => {
 	const folders = useRootsArray();
