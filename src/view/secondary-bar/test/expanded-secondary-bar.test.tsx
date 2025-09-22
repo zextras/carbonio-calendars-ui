@@ -7,18 +7,18 @@ import React from 'react';
 
 import { useTagStore } from '@zextras/carbonio-ui-commons';
 
-import SecondaryBar from './secondary-bar';
-import { populateFoldersStore } from '../../__test__/mocks/store/folders';
-import { tags } from '../../__test__/mocks/tags/tags';
-import { getMocksContext } from '../../__test__/mocks/utils/mocks-context';
-import { setupTest, screen } from '../../__test__/test-setup';
+import { populateFoldersStore } from '../../../__test__/mocks/store/folders';
+import { tags } from '../../../__test__/mocks/tags/tags';
+import { getMocksContext } from '../../../__test__/mocks/utils/mocks-context';
+import { setupTest, screen } from '../../../__test__/test-setup';
+import { ExpandedSecondaryBar } from '../expanded-secondary-bar';
 
-describe('SecondaryBar', () => {
+describe('ExpandedSecondaryBar', () => {
 	it('should render the primary account accordion item', () => {
 		const primaryIdentity = getMocksContext().identities.primary;
 		populateFoldersStore();
 
-		setupTest(<SecondaryBar expanded />);
+		setupTest(<ExpandedSecondaryBar />);
 
 		expect(screen.getByText(primaryIdentity.identity.email)).toBeVisible();
 	});
@@ -27,15 +27,15 @@ describe('SecondaryBar', () => {
 		const sharedIdentities = getMocksContext().identities.sendAs;
 		populateFoldersStore();
 
-		setupTest(<SecondaryBar expanded />);
+		setupTest(<ExpandedSecondaryBar />);
 
-		sharedIdentities.forEach((shaedIdentity) => {
-			expect(screen.getByText(shaedIdentity.identity.email)).toBeVisible();
+		sharedIdentities.forEach((sharedIdentity) => {
+			expect(screen.getByText(sharedIdentity.identity.email)).toBeVisible();
 		});
 	});
 
 	it('should render the divider', () => {
-		setupTest(<SecondaryBar expanded />);
+		setupTest(<ExpandedSecondaryBar />);
 
 		expect(screen.getByTestId('divider')).toBeVisible();
 	});
@@ -44,7 +44,7 @@ describe('SecondaryBar', () => {
 		populateFoldersStore();
 		useTagStore.setState({ tags });
 
-		setupTest(<SecondaryBar expanded />);
+		setupTest(<ExpandedSecondaryBar />);
 
 		expect(screen.getByText('Tags')).toBeVisible();
 	});

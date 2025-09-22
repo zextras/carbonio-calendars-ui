@@ -6,8 +6,8 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
 import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-design-system';
-
 import { Folder } from '@zextras/carbonio-ui-commons';
+
 import { getFolderIcon, recursiveToggleCheck } from '../../commons/utilities';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
