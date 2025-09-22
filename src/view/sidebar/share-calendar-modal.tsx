@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
 	Checkbox,
@@ -27,7 +27,7 @@ import {
 	ModalHeader,
 	useContactInput
 } from '@zextras/carbonio-ui-commons';
-import { find, map, some } from 'lodash';
+import { filter, find, map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../constants';
@@ -123,55 +123,55 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		[grant]
 	);
 
-	const contactInputHasError = useMemo(
-		() => some(contacts, (contact) => find(contact.actions, (action) => action.id === 'isInGrant')),
-		[contacts]
+	const duplicateGrantActionWarning = useMemo(
+		() =>
+			({
+				id: 'isInGrant',
+				label: t('label.duplicate_share', "You've already shared this calendar with this user"),
+				color: 'error',
+				type: 'icon',
+				icon: 'AlertTriangle'
+			}) as const,
+		[t]
 	);
 
-	const customAttendeeChip = useCallback(
-		(attendeeChip: ContactInputItem): ContactInputItem => {
-			const chipIsInGrant = find(grant, (g) => g.d === attendeeChip.value.email);
-			const chipHasWarningAction = find(
-				attendeeChip.actions,
-				(action) => action.id === 'isInGrant'
+	const contactInputHasError = useMemo(() => {
+		if (grant) {
+			const duplicateUsers = filter(
+				grant,
+				(g) => !!find(contacts, (contact) => (g.d ?? g.zid) === contact.value.email)
 			);
-			if (chipIsInGrant && !chipHasWarningAction) {
-				return {
-					...attendeeChip,
-					actions: [
-						{
-							id: 'isInGrant',
-							label: t(
-								'attendee_unavailable',
-								'Attendee not available at the selected time of the event'
-							),
-							color: 'error',
-							type: 'icon',
-							icon: 'AlertTriangle'
-						} as const,
-						...(attendeeChip.actions ?? [])
-					]
-				};
-			}
-			return attendeeChip;
-		},
-		[grant, t]
+			return some(duplicateUsers, (user) => user.perm === shareWithUserRole);
+		}
+		return false;
+	}, [contacts, grant, shareWithUserRole]);
+
+	const addWarningActionToChip = useCallback(
+		(attendeeChip: ContactInputItem): ContactInputItem => ({
+			...attendeeChip,
+			actions: [duplicateGrantActionWarning, ...(attendeeChip.actions ?? [])]
+		}),
+		[duplicateGrantActionWarning]
 	);
 
-	const onContactInputChange = useCallback(
-		(ev: Array<ContactInputItem>) => {
-			const newValue = ev.map(customAttendeeChip);
-			setContacts(newValue);
-		},
-		[customAttendeeChip]
+	const removeWarningActionFromChip = useCallback(
+		(attendeeChip: ContactInputItem): ContactInputItem => ({
+			...attendeeChip,
+			actions: filter(
+				attendeeChip.actions ?? [],
+				(action) => action.id !== duplicateGrantActionWarning.id
+			)
+		}),
+		[duplicateGrantActionWarning]
 	);
 
-	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>(
-		(shareRole) => {
-			setShareWithUserRole(shareRole);
-		},
-		[setShareWithUserRole]
-	);
+	const onContactInputChange = useCallback((ev: Array<ContactInputItem>) => {
+		setContacts(ev);
+	}, []);
+
+	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>((shareRole) => {
+		setShareWithUserRole(shareRole);
+	}, []);
 
 	const publicShareAction = useMemo((): Array<{
 		id: string;
@@ -283,12 +283,84 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		[contactInputHasError, contacts, isShareWithPublicOptionsChanged]
 	);
 
-	const confirmTooltip = useMemo(
-		() => (disabled ? t('label.no_changes', 'You haven’t made any changes yet') : undefined),
-		[disabled, t]
-	);
+	const confirmTooltip = useMemo(() => {
+		if (disabled) {
+			if (contactInputHasError) {
+				return t(
+					'label.duplicate_shares',
+					"You've already shared this calendar with one or more users"
+				);
+			}
+			return t('label.no_changes', 'You haven’t made any changes yet');
+		}
+		return undefined;
+	}, [contactInputHasError, disabled, t]);
 
 	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
+
+	useEffect(() => {
+		const changesToAdd: ContactInputItem[] = [];
+		const duplicatedContacts = filter(
+			contacts,
+			(contact) => !!find(grant, (g) => contact.value.email === (g.d ?? g.zid))
+		);
+		if (duplicatedContacts.length) {
+			const duplicatedContactsWithSameRole = filter(
+				contacts,
+				(contact) =>
+					!!find(
+						grant,
+						(g) => contact.value.email === (g.d ?? g.zid) && g.perm === shareWithUserRole
+					)
+			);
+			if (duplicatedContactsWithSameRole.length) {
+				const duplicatesWithoutWarningAction = filter(
+					duplicatedContactsWithSameRole,
+					(user) => !find(user.actions, (action) => action.id === duplicateGrantActionWarning.id)
+				);
+				if (duplicatesWithoutWarningAction.length) {
+					changesToAdd.push(...duplicatesWithoutWarningAction.map(addWarningActionToChip));
+				}
+			}
+			const duplicatedContactsWithDifferentRole = filter(
+				contacts,
+				(contact) =>
+					!!find(
+						grant,
+						(g) => contact.value.email === (g.d ?? g.zid) && g.perm !== shareWithUserRole
+					)
+			);
+			if (duplicatedContactsWithDifferentRole.length) {
+				const duplicatesWithWarningAction = filter(
+					duplicatedContactsWithDifferentRole,
+					(user) => !!find(user.actions, (action) => action.id === duplicateGrantActionWarning.id)
+				);
+				if (duplicatesWithWarningAction.length) {
+					changesToAdd.push(...duplicatesWithWarningAction.map(removeWarningActionFromChip));
+				}
+			}
+		}
+		if (changesToAdd.length) {
+			const newContacts = map(contacts, (contact) => {
+				const newContactToUpdate = find(
+					changesToAdd,
+					(contactToAdd) => contactToAdd.value.id === contact.value.id
+				);
+				if (newContactToUpdate) {
+					return newContactToUpdate;
+				}
+				return contact;
+			});
+			setContacts(newContacts);
+		}
+	}, [
+		addWarningActionToChip,
+		contacts,
+		duplicateGrantActionWarning.id,
+		grant,
+		removeWarningActionFromChip,
+		shareWithUserRole
+	]);
 
 	return (
 		<Container
@@ -327,8 +399,8 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					description={
 						contactInputHasError
 							? t(
-									'label.already_shared',
-									'Already shared with this user. Try changing role or typing another address.'
+									'label.duplicate_share_info',
+									"You've already shared this calendar with one or more users. Try changing role or typing another address."
 								)
 							: undefined
 					}
