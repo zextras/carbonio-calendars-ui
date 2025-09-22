@@ -5,10 +5,10 @@
  */
 import { useTagStore } from '@zextras/carbonio-ui-commons';
 
-import { TagAccordionItem } from './custom-accordion-components/tag-accordion-item';
-import { TagsAggregatorAccordionItem } from './custom-accordion-components/tags-aggregator-accordion-item';
-import { useSecondaryBarTreeTags } from './use-secondary-bar-tree-tags';
-import { setupHook } from '../../__test__/test-setup';
+import { setupHook } from '../../../__test__/test-setup';
+import { TagAccordionItem } from '../custom-accordion-components/tag-accordion-item';
+import { TagsAggregatorAccordionItem } from '../custom-accordion-components/tags-aggregator-accordion-item';
+import { useSecondaryBarTreeTags } from '../use-secondary-bar-tree-tags';
 
 describe('useSecondaryBarTreeTags', () => {
 	it('should render the tags aggregator accordion item', () => {

@@ -6,13 +6,13 @@
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { getRootsArray } from '@zextras/carbonio-ui-commons';
 
-import { AccountAccordionItem } from './custom-accordion-components/account-accordion-item';
-import { useSecondaryBarTreePrimaryAccount } from './use-secondary-bar-tree-primary-account';
-import { useLocalStorage } from '../../../__mocks__/@zextras/carbonio-shell-ui';
-import { populateFoldersStore } from '../../__test__/mocks/store/folders';
-import { setupHook } from '../../__test__/test-setup';
-import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
-import { generateGroupCalendar, populateGroupsStore } from '../../test/generators/group';
+import { useLocalStorage } from '../../../../__mocks__/@zextras/carbonio-shell-ui';
+import { populateFoldersStore } from '../../../__test__/mocks/store/folders';
+import { setupHook } from '../../../__test__/test-setup';
+import { SIDEBAR_ROOT_SUBSECTION } from '../../../constants/sidebar';
+import { generateGroupCalendar, populateGroupsStore } from '../../../test/generators/group';
+import { AccountAccordionItem } from '../custom-accordion-components/account-accordion-item';
+import { useSecondaryBarTreePrimaryAccount } from '../use-secondary-bar-tree-primary-account';
 
 describe('useSecondaryBarTreePrimaryAccount', () => {
 	it('should return an object with the correct structure', () => {

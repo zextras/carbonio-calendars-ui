@@ -10,8 +10,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
 import { getRootsArray } from '@zextras/carbonio-ui-commons';
 
-import { SharedAccountAccordion } from './shared-account-accordion';
-import { reducers } from '../../store/redux';
+import { reducers } from '../../../store/redux';
+import { SharedAccountAccordion } from '../shared-account-accordion';
 import { screen, setupTest } from '@test-setup';
 import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
