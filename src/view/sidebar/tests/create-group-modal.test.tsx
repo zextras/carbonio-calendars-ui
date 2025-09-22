@@ -11,6 +11,7 @@ import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
+import { CreateGroupModal } from '../../../actions/modals/create-group-modal';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import {
 	CreateCalendarGroupRequest,
@@ -18,7 +19,6 @@ import {
 } from '../../../soap/create-calendar-group-request';
 import * as createGroupApi from '../../../soap/create-calendar-group-request';
 import { generateApiErrorResponse } from '../../../test/generators/api';
-import { CreateGroupModal } from '../create-group-modal';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
