@@ -7,9 +7,9 @@ import React from 'react';
 
 import { act } from '@testing-library/react';
 
-import { CreateGroupAccordionItem } from './create-group-accordion-item';
-import { setupTest, screen } from '../../../__test__/test-setup';
-import { MODAL_ANIMATION_DURATION } from '../../../constants/test-utils';
+import { setupTest, screen } from '../../../../__test__/test-setup';
+import { MODAL_ANIMATION_DURATION } from '../../../../constants/test-utils';
+import { CreateGroupAccordionItem } from '../create-group-accordion-item';
 
 describe('CreateGroupAccordionItem', () => {
 	it('should render a button with a specific label', () => {
