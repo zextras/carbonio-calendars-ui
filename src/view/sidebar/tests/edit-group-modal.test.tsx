@@ -12,6 +12,7 @@ import { Folder } from '@zextras/carbonio-ui-commons';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
+import { EditGroupModal, EditGroupModalProps } from '../../../actions/modals/edit-group-modal';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { CreateCalendarGroupResponse } from '../../../soap/create-calendar-group-request';
 import {
@@ -22,7 +23,6 @@ import * as modifyGroupApi from '../../../soap/modify-calendar-group-request';
 import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { generateApiErrorResponse } from '../../../test/generators/api';
 import { generateGroup, populateGroupsStore } from '../../../test/generators/group';
-import { EditGroupModal, EditGroupModalProps } from '../edit-group-modal';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';

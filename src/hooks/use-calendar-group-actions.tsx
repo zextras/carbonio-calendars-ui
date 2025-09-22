@@ -8,11 +8,11 @@ import React, { useCallback } from 'react';
 import { useModal } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { EditGroupModal } from '../actions/modals/edit-group-modal';
 import { GROUP_ACTIONS, GroupActionsId } from '../constants/event-actions';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { ActionsClick } from '../types/actions';
 import { DeleteCalendarGroupModal } from '../view/modals/delete-calendar-group-modal';
-import { EditGroupModal } from '../view/sidebar/edit-group-modal';
 
 export type GroupActionsItems = {
 	id: GroupActionsId;
