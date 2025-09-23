@@ -5,13 +5,24 @@
  */
 import React from 'react';
 
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useTagStore } from '@zextras/carbonio-ui-commons';
 
 import { TagsAccordion } from './tags-accordion';
+import { useLocalStorage } from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import { setupTest, screen } from '../../__test__/test-setup';
+import { populateFoldersStore } from '@test-utils/store/folders';
+import { SIDEBAR_ITEMS } from 'constants/sidebar';
+import { reducers } from 'store/redux';
 
 describe('TagsAccordion', () => {
-	it('should render the tags accordion with the correct items', async () => {
+	it('should render the tags accordion with the correct items', () => {
+		useLocalStorage.mockReturnValue([[SIDEBAR_ITEMS.TAGS], jest.fn()]);
+		populateFoldersStore();
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+
 		const tags = {
 			'1': {
 				id: '1',
@@ -28,11 +39,9 @@ describe('TagsAccordion', () => {
 		};
 		useTagStore.setState({ tags });
 
-		const { user } = setupTest(<TagsAccordion />);
+		setupTest(<TagsAccordion />, { store });
 
 		expect(screen.getByText('Tags')).toBeVisible();
-
-		await user.click(screen.getByText('Tags'));
 
 		expect(screen.getByText('AAAA BBBB')).toBeVisible();
 		expect(screen.getByText('ZZZZ AAAA')).toBeVisible();
