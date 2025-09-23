@@ -5,6 +5,7 @@
  */
 import React, { FC, useCallback, useMemo, useRef } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	AccordionItem,
 	AccordionItemType,
@@ -36,7 +37,6 @@ import {
 import { Folder, type LinkFolder } from '@zextras/carbonio-ui-commons';
 import { every, find, forEach, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
 
 import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
 import {

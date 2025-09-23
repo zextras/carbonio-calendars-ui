@@ -14,6 +14,7 @@ import {
 	useModal,
 	Padding
 } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +24,6 @@ import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
 import { CustomEventIcon } from './custom-event-icon';
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
-import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { TagIconComponent } from '../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EVENT_ACTIONS } from '../../constants/event-actions';

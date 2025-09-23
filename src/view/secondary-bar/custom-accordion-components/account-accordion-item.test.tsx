@@ -7,11 +7,11 @@ import React from 'react';
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
 
-import { populateFoldersStore } from '../../../../__test__/mocks/store/folders';
-import { getMocksContext } from '../../../../__test__/mocks/utils/mocks-context';
-import { setupTest, screen } from '../../../../__test__/test-setup';
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { AccountAccordionItem } from '../account-accordion-item';
+import { AccountAccordionItem } from './account-accordion-item';
+import { populateFoldersStore } from '../../../__test__/mocks/store/folders';
+import { getMocksContext } from '../../../__test__/mocks/utils/mocks-context';
+import { setupTest, screen } from '../../../__test__/test-setup';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 
 describe('AccountAccordionItem', () => {
 	populateFoldersStore();

@@ -11,10 +11,10 @@ import { waitFor } from '@testing-library/react';
 import { Folder, FOLDERS, Grant } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
-import * as utilities from '../../../../commons/utilities';
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { reducers } from '../../../../store/redux';
-import { CalendarAccordionItem } from '../calendar-accordion-item';
+import { CalendarAccordionItem } from './calendar-accordion-item';
+import * as utilities from '../../../commons/utilities';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
+import { reducers } from '../../../store/redux';
 import { getSetupServer } from '@jest-setup';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';

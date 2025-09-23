@@ -1,12 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import {
-	generateFolder,
-	generateFolderLink
-} from '../../../__test__/mocks/folders/folders-generator';
-import { getMocksContext } from '../../../__test__/mocks/utils/mocks-context';
-import { getCalendarSortCriteria } from '../calendar-sort-criteria';
+import { getCalendarSortCriteria } from './calendar-sort-criteria';
+import { generateFolder, generateFolderLink } from '../../__test__/mocks/folders/folders-generator';
+import { getMocksContext } from '../../__test__/mocks/utils/mocks-context';
 
 /*
  * SPDX-FileCopyrightText: 2025 Zextras <https://www.zextras.com>

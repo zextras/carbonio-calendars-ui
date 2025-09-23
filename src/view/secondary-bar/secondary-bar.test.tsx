@@ -8,11 +8,11 @@ import React from 'react';
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 
-import { useLocalStorage } from '../../../../__mocks__/@zextras/carbonio-shell-ui';
-import { populateFoldersStore } from '../../../__test__/mocks/store/folders';
-import { setupTest, screen } from '../../../__test__/test-setup';
-import { reducers } from '../../../store/redux';
-import SecondaryBar from '../secondary-bar';
+import SecondaryBar from './secondary-bar';
+import { useLocalStorage } from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { populateFoldersStore } from '../../__test__/mocks/store/folders';
+import { setupTest, screen } from '../../__test__/test-setup';
+import { reducers } from '../../store/redux';
 
 describe('SecondaryBar', () => {
 	beforeAll(() => {

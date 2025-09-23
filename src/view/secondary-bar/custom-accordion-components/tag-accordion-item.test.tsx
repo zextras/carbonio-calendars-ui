@@ -14,9 +14,9 @@ import {
 	ZIMBRA_STANDARD_COLORS
 } from '@zextras/carbonio-ui-commons';
 
-import { setupTest, screen } from '../../../../__test__/test-setup';
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { TagAccordionItem } from '../tag-accordion-item';
+import { TagAccordionItem } from './tag-accordion-item';
+import { setupTest, screen } from '../../../__test__/test-setup';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 
 const generateTag = (model: Partial<Tag> = {}): Tag => ({
 	id: model.id || faker.string.uuid(),

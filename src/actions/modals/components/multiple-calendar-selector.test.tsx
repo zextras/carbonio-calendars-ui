@@ -10,8 +10,8 @@ import { act, within } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { times } from 'lodash';
 
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { MultipleCalendarSelector } from '../multiple-calendar-selector';
+import { MultipleCalendarSelector } from './multiple-calendar-selector';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { screen, setupTest } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';

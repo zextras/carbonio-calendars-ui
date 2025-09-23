@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { TEST_SELECTORS } from '../../../constants/test-utils';
+import { TEST_SELECTORS } from '../../constants/test-utils';
 import { UserEvent, screen } from '@test-setup';
 
 export const selectCalendarFromSelector = async (

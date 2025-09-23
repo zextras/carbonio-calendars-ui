@@ -8,8 +8,8 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import { times } from 'lodash';
 
-import { generateGroupCalendar } from '../../../../test/generators/group';
-import { GroupCalendarsList } from '../group-calendars-list';
+import { GroupCalendarsList } from './group-calendars-list';
+import { generateGroupCalendar } from '../../../test/generators/group';
 import { setupTest } from '@test-setup';
 
 describe('Group calendars list', () => {

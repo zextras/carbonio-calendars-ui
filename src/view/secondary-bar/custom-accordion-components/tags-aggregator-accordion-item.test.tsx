@@ -7,10 +7,10 @@ import React from 'react';
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
 
-import { setupTest, screen } from '../../../../__test__/test-setup';
-import { SIDEBAR_ITEMS } from '../../../../constants/sidebar';
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { TagsAggregatorAccordionItem } from '../tags-aggregator-accordion-item';
+import { TagsAggregatorAccordionItem } from './tags-aggregator-accordion-item';
+import { setupTest, screen } from '../../../__test__/test-setup';
+import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 
 describe('TagsAggregatorAccordionItem', () => {
 	it('should render correctly', () => {

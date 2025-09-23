@@ -8,8 +8,8 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { CalendarChip } from '../calendar-chips';
+import { CalendarChip } from './calendar-chips';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';

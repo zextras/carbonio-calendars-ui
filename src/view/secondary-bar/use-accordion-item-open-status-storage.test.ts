@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useLocalStorage } from '../../../__test__/mocks/carbonio-shell-ui/carbonio-shell-ui';
-import { setupHook } from '../../../__test__/test-setup';
-import { useAccordionItemOpenStatusStorage } from '../use-accordion-item-open-status-storage';
+import { useAccordionItemOpenStatusStorage } from './use-accordion-item-open-status-storage';
+import { useLocalStorage } from '../../__test__/mocks/carbonio-shell-ui/carbonio-shell-ui';
+import { setupHook } from '../../__test__/test-setup';
 
 describe('useAccordionItemOpenStatusStorage', () => {
 	it('should return an object with 2 functions to get and set the open status', () => {

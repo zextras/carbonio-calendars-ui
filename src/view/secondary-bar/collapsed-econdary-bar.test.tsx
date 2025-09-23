@@ -8,10 +8,10 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { getFolders } from '@zextras/carbonio-ui-commons';
 
-import { populateFoldersStore } from '../../../__test__/mocks/store/folders';
-import { setupTest, screen } from '../../../__test__/test-setup';
-import { reducers } from '../../../store/redux';
-import { CollapsedSecondaryBar } from '../collapsed-secondary-bar';
+import { CollapsedSecondaryBar } from './collapsed-secondary-bar';
+import { populateFoldersStore } from '../../__test__/mocks/store/folders';
+import { setupTest, screen } from '../../__test__/test-setup';
+import { reducers } from '../../store/redux';
 
 describe('CollapsedSecondaryBar', () => {
 	it('should render an icon for each calendar of the primary account', () => {

@@ -5,9 +5,9 @@
  */
 import React, { FC } from 'react';
 
+import styled from '@emotion/styled';
 import { Button, Container, Tooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
 
 const BorderContainer = styled(Container)`
 	border-bottom: 0.0625rem solid ${({ theme }): string => theme?.palette?.gray2?.regular};

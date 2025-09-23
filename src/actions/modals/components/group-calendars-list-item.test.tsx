@@ -7,9 +7,9 @@ import React from 'react';
 
 import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { generateGroupCalendar } from '../../../../test/generators/group';
-import { GroupCalendarsListItem } from '../group-calendars-list-item';
+import { GroupCalendarsListItem } from './group-calendars-list-item';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
+import { generateGroupCalendar } from '../../../test/generators/group';
 import { setupTest, screen } from '@test-setup';
 
 describe('Group calendars list item', () => {

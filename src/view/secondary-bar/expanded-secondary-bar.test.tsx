@@ -7,11 +7,11 @@ import React from 'react';
 
 import { useTagStore } from '@zextras/carbonio-ui-commons';
 
-import { populateFoldersStore } from '../../../__test__/mocks/store/folders';
-import { tags } from '../../../__test__/mocks/tags/tags';
-import { getMocksContext } from '../../../__test__/mocks/utils/mocks-context';
-import { setupTest, screen } from '../../../__test__/test-setup';
-import { ExpandedSecondaryBar } from '../expanded-secondary-bar';
+import { ExpandedSecondaryBar } from './expanded-secondary-bar';
+import { populateFoldersStore } from '../../__test__/mocks/store/folders';
+import { tags } from '../../__test__/mocks/tags/tags';
+import { getMocksContext } from '../../__test__/mocks/utils/mocks-context';
+import { setupTest, screen } from '../../__test__/test-setup';
 
 describe('ExpandedSecondaryBar', () => {
 	it('should render the primary account accordion item', () => {

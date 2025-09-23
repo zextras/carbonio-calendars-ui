@@ -8,11 +8,11 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useTheme } from '@zextras/carbonio-design-system';
 
-import { setupTest, screen, setupHook } from '../../../../__test__/test-setup';
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { reducers } from '../../../../store/redux';
-import { generateGroup, populateGroupsStore } from '../../../../test/generators/group';
-import { GroupAccordionItem } from '../group-accordion-item';
+import { GroupAccordionItem } from './group-accordion-item';
+import { setupTest, screen, setupHook } from '../../../__test__/test-setup';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
+import { reducers } from '../../../store/redux';
+import { generateGroup, populateGroupsStore } from '../../../test/generators/group';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '@test-utils/store/folders';

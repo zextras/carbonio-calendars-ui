@@ -10,15 +10,15 @@ import { act, within } from '@testing-library/react';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 import { times } from 'lodash';
 
-import { selectCalendarFromSelector } from './utils';
-import { CreateGroupModal } from '../create-group-modal';
-import { TEST_SELECTORS } from '../../../constants/test-utils';
+import { CreateGroupModal } from './create-group-modal';
+import { selectCalendarFromSelector } from './test-utils';
+import { TEST_SELECTORS } from '../../constants/test-utils';
 import {
 	CreateCalendarGroupRequest,
 	CreateCalendarGroupResponse
-} from '../../../soap/create-calendar-group-request';
-import * as createGroupApi from '../../../soap/create-calendar-group-request';
-import { generateApiErrorResponse } from '../../../test/generators/api';
+} from '../../soap/create-calendar-group-request';
+import * as createGroupApi from '../../soap/create-calendar-group-request';
+import { generateApiErrorResponse } from '../../test/generators/api';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';

@@ -5,9 +5,9 @@
  */
 import React from 'react';
 
-import { createSoapAPIInterceptor } from '../../../../__test__/mocks/network/msw/create-api-interceptor';
-import { setupTest, screen } from '../../../../__test__/test-setup';
-import { FindSharesAccordionItem } from '../find-shares-accordion-item';
+import { FindSharesAccordionItem } from './find-shares-accordion-item';
+import { createSoapAPIInterceptor } from '../../../__test__/mocks/network/msw/create-api-interceptor';
+import { setupTest, screen } from '../../../__test__/test-setup';
 
 describe('FindSharesAccordionItem', () => {
 	it('should render a button with a specific label', () => {

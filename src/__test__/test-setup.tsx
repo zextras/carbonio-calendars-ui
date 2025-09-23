@@ -5,6 +5,7 @@
  */
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
 
+import { matchers } from '@emotion/jest';
 import {
 	act,
 	ByRoleMatcher,
@@ -21,9 +22,9 @@ import {
 	renderHook,
 	RenderHookOptions
 } from '@testing-library/react';
-import { matchers } from '@emotion/jest';
 import userEvent, { UserEvent as RTLUserEvent } from '@testing-library/user-event';
 import { ModalManager, SnackbarManager, ThemeProvider } from '@zextras/carbonio-design-system';
+import { themeMuiExtension } from '@zextras/carbonio-ui-commons';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { MemoryRouter, MemoryRouterProps, Route, RouteProps, Routes } from 'react-router-dom';
@@ -31,7 +32,6 @@ import { Store } from 'redux';
 
 import { getAppI18n } from './i18n/i18n-test-factory';
 import { previewContextMock, PreviewsManagerContext } from '@test-utils/carbonio-ui-preview';
-import { themeMuiExtension } from '@zextras/carbonio-ui-commons';
 
 type ByRoleWithIconOptions = ByRoleOptions & {
 	icon: string | RegExp;

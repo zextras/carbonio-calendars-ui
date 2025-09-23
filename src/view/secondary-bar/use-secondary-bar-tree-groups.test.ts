@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { generateFolder } from '../../../__test__/mocks/folders/folders-generator';
-import { populateFoldersStore } from '../../../__test__/mocks/store/folders';
-import { setupHook } from '../../../__test__/test-setup';
-import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
-import { generateGroup, populateGroupsStore } from '../../../test/generators/group';
-import { CreateGroupAccordionItem } from '../custom-accordion-components/create-group-accordion-item';
-import { GroupAccordionItem } from '../custom-accordion-components/group-accordion-item';
-import { useSecondaryBarTreeGroups } from '../use-secondary-bar-tree-groups';
+import { CreateGroupAccordionItem } from './custom-accordion-components/create-group-accordion-item';
+import { GroupAccordionItem } from './custom-accordion-components/group-accordion-item';
+import { useSecondaryBarTreeGroups } from './use-secondary-bar-tree-groups';
+import { generateFolder } from '../../__test__/mocks/folders/folders-generator';
+import { populateFoldersStore } from '../../__test__/mocks/store/folders';
+import { setupHook } from '../../__test__/test-setup';
+import { SIDEBAR_ITEMS } from '../../constants/sidebar';
+import { generateGroup, populateGroupsStore } from '../../test/generators/group';
 
 describe('useSecondaryBarTreeGroups', () => {
 	it('should return an object with the correct structure', () => {

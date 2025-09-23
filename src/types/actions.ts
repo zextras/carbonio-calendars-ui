@@ -6,13 +6,11 @@
 import React from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation, Folders, Tag } from '@zextras/carbonio-ui-commons';
 import { TFunction } from 'i18next';
 
 import { EventType } from './event';
 import { Invite } from './store/invite';
-import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { Folders } from '@zextras/carbonio-ui-commons';
-import { Tag } from '@zextras/carbonio-ui-commons';
 import { EventActionsId } from '../constants/event-actions';
 import { AppDispatch } from '../store/redux';
 
