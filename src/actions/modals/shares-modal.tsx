@@ -5,6 +5,7 @@
  */
 import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Accordion,
 	AccordionItem,
@@ -39,7 +40,6 @@ import {
 	values
 } from 'lodash';
 import { Trans } from 'react-i18next';
-import styled from '@emotion/styled';
 
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { createMountpoint } from '../../store/actions/create-mountpoint';

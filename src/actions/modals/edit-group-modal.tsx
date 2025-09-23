@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { modifyCalendarGroupRequest } from '../../soap/modify-calendar-group-request';
 import { updateCalendarGroupsStore, useGroupById } from '../../store/zustand/calendar-group-store';
 import { MultipleCalendarSelector } from '../../view/sidebar/custom-components/multiple-calendar-selector';
-import { GroupCalendarsList } from '../../view/sidebar/group-calendars-list';
+import { GroupCalendarsList } from './group-calendars-list';
 
 export type EditGroupModalProps = {
 	groupId: string;

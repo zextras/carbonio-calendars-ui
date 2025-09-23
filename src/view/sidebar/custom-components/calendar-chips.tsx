@@ -6,8 +6,8 @@
 import React, { FC, useCallback } from 'react';
 
 import { Chip, ChipItem, ChipProps } from '@zextras/carbonio-design-system';
-
 import { useFolder } from '@zextras/carbonio-ui-commons';
+
 import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
 
 export type CalendarChipInputItem = ChipItem<{

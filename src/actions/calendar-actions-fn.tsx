@@ -21,10 +21,10 @@ import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
 import { NewModal } from '../view/move/new-calendar-modal';
-import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
-import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
-import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
-import { SharesModal } from '../view/sidebar/shares-modal';
+import { EditModal } from './modals/edit-modal/edit-modal';
+import { ShareCalendarModal } from './modals/share-calendar-modal';
+import { SharesInfoModal } from './modals/shares-info-modal';
+import { SharesModal } from './modals/shares-modal';
 
 export const newCalendar =
 	({

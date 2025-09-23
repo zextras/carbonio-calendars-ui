@@ -11,7 +11,7 @@ import { folderWorker } from '@zextras/carbonio-ui-commons';
 import { reducers } from '../../../store/redux';
 import { useCalendarGroupStore } from '../../../store/zustand/calendar-group-store';
 import mockedData from '../../../test/generators';
-import { useSyncDataHandler } from '../use-sync-data-handler';
+import { useSyncDataHandler } from '../../../view/sidebar/use-sync-data-handler';
 import { setupHook } from '@test-setup';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { mockSoapSync } from '@test-utils/utils/soap';

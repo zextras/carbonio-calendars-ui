@@ -12,7 +12,7 @@ import { Folder } from '@zextras/carbonio-ui-commons';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
-import { EditGroupModal, EditGroupModalProps } from '../../../actions/modals/edit-group-modal';
+import { EditGroupModal, EditGroupModalProps } from '../edit-group-modal';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { CreateCalendarGroupResponse } from '../../../soap/create-calendar-group-request';
 import {

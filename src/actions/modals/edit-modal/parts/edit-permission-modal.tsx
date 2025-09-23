@@ -16,10 +16,10 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { Folder, Grant } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
-import { Folder, Grant } from '@zextras/carbonio-ui-commons';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';

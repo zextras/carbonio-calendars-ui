@@ -6,10 +6,10 @@
 import React, { useMemo } from 'react';
 
 import { Chip } from '@zextras/carbonio-design-system';
+import { Grant } from '@zextras/carbonio-ui-commons';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { Grant } from '@zextras/carbonio-ui-commons';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 

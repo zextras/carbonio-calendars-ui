@@ -11,7 +11,7 @@ import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
-import { CreateGroupModal } from '../../../actions/modals/create-group-modal';
+import { CreateGroupModal } from '../create-group-modal';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import {
 	CreateCalendarGroupRequest,
