@@ -5,20 +5,30 @@
  */
 import React from 'react';
 
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useTagStore } from '@zextras/carbonio-ui-commons';
 
 import { ExpandedSecondaryBar } from './expanded-secondary-bar';
+import { useLocalStorage } from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import { populateFoldersStore } from '../../__test__/mocks/store/folders';
 import { tags } from '../../__test__/mocks/tags/tags';
 import { getMocksContext } from '../../__test__/mocks/utils/mocks-context';
 import { setupTest, screen } from '../../__test__/test-setup';
+import { reducers } from 'store/redux';
+
+beforeAll(() => {
+	useLocalStorage.mockReturnValue([[], jest.fn()]);
+});
 
 describe('ExpandedSecondaryBar', () => {
 	it('should render the primary account accordion item', () => {
 		const primaryIdentity = getMocksContext().identities.primary;
 		populateFoldersStore();
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
 
-		setupTest(<ExpandedSecondaryBar />);
+		setupTest(<ExpandedSecondaryBar />, { store });
 
 		expect(screen.getByText(primaryIdentity.identity.email)).toBeVisible();
 	});
@@ -26,8 +36,11 @@ describe('ExpandedSecondaryBar', () => {
 	it('should render the shared accounts accordion items', () => {
 		const sharedIdentities = getMocksContext().identities.sendAs;
 		populateFoldersStore();
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
 
-		setupTest(<ExpandedSecondaryBar />);
+		setupTest(<ExpandedSecondaryBar />, { store });
 
 		sharedIdentities.forEach((sharedIdentity) => {
 			expect(screen.getByText(sharedIdentity.identity.email)).toBeVisible();
@@ -36,20 +49,23 @@ describe('ExpandedSecondaryBar', () => {
 
 	it('should render the divider', () => {
 		setupTest(<ExpandedSecondaryBar />);
+		configureStore({
+			reducer: combineReducers(reducers)
+		});
 
 		expect(screen.getByTestId('divider')).toBeVisible();
 	});
 
 	it('should render the tags aggregator accordion item', () => {
 		populateFoldersStore();
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+
 		useTagStore.setState({ tags });
 
-		setupTest(<ExpandedSecondaryBar />);
+		setupTest(<ExpandedSecondaryBar />, { store });
 
 		expect(screen.getByText('Tags')).toBeVisible();
 	});
-
-	it.todo(
-		'should render only the primary accounts calendars icons when the secondary bar is expanded'
-	);
 });
