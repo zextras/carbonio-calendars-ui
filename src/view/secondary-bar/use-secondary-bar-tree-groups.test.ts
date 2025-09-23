@@ -60,6 +60,7 @@ describe('useSecondaryBarTreeGroups', () => {
 			},
 			{
 				id: 'add-group',
+				disableHover: true,
 				CustomComponent: CreateGroupAccordionItem
 			}
 		];
