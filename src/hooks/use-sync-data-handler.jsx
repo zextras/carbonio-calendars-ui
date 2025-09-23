@@ -14,21 +14,21 @@ import {
 import { useSync } from '@zextras/carbonio-ui-soap-lib';
 import { isEmpty, reduce, forEach, sortBy, map, filter, isNil } from 'lodash';
 
-import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
-import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch } from '../../store/redux/hooks';
+import { useCheckedCalendarsQuery } from './use-checked-calendars-query';
+import { searchAppointments } from '../store/actions/search-appointments';
+import { useAppDispatch } from '../store/redux/hooks';
 import {
 	handleDeletedAppointments,
 	handleModifiedAppointments
-} from '../../store/slices/appointments-slice';
-import { handleModifiedInvites } from '../../store/slices/invites-slice';
+} from '../store/slices/appointments-slice';
+import { handleModifiedInvites } from '../store/slices/invites-slice';
 import {
 	deleteCalendarGroupsFromStore,
 	updateCalendarGroupIds,
 	updateCalendarGroupName,
 	updateCalendarGroupsStore
-} from '../../store/zustand/calendar-group-store';
-import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
+} from '../store/zustand/calendar-group-store';
+import { useRangeEnd, useRangeStart } from '../store/zustand/hooks';
 
 function handleCalendarGroupNotify(notify) {
 	if (notify.deleted) {

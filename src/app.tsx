@@ -38,7 +38,7 @@ import { useAppDispatch } from './store/redux/hooks';
 import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
-import { SyncDataHandler } from './view/sidebar/sync-data-handler';
+import { SyncDataHandler } from './components/sync-data-handler';
 import { InitializeTags } from './view/tags/initialize-tags';
 
 const LazyCalendarView = lazy(
