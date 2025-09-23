@@ -19,10 +19,10 @@ import { getErrorMessage, Folder } from '@zextras/carbonio-ui-commons';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { GroupCalendarsList } from './components/group-calendars-list';
+import { MultipleCalendarSelector } from './components/multiple-calendar-selector';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
 import { updateCalendarGroupsStore } from '../../store/zustand/calendar-group-store';
-import { MultipleCalendarSelector } from '../../view/sidebar/custom-components/multiple-calendar-selector';
-import { GroupCalendarsList } from './group-calendars-list';
 
 type CreateGroupModalProps = {
 	onClose: () => void;

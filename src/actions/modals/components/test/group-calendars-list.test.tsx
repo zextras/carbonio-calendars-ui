@@ -8,7 +8,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import { times } from 'lodash';
 
-import { generateGroupCalendar } from '../../../test/generators/group';
+import { generateGroupCalendar } from '../../../../test/generators/group';
 import { GroupCalendarsList } from '../group-calendars-list';
 import { setupTest } from '@test-setup';
 

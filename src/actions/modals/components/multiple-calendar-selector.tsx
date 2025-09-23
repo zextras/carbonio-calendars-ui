@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import { ItemFactory } from '../../editor/parts/select-label-factory';
+import { ItemFactory } from '../../../view/editor/parts/select-label-factory';
 
 export type MultipleCalendarSelectorProps = {
 	onCalendarChange: (selectedCalendars: Array<Folder>) => void;

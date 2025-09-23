@@ -9,8 +9,8 @@ import { Button, Container, Row, Tooltip, Text } from '@zextras/carbonio-design-
 import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
-import { Square } from '../../commons/styled-components';
-import { GroupCalendar } from '../../types/groups';
+import { Square } from '../../../commons/styled-components';
+import { GroupCalendar } from '../../../types/groups';
 
 export type GroupCalendarsListItemProps = {
 	calendar: GroupCalendar;

@@ -10,7 +10,7 @@ import { Container, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { GroupCalendarsListItem } from './group-calendars-list-item';
-import { GroupCalendar } from '../../types/groups';
+import { GroupCalendar } from '../../../types/groups';
 
 export type GroupCalendarsListProps = {
 	calendars: Array<GroupCalendar>;
