@@ -116,7 +116,7 @@ export const ReminderModal = ({
 	return (
 		<CustomModal
 			open={openModal}
-			onClose={(): null => null}
+			onClose={dismissAll}
 			maxHeight="90vh"
 			data-testid="reminder-modal"
 		>

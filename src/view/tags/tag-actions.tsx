@@ -76,7 +76,10 @@ export const createTag = ({ createModal, closeModal }: ActionParams): ActionDesc
 					<StoreProvider>
 						<CreateUpdateTagModal onClose={(): void => closeModal?.(modalId)} />
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					closeModal?.(modalId);
+				}
 			},
 			true
 		);
@@ -98,7 +101,7 @@ export const createAndApplyTag = ({
 			e.stopPropagation();
 		}
 
-		const modalId = 'create-tag';
+		const modalId = 'create-update-tag';
 		context.createModal(
 			{
 				id: modalId,
@@ -106,7 +109,10 @@ export const createAndApplyTag = ({
 					<StoreProvider>
 						<CreateUpdateTagModal onClose={(): void => context.closeModal(modalId)} event={event} />
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					context.closeModal(modalId);
+				}
 			},
 			true
 		);
@@ -120,7 +126,7 @@ export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionD
 		if (e) {
 			e.stopPropagation();
 		}
-		const modalId = 'create-tag';
+		const modalId = 'edit-tag';
 		createModal?.(
 			{
 				id: modalId,
@@ -128,7 +134,10 @@ export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionD
 					<StoreProvider>
 						<CreateUpdateTagModal onClose={(): void => closeModal?.(modalId)} tag={tag} editMode />
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					closeModal?.(modalId);
+				}
 			},
 			true
 		);
@@ -151,7 +160,10 @@ export const deleteTag = ({ createModal, closeModal, tag }: ActionParams): Actio
 					<StoreProvider>
 						<DeleteTagModal onClose={(): void => closeModal?.(modalId)} tag={tag} />
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					closeModal?.(modalId);
+				}
 			},
 			true
 		);

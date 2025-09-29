@@ -223,7 +223,10 @@ export const useCalendarComponentUtils = (): {
 											isEdited
 										/>
 									</StoreProvider>
-								)
+								),
+								onClose: () => {
+									closeModal(modalId);
+								}
 							},
 							true
 						);
@@ -296,7 +299,10 @@ export const useCalendarComponentUtils = (): {
 										onInstance={onSingleInstance}
 									/>
 								</StoreProvider>
-							)
+							),
+							onClose: () => {
+								closeModal(modalId);
+							}
 						},
 						true
 					);
