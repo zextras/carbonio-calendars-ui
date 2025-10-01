@@ -111,7 +111,10 @@
 		"react-widgets": "4.6.1",
 		"react-widgets-moment": "4.0.30",
 		"redux": "4.2.1",
-		"zustand": "^4.5.5"
+		"zustand": "^4.5.5",
+		"tinymce": "^6.8.4",
+		"@tinymce/tinymce-react": "^4.3.2",
+		"date-fns": "^4.1.0"
 	},
 	"browserslist": [
 		">1%",
