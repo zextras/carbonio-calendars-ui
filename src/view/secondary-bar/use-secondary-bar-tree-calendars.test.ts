@@ -5,16 +5,7 @@
  */
 
 describe('useSecondaryBarTreeCalendars', () => {
-	it('should return an array of accordion items including calendar items and a find shares item', () => {
-		// populateFoldersStore({ view: 'appointment' });
-		// const {
-		// 	result: { current: result }
-		// } = setupHook(useSecondaryBarTreeCalendars, { initialProps: [FOLDERS.USER_ROOT] }); // Using root ID '10' for calendars
-		// const expectedResult = {
-		//     id:
-		// }
-		// expect(result).toHaveLength(3); // 2 calendar items + 1 find shares item
-		// expect(result[2].id).toBe('find-shares');
-		// expect(result[2].CustomComponent).toBe(FindSharesAccordionItem);
-	});
+	it.todo(
+		'should return an array of accordion items including calendar items and a find shares item'
+	);
 });
