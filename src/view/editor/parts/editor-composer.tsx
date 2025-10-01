@@ -5,10 +5,11 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
-import { debounce } from 'lodash';
 import styled from '@emotion/styled';
+import { t } from '@zextras/carbonio-shell-ui';
+import { debounce } from 'lodash';
 
+import { Composer } from '../../../composer/composer';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorDisabled,
@@ -119,13 +120,7 @@ const PlainComposer = ({ editorId }: { editorId: string }): JSX.Element => {
 	);
 };
 
-const HtmlComposer = ({
-	Composer,
-	editorId
-}: {
-	editorId: string;
-	Composer: React.ComponentType<Record<string, unknown>>;
-}): React.JSX.Element => {
+const HtmlComposer = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const richText = useAppSelector(selectEditorRichText(editorId));
 	const dispatch = useAppDispatch();
@@ -159,7 +154,6 @@ const HtmlComposer = ({
 		<EditorWrapper>
 			<Composer
 				onEditorChange={onRichTextChange}
-				minHeight="12.5rem"
 				value={richTextValue}
 				disabled={disabled?.composer}
 				data-testid="editor-composer"
@@ -170,16 +164,9 @@ const HtmlComposer = ({
 };
 
 export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement | null => {
-	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	const isRichText = useAppSelector(selectEditorIsRichText(editorId));
 
 	return (
-		<>
-			{composerIsAvailable && isRichText ? (
-				<HtmlComposer Composer={Composer} editorId={editorId} />
-			) : (
-				<PlainComposer editorId={editorId} />
-			)}
-		</>
+		<>{isRichText ? <HtmlComposer editorId={editorId} /> : <PlainComposer editorId={editorId} />}</>
 	);
 };
