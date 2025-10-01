@@ -72,6 +72,21 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 		});
 	}, [folderId]);
 
+	useEffect(() => {
+		const onKey = (e: KeyboardEvent): void => {
+			if (e.key === 'Escape') {
+				if (modal !== 'main') {
+					e.preventDefault();
+					onGoBack();
+				} else {
+					onClose();
+				}
+			}
+		};
+		window.addEventListener('keydown', onKey, { capture: true });
+		return () => window.removeEventListener('keydown', onKey, { capture: true });
+	}, [modal, onClose, onGoBack]);
+
 	return (
 		<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
 			{modal === 'main' && folder && (

@@ -130,7 +130,10 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 								onInstance={onSingleInstance}
 							/>
 						</StoreProvider>
-					)
+					),
+					onClose: () => {
+						closeModal(modalId);
+					}
 				},
 				true
 			);

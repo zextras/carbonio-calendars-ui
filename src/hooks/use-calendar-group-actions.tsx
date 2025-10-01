@@ -36,7 +36,10 @@ export const useCalendarGroupDeleteActionFn = (calendarGroupId: string): (() => 
 						groupId={calendarGroupId}
 						onClose={(): void => closeModal(GROUP_ACTIONS.DELETE)}
 					/>
-				)
+				),
+				onClose: () => {
+					closeModal(GROUP_ACTIONS.DELETE);
+				}
 			},
 			true
 		);
@@ -57,7 +60,10 @@ const useCalendarGroupEditActionFn = (calendarGroupId: string): (() => void) => 
 							onClose={(): void => closeModal(GROUP_ACTIONS.EDIT)}
 							groupId={calendarGroupId}
 						/>
-					)
+					),
+					onClose: () => {
+						closeModal(GROUP_ACTIONS.EDIT);
+					}
 				},
 				true
 			),
