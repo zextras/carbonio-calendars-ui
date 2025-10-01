@@ -7,7 +7,7 @@
 import { calculateTinyMCELanguage } from '../locale-utils';
 
 // Mock the locale constants
-jest.mock('views/app/detail-panel/edit/composer/locale-consts', () => ({
+jest.mock('composer/locale-consts', () => ({
 	STATIC_LOCALES: {
 		zh_CN: {
 			name: '中文 (中国)',

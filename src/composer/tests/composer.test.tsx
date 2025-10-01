@@ -8,7 +8,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import { setupTest } from '@test-setup';
-import { Composer } from 'views/app/detail-panel/edit/composer/composer';
+import { Composer } from 'composer/composer';
 
 jest.mock('@tinymce/tinymce-react', () => ({
 	Editor: jest.fn(({ onEditorChange, disabled, ...props }) => {
