@@ -9,7 +9,7 @@ import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-
 import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { ImageAndIconPart } from './image-and-icon-part';
 import { useFolder } from '@zextras/carbonio-ui-commons';

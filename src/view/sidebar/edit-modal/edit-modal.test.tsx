@@ -670,3 +670,33 @@ describe('the edit calendar modal is composed by', () => {
 		});
 	});
 });
+
+describe('Edit calendar modal ESC behaviours', () => {
+	test('if the user press ESC while in the main modal it will call the onClose function', async () => {
+		const onCloseFn = jest.fn();
+		setupFoldersStore();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={onCloseFn} />, {
+			store
+		});
+		await user.keyboard('{Escape}');
+		expect(onCloseFn).toHaveBeenCalledTimes(1);
+	});
+
+	test('if the user press ESC while in a sub modal it will close only the submodal and go back to the main one', async () => {
+		const onCloseFn = jest.fn();
+		setupFoldersStore();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={onCloseFn} />, {
+			store
+		});
+		const addShareBtn = screen.getByRole('button', {
+			name: /add share/i
+		});
+		await user.click(addShareBtn);
+		expect(screen.getByTestId('ShareCalendarModal')).toBeInTheDocument();
+		await user.keyboard('{Escape}');
+		expect(onCloseFn).not.toHaveBeenCalled();
+		expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+	});
+});

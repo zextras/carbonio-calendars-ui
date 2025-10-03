@@ -6,7 +6,7 @@
 import React, { ReactElement } from 'react';
 
 import { Icon, Row, Tooltip } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const AlignedIcon = styled(Icon)`
 	position: relative;

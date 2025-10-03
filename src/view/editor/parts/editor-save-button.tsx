@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import { Button, Tooltip, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { onSave } from '../../../commons/editor-save-send-fns';
@@ -33,6 +33,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
 	const equipmentsLength = useAppSelector(selectEditorEquipment(editorId))?.length;
+	const isSaveDisabled = useMemo(() => disabled?.saveButton || !title?.length, [disabled, title]);
 
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
@@ -96,12 +97,17 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	]);
 
 	return (
-		<Button
-			label={t('label.save', 'Save')}
-			icon="SaveOutline"
-			disabled={disabled?.saveButton || !title?.length}
-			onClick={onClick}
-			type="outlined"
-		/>
+		<Tooltip
+			label={t('label.add_event_title_to_save', 'Add event title to save')}
+			disabled={!isSaveDisabled}
+		>
+			<Button
+				label={t('label.save', 'Save')}
+				icon="SaveOutline"
+				disabled={isSaveDisabled}
+				onClick={onClick}
+				type="outlined"
+			/>
+		</Tooltip>
 	);
 };

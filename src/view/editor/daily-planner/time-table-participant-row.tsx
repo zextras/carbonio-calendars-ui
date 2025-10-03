@@ -9,7 +9,7 @@ import React from 'react';
 import { Chip, Container, Icon, Tooltip } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 import { EndMark } from './parts/end-mark';

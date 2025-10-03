@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { useTheme } from 'styled-components';
+import { useTheme } from '@zextras/carbonio-design-system';
 
 import { MinutesLine } from './parts/minutes-line';
 

@@ -5,6 +5,7 @@
  */
 import React, { useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Container,
 	Text,
@@ -16,7 +17,6 @@ import {
 import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { ContactInputProps } from '@zextras/carbonio-ui-commons';
 import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
-import styled from 'styled-components';
 
 import { permissionsSubSection } from './sub-sections';
 import { PermissionsRightsOptions } from '../constants/api';

@@ -14,7 +14,7 @@ import { AppointmentCard } from './appointment-card';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import mockedData from '../../../test/generators';
 import { setupTest } from '@test-setup';
-import 'jest-styled-components';
+
 import { tags } from '@test-utils/tags/tags';
 
 describe('appointment card component', () => {
