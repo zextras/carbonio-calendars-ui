@@ -14,9 +14,9 @@ import {
 	Container
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
 
 import { iCalSubSection } from './sub-sections';
-import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
 
 export default function AppleIcalSettings({
 	settingsObj,

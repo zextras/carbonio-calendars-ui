@@ -5,10 +5,10 @@
  */
 import React, { ReactNode, useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import styled from '@emotion/styled';
 
 import Displayer from './displayer';
 import { EVENT_ACTIONS } from '../../constants/event-actions';

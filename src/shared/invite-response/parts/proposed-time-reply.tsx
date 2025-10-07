@@ -7,11 +7,11 @@ import React, { FC, ReactElement, useCallback } from 'react';
 
 import { Container, Padding, Button, Divider, useSnackbar } from '@zextras/carbonio-design-system';
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { find, map } from 'lodash';
 import moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
 import { normalizeCalendarEvent } from '../../../normalizations/normalize-calendar-events';

@@ -23,7 +23,8 @@ export enum FOLDER_ACTIONS {
 // eslint-disable-next-line no-shadow
 export enum SIDEBAR_ITEMS {
 	ALL_CALENDAR = 'a970bb9528c94c40bd51bfede60fcb31',
-	SHARES = 'shares'
+	SHARES = 'shares',
+	TAGS = 'tags'
 }
 
 export const SIDEBAR_ROOT_SUBSECTION = {

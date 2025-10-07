@@ -6,6 +6,7 @@
 
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	ChipAction,
 	ChipInput,
@@ -19,7 +20,6 @@ import {
 } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
 
 import { getIsBusyAtTimeOfTheEvent } from './editor-availability-warning-row';
 import { generateResourceId, getDuplicateResourceIds, isValidResource } from './utils';

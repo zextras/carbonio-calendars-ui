@@ -6,10 +6,10 @@
 import React, { useCallback } from 'react';
 
 import { Container, Icon, Row, Tooltip, Padding, Text } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 
-import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { TagIconComponent } from '../../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';

@@ -6,10 +6,10 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { noop } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../commons/editor-generator';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../../store/redux/hooks';

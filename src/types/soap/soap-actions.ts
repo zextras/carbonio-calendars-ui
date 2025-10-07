@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ErrorSoapResponse } from '@zextras/carbonio-shell-ui';
-
 import { Grant } from '@zextras/carbonio-ui-commons';
 
 export type Contact = {
