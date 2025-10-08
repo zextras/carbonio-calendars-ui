@@ -5,9 +5,10 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
-import { debounce } from 'lodash';
 import styled from '@emotion/styled';
+import { t } from '@zextras/carbonio-shell-ui';
+import { Composer } from '@zextras/carbonio-ui-text-composer';
+import { debounce } from 'lodash';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -170,12 +171,11 @@ const HtmlComposer = ({
 };
 
 export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement | null => {
-	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	const isRichText = useAppSelector(selectEditorIsRichText(editorId));
 
 	return (
 		<>
-			{composerIsAvailable && isRichText ? (
+			{isRichText ? (
 				<HtmlComposer Composer={Composer} editorId={editorId} />
 			) : (
 				<PlainComposer editorId={editorId} />
