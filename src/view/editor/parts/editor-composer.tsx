@@ -7,17 +7,17 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { t } from '@zextras/carbonio-shell-ui';
+import { Composer } from '@zextras/carbonio-ui-text-composer';
 import { debounce } from 'lodash';
 
-import { Composer } from '../../../composer/composer';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorDisabled,
 	selectEditorIsRichText,
 	selectEditorPlainText,
 	selectEditorRichText
-} from '../../../store/selectors/editor';
-import { editEditorText } from '../../../store/slices/editor-slice';
+} from 'store/selectors/editor';
+import { editEditorText } from 'store/slices/editor-slice';
 
 const TextArea = styled.textarea`
 	box-sizing: border-box;
