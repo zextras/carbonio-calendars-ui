@@ -38,7 +38,7 @@ import { useAppDispatch } from './store/redux/hooks';
 import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
-import { SyncDataHandler } from './view/sidebar/sync-data-handler';
+import { SyncDataHandler } from './components/sync-data-handler';
 import { InitializeTags } from './view/tags/initialize-tags';
 
 const LazyCalendarView = lazy(
@@ -51,8 +51,8 @@ const LazyEditorView = lazy(
 const LazySettingsView = lazy(
 	() => import(/* webpackChunkName: "settings-view" */ './settings/settings-view')
 );
-const LazySidebarView = lazy(
-	() => import(/* webpackChunkName: "sidebar-view" */ './view/sidebar/sidebar')
+const LazySecondaryBarView = lazy(
+	() => import(/* webpackChunkName: "secondary-bar-view" */ './view/secondary-bar/secondary-bar')
 );
 const LazySearchView = lazy(
 	() => import(/* webpackChunkName: "search-view" */ './view/search/search-view')
@@ -87,11 +87,11 @@ const SettingsView = (): React.JSX.Element => (
 	</Suspense>
 );
 
-const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
+const SecondaryBarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
-				<LazySidebarView {...props} />
+				<LazySecondaryBarView {...props} />
 			</ModalManager>
 		</StoreProvider>
 	</Suspense>
@@ -123,7 +123,7 @@ const AppRegistrations = (): null => {
 			visible: true,
 			label: appLabel,
 			primaryBar: 'CalendarModOutline',
-			secondaryBar: SidebarView,
+			secondaryBar: SecondaryBarView,
 			appView: CalendarView
 		});
 		addSettingsView({

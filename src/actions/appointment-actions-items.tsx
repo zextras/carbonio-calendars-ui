@@ -228,7 +228,10 @@ export const forwardEventItem = ({
 							}}
 						/>
 					</StoreProvider>
-				)
+				),
+				onClose: () => {
+					context.closeModal(EVENT_ACTIONS.FORWARD);
+				}
 			},
 			true
 		);

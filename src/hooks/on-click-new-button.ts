@@ -6,8 +6,8 @@
 import { SyntheticEvent, useCallback } from 'react';
 
 import { addBoard } from '@zextras/carbonio-shell-ui';
-
 import { useFoldersMap } from '@zextras/carbonio-ui-commons';
+
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../constants';
 import { useAppDispatch } from '../store/redux/hooks';

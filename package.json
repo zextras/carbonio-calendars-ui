@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.16.5",
+	"version": "1.17.0",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"engines": {
@@ -61,7 +61,7 @@
 		"@types/react-widgets-moment": "^4.0.3",
 		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#devel",
 		"@zextras/carbonio-ui-configs": "^2.1.0",
-		"@zextras/carbonio-ui-sdk": "2.2.0-devel.1",
+		"@zextras/carbonio-ui-sdk": "2.2.0-devel.3",
 		"babel-plugin-transform-import-meta": "^2.2.1",
 		"eslint-plugin-jest-dom": "^4.0.3",
 		"eslint-plugin-notice": "^0.9.10",
@@ -82,8 +82,6 @@
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.0",
-		"@mui/icons-material": "^5.16.13",
-		"@mui/material": "^5.16.13",
 		"@reduxjs/toolkit": "^1.9.7",
 		"@types/webpack": "^5.28.5",
 		"@types/webpack-env": "^1.18.5",

@@ -5,6 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Container,
 	Input,
@@ -22,7 +23,6 @@ import {
 import { FOLDERS, useFoldersMapByRoot, useRoot, hasId } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';

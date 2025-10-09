@@ -5,11 +5,11 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import { Container, Divider, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, useFolder, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import styled from '@emotion/styled';
 
 import ActionButtons from './actions-buttons';
 import { AttachmentsBlock } from './attachments-block';

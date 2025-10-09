@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
+
 import { configureStore } from '@reduxjs/toolkit';
-import { setupTest } from '@test-setup';
 import { screen, waitFor } from '@testing-library/react';
 import { combineReducers } from 'redux';
 
@@ -14,6 +14,7 @@ import { generateEditor } from '../../../../commons/editor-generator';
 import { onSave } from '../../../../commons/editor-save-send-fns';
 import { reducers } from '../../../../store/redux';
 import { EditorSaveButton } from '../editor-save-button';
+import { setupTest } from '@test-setup';
 
 jest.mock('../../../../commons/editor-save-send-fns', () => ({
 	onSave: jest.fn()
