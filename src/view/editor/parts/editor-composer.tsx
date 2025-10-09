@@ -6,7 +6,7 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { t } from '@zextras/carbonio-shell-ui';
+import { t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Composer } from '@zextras/carbonio-ui-text-composer';
 import { debounce } from 'lodash';
 
@@ -150,6 +150,8 @@ const HtmlComposer = ({ editorId }: { editorId: string }): React.JSX.Element => 
 		[debounceInput]
 	);
 
+	const { prefs } = useUserSettings();
+
 	return (
 		<EditorWrapper>
 			<Composer
@@ -158,6 +160,12 @@ const HtmlComposer = ({ editorId }: { editorId: string }): React.JSX.Element => 
 				disabled={disabled?.composer}
 				data-testid="editor-composer"
 				customInitOptions={{ auto_focus: false }}
+				accountSettingsPrefs={{
+					zimbraPrefLocale: prefs?.zimbraPrefLocale,
+					zimbraPrefHtmlEditorDefaultFontFamily: prefs?.zimbraPrefHtmlEditorDefaultFontFamily,
+					zimbraPrefHtmlEditorDefaultFontSize: prefs?.zimbraPrefHtmlEditorDefaultFontSize,
+					zimbraPrefHtmlEditorDefaultFontColor: prefs?.zimbraPrefHtmlEditorDefaultFontColor
+				}}
 			/>
 		</EditorWrapper>
 	);
