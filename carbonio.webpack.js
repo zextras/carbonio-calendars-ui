@@ -8,19 +8,11 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
-const { STATIC_LOCALES } = require('./src/composer/locale-consts');
-
 const customizeConfig = (config, pkg, options, mode) => {
 	const newConfig = { ...config };
 
 	const commitHash = execSync('git rev-parse HEAD').toString().trim();
 	const baseStaticPath = `/static/iris/carbonio-mails-ui/${commitHash}/`;
-
-	const supportedLocalesList = Object.values(STATIC_LOCALES);
-
-	const tinymceLocales = supportedLocalesList.map(
-		(locale) => ('tinymceLocale' in locale && locale.tinymceLocale) || locale.value
-	);
 
 	newConfig.resolve = {
 		...config.resolve,
@@ -41,18 +33,12 @@ const customizeConfig = (config, pkg, options, mode) => {
 		new CopyPlugin({
 			patterns: [
 				{
-					from: 'src/composer/assets/',
-					to: ''
-				},
-				{
-					from: `plugins/help/js/i18n/**/(${tinymceLocales.join('|')}).js`,
-					to: '',
-					context: 'node_modules/tinymce/'
-				},
-				{
-					from: 'plugins/emoticons',
-					to: 'plugins/emoticons',
-					context: 'node_modules/tinymce/'
+					from: path.resolve(
+						__dirname,
+						'node_modules/@zextras/carbonio-ui-text-composer/dist/assets'
+					),
+					to: path.resolve(__dirname, 'dist/'),
+					noErrorOnMissing: true
 				}
 			]
 		})
