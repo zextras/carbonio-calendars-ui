@@ -17,19 +17,26 @@ export const SetNewAppointmentTimeModal: FC<SetNewTimeModalProps> = ({
 	setNewTime
 }): ReactElement => {
 	const [t] = useTranslation();
+	const rescheduleLabel = t('label.reschedule_appointment', 'Reschedule appointment');
+	const setNewTimeMessage = t(
+		'reminder.modal.set_new_time_message',
+		'Are you sure you want to reschedule the missed appointment? If you click OK, all the other reminders will be automatically dismissed.'
+	);
+	const goBackLabel = t('folder.modal.footer.go_back', 'Go back');
+	const confirmLabel = t('label.ok', 'OK');
 
 	return (
 		<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
-			<ModalHeader title={t('label.set_new_time', 'Set new time')} />
+			<ModalHeader title={rescheduleLabel} />
 			<Padding vertical="extrasmall" />
 			<Container padding={{ vertical: 'medium' }}>
-				<Text overflow="break-word">{t('reminder.modal.set_new_time_message')}</Text>
+				<Text overflow="break-word">{setNewTimeMessage}</Text>
 			</Container>
 			<ModalFooter
 				onConfirm={setNewTime}
 				secondaryAction={toggleModal}
-				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
-				label={t('label.ok', 'OK')}
+				secondaryLabel={goBackLabel}
+				label={confirmLabel}
 			/>
 		</Container>
 	);
