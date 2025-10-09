@@ -6,9 +6,9 @@
 import React, { useMemo } from 'react';
 
 import { Container, Icon, Padding, Row, Shimmer, Theme } from '@zextras/carbonio-design-system';
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy, times } from 'lodash';
 
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';

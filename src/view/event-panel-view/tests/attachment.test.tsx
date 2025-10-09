@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, render, waitFor, act } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { reducers } from '../../../store/redux';

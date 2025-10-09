@@ -5,9 +5,9 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { debounce } from 'lodash';
-import styled from '@emotion/styled';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {

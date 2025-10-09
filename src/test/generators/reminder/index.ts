@@ -5,8 +5,8 @@
  */
 
 import { faker } from '@faker-js/faker';
-
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
+
 import { ReminderItem } from '../../../types/appointment-reminder';
 import { AlarmType } from '../../../types/event';
 

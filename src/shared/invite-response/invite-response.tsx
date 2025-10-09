@@ -5,6 +5,7 @@
  */
 import React, { FC, ReactElement, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Container,
 	Row,
@@ -21,7 +22,6 @@ import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
 
 import 'moment-timezone';
 import { AvailabilityChecker } from './parts/availability-checker';

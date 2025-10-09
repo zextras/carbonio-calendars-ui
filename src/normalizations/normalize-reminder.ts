@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
-
 import { Folder } from '@zextras/carbonio-ui-commons';
+
 import { ReminderItem } from '../types/appointment-reminder';
 import { Appointment } from '../types/store/appointments';
 

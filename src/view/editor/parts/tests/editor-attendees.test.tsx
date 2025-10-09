@@ -7,9 +7,6 @@
 import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
-import { setupTest } from '@test-setup';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 import { screen, waitFor, within } from '@testing-library/react';
 import { CONTACT_TYPES, DefaultContactInput, useContactInput } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
@@ -26,6 +23,9 @@ import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
+import { setupTest } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 jest.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
