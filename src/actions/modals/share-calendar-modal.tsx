@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
 	Checkbox,
@@ -22,20 +22,17 @@ import {
 import { useUserAccounts, useUserSettings } from '@zextras/carbonio-shell-ui';
 import {
 	ContactInputItem,
+	Grant,
 	ModalFooter,
 	ModalHeader,
 	useContactInput
 } from '@zextras/carbonio-ui-commons';
-import { map, some } from 'lodash';
+import { filter, find, map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { SHARE_USER_TYPE } from '../../constants';
+import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
-import {
-	findLabel,
-	getShareCalendarWithOptions,
-	ShareCalendarRoleOptions
-} from '../../settings/components/utils';
+import { findLabel, ShareCalendarRoleOptions } from '../../settings/components/utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
@@ -46,7 +43,6 @@ type SharePrivateCheckboxProps = {
 	allowToSeePrvtAppt: boolean;
 	setAllowToSeePrvtAppt: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export type ShareUserType = (typeof SHARE_USER_TYPE)[keyof typeof SHARE_USER_TYPE];
 
 export const SharePrivateCheckbox: FC<SharePrivateCheckboxProps> = ({
 	allowToSeePrvtAppt,
@@ -88,18 +84,23 @@ export const SharePrivateCheckbox: FC<SharePrivateCheckboxProps> = ({
 	);
 };
 
-const UserShare = ({
-	grant,
+export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
+	folderName,
 	folderId,
+	closeFn,
 	onGoBack,
 	secondaryLabel,
-	closeFn
-}: Omit<ShareCalendarModalProps, 'folderName'> & {
-	shareWithUserType: ShareUserType;
-}): JSX.Element | null => {
+	grant
+}): ReactElement => {
+	const [t] = useTranslation();
+	const userSettings = useUserSettings();
+	const defaultSharedWithPublic = useMemo(() => grant?.find((gr) => gr.gt === 'pub'), [grant]);
+	const [isSharedWithPublic, setIsSharedWithPublic] = useState(!!defaultSharedWithPublic);
+
+	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
+
 	const accounts = useUserAccounts();
 
-	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useSnackbar();
 
@@ -111,29 +112,102 @@ const UserShare = ({
 	const [contacts, setContacts] = useState<ContactInputItem[]>([]);
 
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
-	const disabled = useMemo(() => !contacts.length || some(contacts, 'error'), [contacts]);
+
+	const isShareWithPublicOptionsChanged = useMemo(
+		() => !!defaultSharedWithPublic !== isSharedWithPublic,
+		[defaultSharedWithPublic, isSharedWithPublic]
+	);
 
 	const shareCalendarRoleOptions = useMemo(
 		() => ShareCalendarRoleOptions(grant?.[0]?.perm?.includes('p')),
 		[grant]
 	);
 
-	const onContactInputChange = useCallback(
-		(ev: Array<ContactInputItem>) => {
-			setContacts(ev);
-		},
-		[setContacts]
+	const duplicateGrantActionWarning = useMemo(
+		() =>
+			({
+				id: 'isInGrant',
+				label: t('label.duplicate_share', "You've already shared this calendar with this user"),
+				color: 'error',
+				type: 'icon',
+				icon: 'AlertTriangle'
+			}) as const,
+		[t]
 	);
 
-	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>(
-		(shareRole) => {
-			setShareWithUserRole(shareRole);
-		},
-		[setShareWithUserRole]
+	const contactInputHasError = useMemo(() => {
+		if (grant) {
+			const duplicateUsers = filter(
+				grant,
+				(g) => !!find(contacts, (contact) => (g.d ?? g.zid) === contact.value.email)
+			);
+			return some(duplicateUsers, (user) => user.perm === shareWithUserRole);
+		}
+		return false;
+	}, [contacts, grant, shareWithUserRole]);
+
+	const addWarningActionToChip = useCallback(
+		(attendeeChip: ContactInputItem): ContactInputItem => ({
+			...attendeeChip,
+			actions: [duplicateGrantActionWarning, ...(attendeeChip.actions ?? [])]
+		}),
+		[duplicateGrantActionWarning]
 	);
+
+	const removeWarningActionFromChip = useCallback(
+		(attendeeChip: ContactInputItem): ContactInputItem => ({
+			...attendeeChip,
+			actions: filter(
+				attendeeChip.actions ?? [],
+				(action) => action.id !== duplicateGrantActionWarning.id
+			)
+		}),
+		[duplicateGrantActionWarning]
+	);
+
+	const onContactInputChange = useCallback((ev: Array<ContactInputItem>) => {
+		setContacts(ev);
+	}, []);
+
+	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>((shareRole) => {
+		setShareWithUserRole(shareRole);
+	}, []);
+
+	const publicShareAction = useMemo((): Array<{
+		id: string;
+		zid?: string;
+		op: string;
+		grant?: Grant[];
+	}> => {
+		if (isShareWithPublicOptionsChanged) {
+			if (defaultSharedWithPublic) {
+				return [
+					{
+						id: folderId,
+						zid: PUBLIC_SHARE_ZID,
+						op: FOLDER_OPERATIONS.REVOKE_GRANT
+					}
+				];
+			}
+			return [
+				{
+					id: folderId,
+					op: FOLDER_OPERATIONS.GRANT,
+					grant: [
+						{
+							gt: SHARE_USER_TYPE.PUBLIC,
+							perm: 'r',
+							pw: ''
+						}
+					]
+				}
+			];
+		}
+		return [];
+	}, [defaultSharedWithPublic, folderId, isShareWithPublicOptionsChanged]);
 
 	const onConfirm = useCallback((): void => {
-		const folderActionArr: FolderAction[] = map(contacts, (contactInputItem) => ({
+		const grantUsersAction: FolderAction[] = map(contacts, (contactInputItem) => ({
 			id: folderId,
 			op: FOLDER_OPERATIONS.GRANT,
 			grant: [
@@ -147,7 +221,9 @@ const UserShare = ({
 			]
 		}));
 
-		const folderActionToSend = folderActionArr.length > 1 ? folderActionArr : folderActionArr[0];
+		const folderActions = grantUsersAction.concat(publicShareAction);
+
+		const folderActionToSend = folderActions.length > 1 ? folderActions : folderActions[0];
 
 		folderAction(folderActionToSend).then((res) => {
 			if (!res.Fault) {
@@ -192,14 +268,123 @@ const UserShare = ({
 		createSnackbar,
 		dispatch,
 		folderId,
+		publicShareAction,
 		sendNotification,
 		shareWithUserRole,
 		standardMessage,
 		t
 	]);
 
+	const disabled = useMemo(
+		() =>
+			(!contacts.length && !isShareWithPublicOptionsChanged) ||
+			some(contacts, 'error') ||
+			contactInputHasError,
+		[contactInputHasError, contacts, isShareWithPublicOptionsChanged]
+	);
+
+	const confirmTooltip = useMemo(() => {
+		if (disabled) {
+			if (contactInputHasError) {
+				return t(
+					'label.duplicate_shares',
+					"You've already shared this calendar with one or more users"
+				);
+			}
+			return t('label.no_changes', 'You haven’t made any changes yet');
+		}
+		return undefined;
+	}, [contactInputHasError, disabled, t]);
+
+	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
+
+	useEffect(() => {
+		const changesToAdd: ContactInputItem[] = [];
+		const duplicatedContacts = filter(
+			contacts,
+			(contact) => !!find(grant, (g) => contact.value.email === (g.d ?? g.zid))
+		);
+		if (duplicatedContacts.length) {
+			const duplicatedContactsWithSameRole = filter(
+				contacts,
+				(contact) =>
+					!!find(
+						grant,
+						(g) => contact.value.email === (g.d ?? g.zid) && g.perm === shareWithUserRole
+					)
+			);
+			if (duplicatedContactsWithSameRole.length) {
+				const duplicatesWithoutWarningAction = filter(
+					duplicatedContactsWithSameRole,
+					(user) => !find(user.actions, (action) => action.id === duplicateGrantActionWarning.id)
+				);
+				if (duplicatesWithoutWarningAction.length) {
+					changesToAdd.push(...duplicatesWithoutWarningAction.map(addWarningActionToChip));
+				}
+			}
+			const duplicatedContactsWithDifferentRole = filter(
+				contacts,
+				(contact) =>
+					!!find(
+						grant,
+						(g) => contact.value.email === (g.d ?? g.zid) && g.perm !== shareWithUserRole
+					)
+			);
+			if (duplicatedContactsWithDifferentRole.length) {
+				const duplicatesWithWarningAction = filter(
+					duplicatedContactsWithDifferentRole,
+					(user) => !!find(user.actions, (action) => action.id === duplicateGrantActionWarning.id)
+				);
+				if (duplicatesWithWarningAction.length) {
+					changesToAdd.push(...duplicatesWithWarningAction.map(removeWarningActionFromChip));
+				}
+			}
+		}
+		if (changesToAdd.length) {
+			const newContacts = map(contacts, (contact) => {
+				const newContactToUpdate = find(
+					changesToAdd,
+					(contactToAdd) => contactToAdd.value.id === contact.value.id
+				);
+				if (newContactToUpdate) {
+					return newContactToUpdate;
+				}
+				return contact;
+			});
+			setContacts(newContacts);
+		}
+	}, [
+		addWarningActionToChip,
+		contacts,
+		duplicateGrantActionWarning.id,
+		grant,
+		removeWarningActionFromChip,
+		shareWithUserRole
+	]);
+
 	return (
-		<>
+		<Container
+			data-testid="ShareCalendarModal"
+			padding="0.5rem 0.5rem 1.5rem"
+			style={{ overflowY: 'auto' }}
+		>
+			<ModalHeader onClose={closeFn} title={title} />
+			{isPublicShareEnabled && (
+				<Container
+					padding={{ top: 'small', bottom: 'small' }}
+					mainAlignment="center"
+					crossAlignment="flex-start"
+					height="fit"
+					data-testid={'publicShareCheckboxContainer'}
+				>
+					<Checkbox
+						value={isSharedWithPublic}
+						defaultChecked={isSharedWithPublic}
+						onClick={(): void => setIsSharedWithPublic((prevValue) => !prevValue)}
+						label={t('share.options.share_calendar_with.public', 'Public')}
+					/>
+				</Container>
+			)}
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}
 				mainAlignment="center"
@@ -211,6 +396,15 @@ const UserShare = ({
 					onChange={onContactInputChange}
 					background={'gray5'}
 					defaultValue={contacts}
+					description={
+						contactInputHasError
+							? t(
+									'label.duplicate_share_info',
+									"You've already shared this calendar with one or more users. Try changing role or typing another address."
+								)
+							: undefined
+					}
+					hasError={contactInputHasError}
 				/>
 			</Container>
 			<SharePrivateCheckbox
@@ -290,123 +484,12 @@ const UserShare = ({
 			</Container>
 			<ModalFooter
 				onConfirm={onConfirm}
-				label={t('action.share_calendar', 'Share Calendar')}
+				label={t('label.confirm', 'Confirm')}
 				disabled={disabled}
 				secondaryAction={onGoBack}
 				secondaryLabel={secondaryLabel}
+				tooltip={confirmTooltip}
 			/>
-		</>
-	);
-};
-
-const PublicShare = ({
-	onGoBack,
-	secondaryLabel,
-	folderId,
-	closeFn
-}: Omit<ShareCalendarModalProps, 'folderName' | 'grant'>): JSX.Element => {
-	const createSnackbar = useSnackbar();
-	const [t] = useTranslation();
-
-	const onConfirm = useCallback((): void => {
-		const grant = {
-			gt: SHARE_USER_TYPE.PUBLIC,
-			inh: '1',
-			perm: 'r',
-			pw: ''
-		};
-		folderAction({ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant }).then((res) => {
-			if (!res.Fault) {
-				createSnackbar({
-					key: `folder-action-success`,
-					replace: true,
-					severity: 'success',
-					hideButton: true,
-					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
-					autoHideTimeout: 3000
-				});
-			}
-		});
-		closeFn && closeFn();
-	}, [closeFn, createSnackbar, folderId, t]);
-
-	return (
-		<ModalFooter
-			onConfirm={onConfirm}
-			label={t('action.share_calendar', 'Share Calendar')}
-			secondaryAction={onGoBack}
-			secondaryLabel={secondaryLabel}
-		/>
-	);
-};
-
-export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
-	folderName,
-	folderId,
-	closeFn,
-	onGoBack,
-	secondaryLabel,
-	grant
-}): ReactElement => {
-	const [t] = useTranslation();
-	const accountSettings = useUserSettings();
-	const shareCalendarWithOptions = useMemo(
-		() => getShareCalendarWithOptions(accountSettings),
-		[accountSettings]
-	);
-
-	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
-		SHARE_USER_TYPE.USER
-	);
-
-	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
-
-	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | 'pub'>>((shareWith) => {
-		setShareWithUserType(shareWith);
-	}, []);
-
-	return (
-		<Container
-			data-testid="ShareCalendarModal"
-			padding="0.5rem 0.5rem 1.5rem"
-			style={{ overflowY: 'auto' }}
-		>
-			<ModalHeader onClose={closeFn} title={title} />
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				<Select
-					items={shareCalendarWithOptions}
-					background={'gray5'}
-					label={t('label.share_with', 'Share with')}
-					disablePortal
-					onChange={onShareWithChange}
-					defaultSelection={{
-						value: SHARE_USER_TYPE.USER,
-						label: findLabel(shareCalendarWithOptions, SHARE_USER_TYPE.USER) ?? ''
-					}}
-				/>
-			</Container>
-			{shareWithUserType === SHARE_USER_TYPE.USER ? (
-				<UserShare
-					shareWithUserType={shareWithUserType}
-					grant={grant}
-					folderId={folderId}
-					onGoBack={onGoBack}
-					secondaryLabel={secondaryLabel}
-					closeFn={closeFn}
-				/>
-			) : (
-				<PublicShare
-					onGoBack={onGoBack}
-					secondaryLabel={secondaryLabel}
-					folderId={folderId}
-					closeFn={closeFn}
-				/>
-			)}
 		</Container>
 	);
 };
