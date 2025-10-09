@@ -12,7 +12,8 @@ const customizeConfig = (config, pkg, options, mode) => {
 	const newConfig = { ...config };
 
 	const commitHash = execSync('git rev-parse HEAD').toString().trim();
-	const baseStaticPath = `/static/iris/carbonio-mails-ui/${commitHash}/`;
+	const packageName = pkg.name || require(path.resolve(__dirname, 'package.json')).name;
+	const baseStaticPath = `/static/iris/${packageName}/${commitHash}/`;
 
 	newConfig.resolve = {
 		...config.resolve,
