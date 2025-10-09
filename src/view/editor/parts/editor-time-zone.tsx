@@ -6,9 +6,9 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
+import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
-import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { findLabel, TimeZonesOptions } from '../../../settings/components/utils';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {

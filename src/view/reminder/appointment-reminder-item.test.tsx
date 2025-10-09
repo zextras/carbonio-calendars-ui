@@ -7,8 +7,8 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import moment from 'moment-timezone';
 import { useTheme } from '@zextras/carbonio-design-system';
+import moment from 'moment-timezone';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { reducers } from '../../store/redux';

@@ -6,10 +6,9 @@
 import React, { lazy, ReactElement, Suspense } from 'react';
 
 import { Button, Container } from '@zextras/carbonio-design-system';
+import { useUpdateView } from '@zextras/carbonio-ui-commons';
 import { noop } from 'lodash';
 import { Routes, Route } from 'react-router-dom';
-
-import { useUpdateView } from '@zextras/carbonio-ui-commons';
 
 const CalendarComponent = lazy(
 	() => import(/* webpackChunkName: "calendar-component" */ './calendar-component')

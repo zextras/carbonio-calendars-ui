@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { filter, map } from 'lodash';
 
 import { useCheckedFolders } from './use-checked-folders';
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
 
 export const useCheckedCalendarsQuery = (): string => {
 	const calendars = useCheckedFolders();
