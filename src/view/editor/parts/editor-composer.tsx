@@ -159,7 +159,7 @@ const HtmlComposer = ({ editorId }: { editorId: string }): React.JSX.Element => 
 				value={richTextValue}
 				disabled={disabled?.composer}
 				data-testid="editor-composer"
-				customInitOptions={{ auto_focus: false }}
+				customInitOptions={{ auto_focus: false, base_url: `${BASE_PATH}` }}
 				accountSettingsPrefs={{
 					zimbraPrefLocale: prefs?.zimbraPrefLocale,
 					zimbraPrefHtmlEditorDefaultFontFamily: prefs?.zimbraPrefHtmlEditorDefaultFontFamily,
