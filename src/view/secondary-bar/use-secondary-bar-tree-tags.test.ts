@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useTagStore } from '@zextras/carbonio-ui-commons';
 
 import { TagAccordionItem } from './custom-accordion-components/tag-accordion-item';
@@ -11,9 +10,6 @@ import { TagsAggregatorAccordionItem } from './custom-accordion-components/tags-
 import { useSecondaryBarTreeTags } from './use-secondary-bar-tree-tags';
 import { useLocalStorage } from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import { setupHook } from '../../__test__/test-setup';
-import { populateFoldersStore } from '@test-utils/store/folders';
-import { SIDEBAR_ITEMS } from 'constants/sidebar';
-import { reducers } from 'store/redux';
 
 describe('useSecondaryBarTreeTags', () => {
 	it('should render the tags aggregator accordion item', () => {
