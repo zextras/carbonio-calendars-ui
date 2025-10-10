@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /*
  * SPDX-FileCopyrightText: 2024 Zextras <https://www.zextras.com>
  *
@@ -9,12 +10,12 @@ import { faker } from '@faker-js/faker';
 import { act, screen } from '@testing-library/react';
 import { noop } from 'lodash';
 
-import { generateSoapErrorResponseBody } from '../../../test/generators/utils';
-import { ForwardAppointmentRequest } from '../../../types/soap/soap-actions';
-import { ForwardAppointmentModal } from '../forward-appointment-modal';
 import { UserEvent, setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { generateSoapErrorResponseBody } from 'test/generators/utils';
 import { EventType } from 'types/event';
+import { ForwardAppointmentRequest } from 'types/soap/soap-actions';
+import { ForwardAppointmentModal } from 'view/modals/forward-appointment/forward-appointment-modal';
 
 async function inputAttendee(user: UserEvent, input: HTMLElement, attendee: string): Promise<void> {
 	await act(async () => {
