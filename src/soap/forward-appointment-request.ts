@@ -21,9 +21,13 @@ export const forwardAppointmentRequest = async ({
 		id,
 		m: {
 			e: attendees.map((attendee) => ({ a: attendee, t: 't' })),
-			mp: {
-				ct: 'multipart/alternative',
-				mp: messageParts
-			}
+			...(messageParts.length > 0
+				? {
+						mp: {
+							ct: 'multipart/alternative',
+							mp: messageParts
+						}
+				  }
+				: {})
 		}
 	});
