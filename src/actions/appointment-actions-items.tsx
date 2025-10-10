@@ -222,7 +222,7 @@ export const forwardEventItem = ({
 				children: (
 					<StoreProvider>
 						<ForwardAppointmentModal
-							eventId={event.resource.id}
+							event={event}
 							onClose={(): void => {
 								context.closeModal(EVENT_ACTIONS.FORWARD);
 							}}

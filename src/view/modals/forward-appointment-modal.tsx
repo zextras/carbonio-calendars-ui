@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 
 import { Container, Divider, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
@@ -16,19 +16,48 @@ import {
 } from '@zextras/carbonio-ui-commons';
 
 import { forwardAppointmentRequest } from '../../soap/forward-appointment-request';
+import { getMessageRequest } from '../../soap/get-message-request';
+import { EventType } from 'types/event';
 
 type ForwardAppointmentModalProps = {
-	eventId: string;
+	event: EventType;
 	onClose: () => void;
 };
 
 export const ForwardAppointmentModal = ({
-	eventId,
+	event,
 	onClose
 }: ForwardAppointmentModalProps): React.JSX.Element => {
 	const [contacts, setContacts] = useState<ContactInputItem[]>([]);
+	const [messageData, setMessageData] = useState<any>(null);
 	const ContactInput = useContactInput();
 	const createSnackbar = useSnackbar();
+
+	const eventId = event.resource.id;
+
+	useEffect(() => {
+		const fetchMessageData = async (): Promise<void> => {
+			const eventRidZ = event.resource.ridZ;
+			const eventInviteId = event.resource.inviteId;
+			if (!eventInviteId) return;
+
+			try {
+				const response = await getMessageRequest({
+					inviteId: eventInviteId,
+					ridZ: eventRidZ
+				});
+
+				if (response && !('error' in response) && response.m) {
+					setMessageData(response.m[0]);
+				}
+			} catch (error) {
+				console.error('Failed to fetch message data:', error);
+			}
+		};
+
+		fetchMessageData();
+	}, [event.resource.id, event.resource.inviteId, event.resource.ridZ]);
+
 	const modalHeaderTitle = t('modal.forwardAppointment.title', 'Forward appointment');
 	const modalContent = t(
 		'modal.forwardAppointment.content',
@@ -38,6 +67,34 @@ export const ForwardAppointmentModal = ({
 	const inputPlaceholder = t('modal.forwardAppointment.placeholder', 'Add new attendees');
 	const onContactChange = useCallback((users: ContactInputItem[]) => setContacts(users), []);
 	const disabled = contacts.length === 0;
+
+	// Build message parts with appointment content from fetched message data
+	const messageParts = useMemo(() => {
+		const invite = messageData?.inv?.[0]?.comp?.[0];
+		const plainText = invite?.desc?.[0]?._content ?? '';
+		const htmlContent = invite?.descHtml?.[0]?._content ?? '';
+
+		const parts: Array<{ ct: string; content: string }> = [];
+
+		// Add plain text part
+		if (plainText) {
+			parts.push({
+				ct: 'text/plain',
+				content: plainText
+			});
+		}
+
+		// Add HTML part
+		if (htmlContent) {
+			parts.push({
+				ct: 'text/html',
+				content: htmlContent
+			});
+		}
+
+		return parts;
+	}, [messageData]);
+
 	const invokeErrorSnackbar = useCallback((): void => {
 		createSnackbar({
 			key: 'forward-appointment-error',
@@ -51,7 +108,8 @@ export const ForwardAppointmentModal = ({
 	const onConfirm = useCallback(async () => {
 		const response = await forwardAppointmentRequest({
 			id: eventId,
-			attendees: contacts.map((contact) => contact.value.email)
+			attendees: contacts.map((contact) => contact.value.email),
+			messageParts
 		})
 			.catch(() => {
 				invokeErrorSnackbar();
@@ -71,7 +129,7 @@ export const ForwardAppointmentModal = ({
 			label: t('snackbar.forwardAppointment.success', 'Appointment forwarded'),
 			autoHideTimeout: 3000
 		});
-	}, [contacts, createSnackbar, eventId, invokeErrorSnackbar, onClose]);
+	}, [contacts, createSnackbar, eventId, invokeErrorSnackbar, onClose, messageParts]);
 
 	return (
 		<Container
