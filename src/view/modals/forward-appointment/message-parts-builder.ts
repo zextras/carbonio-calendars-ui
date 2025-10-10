@@ -9,22 +9,21 @@ export type MessagePart = {
 	content: string;
 };
 
-// Define types based on the structure accessed in buildMessageParts
 interface MessageDesc {
-    _content?: string;
+	_content?: string;
 }
 
 interface MessageComp {
-    desc?: MessageDesc[];
-    descHtml?: MessageDesc[];
+	desc?: MessageDesc[];
+	descHtml?: MessageDesc[];
 }
 
 interface MessageInv {
-    comp?: MessageComp[];
+	comp?: MessageComp[];
 }
 
 export interface MessageData {
-    inv?: MessageInv[];
+	inv?: MessageInv[];
 }
 export const buildMessageParts = (messageData: MessageData | null): MessagePart[] => {
 	if (!messageData) return [];
