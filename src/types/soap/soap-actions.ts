@@ -80,7 +80,13 @@ type ZimbraRequest = {
 
 export type ForwardAppointmentRequest = ZimbraRequest & {
 	id: string;
-	m: { e: Array<{ a: string; t: string }> };
+	m: {
+		e: Array<{ a: string; t: string }>;
+		mp?: {
+			ct: string;
+			mp: Array<{ ct: string; content: string }>;
+		};
+	};
 };
 
 export type ForwardAppointmentResponse = Record<string, never> | ErrorSoapResponse;
