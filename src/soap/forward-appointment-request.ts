@@ -27,7 +27,7 @@ export const forwardAppointmentRequest = async ({
 							ct: 'multipart/alternative',
 							mp: messageParts
 						}
-				  }
+					}
 				: {})
 		}
 	});
