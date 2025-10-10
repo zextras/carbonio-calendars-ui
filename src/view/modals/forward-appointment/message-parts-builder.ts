@@ -9,8 +9,23 @@ export type MessagePart = {
 	content: string;
 };
 
-type MessageData = any; // TODO: Define proper type based on SOAP response
+// Define types based on the structure accessed in buildMessageParts
+interface MessageDesc {
+    _content?: string;
+}
 
+interface MessageComp {
+    desc?: MessageDesc[];
+    descHtml?: MessageDesc[];
+}
+
+interface MessageInv {
+    comp?: MessageComp[];
+}
+
+export interface MessageData {
+    inv?: MessageInv[];
+}
 export const buildMessageParts = (messageData: MessageData | null): MessagePart[] => {
 	if (!messageData) return [];
 
