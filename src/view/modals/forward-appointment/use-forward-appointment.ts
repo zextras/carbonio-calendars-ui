@@ -9,7 +9,7 @@ import { useCallback } from 'react';
 import { ContactInputItem } from '@zextras/carbonio-ui-commons';
 
 import { MessagePart } from './message-parts-builder';
-import { forwardAppointmentRequest } from 'soap/forward-appointment-request';
+import { forwardAppointmentRequest } from '../../../soap/forward-appointment-request';
 
 type UseForwardAppointmentParams = {
 	eventId: string;

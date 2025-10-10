@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { getMessageRequest } from 'soap/get-message-request';
+import { getMessageRequest } from '../../../soap/get-message-request';
 
 type UseAppointmentMessageDataParams = {
 	inviteId?: string;
