@@ -6,14 +6,13 @@
 
 import { useEffect, useState } from 'react';
 
-import { getMessageRequest } from '../../../soap/get-message-request';
+import { getMessageRequest } from 'soap/get-message-request';
+import { MessageData } from 'view/modals/forward-appointment/types';
 
 type UseAppointmentMessageDataParams = {
 	inviteId?: string;
 	ridZ?: string;
 };
-
-type MessageData = any; // TODO: Define proper type based on SOAP response
 
 export const useAppointmentMessageData = ({
 	inviteId,

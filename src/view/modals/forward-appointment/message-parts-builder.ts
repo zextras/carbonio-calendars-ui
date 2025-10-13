@@ -4,27 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { MessageData } from 'view/modals/forward-appointment/types';
+
 export type MessagePart = {
 	ct: string;
 	content: string;
 };
 
-interface MessageDesc {
-	_content?: string;
-}
-
-interface MessageComp {
-	desc?: MessageDesc[];
-	descHtml?: MessageDesc[];
-}
-
-interface MessageInv {
-	comp?: MessageComp[];
-}
-
-export interface MessageData {
-	inv?: MessageInv[];
-}
 export const buildMessageParts = (messageData: MessageData | null): MessagePart[] => {
 	if (!messageData) return [];
 
