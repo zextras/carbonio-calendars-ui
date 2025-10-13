@@ -98,9 +98,7 @@ describe('useForwardAppointment', () => {
 		expect(mockOnComplete).toHaveBeenCalledTimes(1);
 	});
 
-	it('should call onError  when request fails', async () => {
-		// createSoapAPIInterceptor('ForwardAppointment', );
-
+	it('should call onError when request fails', async () => {
 		createAPIInterceptor('post', '/service/soap/ForwardAppointmentRequest', HttpResponse.error());
 
 		const { result } = renderHook(() => useForwardAppointment(defaultParams));
