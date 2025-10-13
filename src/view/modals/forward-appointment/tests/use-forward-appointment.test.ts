@@ -5,8 +5,12 @@
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { HttpResponse } from 'msw';
 
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '@test-utils/network/msw/create-api-interceptor';
 import { generateSoapErrorResponseBody } from 'test/generators/utils';
 import { ForwardAppointmentRequest } from 'types/soap/soap-actions';
 import { useForwardAppointment } from 'view/modals/forward-appointment/use-forward-appointment';
@@ -92,6 +96,24 @@ describe('useForwardAppointment', () => {
 
 		expect(mockOnSuccess).not.toHaveBeenCalled();
 		expect(mockOnComplete).toHaveBeenCalledTimes(1);
+	});
+
+	it('should call onError  when request fails', async () => {
+		// createSoapAPIInterceptor('ForwardAppointment', );
+
+		createAPIInterceptor('post', '/service/soap/ForwardAppointmentRequest', HttpResponse.error());
+
+		const { result } = renderHook(() => useForwardAppointment(defaultParams));
+
+		await act(async () => {
+			await result.current(mockContacts, mockMessageParts);
+		});
+
+		await waitFor(() => {
+			expect(mockOnError).toHaveBeenCalledTimes(1);
+		});
+
+		expect(mockOnSuccess).not.toHaveBeenCalled();
 	});
 
 	it('should handle empty contacts array', async () => {

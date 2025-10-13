@@ -45,7 +45,6 @@ export const useForwardAppointment = ({
 
 				onSuccess();
 			} catch (error) {
-				console.error('Failed to forward appointment:', error);
 				onError();
 			} finally {
 				onComplete();
