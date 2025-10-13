@@ -13,26 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 import { AlarmType } from '../../types/event';
 
-// interface DropdownItem {
-// 	type?: 'divider';
-// 	id: string;
-// 	label: string;
-// 	icon?: string;
-// 	onClick?: (e: React.SyntheticEvent<HTMLElement> | KeyboardEvent) => void;
-// 	selected?: boolean;
-// 	customComponent?: React.ReactNode;
-// 	disabled?: boolean;
-// 	items?: Array<DropdownItem>;
-// 	keepOpen?: boolean;
-// }
-//
-// type ReturnType = Array<{
-// 	id: string;
-// 	label?: string;
-// 	onClick?: () => void;
-// 	value: number;
-// 	type?: 'divider';
-// }>;
 type Option = {
 	id: string;
 	label: string;

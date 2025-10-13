@@ -87,87 +87,111 @@ export const ReminderPart = ({
 		},
 		[calendarFolders, dispatch, event, invite]
 	);
+
 	const getReminderItems = useMemo(
 		() => [
-			{ id: '0', label: t('reminder.never', 'Never'), value: '-1', onClick: () => setSnooze('-1') },
+			{
+				id: '0',
+				selected: invite.alarmValue === '0',
+				label: t('reminder.never', 'Never'),
+				onClick: () => setSnooze('0')
+			},
 			{
 				id: '1',
+				selected: invite.alarmValue === '-1',
 				label: t('reminder.at_time_of_event', 'At the time of the event'),
-				onClick: () => setSnooze('0')
+				onClick: () => setSnooze('-1')
 			},
 			{
 				id: '2',
 				label: getMinuteLabel(1),
+				selected: invite.alarmValue === '1',
 				onClick: () => setSnooze('1')
 			},
 			{
 				id: '3',
 				label: getMinuteLabel(5),
+				selected: invite.alarmValue === '5',
 				onClick: () => setSnooze('5')
 			},
 			{
 				id: '4',
 				label: getMinuteLabel(10),
+				selected: invite.alarmValue === '10',
 				onClick: () => setSnooze('10')
 			},
 			{
 				id: '5',
 				label: getMinuteLabel(15),
+				selected: invite.alarmValue === '15',
+
 				onClick: () => setSnooze('15')
 			},
 			{
 				id: '6',
 				label: getMinuteLabel(30),
+				selected: invite.alarmValue === '30',
+
 				onClick: () => setSnooze('30')
 			},
 			{
 				id: '7',
 				label: getMinuteLabel(45),
+				selected: invite.alarmValue === '45',
 				onClick: () => setSnooze('45')
 			},
 			{
 				id: '8',
 				label: getHourLabel(1),
+				selected: invite.alarmValue === '60',
 				onClick: () => setSnooze('60')
 			},
 			{
 				id: '9',
 				label: getHourLabel(2),
+				selected: invite.alarmValue === '120',
 				onClick: () => setSnooze('120')
 			},
 			{
 				id: '10',
 				label: getHourLabel(4),
+				selected: invite.alarmValue === '240',
 				onClick: () => setSnooze('240')
 			},
 			{
 				id: '11',
 				label: getHourLabel(5),
+				selected: invite.alarmValue === '300',
 				onClick: () => setSnooze('300')
 			},
 			{
 				id: '12',
 				label: getHourLabel(18),
+				selected: invite.alarmValue === (18 * 60).toString(),
 				onClick: () => setSnooze((18 * 60).toString())
 			},
 			{
 				id: '13',
 				label: getDayLabel(1),
+				selected: invite.alarmValue === (24 * 60).toString(),
 				onClick: () => setSnooze((24 * 60).toString())
 			},
 			{
 				id: '14',
 				label: getDayLabel(2),
+				selected: invite.alarmValue === (48 * 60).toString(),
 				onClick: () => setSnooze((48 * 60).toString())
 			},
 			{
 				id: '15',
 				label: getDayLabel(3),
+				selected: invite.alarmValue === (72 * 60).toString(),
 				onClick: () => setSnooze((72 * 60).toString())
 			},
 			{
 				id: '16',
 				label: getDayLabel(4),
+				selected: invite.alarmValue === (4 * 24 * 60).toString(),
 				onClick: () => setSnooze((4 * 24 * 60).toString())
 			},
 			{
@@ -177,11 +201,13 @@ export const ReminderPart = ({
 					defaultValue_one: '{{count}} week before',
 					defaultValue_other: '{{count}} weeks before'
 				}),
+				selected: invite.alarmValue === (7 * 24 * 60).toString(),
 				onClick: () => setSnooze((7 * 24 * 60).toString())
 			}
 		],
-		[getDayLabel, getHourLabel, getMinuteLabel, setSnooze, t]
+		[getDayLabel, getHourLabel, getMinuteLabel, setSnooze, t, invite.alarmValue]
 	);
+
 	return alarmString ? (
 		<Container
 			orientation="horizontal"

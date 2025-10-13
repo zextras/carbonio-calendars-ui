@@ -10,6 +10,7 @@
 	"scripts": {
 		"build": "sdk build",
 		"deploy": "sdk deploy",
+		"sdk-install": "sdk install",
 		"start": "sdk watch",
 		"prepublishOnly": "pinst --disable",
 		"postpublish": "pinst --enable",
@@ -61,7 +62,7 @@
 		"@types/react-widgets-moment": "^4.0.3",
 		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#devel",
 		"@zextras/carbonio-ui-configs": "^2.1.0",
-		"@zextras/carbonio-ui-sdk": "2.2.0-devel.3",
+		"@zextras/carbonio-ui-sdk": "2.2.0-devel.5",
 		"babel-plugin-transform-import-meta": "^2.2.1",
 		"eslint-plugin-jest-dom": "^4.0.3",
 		"eslint-plugin-notice": "^0.9.10",
