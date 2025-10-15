@@ -310,7 +310,7 @@ describe('Appointment Reminder Item Details', () => {
 			expect(screen.getByTestId('icon: MessageSquareOutline')).toBeVisible();
 		});
 
-		it("shouldn't render empty  description placeholder if it's not set in the invite", () => {
+		it('shouldn render empty description placeholder if it is not set in the invite', () => {
 			const inviteId = faker.string.uuid();
 			const invite = generateInvite({
 				context: { id: inviteId }
