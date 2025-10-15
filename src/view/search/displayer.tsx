@@ -11,7 +11,6 @@ import { Container } from '@zextras/carbonio-design-system';
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
-import { hasDescription } from '../../utils/invite';
 import { AttachmentsBlock } from '../event-panel-view/attachments-block';
 import { DetailsPart } from '../event-panel-view/details-part';
 import { DisplayerHeader } from '../event-panel-view/event-panel-view';
@@ -73,7 +72,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 								<StyledDivider />
 							</>
 						)}
-						{invite && hasDescription(invite) && (
+						{invite && (
 							<Container>
 								<MessagePart fullInvite={invite} />
 								<StyledDivider />
