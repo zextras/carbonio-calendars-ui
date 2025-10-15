@@ -14,107 +14,273 @@ import {
 	getAlarmValueInMinutes
 } from './normalizations-utils';
 import { getLocationUrl } from './normalize-calendar-events';
-import { EVENT_DISPLAY_STATUS } from '../constants/api';
-import { Invite } from '../types/store/invite';
+import { EVENT_DISPLAY_STATUS } from 'constants/api';
+import { Invite } from 'types/store/invite';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const normalizeInvite = (m: any): Invite => ({
-	ciFolder: m?.inv?.[0]?.comp?.[0]?.ciFolder,
-	allDay: m?.inv?.[0]?.comp?.[0]?.allDay ?? false,
-	apptId: m?.inv?.[0]?.comp?.[0]?.apptId,
-	tz: find(m?.inv?.[0]?.tz, (value) => value.id !== 'UTC')?.id,
-	id: m.id,
-	attendees: m?.inv?.[0]?.comp?.[0]?.at ?? [],
-	parent: m.l,
-	flags: m.f,
-	parts: m.mp ? normalizeMailPartMapFn(m.mp) : [],
-	alarmString: getAlarmToString(m?.inv?.[0]?.comp?.[0]?.alarm),
-	alarmValue: getAlarmValueInMinutes(m?.inv?.[0]?.comp?.[0]?.alarm?.[0]?.trigger?.[0]?.rel?.[0]),
-	class: m?.inv?.[0]?.comp?.[0]?.class,
-	compNum: m?.inv?.[0]?.comp?.[0]?.compNum, // Component number of the invite
-	date: m.d,
-	textDescription: m?.inv?.[0]?.comp?.[0]?.desc, // todo: normalize
-	htmlDescription: m?.inv?.[0]?.comp?.[0]?.descHtml,
-	end: m?.inv?.[0]?.comp?.[0]?.e[0], // todo: normalize
-	freeBusy: m?.inv?.[0]?.comp?.[0]?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
-	freeBusyActualStatus: m?.inv?.[0]?.comp?.[0]?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
-	fragment: m?.inv?.[0]?.comp?.[0]?.fr,
-	isOrganizer: m?.inv?.[0]?.comp?.[0]?.isOrg ?? false,
-	location: m?.inv?.[0]?.comp?.[0]?.loc ?? '',
-	name: m?.inv?.[0]?.comp?.[0]?.name,
-	noBlob: m?.inv?.[0]?.comp?.[0]?.noBlob,
-	organizer: m?.inv?.[0]?.comp?.[0]?.or, // todo: normalize
-	recurrenceRule: m?.inv?.[0]?.comp?.[0]?.recur, // todo: normalize
-	isRespRequested: m?.inv?.[0]?.comp?.[0]?.rsvp,
-	start: m?.inv?.[0]?.comp?.[0]?.s[0], // todo: normalize
-	sequenceNumber: m?.inv?.[0]?.comp?.[0]?.seq,
-	status: m?.inv?.[0]?.comp?.[0]?.status,
-	transparency: m?.inv?.[0]?.comp?.[0]?.transp, // todo: check what is this for
-	uid: m?.inv?.[0]?.comp?.[0]?.uid,
-	url: m?.inv?.[0]?.comp?.[0]?.url,
-	isException: m?.inv?.[0]?.comp?.[0]?.ex || false,
-	exceptId: m?.inv?.[0]?.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
-	tagNamesList: m.tn,
-	tags: !isNil(m.t) ? filter(m.t.split(','), (t) => t !== '') : [],
-	attach: {
-		mp: retrieveAttachmentsType(m?.mp?.[0] ?? [], 'attachment', m?.id)
-	},
-	attachmentFiles: findAttachments(m.mp ?? [], []),
-	participants: normalizeInviteParticipants(m?.inv?.[0]?.comp?.[0]?.at ?? []),
-	alarm: !!m?.inv?.[0]?.comp?.[0]?.alarm,
-	alarmData: m?.inv?.[0]?.comp?.[0]?.alarm,
-	ms: m.ms || 0,
-	rev: m.rev || 0,
-	meta: m.meta,
-	xprop: m?.inv?.[0]?.comp?.[0]?.xprop,
-	neverSent: m?.inv?.[0]?.comp?.[0]?.neverSent ?? false,
-	locationUrl: getLocationUrl(m?.inv?.[0]?.comp?.[0]?.loc ?? '')
-});
+interface MailPart {
+	contentType?: string;
+	content?: string;
+	parts?: MailPart[];
+}
 
+interface DescriptionContent {
+	html?: string;
+	text?: string;
+}
+
+interface DescriptionArray {
+	_content: string;
+}
+
+/**
+ * Recursively extracts HTML and plain text content from mail parts
+ * @param parts - The mail parts structure to search through
+ * @returns Object containing extracted HTML and text content
+ */
+const extractDescriptionFromParts = (parts: MailPart[]): DescriptionContent => {
+	const result: DescriptionContent = {};
+
+	const findContentInParts = (partsList: MailPart[]): void => {
+		if (!partsList) return;
+
+		partsList.forEach((part) => {
+			// Extract text/html content
+			if (part.contentType === 'text/html' && part.content && !result.html) {
+				result.html = part.content;
+			}
+			// Extract text/plain content
+			if (part.contentType === 'text/plain' && part.content && !result.text) {
+				result.text = part.content;
+			}
+			// Recursively search nested parts
+			if (part.parts) {
+				findContentInParts(part.parts);
+			}
+		});
+	};
+
+	findContentInParts(parts);
+	return result;
+};
+
+/**
+ * Normalizes description data from various formats (array, string, or parts)
+ * into a consistent array format
+ * @param description - Description from invite component (can be array or string)
+ * @param fallbackContent - Fallback content extracted from mail parts
+ * @returns Normalized description as an array
+ */
+const normalizeDescription = (
+	description: any,
+	fallbackContent?: string
+): Array<DescriptionArray> => {
+	// If already an array with content, use it
+	if (Array.isArray(description) && description.length > 0) {
+		return description;
+	}
+	// If it's a string, convert to array format
+	if (typeof description === 'string' && description) {
+		return [{ _content: description }];
+	}
+	// Use fallback content from mail parts if available
+	if (fallbackContent) {
+		return [{ _content: fallbackContent }];
+	}
+	// Return empty array if no content available
+	return [];
+};
+
+/**
+ * Normalizes tag data from comma-separated string to array
+ * @param tagString - Comma-separated tag string
+ * @returns Array of non-empty tag strings
+ */
+const normalizeTags = (tagString?: string): string[] => {
+	if (isNil(tagString)) return [];
+	return filter(tagString.split(','), (tag) => tag !== '');
+};
+
+/**
+ * Extracts the first component from an invite structure
+ * Helper to reduce repetitive deep property access
+ */
+const getInviteComponent = (inv: any) => inv?.[0]?.comp?.[0];
+
+/**
+ * Normalizes a calendar invite from message data
+ * @param m - Raw message data containing invite information
+ * @returns Normalized Invite object
+ */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const normalizeInviteFromSync = (inv: any): Invite => ({
-	ciFolder: inv?.comp?.[0]?.ciFolder,
-	apptId: inv?.comp?.[0]?.apptId,
-	id: `${inv?.comp?.[0]?.apptId}-${inv.id}`,
-	attendees: inv.comp?.[0]?.at ?? [],
-	parent: inv?.comp?.[0]?.ciFolder, // id folder
-	flags: inv.f, // read,unread,attachments,ecc...
-	parts: inv.mp ? normalizeMailPartMapFn(inv.mp) : [],
-	alarmString: getAlarmToString(inv?.comp?.[0]?.alarm),
-	alarmValue: getAlarmValueInMinutes(inv?.comp?.[0]?.alarm?.[0]?.trigger?.[0]?.rel?.[0]),
-	class: inv.comp?.[0]?.class,
-	compNum: inv.comp?.[0]?.compNum, // Component number of the invite
-	date: inv.d, // todo: check what date is
-	textDescription: inv.comp?.[0]?.desc, // todo: normalize
-	htmlDescription: inv.comp?.[0]?.descHtml,
-	end: inv.comp?.[0]?.e[0], // todo: normalize
-	freeBusy: inv.comp?.[0]?.fb,
-	freeBusyActualStatus: inv.comp?.[0]?.fba,
-	fragment: inv.comp?.[0]?.fr,
-	isOrganizer: inv.comp?.[0]?.isOrg,
-	location: inv.comp?.[0]?.loc ?? '',
-	meta: inv.meta,
-	name: inv.comp?.[0]?.name,
-	noBlob: inv.comp?.[0]?.noBlob,
-	organizer: inv.comp?.[0]?.or, // todo: normalize
-	recurrenceRule: inv.comp?.[0]?.recur, // todo: normalize
-	isRespRequested: inv.comp?.[0]?.rsvp,
-	start: inv.comp?.[0]?.s[0], // todo: normalize
-	sequenceNumber: inv.comp?.[0]?.seq,
-	status: inv.comp?.[0]?.status,
-	transparency: inv.comp?.[0]?.transp, // todo: check what is this for
-	uid: inv.comp?.[0]?.uid,
-	url: inv.comp?.[0]?.url,
-	isException: inv.comp?.[0]?.ex || false,
-	exceptId: inv.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
-	tagNamesList: inv.tn,
-	tags: !isNil(inv.t) ? filter(inv.t.split(','), (t) => t !== '') : [],
-	participants: normalizeInviteParticipants(inv.comp?.[0]?.at ?? []),
-	alarm: !!inv.comp?.[0]?.alarm,
-	alarmData: inv.comp?.[0]?.alarm,
-	ms: inv.ms || 0,
-	rev: inv.rev || 0,
-	xprop: inv.comp?.[0]?.xprop,
-	neverSent: inv?.comp?.[0]?.neverSent ?? false,
-	locationUrl: getLocationUrl(inv?.comp?.[0]?.loc ?? '')
-});
+export const normalizeInvite = (m: any): Invite => {
+	const component = getInviteComponent(m?.inv);
+	const descFromParts = extractDescriptionFromParts(m.parts || []);
+
+	// Normalize descriptions to consistent array format
+	const htmlDescription = normalizeDescription(component?.descHtml, descFromParts.html);
+	const textDescription = normalizeDescription(component?.desc, descFromParts.text);
+
+	// Extract alarm trigger for easier access
+	const alarmTrigger = component?.alarm?.[0]?.trigger?.[0]?.rel?.[0];
+
+	return {
+		// Calendar folder and appointment identifiers
+		ciFolder: component?.ciFolder,
+		apptId: component?.apptId,
+		id: m.id,
+		compNum: component?.compNum,
+
+		// Basic appointment properties
+		allDay: component?.allDay ?? false,
+		name: component?.name,
+		location: component?.loc ?? '',
+		locationUrl: getLocationUrl(component?.loc ?? ''),
+
+		// Date/time and timezone
+		tz: find(m?.inv?.[0]?.tz, (value) => value.id !== 'UTC')?.id,
+		start: component?.s?.[0],
+		end: component?.e?.[0],
+		date: m.d,
+
+		// Descriptions
+		textDescription,
+		htmlDescription,
+		fragment: component?.fr,
+
+		// Participants and organizer
+		attendees: component?.at ?? [],
+		participants: normalizeInviteParticipants(component?.at ?? []),
+		organizer: component?.or,
+		isOrganizer: component?.isOrg ?? false,
+		isRespRequested: component?.rsvp,
+
+		// Status and visibility
+		status: component?.status,
+		class: component?.class,
+		freeBusy: component?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
+		freeBusyActualStatus: component?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
+		transparency: component?.transp,
+
+		// Recurrence and exceptions
+		recurrenceRule: component?.recur,
+		isException: component?.ex || false,
+		exceptId: component?.exceptId,
+
+		// Alarms/reminders
+		alarm: !!component?.alarm,
+		alarmData: component?.alarm,
+		alarmString: getAlarmToString(component?.alarm),
+		alarmValue: getAlarmValueInMinutes(alarmTrigger),
+
+		// Metadata and flags
+		parent: m.l,
+		flags: m.f,
+		sequenceNumber: component?.seq,
+		uid: component?.uid,
+		url: component?.url,
+		noBlob: component?.noBlob,
+		ms: m.ms || 0,
+		rev: m.rev || 0,
+		meta: m.meta,
+		xprop: component?.xprop,
+		neverSent: component?.neverSent ?? false,
+
+		// Tags
+		tagNamesList: m.tn,
+		tags: normalizeTags(m.t),
+
+		// Attachments
+		parts: m.mp ? normalizeMailPartMapFn(m.mp) : [],
+		attach: {
+			mp: retrieveAttachmentsType(m?.mp?.[0] ?? [], 'attachment', m?.id)
+		},
+		attachmentFiles: findAttachments(m.mp ?? [], [])
+	};
+};
+
+/**
+ * Normalizes a calendar invite from sync data
+ * @param inv - Raw invite data from sync operation
+ * @returns Normalized Invite object
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const normalizeInviteFromSync = (inv: any): Invite => {
+	const component = inv?.comp?.[0];
+
+	// Extract alarm trigger for easier access
+	const alarmTrigger = component?.alarm?.[0]?.trigger?.[0]?.rel?.[0];
+
+	return {
+		// Calendar folder and appointment identifiers
+		ciFolder: component?.ciFolder,
+		apptId: component?.apptId,
+		id: `${component?.apptId}-${inv.id}`,
+		compNum: component?.compNum,
+
+		// Basic appointment properties
+		allDay: component?.allDay ?? false,
+		name: component?.name,
+		location: component?.loc ?? '',
+		locationUrl: getLocationUrl(component?.loc ?? ''),
+
+		// Date/time and timezone
+		tz: find(inv?.tz, (value) => value.id !== 'UTC')?.id,
+		start: component?.s?.[0],
+		end: component?.e?.[0],
+		date: inv.d,
+
+		// Descriptions (sync data doesn't need normalization)
+		textDescription: component?.desc,
+		htmlDescription: component?.descHtml,
+		fragment: component?.fr,
+
+		// Participants and organizer
+		attendees: component?.at ?? [],
+		participants: normalizeInviteParticipants(component?.at ?? []),
+		organizer: component?.or,
+		isOrganizer: component?.isOrg ?? false,
+		isRespRequested: component?.rsvp,
+
+		// Status and visibility
+		status: component?.status,
+		class: component?.class,
+		freeBusy: component?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
+		freeBusyActualStatus: component?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
+		transparency: component?.transp,
+
+		// Recurrence and exceptions
+		recurrenceRule: component?.recur,
+		isException: component?.ex || false,
+		exceptId: component?.exceptId,
+
+		// Alarms/reminders
+		alarm: !!component?.alarm,
+		alarmData: component?.alarm,
+		alarmString: getAlarmToString(component?.alarm),
+		alarmValue: getAlarmValueInMinutes(alarmTrigger),
+
+		// Metadata and flags (parent is folder ID for sync data)
+		parent: component?.ciFolder,
+		flags: inv.f,
+		sequenceNumber: component?.seq,
+		uid: component?.uid,
+		url: component?.url,
+		noBlob: component?.noBlob,
+		ms: inv.ms || 0,
+		rev: inv.rev || 0,
+		meta: inv.meta,
+		xprop: component?.xprop,
+		neverSent: component?.neverSent ?? false,
+
+		// Tags
+		tagNamesList: inv.tn,
+		tags: normalizeTags(inv.t),
+
+		// Attachments
+		parts: inv.mp ? normalizeMailPartMapFn(inv.mp) : [],
+		attach: {
+			mp: retrieveAttachmentsType(inv?.mp?.[0] ?? [], 'attachment', inv?.id)
+		},
+		attachmentFiles: findAttachments(inv.mp ?? [], [])
+	};
+};
