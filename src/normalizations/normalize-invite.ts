@@ -71,7 +71,7 @@ const extractDescriptionFromParts = (parts: MailPart[]): DescriptionContent => {
  * @returns Normalized description as an array
  */
 const normalizeDescription = (
-	description: any,
+	description: string | Array<DescriptionArray> | undefined,
 	fallbackContent?: string
 ): Array<DescriptionArray> => {
 	// If already an array with content, use it
@@ -115,77 +115,75 @@ const getInviteComponent = (inv: any): any => inv?.[0]?.comp?.[0];
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInvite = (m: any): Invite => {
-	const component = getInviteComponent(m?.inv);
+	const inviteComponent = getInviteComponent(m?.inv);
+
 	const descFromParts = extractDescriptionFromParts(m.parts ?? []);
+	const htmlDescription = normalizeDescription(inviteComponent?.descHtml, descFromParts.html);
+	const textDescription = normalizeDescription(inviteComponent?.desc, descFromParts.text);
 
-	// Normalize descriptions to consistent array format
-	const htmlDescription = normalizeDescription(component?.descHtml, descFromParts.html);
-	const textDescription = normalizeDescription(component?.desc, descFromParts.text);
-
-	// Extract alarm trigger for easier access
-	const alarmTrigger = component?.alarm?.[0]?.trigger?.[0]?.rel?.[0];
+	const alarmTrigger = inviteComponent?.alarm?.[0]?.trigger?.[0]?.rel?.[0];
 
 	return {
 		// Calendar folder and appointment identifiers
-		ciFolder: component?.ciFolder,
-		apptId: component?.apptId,
+		ciFolder: inviteComponent?.ciFolder,
+		apptId: inviteComponent?.apptId,
 		id: m.id,
-		compNum: component?.compNum,
+		compNum: inviteComponent?.compNum,
 
 		// Basic appointment properties
-		allDay: component?.allDay ?? false,
-		name: component?.name,
-		location: component?.loc ?? '',
-		locationUrl: getLocationUrl(component?.loc ?? ''),
+		allDay: inviteComponent?.allDay ?? false,
+		name: inviteComponent?.name,
+		location: inviteComponent?.loc ?? '',
+		locationUrl: getLocationUrl(inviteComponent?.loc ?? ''),
 
 		// Date/time and timezone
 		tz: find(m?.inv?.[0]?.tz, (value) => value.id !== 'UTC')?.id,
-		start: component?.s?.[0],
-		end: component?.e?.[0],
+		start: inviteComponent?.s?.[0],
+		end: inviteComponent?.e?.[0],
 		date: m.d,
 
 		// Descriptions
 		textDescription,
 		htmlDescription,
-		fragment: component?.fr,
+		fragment: inviteComponent?.fr,
 
 		// Participants and organizer
-		attendees: component?.at ?? [],
-		participants: normalizeInviteParticipants(component?.at ?? []),
-		organizer: component?.or,
-		isOrganizer: component?.isOrg ?? false,
-		isRespRequested: component?.rsvp,
+		attendees: inviteComponent?.at ?? [],
+		participants: normalizeInviteParticipants(inviteComponent?.at ?? []),
+		organizer: inviteComponent?.or,
+		isOrganizer: inviteComponent?.isOrg ?? false,
+		isRespRequested: inviteComponent?.rsvp,
 
 		// Status and visibility
-		status: component?.status,
-		class: component?.class,
-		freeBusy: component?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
-		freeBusyActualStatus: component?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
-		transparency: component?.transp,
+		status: inviteComponent?.status,
+		class: inviteComponent?.class,
+		freeBusy: inviteComponent?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
+		freeBusyActualStatus: inviteComponent?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
+		transparency: inviteComponent?.transp,
 
 		// Recurrence and exceptions
-		recurrenceRule: component?.recur,
-		isException: component?.ex ?? false,
-		exceptId: component?.exceptId,
+		recurrenceRule: inviteComponent?.recur,
+		isException: inviteComponent?.ex ?? false,
+		exceptId: inviteComponent?.exceptId,
 
 		// Alarms/reminders
-		alarm: !!component?.alarm,
-		alarmData: component?.alarm,
-		alarmString: getAlarmToString(component?.alarm),
+		alarm: !!inviteComponent?.alarm,
+		alarmData: inviteComponent?.alarm,
+		alarmString: getAlarmToString(inviteComponent?.alarm),
 		alarmValue: getAlarmValueInMinutes(alarmTrigger),
 
 		// Metadata and flags
 		parent: m.l,
 		flags: m.f,
-		sequenceNumber: component?.seq,
-		uid: component?.uid,
-		url: component?.url,
-		noBlob: component?.noBlob,
+		sequenceNumber: inviteComponent?.seq,
+		uid: inviteComponent?.uid,
+		url: inviteComponent?.url,
+		noBlob: inviteComponent?.noBlob,
 		ms: m.ms || 0,
 		rev: m.rev || 0,
 		meta: m.meta,
-		xprop: component?.xprop,
-		neverSent: component?.neverSent ?? false,
+		xprop: inviteComponent?.xprop,
+		neverSent: inviteComponent?.neverSent ?? false,
 
 		// Tags
 		tagNamesList: m.tn,
@@ -207,72 +205,70 @@ export const normalizeInvite = (m: any): Invite => {
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInviteFromSync = (inv: any): Invite => {
-	const component = inv?.comp?.[0];
-
-	// Extract alarm trigger for easier access
-	const alarmTrigger = component?.alarm?.[0]?.trigger?.[0]?.rel?.[0];
+	const inviteComponent = inv?.comp?.[0];
+	const alarmTrigger = inviteComponent?.alarm?.[0]?.trigger?.[0]?.rel?.[0];
 
 	return {
 		// Calendar folder and appointment identifiers
-		ciFolder: component?.ciFolder,
-		apptId: component?.apptId,
-		id: `${component?.apptId}-${inv.id}`,
-		compNum: component?.compNum,
+		ciFolder: inviteComponent?.ciFolder,
+		apptId: inviteComponent?.apptId,
+		id: `${inviteComponent?.apptId}-${inv.id}`,
+		compNum: inviteComponent?.compNum,
 
 		// Basic appointment properties
-		allDay: !!component?.allDay,
-		name: component?.name,
-		location: component?.loc ?? '',
-		locationUrl: getLocationUrl(component?.loc ?? ''),
+		allDay: !!inviteComponent?.allDay,
+		name: inviteComponent?.name,
+		location: inviteComponent?.loc ?? '',
+		locationUrl: getLocationUrl(inviteComponent?.loc ?? ''),
 
 		// Date/time and timezone
 		tz: find(inv?.tz, (value) => value.id !== 'UTC')?.id,
-		start: component?.s?.[0],
-		end: component?.e?.[0],
+		start: inviteComponent?.s?.[0],
+		end: inviteComponent?.e?.[0],
 		date: inv.d,
 
 		// Descriptions (sync data doesn't need normalization)
-		textDescription: component?.desc,
-		htmlDescription: component?.descHtml,
-		fragment: component?.fr,
+		textDescription: inviteComponent?.desc,
+		htmlDescription: inviteComponent?.descHtml,
+		fragment: inviteComponent?.fr,
 
 		// Participants and organizer
-		attendees: component?.at ?? [],
-		participants: normalizeInviteParticipants(component?.at ?? []),
-		organizer: component?.or,
-		isOrganizer: !!component?.isOrg,
-		isRespRequested: component?.rsvp,
+		attendees: inviteComponent?.at ?? [],
+		participants: normalizeInviteParticipants(inviteComponent?.at ?? []),
+		organizer: inviteComponent?.or,
+		isOrganizer: !!inviteComponent?.isOrg,
+		isRespRequested: inviteComponent?.rsvp,
 
 		// Status and visibility
-		status: component?.status,
-		class: component?.class,
-		freeBusy: component?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
-		freeBusyActualStatus: component?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
-		transparency: component?.transp,
+		status: inviteComponent?.status,
+		class: inviteComponent?.class,
+		freeBusy: inviteComponent?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
+		freeBusyActualStatus: inviteComponent?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
+		transparency: inviteComponent?.transp,
 
 		// Recurrence and exceptions
-		recurrenceRule: component?.recur,
-		isException: !!component?.ex,
-		exceptId: component?.exceptId,
+		recurrenceRule: inviteComponent?.recur,
+		isException: !!inviteComponent?.ex,
+		exceptId: inviteComponent?.exceptId,
 
 		// Alarms/reminders
-		alarm: !!component?.alarm,
-		alarmData: component?.alarm,
-		alarmString: getAlarmToString(component?.alarm),
+		alarm: !!inviteComponent?.alarm,
+		alarmData: inviteComponent?.alarm,
+		alarmString: getAlarmToString(inviteComponent?.alarm),
 		alarmValue: getAlarmValueInMinutes(alarmTrigger),
 
 		// Metadata and flags (parent is folder ID for sync data)
-		parent: component?.ciFolder,
+		parent: inviteComponent?.ciFolder,
 		flags: inv.f,
-		sequenceNumber: component?.seq,
-		uid: component?.uid,
-		url: component?.url,
-		noBlob: component?.noBlob,
+		sequenceNumber: inviteComponent?.seq,
+		uid: inviteComponent?.uid,
+		url: inviteComponent?.url,
+		noBlob: inviteComponent?.noBlob,
 		ms: inv.ms || 0,
 		rev: inv.rev || 0,
 		meta: inv.meta,
-		xprop: component?.xprop,
-		neverSent: !!component?.neverSent,
+		xprop: inviteComponent?.xprop,
+		neverSent: !!inviteComponent?.neverSent,
 
 		// Tags
 		tagNamesList: inv.tn,
