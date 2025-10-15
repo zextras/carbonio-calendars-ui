@@ -12,23 +12,26 @@ import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
 
-import { InviteResponse } from './invite-response';
+import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
+import * as handler from '../../../commons/get-appointment';
+import { CALENDAR_BOARD_ID } from '../../../constants';
+import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { MESSAGE_METHOD } from 'constants/api';
+import { InviteResponse } from 'shared/invite-response/invite-response';
 import {
 	buildMailMessageType,
 	MESSAGE_TYPE,
 	setupServerSingleEventResponse
-} from './invite-test-utils';
-import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
-import * as handler from '../../commons/get-appointment';
-import { CALENDAR_BOARD_ID } from '../../constants';
-import { MESSAGE_METHOD } from '../../constants/api';
-import * as getFreeBusyResponseHandler from '../../soap/get-free-busy-request';
-import * as getMsgHandler from '../../soap/get-message-request';
-import * as moveAppointmentHandler from '../../store/actions/move-appointment';
-import * as modifyAppointmentHandler from '../../store/actions/new-modify-appointment';
-import * as sendInviteResponseHandler from '../../store/actions/send-invite-response';
-import { reducers } from '../../store/redux';
-import mockedData from '../../test/generators';
+} from 'shared/invite-response/invite-test-utils';
+import * as getFreeBusyResponseHandler from 'soap/get-free-busy-request';
+import * as getMsgHandler from 'soap/get-message-request';
+import * as moveAppointmentHandler from 'store/actions/move-appointment';
+import * as modifyAppointmentHandler from 'store/actions/new-modify-appointment';
+import * as sendInviteResponseHandler from 'store/actions/send-invite-response';
+import { reducers } from 'store/redux';
+import mockedData from 'test/generators';
 import {
 	exceptionAppointmentAllDayResponse,
 	exceptionAppointmentResponse,
@@ -36,16 +39,13 @@ import {
 	seriesAppointmentResponse,
 	singleAppointmentAllDayResponse,
 	singleAppointmentResponse
-} from '../../test/mocks/network/msw/handle-get-appointment';
+} from 'test/mocks/network/msw/handle-get-appointment';
 import {
 	seriesGetMsgAllDayResponse,
 	seriesGetMsgResponse,
 	singleGetMsgAllDayResponse,
 	singleGetMsgResponse
-} from '../../test/mocks/network/msw/handle-get-invite';
-import { setupTest } from '@test-setup';
-import { generateRoots } from '@test-utils/folders/roots-generator';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+} from 'test/mocks/network/msw/handle-get-invite';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
