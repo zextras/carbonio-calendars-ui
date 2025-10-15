@@ -280,7 +280,7 @@ describe('normalize-invite.ts', () => {
 						contentType: 'text/html',
 						content: '<html><body>HTML content</body></html>'
 					}
-				] as any,
+				] as never,
 				inv: [
 					{
 						comp: [
@@ -327,9 +327,9 @@ describe('normalize-invite.ts', () => {
 										contentType: 'text/html',
 										content: '<html><body>HTML content</body></html>'
 									}
-								] as any
+								] as never
 							}
-						] as any
+						] as never
 					}
 				],
 				inv: [
@@ -371,7 +371,7 @@ describe('normalize-invite.ts', () => {
 							}
 						]
 					}
-				] as any,
+				] as never,
 				inv: [
 					{
 						comp: [
