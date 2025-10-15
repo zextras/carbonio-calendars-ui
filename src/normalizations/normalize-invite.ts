@@ -44,15 +44,14 @@ const extractDescriptionFromParts = (parts: MailPart[]): DescriptionContent => {
 		if (!partsList) return;
 
 		partsList.forEach((part) => {
-			// Extract text/html content
 			if (part.contentType === 'text/html' && part.content && !result.html) {
 				result.html = part.content;
 			}
-			// Extract text/plain content
+
 			if (part.contentType === 'text/plain' && part.content && !result.text) {
 				result.text = part.content;
 			}
-			// Recursively search nested parts
+
 			if (part.parts) {
 				findContentInParts(part.parts);
 			}
@@ -74,19 +73,18 @@ const normalizeDescription = (
 	description: string | Array<DescriptionArray> | undefined,
 	fallbackContent?: string
 ): Array<DescriptionArray> => {
-	// If already an array with content, use it
 	if (Array.isArray(description) && description.length > 0) {
 		return description;
 	}
-	// If it's a string, convert to array format
+
 	if (typeof description === 'string' && description) {
 		return [{ _content: description }];
 	}
-	// Use fallback content from mail parts if available
+
 	if (fallbackContent) {
 		return [{ _content: fallbackContent }];
 	}
-	// Return empty array if no content available
+
 	return [];
 };
 
