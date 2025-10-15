@@ -310,7 +310,7 @@ describe('Appointment Reminder Item Details', () => {
 			expect(screen.getByTestId('icon: MessageSquareOutline')).toBeVisible();
 		});
 
-		it("shouldn't render the description if it's not set in the invite", () => {
+		it("shouldn't render empty  description placeholder if it's not set in the invite", () => {
 			const inviteId = faker.string.uuid();
 			const invite = generateInvite({
 				context: { id: inviteId }
@@ -323,7 +323,8 @@ describe('Appointment Reminder Item Details', () => {
 
 			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
 
-			expect(screen.queryByTestId('icon: MessageSquareOutline')).not.toBeInTheDocument();
+			expect(screen.getByTestId('icon: MessageSquareOutline')).toBeInTheDocument();
+			expect(screen.getByText('(message.invite_has_no_message.)')).toBeVisible();
 		});
 	});
 });
