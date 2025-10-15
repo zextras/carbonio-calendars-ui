@@ -196,6 +196,203 @@ describe('normalize-invite.ts', () => {
 			expect(result.htmlDescription).toEqual([]);
 			expect(result.textDescription).toEqual([]);
 		});
+
+		it('should handle message without mp property (no mail parts)', () => {
+			const mockMessage = {
+				id: '2687',
+				l: '2380',
+				f: '',
+				d: 1752046088000,
+				tn: '',
+				parts: [],
+				inv: [
+					{
+						comp: [
+							{
+								name: 'Test Appointment',
+								apptId: '2688',
+								ciFolder: '10',
+								s: [{ d: '20250710T073000Z', u: 1752132600000 }],
+								e: [{ u: 1752134400000, d: '20250710T080000Z' }]
+							}
+						]
+					}
+				]
+				// mp property is intentionally missing
+			};
+
+			const result = normalizeInvite(mockMessage);
+
+			expect(result.parts).toEqual([]);
+			expect(result.attach).toBeDefined();
+			expect(result.attachmentFiles).toEqual([]);
+		});
+
+		it('should handle message with mp property containing attachments', () => {
+			const mockMessage = {
+				id: '2687',
+				l: '2380',
+				f: '',
+				d: 1752046088000,
+				tn: '',
+				parts: [],
+				mp: [
+					{
+						part: '1',
+						ct: 'application/pdf',
+						filename: 'document.pdf',
+						s: 12345
+					}
+				],
+				inv: [
+					{
+						comp: [
+							{
+								name: 'Test Appointment',
+								apptId: '2688',
+								ciFolder: '10',
+								s: [{ d: '20250710T073000Z', u: 1752132600000 }],
+								e: [{ u: 1752134400000, d: '20250710T080000Z' }]
+							}
+						]
+					}
+				]
+			};
+
+			const result = normalizeInvite(mockMessage);
+
+			expect(result.parts).toBeDefined();
+			expect(result.attach).toBeDefined();
+			expect(result.attachmentFiles).toBeDefined();
+		});
+
+		it('should handle parts array with undefined items gracefully', () => {
+			const mockMessage = {
+				id: '2687',
+				l: '2380',
+				f: '',
+				d: 1752046088000,
+				tn: '',
+				parts: [
+					undefined,
+					null,
+					{
+						contentType: 'text/html',
+						content: '<html><body>HTML content</body></html>'
+					}
+				] as any,
+				inv: [
+					{
+						comp: [
+							{
+								name: 'Test Appointment',
+								apptId: '2688',
+								ciFolder: '10',
+								s: [{ d: '20250710T073000Z', u: 1752132600000 }],
+								e: [{ u: 1752134400000, d: '20250710T080000Z' }]
+							}
+						]
+					}
+				]
+			};
+
+			const result = normalizeInvite(mockMessage);
+
+			expect(result.htmlDescription).toEqual([
+				{ _content: '<html><body>HTML content</body></html>' }
+			]);
+		});
+
+		it('should handle deeply nested parts structure with null values', () => {
+			const mockMessage = {
+				id: '2687',
+				l: '2380',
+				f: '',
+				d: 1752046088000,
+				tn: '',
+				parts: [
+					{
+						contentType: 'multipart/mixed',
+						parts: [
+							null,
+							{
+								contentType: 'multipart/alternative',
+								parts: [
+									undefined,
+									{
+										contentType: 'text/plain',
+										content: 'Plain text content'
+									},
+									{
+										contentType: 'text/html',
+										content: '<html><body>HTML content</body></html>'
+									}
+								] as any
+							}
+						] as any
+					}
+				],
+				inv: [
+					{
+						comp: [
+							{
+								name: 'Test Appointment',
+								apptId: '2688',
+								ciFolder: '10',
+								s: [{ d: '20250710T073000Z', u: 1752132600000 }],
+								e: [{ u: 1752134400000, d: '20250710T080000Z' }]
+							}
+						]
+					}
+				]
+			};
+
+			const result = normalizeInvite(mockMessage);
+
+			expect(result.htmlDescription).toEqual([
+				{ _content: '<html><body>HTML content</body></html>' }
+			]);
+			expect(result.textDescription).toEqual([{ _content: 'Plain text content' }]);
+		});
+
+		it('should handle parts without contentType property', () => {
+			const mockMessage = {
+				id: '2687',
+				l: '2380',
+				f: '',
+				d: 1752046088000,
+				tn: '',
+				parts: [
+					{
+						parts: [
+							{
+								contentType: 'text/html',
+								content: '<html><body>HTML content</body></html>'
+							}
+						]
+					}
+				] as any,
+				inv: [
+					{
+						comp: [
+							{
+								name: 'Test Appointment',
+								apptId: '2688',
+								ciFolder: '10',
+								s: [{ d: '20250710T073000Z', u: 1752132600000 }],
+								e: [{ u: 1752134400000, d: '20250710T080000Z' }]
+							}
+						]
+					}
+				]
+			};
+
+			const result = normalizeInvite(mockMessage);
+
+			expect(result.htmlDescription).toEqual([
+				{ _content: '<html><body>HTML content</body></html>' }
+			]);
+		});
 	});
 
 	describe('normalizeInviteFromSync', () => {
