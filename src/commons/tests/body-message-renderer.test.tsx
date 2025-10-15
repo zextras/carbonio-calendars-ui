@@ -19,7 +19,10 @@ const mockInvite = mockedData.getInvite();
 describe('BodyMessageRenderer', () => {
 	it('renders EmptyBody when fragment is empty', () => {
 		setupTest(
-			<BodyMessageRenderer fragment={''} htmlDescription={undefined} textDescription={undefined} />
+			<BodyMessageRenderer
+				htmlDescription={undefined as never}
+				textDescription={undefined as never}
+			/>
 		);
 		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
 	});
@@ -28,7 +31,6 @@ describe('BodyMessageRenderer', () => {
 		const htmlContent = '<div>Some <b>HTML</b> content</div>';
 		setupTest(
 			<BodyMessageRenderer
-				fragment={'some fragment'}
 				htmlDescription={[{ _content: htmlContent }]}
 				textDescription={mockInvite.textDescription}
 			/>
@@ -47,7 +49,6 @@ describe('BodyMessageRenderer', () => {
 		setupTest(
 			<BodyMessageRenderer
 				textDescription={mockInvite.textDescription}
-				fragment={'some fragment'}
 				htmlDescription={[{ _content: htmlContent }]}
 				fontSize="large"
 			/>
@@ -64,7 +65,6 @@ describe('BodyMessageRenderer', () => {
 		setupTest(
 			<BodyMessageRenderer
 				textDescription={[{ _content: textContent }]}
-				fragment={'some fragment'}
 				htmlDescription={mockInvite.htmlDescription}
 				fontSize="large"
 			/>
@@ -76,7 +76,6 @@ describe('BodyMessageRenderer', () => {
 		const textContent = 'Line1\nLine2';
 		setupTest(
 			<BodyMessageRenderer
-				fragment={'some fragment'}
 				htmlDescription={mockInvite.htmlDescription}
 				textDescription={[{ _content: textContent }]}
 			/>
@@ -90,7 +89,6 @@ describe('BodyMessageRenderer', () => {
 		setupTest(
 			<BodyMessageRenderer
 				textDescription={[{ _content: textContent }]}
-				fragment={'some fragment'}
 				htmlDescription={mockInvite.htmlDescription}
 				fontSize="large"
 			/>
@@ -114,7 +112,6 @@ describe('BodyMessageRenderer', () => {
 			<BodyMessageRenderer
 				textDescription={mockInvite.textDescription}
 				htmlDescription={[{ _content: htmlContent }]}
-				fragment={'some fragment'}
 				fontSize="large"
 			/>
 		);
