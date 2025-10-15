@@ -12,9 +12,9 @@ import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
 
-import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import * as handler from '../../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../../constants';
+import * as mockshell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
@@ -208,7 +208,7 @@ describe('invite response component', () => {
 			describe('a row which inform the user about his availability', () => {
 				test('if the appointment is received by the primary account, it will be the one used', async () => {
 					const name = 'sam@mail.com';
-					shell.useUserAccount.mockImplementation(() => ({
+					mockshell.useUserAccount.mockImplementation(() => ({
 						name,
 						displayName: name,
 						id: '0e9d1df6-30df-4e1d-aff6-212908045221',
@@ -700,7 +700,7 @@ describe('invite response component', () => {
 					test('a board is opened', async () => {
 						setupFoldersStore();
 
-						const boardSpy = jest.spyOn(shell, 'addBoard');
+						const boardSpy = jest.spyOn(mockshell, 'addBoard');
 
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
