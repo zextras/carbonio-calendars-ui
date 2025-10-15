@@ -44,6 +44,8 @@ const extractDescriptionFromParts = (parts: MailPart[]): DescriptionContent => {
 		if (!partsList) return;
 
 		partsList.forEach((part) => {
+			if (!part) return;
+
 			if (part.contentType === 'text/html' && part.content && !result.html) {
 				result.html = part.content;
 			}
