@@ -6,7 +6,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { normalizeInvite, normalizeInviteFromSync } from './normalize-invite';
+import { normalizeInvite, normalizeInviteFromSync } from 'normalizations/normalize-invite';
 
 describe('normalize-invite.ts', () => {
 	describe('normalizeInvite', () => {
