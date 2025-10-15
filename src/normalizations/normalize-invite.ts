@@ -116,7 +116,7 @@ const getInviteComponent = (inv: any): any => inv?.[0]?.comp?.[0];
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInvite = (m: any): Invite => {
 	const component = getInviteComponent(m?.inv);
-	const descFromParts = extractDescriptionFromParts(m.parts || []);
+	const descFromParts = extractDescriptionFromParts(m.parts ?? []);
 
 	// Normalize descriptions to consistent array format
 	const htmlDescription = normalizeDescription(component?.descHtml, descFromParts.html);
@@ -165,7 +165,7 @@ export const normalizeInvite = (m: any): Invite => {
 
 		// Recurrence and exceptions
 		recurrenceRule: component?.recur,
-		isException: component?.ex || false,
+		isException: component?.ex ?? false,
 		exceptId: component?.exceptId,
 
 		// Alarms/reminders
@@ -252,7 +252,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => {
 
 		// Recurrence and exceptions
 		recurrenceRule: component?.recur,
-		isException: component?.ex || false,
+		isException: component?.ex ?? false,
 		exceptId: component?.exceptId,
 
 		// Alarms/reminders
