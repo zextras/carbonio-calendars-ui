@@ -104,7 +104,9 @@ const normalizeTags = (tagString?: string): string[] => {
  * Extracts the first component from an invite structure
  * Helper to reduce repetitive deep property access
  */
-const getInviteComponent = (inv: any) => inv?.[0]?.comp?.[0];
+// TODO: type this properly
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getInviteComponent = (inv: any): any => inv?.[0]?.comp?.[0];
 
 /**
  * Normalizes a calendar invite from message data
