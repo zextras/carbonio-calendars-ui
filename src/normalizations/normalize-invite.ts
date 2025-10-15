@@ -220,7 +220,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => {
 		compNum: component?.compNum,
 
 		// Basic appointment properties
-		allDay: component?.allDay ?? false,
+		allDay: !!component?.allDay,
 		name: component?.name,
 		location: component?.loc ?? '',
 		locationUrl: getLocationUrl(component?.loc ?? ''),
@@ -240,7 +240,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => {
 		attendees: component?.at ?? [],
 		participants: normalizeInviteParticipants(component?.at ?? []),
 		organizer: component?.or,
-		isOrganizer: component?.isOrg ?? false,
+		isOrganizer: !!component?.isOrg,
 		isRespRequested: component?.rsvp,
 
 		// Status and visibility
@@ -252,7 +252,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => {
 
 		// Recurrence and exceptions
 		recurrenceRule: component?.recur,
-		isException: component?.ex ?? false,
+		isException: !!component?.ex,
 		exceptId: component?.exceptId,
 
 		// Alarms/reminders
@@ -272,7 +272,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => {
 		rev: inv.rev || 0,
 		meta: inv.meta,
 		xprop: component?.xprop,
-		neverSent: component?.neverSent ?? false,
+		neverSent: !!component?.neverSent,
 
 		// Tags
 		tagNamesList: inv.tn,
