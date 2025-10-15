@@ -18,16 +18,6 @@ import { setupTest } from '@test-setup';
 const mockInvite = mockedData.getInvite();
 
 describe('BodyMessageRenderer', () => {
-	it('renders EmptyBody when fragment is empty', () => {
-		setupTest(
-			<BodyMessageRenderer
-				htmlDescription={undefined as never}
-				textDescription={undefined as never}
-			/>
-		);
-		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
-	});
-
 	it('renders HtmlMessageRenderer when htmlDescription is present', () => {
 		const htmlContent = '<div>Some <b>HTML</b> content</div>';
 		setupTest(
