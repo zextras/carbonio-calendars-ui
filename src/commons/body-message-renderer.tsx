@@ -81,17 +81,17 @@ export const BodyMessageRenderer = ({
 
 		const roomHtmlDesc = roomValidationRegEx?.exec(htmlContent)?.[0];
 		const cleanedHtml = roomHtmlDesc ? replace(htmlContent, roomHtmlDesc, '') : htmlContent;
-		const extracted = extractHtmlBody(cleanedHtml);
-		const trimmed = extracted.trim();
+		const htmlBody = extractHtmlBody(cleanedHtml);
+		const trimmedHtmlBody = htmlBody.trim();
 
 		// Check if HTML is empty or contains only empty tags
-		if (!trimmed || trimmed === '"') return null;
+		if (!trimmedHtmlBody || trimmedHtmlBody === '"') return null;
 
 		// Check for empty HTML body structures
 		const emptyHtmlPattern = /<html[^>]*>\s*<body[^>]*>\s*<\/body>\s*<\/html>/i;
-		if (emptyHtmlPattern.test(trimmed)) return null;
+		if (emptyHtmlPattern.test(trimmedHtmlBody)) return null;
 
-		return trimmed;
+		return trimmedHtmlBody;
 	}, [htmlDescription]);
 
 	const processedTextContent = useMemo(() => {
@@ -100,13 +100,13 @@ export const BodyMessageRenderer = ({
 
 		const roomTextDesc = roomValidationRegEx?.exec(textContent)?.[0];
 		const cleanedText = roomTextDesc ? replace(textContent, roomTextDesc, '') : textContent;
-		const extracted = extractBody(cleanedText);
-		const trimmed = extracted.trim();
+		const textBody = extractBody(cleanedText);
+		const trimmedTextBody = textBody.trim();
 
 		// Filter out invalid content like single quote or empty strings
-		if (!trimmed || trimmed === '"') return null;
+		if (!trimmedTextBody || trimmedTextBody === '"') return null;
 
-		return trimmed;
+		return trimmedTextBody;
 	}, [textDescription]);
 
 	if (processedHtmlContent) {
