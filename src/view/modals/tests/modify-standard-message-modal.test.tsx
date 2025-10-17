@@ -126,7 +126,7 @@ describe('modify standard message modal', () => {
 				);
 				const { result } = setupHook(useTheme);
 				expect(screen.getByRole('button', { name: 'confirmLabel' })).toHaveStyle(
-					`background-color: ${result.current.palette.primary.active}`
+					`background-color: ${result.current.palette.primary.regular}`
 				);
 			});
 			it('has gray6 text color', () => {
@@ -141,7 +141,7 @@ describe('modify standard message modal', () => {
 				);
 				const { result } = setupHook(useTheme);
 				expect(screen.getByRole('button', { name: 'confirmLabel' })).toHaveStyle(
-					`color: ${result.current.palette.gray6.active}`
+					`color: ${result.current.palette.gray6.regular}`
 				);
 			});
 			describe('clicking the button', () => {
@@ -198,7 +198,7 @@ describe('modify standard message modal', () => {
 				);
 				const { result } = setupHook(useTheme);
 				expect(screen.getByRole('button', { name: 'Edit Message' })).toHaveStyle(
-					`background-color: ${result.current.palette.gray6.active}`
+					`background-color: ${result.current.palette.gray6.regular}`
 				);
 			});
 			it('has primary text color', () => {
@@ -213,7 +213,7 @@ describe('modify standard message modal', () => {
 				);
 				const { result } = setupHook(useTheme);
 				expect(screen.getByRole('button', { name: 'Edit Message' })).toHaveStyle(
-					`color: ${result.current.palette.primary.active}`
+					`color: ${result.current.palette.primary.regular}`
 				);
 			});
 			describe('clicking on the button', () => {
