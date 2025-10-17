@@ -298,7 +298,7 @@ describe('Appointment Reminder Item', () => {
 			expect(screen.getByText(/show details/i)).toBeVisible();
 		});
 
-		it('should render the text with a specific color', () => {
+		it('should render the text with a specific color', async () => {
 			const reminderItem = generateReminderItem({ location: faker.internet.url() });
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const {
@@ -317,11 +317,7 @@ describe('Appointment Reminder Item', () => {
 
 			const showDetailsText = screen.getByText(/show details/i);
 
-			/*
-			 * FIXME change the color variant from hover to regular as soon as
-			 *  the https://github.com/testing-library/jest-dom/issues/594 issue is fixed
-			 */
-			expect(showDetailsText).toHaveStyle({ color: theme.palette.info.hover });
+			expect(showDetailsText).toHaveStyle({ color: theme.palette.info.regular });
 		});
 
 		it('should render the text with underline', () => {
