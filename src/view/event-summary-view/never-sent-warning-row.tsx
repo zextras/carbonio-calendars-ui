@@ -5,9 +5,9 @@
  */
 import React, { ReactElement } from 'react';
 
+import styled from '@emotion/styled';
 import { Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import styled from '@emotion/styled';
 
 const WarningText = styled(Text)`
 	color: #d74942;

@@ -30,7 +30,7 @@ import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
-import { ForwardAppointmentModal } from '../view/modals/forward-appointment-modal';
+import { ForwardAppointmentModal } from '../view/modals/forward-appointment/forward-appointment-modal';
 
 export const openEventItem = ({
 	event,
@@ -222,7 +222,7 @@ export const forwardEventItem = ({
 				children: (
 					<StoreProvider>
 						<ForwardAppointmentModal
-							eventId={event.resource.id}
+							event={event}
 							onClose={(): void => {
 								context.closeModal(EVENT_ACTIONS.FORWARD);
 							}}

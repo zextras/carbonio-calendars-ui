@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.16.5...v1.17.0) (2025-08-22)
+
+
+### Features
+
+* [CO-2044] Resource selection enhancement for events creation ([#607](https://github.com/zextras/carbonio-calendars-ui/issues/607)) ([db36862](https://github.com/zextras/carbonio-calendars-ui/commit/db36862c4f0ac4f26f028015513cccf71dcc2e1e))
+* [CO-2199] Improve resource input validation in editor ([#610](https://github.com/zextras/carbonio-calendars-ui/issues/610)) ([6554bf4](https://github.com/zextras/carbonio-calendars-ui/commit/6554bf4c9f415f3e37b20dc4cd6721251332f0d3))
+* [CO-2216] Dynamic sharing options based on user settings in ShareCalendarModal ([#613](https://github.com/zextras/carbonio-calendars-ui/issues/613)) ([bf1c39d](https://github.com/zextras/carbonio-calendars-ui/commit/bf1c39dd6a106189acdbe43428860a6d46876635))
+* calendars improve month view layout ([20796df](https://github.com/zextras/carbonio-calendars-ui/commit/20796dffa540e4429522b3ee4c5c792cfd0d55e2))
+* get public shares URLs links directly from calendar edit modal ([5104f80](https://github.com/zextras/carbonio-calendars-ui/commit/5104f805a9b01d3c3153ceb88e064f7fb62fc980))
+* limit the all day rows number  ([5791b5e](https://github.com/zextras/carbonio-calendars-ui/commit/5791b5ea21ef17422891a1f2a77bcf8e83f96537))
+
+
+### Bug Fixes
+
+* [CO-2020] default date persistence when no search is executed ([#595](https://github.com/zextras/carbonio-calendars-ui/issues/595)) ([b4e9809](https://github.com/zextras/carbonio-calendars-ui/commit/b4e9809440c8f699382d8ccdddc8ba0e734e23b0))
+* [CO-2125] prevent duplications inside Advanced Filters ([#604](https://github.com/zextras/carbonio-calendars-ui/issues/604)) ([010c77f](https://github.com/zextras/carbonio-calendars-ui/commit/010c77f4d6bbc726ff95f97d4d3d3b43a967708f))
+* free busy availability setting for allow only users of my domain not working ([#601](https://github.com/zextras/carbonio-calendars-ui/issues/601)) ([453589c](https://github.com/zextras/carbonio-calendars-ui/commit/453589cb80e8e4f2ee072d75785c882e8da4bfe7))
+* multiple events imported from ics can be edited or deleted ([fdd2197](https://github.com/zextras/carbonio-calendars-ui/commit/fdd21976adb53416989ef69543d716e09223bcca))
+* update settings domain condition ([85a3752](https://github.com/zextras/carbonio-calendars-ui/commit/85a3752e4f514698113e2a031feabeef1af23fd3))
+* update translation strings for button show more ([252fd00](https://github.com/zextras/carbonio-calendars-ui/commit/252fd0091b1252cd323b58a63ffbf7ca6a98ffad))
+
 ### 1.16.5 (2025-06-27)
 
 

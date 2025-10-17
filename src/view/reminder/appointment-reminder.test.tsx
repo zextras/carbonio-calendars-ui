@@ -16,8 +16,6 @@ import mockedData from '../../test/generators';
 import { Appointment } from '../../types/store/appointments';
 import { setupTest } from '@test-setup';
 
-jest.setTimeout(40000);
-
 describe('appointment reminders', () => {
 	test("'when the appointment is deleted also the relative reminder is deleted", async () => {
 		const event = mockedData.getEvent();

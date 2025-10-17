@@ -25,11 +25,9 @@ import { useTranslation } from 'react-i18next';
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
 import { useGetReminderItems } from './reminder-time-options';
 import { getTimeToDisplayData } from '../../commons/utilities';
-import { getLocationUrl } from '../../normalizations/normalize-calendar-events';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectAppointment } from '../../store/selectors/appointments';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
 
 const DEFAULT_FONT_SIZE = 'medium';
@@ -49,7 +47,6 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 		isRecurrent,
 		end,
 		alarmData,
-		location,
 		name: title,
 		isOrg: isOrganizer,
 		key
@@ -58,9 +55,10 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const [t] = useTranslation();
 	const [now, setNow] = useState(moment().valueOf());
 	const [isDetailsExpanded, setDetailsExpanded] = useState(false);
-	const locationUrl = useMemo(() => getLocationUrl(location), [location]);
-	const appointment = useAppSelector(selectAppointment(id));
 
+	const rescheduleLabel = t('label.reschedule_appointment', 'Reschedule appointment');
+	const snoozeLabel = t('label.snooze', 'Snooze');
+	const dismissLabel = t('label.dismiss', 'Dismiss');
 	const labelShowEventDetails = useMemo(
 		() =>
 			isDetailsExpanded
@@ -143,9 +141,9 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 				</Row>
 				<Row mainAlignment="flex-end" width="fit">
 					{isSetNewTimeAllowed ? (
-						<Tooltip placement="top" label={t('label.set_new_time', 'Set new time')}>
+						<Tooltip placement="top" label={rescheduleLabel}>
 							<Button
-								icon="ClockOutline"
+								icon="CalendarOutline"
 								type="ghost"
 								color="text"
 								size="large"
@@ -153,13 +151,13 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 							/>
 						</Tooltip>
 					) : (
-						<Tooltip placement="top" label={t('label.snooze', 'Snooze')}>
+						<Tooltip placement="top" label={snoozeLabel}>
 							<Dropdown items={reminderItems} placement="bottom-end">
-								<Button type="ghost" color="text" icon="Flip2Outline" size="large" onClick={noop} />
+								<Button type="ghost" color="text" icon="ClockOutline" size="large" onClick={noop} />
 							</Dropdown>
 						</Tooltip>
 					)}
-					<Tooltip placement="top" label={t('label.dismiss', 'Dismiss').toUpperCase()}>
+					<Tooltip placement="top" label={dismissLabel}>
 						<Button
 							type="ghost"
 							color="text"

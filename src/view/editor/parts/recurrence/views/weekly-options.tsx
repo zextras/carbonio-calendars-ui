@@ -7,9 +7,9 @@ import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useSt
 
 import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
 
-import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';

@@ -5,6 +5,8 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo } from 'react';
 
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import {
 	Container,
 	Button,
@@ -15,8 +17,6 @@ import {
 	AnyColor
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';

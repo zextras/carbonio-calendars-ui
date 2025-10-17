@@ -43,7 +43,6 @@ import {
 	singleGetMsgAllDayResponse,
 	singleGetMsgResponse
 } from '../../test/mocks/network/msw/handle-get-invite';
-
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';

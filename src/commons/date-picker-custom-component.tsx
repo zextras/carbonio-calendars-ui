@@ -5,8 +5,8 @@
  */
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 
-import { Padding, Row, Input, IconButton } from '@zextras/carbonio-design-system';
 import styled from '@emotion/styled';
+import { Padding, Row, Input, IconButton } from '@zextras/carbonio-design-system';
 
 type CustomComponentProps = {
 	value: Date;

@@ -5,8 +5,8 @@
  */
 import React, { ComponentProps, ReactComponentElement } from 'react';
 
-import { Container } from '@zextras/carbonio-design-system';
 import styled from '@emotion/styled';
+import { Container } from '@zextras/carbonio-design-system';
 
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
