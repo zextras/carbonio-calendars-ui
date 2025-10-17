@@ -36,7 +36,6 @@ import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-ran
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
-import { hasDescription } from '../../utils/invite';
 
 export function mailToContact(contact: object): Action | undefined {
 	const [mailTo, available] = getAction('contact-list', 'mail-to', [contact]);
@@ -172,8 +171,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const convertedDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
 		allDay: invite.allDay
 	});
-
-	const messageHasABody = useMemo(() => hasDescription(invite), [invite]);
 
 	const inviteId =
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
@@ -492,7 +489,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 					)}
 				</Row>
-				{invite && messageHasABody && (
+				{invite && (
 					<Row
 						width="100%"
 						crossAlignment="flex-start"
@@ -507,7 +504,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
 							<BodyMessageRenderer
-								fragment={invite.fragment}
 								htmlDescription={invite.htmlDescription}
 								textDescription={invite.textDescription}
 							/>

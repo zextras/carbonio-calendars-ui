@@ -31,7 +31,6 @@ import { PanelView } from '../../types/actions';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';
-import { hasDescription } from '../../utils/invite';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
@@ -122,8 +121,6 @@ export default function EventPanelView(): ReactElement | null {
 		[event?.resource?.alarmData]
 	);
 
-	const messageHasABody = useMemo(() => (invite ? hasDescription(invite) : false), [invite]);
-
 	if (!event || !invite) {
 		return null;
 	}
@@ -173,12 +170,12 @@ export default function EventPanelView(): ReactElement | null {
 							<StyledDivider />
 						</>
 					)}
-					{messageHasABody && (
-						<>
-							<MessagePart fullInvite={invite} />
-							<StyledDivider />
-						</>
-					)}
+
+					<>
+						<MessagePart fullInvite={invite} />
+						<StyledDivider />
+					</>
+
 					{alarmString && (
 						<>
 							<ReminderPart alarmString={alarmString} invite={invite} event={event} />
