@@ -35,9 +35,11 @@ const config: Config = {
 	maxWorkers: '50%',
 	moduleDirectories: ['node_modules', 'utils', 'src'],
 	moduleNameMapper: {
+		'\\.(css|less|scss|sass)$': 'identity-obj-proxy',
 		'\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
 			'<rootDir>/__mocks__/fileMock.js',
 		'^uuid$': require.resolve('uuid'),
+		'^@test-mocks/(.*)$': '<rootDir>/__mocks__/$1',
 		'^@test-utils/(.*)$': '<rootDir>/src/__test__/mocks/$1',
 		'^@test-setup$': '<rootDir>/src/__test__/test-setup.tsx',
 		'^@jest-setup$': '<rootDir>/jest-setup.ts'
@@ -46,7 +48,7 @@ const config: Config = {
 	testEnvironmentOptions: {
 		customExportConditions: ['']
 	},
-	transformIgnorePatterns: ['/node_modules/(?!@zextras/carbonio-ui-commons).+\\.js$'],
+	transformIgnorePatterns: ['/node_modules/(?!@zextras/carbonio-ui-commons|until-async).+\\.js$'],
 	transform: {
 		'^.+\\.(ts|tsx|js|jsx)$': ['babel-jest', { configFile: './babel.config.jest.js' }]
 	}

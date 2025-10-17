@@ -103,7 +103,7 @@ describe('delete-permanently', () => {
 		const { result } = setupHook(useTheme, { store });
 
 		expect(screen.getByRole('button', { name: 'Delete permanently' })).toHaveStyle(
-			`background-color: ${result.current.palette.error.active}`
+			`background-color: ${result.current.palette.error.regular}`
 		);
 	});
 	it('onClick will call itemAction request', async () => {

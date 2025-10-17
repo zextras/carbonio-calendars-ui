@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /*
  * SPDX-FileCopyrightText: 2025 Zextras <https://www.zextras.com>
  *
@@ -17,18 +18,10 @@ import { setupTest } from '@test-setup';
 const mockInvite = mockedData.getInvite();
 
 describe('BodyMessageRenderer', () => {
-	it('renders EmptyBody when fragment is empty', () => {
-		setupTest(
-			<BodyMessageRenderer fragment={''} htmlDescription={undefined} textDescription={undefined} />
-		);
-		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
-	});
-
 	it('renders HtmlMessageRenderer when htmlDescription is present', () => {
 		const htmlContent = '<div>Some <b>HTML</b> content</div>';
 		setupTest(
 			<BodyMessageRenderer
-				fragment={'some fragment'}
 				htmlDescription={[{ _content: htmlContent }]}
 				textDescription={mockInvite.textDescription}
 			/>
@@ -47,7 +40,6 @@ describe('BodyMessageRenderer', () => {
 		setupTest(
 			<BodyMessageRenderer
 				textDescription={mockInvite.textDescription}
-				fragment={'some fragment'}
 				htmlDescription={[{ _content: htmlContent }]}
 				fontSize="large"
 			/>
@@ -64,7 +56,6 @@ describe('BodyMessageRenderer', () => {
 		setupTest(
 			<BodyMessageRenderer
 				textDescription={[{ _content: textContent }]}
-				fragment={'some fragment'}
 				htmlDescription={mockInvite.htmlDescription}
 				fontSize="large"
 			/>
@@ -76,7 +67,6 @@ describe('BodyMessageRenderer', () => {
 		const textContent = 'Line1\nLine2';
 		setupTest(
 			<BodyMessageRenderer
-				fragment={'some fragment'}
 				htmlDescription={mockInvite.htmlDescription}
 				textDescription={[{ _content: textContent }]}
 			/>
@@ -90,7 +80,6 @@ describe('BodyMessageRenderer', () => {
 		setupTest(
 			<BodyMessageRenderer
 				textDescription={[{ _content: textContent }]}
-				fragment={'some fragment'}
 				htmlDescription={mockInvite.htmlDescription}
 				fontSize="large"
 			/>
@@ -114,7 +103,6 @@ describe('BodyMessageRenderer', () => {
 			<BodyMessageRenderer
 				textDescription={mockInvite.textDescription}
 				htmlDescription={[{ _content: htmlContent }]}
-				fragment={'some fragment'}
 				fontSize="large"
 			/>
 		);
@@ -124,5 +112,36 @@ describe('BodyMessageRenderer', () => {
 		const renderedHtml = shadowRoot?.innerHTML.toString();
 		expect(renderedHtml).toContain('a1b1c1');
 		expect(renderedHtml).toContain('x1y1z1');
+	});
+
+	it('renders EmptyBody when htmlDescription contains only a quote character', () => {
+		setupTest(
+			<BodyMessageRenderer
+				htmlDescription={[{ _content: '"' }]}
+				textDescription={mockInvite.textDescription}
+			/>
+		);
+		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
+	});
+
+	it('renders EmptyBody when textDescription contains only a quote character', () => {
+		setupTest(
+			<BodyMessageRenderer
+				htmlDescription={mockInvite.htmlDescription}
+				textDescription={[{ _content: '"' }]}
+			/>
+		);
+		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
+	});
+
+	it('renders EmptyBody when htmlDescription contains only empty HTML structure', () => {
+		const emptyHtmlStructure = '<!--suppress ALL --><html><body></body></html>';
+		setupTest(
+			<BodyMessageRenderer
+				htmlDescription={[{ _content: emptyHtmlStructure }]}
+				textDescription={mockInvite.textDescription}
+			/>
+		);
+		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
 	});
 });
