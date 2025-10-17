@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /*
  * SPDX-FileCopyrightText: 2024 Zextras <https://www.zextras.com>
  *
@@ -9,11 +10,12 @@ import { faker } from '@faker-js/faker';
 import { act, screen } from '@testing-library/react';
 import { noop } from 'lodash';
 
-import { generateSoapErrorResponseBody } from '../../../test/generators/utils';
-import { ForwardAppointmentRequest } from '../../../types/soap/soap-actions';
-import { ForwardAppointmentModal } from '../forward-appointment-modal';
 import { UserEvent, setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { generateSoapErrorResponseBody } from 'test/generators/utils';
+import { EventType } from 'types/event';
+import { ForwardAppointmentRequest } from 'types/soap/soap-actions';
+import { ForwardAppointmentModal } from 'view/modals/forward-appointment/forward-appointment-modal';
 
 async function inputAttendee(user: UserEvent, input: HTMLElement, attendee: string): Promise<void> {
 	await act(async () => {
@@ -24,8 +26,14 @@ async function inputAttendee(user: UserEvent, input: HTMLElement, attendee: stri
 }
 
 describe('ForwardAppointmentModal', () => {
+	const event = {
+		resource: {
+			id: '123'
+		}
+	} as EventType;
+
 	it('it correctly renders the component', async () => {
-		setupTest(<ForwardAppointmentModal eventId="" onClose={noop} />);
+		setupTest(<ForwardAppointmentModal event={event} onClose={noop} />);
 		expect(await screen.findByText('modal.forwardAppointment.title')).toBeInTheDocument();
 		expect(screen.getByText('modal.forwardAppointment.content')).toBeInTheDocument();
 		expect(screen.getByText('modal.forwardAppointment.placeholder')).toBeInTheDocument();
@@ -38,7 +46,7 @@ describe('ForwardAppointmentModal', () => {
 
 	it('calls onClose when the close icon is clicked', async () => {
 		const onClose = jest.fn();
-		const { user } = setupTest(<ForwardAppointmentModal eventId="" onClose={onClose} />);
+		const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={onClose} />);
 		const closeIcon = await screen.findByTestId('icon: CloseOutline');
 		await user.click(closeIcon);
 		expect(onClose).toHaveBeenCalled();
@@ -46,7 +54,7 @@ describe('ForwardAppointmentModal', () => {
 
 	it('should enable confirm button only if attendees input not empty', async () => {
 		const onClose = jest.fn();
-		const { user } = setupTest(<ForwardAppointmentModal eventId="" onClose={onClose} />);
+		const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={onClose} />);
 		const input = await screen.findByTestId('forward-appointment-input');
 		await inputAttendee(user, input, faker.internet.email());
 
@@ -59,7 +67,7 @@ describe('ForwardAppointmentModal', () => {
 	describe('when user clicks confirm', () => {
 		it('forwardAppointmentRequest is called with the correct parameters', async () => {
 			const interceptor = createSoapAPIInterceptor<ForwardAppointmentRequest>('ForwardAppointment');
-			const { user } = setupTest(<ForwardAppointmentModal eventId="123" onClose={noop} />);
+			const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={noop} />);
 
 			const input = await screen.findByTestId('forward-appointment-input');
 			const attendee = faker.internet.email();
@@ -79,7 +87,7 @@ describe('ForwardAppointmentModal', () => {
 		it('closes the modal', async () => {
 			const mockOnClose = jest.fn();
 			const interceptor = createSoapAPIInterceptor<ForwardAppointmentRequest>('ForwardAppointment');
-			const { user } = setupTest(<ForwardAppointmentModal eventId="123" onClose={mockOnClose} />);
+			const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={mockOnClose} />);
 
 			const input = await screen.findByTestId('forward-appointment-input');
 			await inputAttendee(user, input, faker.internet.email());
@@ -99,7 +107,7 @@ describe('ForwardAppointmentModal', () => {
 				'ForwardAppointment',
 				generateSoapErrorResponseBody()
 			);
-			const { user } = setupTest(<ForwardAppointmentModal eventId="123" onClose={noop} />);
+			const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={noop} />);
 			const input = await screen.findByTestId('forward-appointment-input');
 			await inputAttendee(user, input, faker.internet.email());
 
