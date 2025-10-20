@@ -15,6 +15,9 @@ interface CalendarStyleProps {
 	$headerMinWidth?: string;
 }
 
+const DISABLE_EMOTION_SSR =
+	'/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
+
 const CalendarStyle: React.FC<CalendarStyleProps> = ({
 	$primaryCalendar,
 	$summaryViewOpen,
@@ -233,29 +236,29 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					font-size: 0.875rem;
 				}
 
-				.rbc-btn-group > button:first-child:not(:last-child) {
+				.rbc-btn-group > button:first-child:not(:last-child)${DISABLE_EMOTION_SSR} {
 					border-top-right-radius: 0;
 					border-bottom-right-radius: 0;
 				}
 
-				.rbc-btn-group > button:last-child:not(:first-child) {
+				.rbc-btn-group > button:last-child:not(:first-child)${DISABLE_EMOTION_SSR} {
 					border-top-left-radius: 0;
 					border-bottom-left-radius: 0;
 				}
 
-				.rbc-rtl .rbc-btn-group > button:first-child:not(:last-child) {
+				.rbc-rtl .rbc-btn-group > button:first-child:not(:last-child)${DISABLE_EMOTION_SSR} {
 					border-radius: 0.125rem;
 					border-top-left-radius: 0;
 					border-bottom-left-radius: 0;
 				}
 
-				.rbc-rtl .rbc-btn-group > button:last-child:not(:first-child) {
+				.rbc-rtl .rbc-btn-group > button:last-child:not(:first-child)${DISABLE_EMOTION_SSR} {
 					border-radius: 0.125rem;
 					border-top-right-radius: 0;
 					border-bottom-right-radius: 0;
 				}
 
-				.rbc-btn-group > button:not(:first-child):not(:last-child) {
+				.rbc-btn-group > button:not(:first-child):not(:last-child)${DISABLE_EMOTION_SSR} {
 					border-radius: 0;
 				}
 
@@ -664,7 +667,7 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					border-left: 0.0625rem solid ${theme.palette.gray3.regular};
 				}
 
-				.rbc-time-header > .rbc-row:first-child {
+				.rbc-time-header > .rbc-row:first-child${DISABLE_EMOTION_SSR} {
 					border-bottom: 0.0625rem solid ${theme.palette.gray3.regular};
 				}
 
@@ -778,7 +781,7 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					position: absolute;
 				}
 
-				.rbc-addons-dnd .rbc-addons-dnd-resize-ns-anchor:first-child {
+				.rbc-addons-dnd .rbc-addons-dnd-resize-ns-anchor:first-child${DISABLE_EMOTION_SSR} {
 					z-index: 20;
 					top: 0;
 				}
@@ -802,7 +805,7 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					bottom: 0;
 				}
 
-				.rbc-addons-dnd .rbc-addons-dnd-resize-ew-anchor:first-child {
+				.rbc-addons-dnd .rbc-addons-dnd-resize-ew-anchor:first-child${DISABLE_EMOTION_SSR} {
 					z-index: 20;
 					left: 0;
 				}
