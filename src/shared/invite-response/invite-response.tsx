@@ -210,7 +210,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							i18nKey="message.organizer_invited_you"
 							values={{
 								organizer: invite.organizer?.d ?? invite.organizer?.a,
-								title: mailMsg.subject ? mailMsg.subject : invite?.name
+								title: mailMsg.subject ?? invite?.name
 							}}
 							defaults="<text>{{organizer}} invited you to an event <bold>{{title}}</bold></text>"
 							components={{ bold: <strong />, text: <Text /> }}
