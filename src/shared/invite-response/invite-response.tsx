@@ -21,7 +21,7 @@ import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import 'moment-timezone';
 import { AvailabilityChecker } from './parts/availability-checker';
@@ -206,18 +206,16 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Text>
 					)}
 					{method !== MESSAGE_METHOD.COUNTER && (
-						<>
-							<Text weight="regular" size="large" style={{ fontSize: '1.125rem' }}>
-								{`${invite.organizer?.d ?? invite.organizer?.a} ${t(
-									'message.invited_you',
-									'invited you to an event'
-								)}`}
-							</Text>
-							<br />
-							<Text weight="bold" size="large" style={{ fontSize: '1.125rem' }}>
-								{mailMsg.subject ? mailMsg.subject : invite?.name}
-							</Text>
-						</>
+						<Trans
+							i18nKey="message.organizer_invited_you"
+							values={{
+								organizer: invite.organizer?.d ?? invite.organizer?.a,
+								title: mailMsg.subject ? mailMsg.subject : invite?.name
+							}}
+							defaults="<text>{{organizer}} invited you to an event <bold>{{title}}</bold></text>"
+							components={{ bold: <strong />, text: <Text /> }}
+							t={t}
+						/>
 					)}
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
