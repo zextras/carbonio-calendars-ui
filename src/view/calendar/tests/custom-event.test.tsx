@@ -14,8 +14,6 @@ import mockedData from '../../../test/generators';
 import { MemoCustomEvent } from '../custom-event';
 import { setupTest } from '@test-setup';
 
-jest.setTimeout(10000);
-
 describe('custom-event', () => {
 	test('if the event is not part of a recurrence it wont have a recurrent icon', async () => {
 		const event = mockedData.getEvent();

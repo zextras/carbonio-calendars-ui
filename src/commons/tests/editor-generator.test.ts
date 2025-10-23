@@ -19,8 +19,6 @@ const identity1 = createFakeIdentity();
 
 const userAccount = getMockedAccountItem({ identity1 });
 
-jest.setTimeout(50000);
-
 const folder = {
 	absFolderPath: '/Test',
 	id: '5',
