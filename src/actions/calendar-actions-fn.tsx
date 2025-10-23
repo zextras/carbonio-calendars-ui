@@ -46,7 +46,11 @@ export const newCalendar =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<CreateCalendarModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
+						<CreateCalendarModal
+							confirmLabel={t('label.create', 'Create')}
+							onClose={(): void => closeModal(modalId)}
+							folderId={item.id}
+						/>
 					</StoreProvider>
 				),
 				onClose: () => {
@@ -82,6 +86,7 @@ export const importCalendarFromURLFn =
 							modalTitle={t('folder.modal.import_from_url.title2', 'Import Calendar from URL')}
 							onClose={(): void => closeModal(modalId)}
 							folderId={item.id}
+							confirmLabel={t('label.create', 'Create')}
 						/>
 					</StoreProvider>
 				),

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useState, useCallback, ReactElement } from 'react';
+import React, { useState, useCallback, ReactElement, useMemo } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
@@ -60,6 +60,28 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 		});
 	};
 
+	const onCreated = useCallback(
+		// TODO: this type is any because it was like that in the original code
+		(response: any) => {
+			moveAppt({
+				inviteId: event.resource.inviteId,
+				l: response.id,
+				destinationCalendarName: response.name,
+				id: event.resource.id
+			});
+			event && hasId(event.resource.calendar, FOLDERS.TRASH)
+				? t('folder.modal.restore.footer', 'Create and Restore')
+				: t('label.create', 'Create');
+		},
+		[event, moveAppt]
+	);
+	const confirmLabel = useMemo(
+		() =>
+			event && hasId(event.resource.calendar, FOLDERS.TRASH)
+				? t('folder.modal.restore.footer', 'Create and Restore')
+				: t('label.create', 'Create'),
+		[event]
+	);
 	return currentFolder ? (
 		<>
 			{showNewFolderModal ? (
@@ -67,8 +89,8 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 					toggleModal={toggleModal}
 					onClose={onClose}
 					folderId={currentFolder.id}
-					event={event}
-					action={moveAppt}
+					onCreated={onCreated}
+					confirmLabel={confirmLabel}
 				/>
 			) : (
 				<MoveModal

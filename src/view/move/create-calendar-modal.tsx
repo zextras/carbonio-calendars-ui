@@ -6,14 +6,13 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Container, Padding, Text, useSnackbar } from '@zextras/carbonio-design-system';
-import { FOLDERS, useFoldersMapByRoot, useRoot, hasId } from '@zextras/carbonio-ui-commons';
+import { useFoldersMapByRoot, useRoot } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { createCalendar } from '../../store/actions/create-calendar';
-import { EventType } from '../../types/event';
 import { CalendarNameInput } from '../forms/calendar-name-input';
 import { URLInput } from '../forms/calendar-url-input';
 import { FreeBusyCheckbox } from '../forms/free-busy-checkbox';
@@ -29,20 +28,20 @@ type ActionArgs = {
 type NewModalProps = {
 	toggleModal?: () => void;
 	modalTitle?: string;
+	confirmLabel: string;
 	onClose: () => void;
-	event?: EventType;
+	onCreated?: (response: any) => void;
 	folderId: string;
-	action?: (arg: ActionArgs) => void;
 	fromUrl?: boolean;
 };
 
 export const CreateCalendarModal = ({
 	onClose,
+	onCreated,
 	toggleModal,
 	modalTitle,
-	event,
+	confirmLabel,
 	fromUrl,
-	action,
 	folderId
 }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
@@ -81,14 +80,7 @@ export const CreateCalendarModal = ({
 				excludeFreeBusy: freeBusy
 			}).then((newCalendarRes) => {
 				if (!newCalendarRes.Fault) {
-					action &&
-						event &&
-						action({
-							inviteId: event.resource.inviteId,
-							l: newCalendarRes.id,
-							destinationCalendarName: newCalendarRes.name,
-							id: event.resource.id
-						});
+					onCreated?.(newCalendarRes);
 					createSnackbar({
 						key: `new`,
 						replace: true,
@@ -124,7 +116,6 @@ export const CreateCalendarModal = ({
 		onClose();
 	}, [onClose]);
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	return (
 		<Container
 			padding={{ all: 'small' }}
@@ -155,11 +146,7 @@ export const CreateCalendarModal = ({
 				onConfirm={onConfirm}
 				secondaryAction={toggleModal}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
-				label={
-					event && hasId(event.resource.calendar, FOLDERS.TRASH)
-						? t('folder.modal.restore.footer', 'Create and Restore')
-						: t('label.create', 'Create')
-				}
+				label={confirmLabel}
 				disabled={disabled}
 			/>
 		</Container>
