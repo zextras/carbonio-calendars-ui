@@ -8,7 +8,6 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import {
 	Container,
-	Input,
 	Padding,
 	Text,
 	SelectItem,
@@ -25,6 +24,7 @@ import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { EventType } from '../../types/event';
 import { CalendarNameInput } from '../forms/calendar-name-input';
+import { URLInput } from '../forms/calendar-url-input';
 import { FreeBusyCheckbox } from '../forms/free-busy-checkbox';
 import { SelectColor } from '../forms/select-color';
 
@@ -176,18 +176,11 @@ export const NewCalendarModal = ({
 			/>
 			{fromUrl && (
 				<>
-					<Input
-						label={t('label.url', 'URL')}
-						backgroundColor="gray5"
-						value={urlValue}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-							setUrlValue(e.target.value);
-						}}
-					/>
+					<URLInput value={urlValue} onChange={setUrlValue} />
 					<Padding vertical="medium" />
 				</>
 			)}
-			<CalendarNameInput value={inputValue} setValue={setInputValue} />
+			<CalendarNameInput value={inputValue} onChange={setInputValue} />
 			{showDupWarning && (
 				<Padding all="small">
 					<Text size="small" color="error">

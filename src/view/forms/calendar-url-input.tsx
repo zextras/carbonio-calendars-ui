@@ -10,9 +10,9 @@ import { t } from '@zextras/carbonio-shell-ui';
 
 import { InputType } from './types';
 
-export const CalendarNameInput = ({ value, onChange }: InputType<string>): React.JSX.Element => (
+export const URLInput = ({ value, onChange }: InputType<string>) => (
 	<Input
-		label={t('label.type_name_here', 'Calendar name')}
+		label={t('label.url', 'URL')}
 		backgroundColor="gray5"
 		value={value}
 		onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
