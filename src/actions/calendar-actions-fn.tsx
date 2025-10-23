@@ -30,10 +30,12 @@ export const newCalendar =
 	({
 		createModal,
 		closeModal,
-		item
+		item,
+		 url = false
 	}: {
 		createModal: CreateModalFn;
 		closeModal: CloseModalFn;
+		url?: boolean;
 		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
@@ -46,7 +48,7 @@ export const newCalendar =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<NewModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
+						<NewModal url={url} onClose={(): void => closeModal(modalId)} folderId={item.id} />
 					</StoreProvider>
 				),
 				onClose: () => {

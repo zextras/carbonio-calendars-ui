@@ -10,6 +10,7 @@ type CreateCalendarRequest = {
 	name: string;
 	parent: '1';
 	color: number;
+	url?: string;
 	excludeFreeBusy: boolean;
 };
 
@@ -17,6 +18,7 @@ export const createCalendar = async ({
 	name,
 	parent,
 	color,
+		url,
 	excludeFreeBusy
 }: CreateCalendarRequest): Promise<any> => {
 	const reqActionParams: RequestFolder = {
@@ -24,6 +26,7 @@ export const createCalendar = async ({
 		f: excludeFreeBusy ? 'b#' : '#',
 		l: parent,
 		name,
+		url,
 		view: 'appointment'
 	};
 	const res = await createFolderRequest(reqActionParams);

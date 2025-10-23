@@ -118,17 +118,20 @@ type NewModalProps = {
 	event?: EventType;
 	folderId: string;
 	action?: (arg: ActionArgs) => void;
+	url?: boolean;
 };
 
 export const NewModal = ({
 	onClose,
 	toggleModal,
 	event,
+		url,
 	action,
 	folderId
 }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const [inputValue, setInputValue] = useState('');
+	const [urlValue, setUrlValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const colors = useMemo(() => getStatusItems(), []);
@@ -158,6 +161,7 @@ export const NewModal = ({
 				parent: (root?.id as '1') ?? '1',
 				name: inputValue,
 				color: selectedColor,
+				url: urlValue,
 				excludeFreeBusy: freeBusy
 			}).then((newCalendarRes) => {
 				if (!newCalendarRes.Fault) {
@@ -218,6 +222,14 @@ export const NewModal = ({
 				title={t('folder.modal.new.title2', 'New calendar creation')}
 				onClose={onCloseModal}
 			/>
+			{url && <><Input
+					label={t('label.url', 'URL')}
+					backgroundColor="gray5"
+					value={urlValue}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+						setUrlValue(e.target.value);
+					}}
+			/><Padding vertical="medium" /></>}
 			<Input
 				label={placeholder}
 				backgroundColor="gray5"
