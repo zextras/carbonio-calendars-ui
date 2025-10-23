@@ -20,7 +20,7 @@ import { EmptyModal } from './modals/empty-modal';
 import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
-import { NewCalendarModal } from '../view/move/new-calendar-modal';
+import { CreateCalendarModal } from '../view/move/create-calendar-modal';
 import { EditModal } from './modals/edit-modal/edit-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
@@ -30,12 +30,10 @@ export const newCalendar =
 	({
 		createModal,
 		closeModal,
-		item,
-		url = false
+		item
 	}: {
 		createModal: CreateModalFn;
 		closeModal: CloseModalFn;
-		url?: boolean;
 		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
@@ -48,8 +46,40 @@ export const newCalendar =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<NewCalendarModal
-							fromUrl={url}
+						<CreateCalendarModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
+			},
+			true
+		);
+	};
+
+export const importCalendarFromURLFn =
+	({
+		createModal,
+		closeModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+		item: { id: string };
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+		const modalId = 'import-calendar-from-url';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<CreateCalendarModal
+							fromUrl
+							modalTitle={t('folder.modal.import_from_url.title2', 'Import Calendar from URL')}
 							onClose={(): void => closeModal(modalId)}
 							folderId={item.id}
 						/>

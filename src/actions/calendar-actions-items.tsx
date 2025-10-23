@@ -23,6 +23,7 @@ import {
 	emptyTrash,
 	exportCalendarICSFn,
 	findShares,
+	importCalendarFromURLFn,
 	moveToRoot,
 	newCalendar,
 	removeFromList,
@@ -338,5 +339,5 @@ export const importCalendarFromURL = ({
 		(item.perm ? !/w/.test(item.perm) : false) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR),
 	tooltipLabel: noPermissionLabel,
-	onClick: newCalendar({ createModal, url: true, closeModal, item })
+	onClick: importCalendarFromURLFn({ createModal, closeModal, item })
 });

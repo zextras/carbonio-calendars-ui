@@ -10,7 +10,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 
 import { InputType } from './types';
 
-export const URLInput = ({ value, onChange }: InputType<string>) => (
+export const URLInput = ({ value, onChange }: InputType<string>): React.JSX.Element => (
 	<Input
 		label={t('label.url', 'URL')}
 		backgroundColor="gray5"

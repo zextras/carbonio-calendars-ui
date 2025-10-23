@@ -28,6 +28,7 @@ type ActionArgs = {
 
 type NewModalProps = {
 	toggleModal?: () => void;
+	modalTitle?: string;
 	onClose: () => void;
 	event?: EventType;
 	folderId: string;
@@ -35,9 +36,10 @@ type NewModalProps = {
 	fromUrl?: boolean;
 };
 
-export const NewCalendarModal = ({
+export const CreateCalendarModal = ({
 	onClose,
 	toggleModal,
+	modalTitle,
 	event,
 	fromUrl,
 	action,
@@ -51,6 +53,7 @@ export const NewCalendarModal = ({
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
+	const title = modalTitle || t('folder.modal.new.title2', 'New calendar creation');
 
 	const folders = useFoldersMapByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
@@ -129,10 +132,7 @@ export const NewCalendarModal = ({
 			crossAlignment="flex-start"
 			height="fit"
 		>
-			<ModalHeader
-				title={t('folder.modal.new.title2', 'New calendar creation')}
-				onClose={onCloseModal}
-			/>
+			<ModalHeader title={title} onClose={onCloseModal} />
 			{fromUrl && (
 				<>
 					<URLInput value={urlValue} onChange={setUrlValue} />
