@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {useModal, useSnackbar} from '@zextras/carbonio-design-system';
-import {Folder} from '@zextras/carbonio-ui-commons';
-import {filter} from 'lodash';
+import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import { Folder } from '@zextras/carbonio-ui-commons';
+import { filter } from 'lodash';
 
 import {
 	CalendarActionsItems,
@@ -14,13 +14,16 @@ import {
 	emptyTrashItem,
 	exportAppointmentICSItem,
 	findSharesItem,
-	importCalendar, importCalendarFromURL, importCalendarICSItem,
+	importCalendar,
+	importCalendarFromURL,
+	importCalendarICSItem,
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
-	sharesInfoItem, syncCalendar
+	sharesInfoItem,
+	syncCalendar
 } from '../actions/calendar-actions-items';
-import {ActionsClick} from '../types/actions';
+import { ActionsClick } from '../types/actions';
 
 type CalendarActionsProps = {
 	id: string;
@@ -49,8 +52,11 @@ export const useCalendarActions = (
 		findSharesItem({ createModal, closeModal, item }),
 		sharesInfoItem({ item, createModal, closeModal }),
 		exportAppointmentICSItem({ item }),
-		syncCalendar({item}),
-		importCalendar(item, [importCalendarICSItem(item, inputRef), importCalendarFromURL({ createModal, closeModal, item })])
+		syncCalendar({ item }),
+		importCalendar(item, [
+			importCalendarICSItem(item, inputRef),
+			importCalendarFromURL({ createModal, closeModal, item })
+		])
 	];
 
 	return filter(actions, ['disabled', false]);

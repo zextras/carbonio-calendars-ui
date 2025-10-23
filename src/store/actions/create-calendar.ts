@@ -18,7 +18,7 @@ export const createCalendar = async ({
 	name,
 	parent,
 	color,
-		url,
+	url,
 	excludeFreeBusy
 }: CreateCalendarRequest): Promise<any> => {
 	const reqActionParams: RequestFolder = {

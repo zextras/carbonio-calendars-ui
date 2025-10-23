@@ -5,8 +5,8 @@
  */
 import React from 'react';
 
-import {CloseModalFn, CreateModalFn, CreateSnackbarFn} from '@zextras/carbonio-design-system';
-import {t} from '@zextras/carbonio-shell-ui';
+import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import {
 	Folder,
 	FOLDERS,
@@ -15,7 +15,7 @@ import {
 	isTrashOrNestedInIt,
 	LinkFolder
 } from '@zextras/carbonio-ui-commons';
-import {isNil, noop} from 'lodash';
+import { isNil } from 'lodash';
 
 import {
 	deleteCalendar,
@@ -29,9 +29,9 @@ import {
 	shareCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
-import {isLinkChild, isMainRootChild} from '../commons/utilities';
-import {CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS} from '../constants/sidebar';
-import {folderAction} from "../store/actions/calendar-actions";
+import { isLinkChild, isMainRootChild } from '../commons/utilities';
+import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
+import { folderAction } from '../store/actions/calendar-actions';
 
 export type CalendarActionsItems = SingleAction | ActionWithItems;
 
@@ -42,16 +42,16 @@ type SingleAction = {
 	label: string;
 	onClick: (ev: React.SyntheticEvent | KeyboardEvent) => void;
 	tooltipLabel: string;
-}
+};
 
 type ActionWithItems = {
 	id: CalendarActionsId;
 	icon: string;
 	disabled: boolean;
 	label: string;
-	items: Array<SingleAction | ActionWithItems>
+	items: Array<SingleAction | ActionWithItems>;
 	tooltipLabel: string;
-}
+};
 
 export const noPermissionLabel = t(
 	'label.no_rights',
@@ -269,16 +269,19 @@ export const syncCalendar = ({ item }: { item: Folder }): CalendarActionsItems =
 	icon: 'Sync',
 	label: t('action.sync', 'Sync'),
 	tooltipLabel: noPermissionLabel,
-	onClick: () => folderAction([{
-		op: 'sync',
-		id: item.id
-	}]),
+	onClick: () =>
+		folderAction([
+			{
+				op: 'sync',
+				id: item.id
+			}
+		]),
 	disabled:
-			hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
-			isTrashOrNestedInIt(item) ||
-			(item as LinkFolder).isLink ||
-			isLinkChild(item) ||
-			(!item.url)
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		isTrashOrNestedInIt(item) ||
+		(item as LinkFolder).isLink ||
+		isLinkChild(item) ||
+		!item.url
 });
 
 export const importCalendarICSItem = (
@@ -302,8 +305,9 @@ export const importCalendarICSItem = (
 });
 
 export const importCalendar = (
-		item: Folder,
-		actions: Array<CalendarActionsItems>,
+	item: Folder,
+
+	actions: Array<CalendarActionsItems>
 ): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.UPLOAD,
 	icon: 'Upload',
@@ -311,17 +315,17 @@ export const importCalendar = (
 	tooltipLabel: noPermissionLabel,
 	items: actions,
 	disabled:
-			hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
-			isTrashOrNestedInIt(item) ||
-			(item as LinkFolder).isLink ||
-			isLinkChild(item)
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		isTrashOrNestedInIt(item) ||
+		(item as LinkFolder).isLink ||
+		isLinkChild(item)
 });
 
 export const importCalendarFromURL = ({
-																	createModal,
-																	closeModal,
-																	item
-																}: {
+	createModal,
+	closeModal,
+	item
+}: {
 	createModal: CreateModalFn;
 	closeModal: CloseModalFn;
 	item: { id: string; perm?: string };
@@ -330,9 +334,9 @@ export const importCalendarFromURL = ({
 	icon: 'Globe',
 	label: t('label.import_calendar_from_url', 'Import Calendar from URL'),
 	disabled:
-			isTrashOrNestedInIt(item) ||
-			(item.perm ? !/w/.test(item.perm) : false) ||
-			hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR),
+		isTrashOrNestedInIt(item) ||
+		(item.perm ? !/w/.test(item.perm) : false) ||
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR),
 	tooltipLabel: noPermissionLabel,
 	onClick: newCalendar({ createModal, url: true, closeModal, item })
 });

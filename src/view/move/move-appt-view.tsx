@@ -10,7 +10,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolder, hasId } from '@zextras/carbonio-ui-commons';
 
 import { MoveModal } from './move-modal';
-import { NewModal } from './new-calendar-modal';
+import { NewCalendarModal } from './new-calendar-modal';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
@@ -63,7 +63,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 	return currentFolder ? (
 		<>
 			{showNewFolderModal ? (
-				<NewModal
+				<NewCalendarModal
 					toggleModal={toggleModal}
 					onClose={onClose}
 					folderId={currentFolder.id}

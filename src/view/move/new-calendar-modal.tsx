@@ -11,7 +11,6 @@ import {
 	Input,
 	Padding,
 	Text,
-	Checkbox,
 	SelectItem,
 	useSnackbar,
 	AnyColor
@@ -26,6 +25,7 @@ import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { EventType } from '../../types/event';
 import { CalendarNameInput } from '../forms/calendar-name-input';
+import { FreeBusyCheckbox } from '../forms/free-busy-checkbox';
 import { SelectColor } from '../forms/select-color';
 
 const Square = styled.div<{ $color?: AnyColor }>`
@@ -72,14 +72,14 @@ type NewModalProps = {
 	event?: EventType;
 	folderId: string;
 	action?: (arg: ActionArgs) => void;
-	url?: boolean;
+	fromUrl?: boolean;
 };
 
-export const NewModal = ({
+export const NewCalendarModal = ({
 	onClose,
 	toggleModal,
 	event,
-	url,
+	fromUrl,
 	action,
 	folderId
 }: NewModalProps): ReactElement => {
@@ -174,7 +174,7 @@ export const NewModal = ({
 				title={t('folder.modal.new.title2', 'New calendar creation')}
 				onClose={onCloseModal}
 			/>
-			{url && (
+			{fromUrl && (
 				<>
 					<Input
 						label={t('label.url', 'URL')}
@@ -198,14 +198,7 @@ export const NewModal = ({
 			<Padding vertical="medium" />
 			<SelectColor colors={colors} setColor={setSelectedColor} />
 			<Padding vertical="medium" />
-			<Checkbox
-				value={freeBusy}
-				onClick={toggleFreeBusy}
-				label={t(
-					'label.exclude_free_busy',
-					'Exclude this calendar when reporting the free/busy times'
-				)}
-			/>
+			<FreeBusyCheckbox value={freeBusy} onClick={toggleFreeBusy} />
 			<ModalFooter
 				onConfirm={onConfirm}
 				secondaryAction={toggleModal}

@@ -20,7 +20,7 @@ import { EmptyModal } from './modals/empty-modal';
 import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
-import { NewModal } from '../view/move/new-calendar-modal';
+import { NewCalendarModal } from '../view/move/new-calendar-modal';
 import { EditModal } from './modals/edit-modal/edit-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
@@ -31,7 +31,7 @@ export const newCalendar =
 		createModal,
 		closeModal,
 		item,
-		 url = false
+		url = false
 	}: {
 		createModal: CreateModalFn;
 		closeModal: CloseModalFn;
@@ -48,7 +48,11 @@ export const newCalendar =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<NewModal url={url} onClose={(): void => closeModal(modalId)} folderId={item.id} />
+						<NewCalendarModal
+							fromUrl={url}
+							onClose={(): void => closeModal(modalId)}
+							folderId={item.id}
+						/>
 					</StoreProvider>
 				),
 				onClose: () => {
