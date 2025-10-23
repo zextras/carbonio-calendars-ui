@@ -632,71 +632,7 @@ export const TimeZonesOptions = (): SelectItem[] => [
 		})
 	}
 ];
-export const FreeBusyOptions = (): SelectItem[] => [
-	{
-		label: t(
-			'settings.options.free_busy_opts.allow_all',
-			'Allow both internal and external users to see my free/busy information'
-		),
-		value: 'pub'
-	},
-	{
-		label: t(
-			'settings.options.free_busy_opts.allow_internal',
-			'Allow only users of internal domains to see my free/busy information'
-		),
-		value: 'all'
-	},
-	{
-		label: t(
-			'settings.options.free_busy_opts.allow_domain',
-			'Allow only users of my domain to see my free/busy information'
-		),
-		value: 'zextras.com'
-	},
-	{
-		label: t(
-			'settings.options.free_busy_opts.allow_none',
-			"Don't let anyone see my free/busy information"
-		),
-		value: 'y3'
-	},
-	{
-		label: t(
-			'settings.options.free_busy_opts.allow_following',
-			'Allow only the following internal users to see my free/busy information'
-		),
-		value: 'y5'
-	}
-];
 
-export const InvitesOptions = (): SelectItem[] => [
-	{
-		label: t(
-			'settings.options.invt_opts.allow_all',
-			'Allow both internal and extrernal users to invite me to meetings'
-		),
-		value: 'v1'
-	},
-	{
-		label: t(
-			'settings.options.invt_opts.allow_internal',
-			'Allow only internal users to invite me to meetings'
-		),
-		value: 'v2'
-	},
-	{
-		label: t('settings.options.invt_opts.allow_none', "Don't let anyone to invite me to meetings"),
-		value: 'v3'
-	},
-	{
-		label: t(
-			'settings.options.invt_opts.allow_following',
-			'Allow only the following internal users to invite me to meetings'
-		),
-		value: 'v4'
-	}
-];
 export const StartWeekOfOptions = (): SelectItem<`${number}`>[] => [
 	{ label: t('label.week_day.sunday', 'Sunday'), value: '0' },
 	{ label: t('label.week_day.monday', 'Monday'), value: '1' },
