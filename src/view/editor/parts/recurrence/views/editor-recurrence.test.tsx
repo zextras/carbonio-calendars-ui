@@ -14,8 +14,6 @@ import { TEST_SELECTORS } from '../../../../../constants/test-utils';
 import { reducers } from '../../../../../store/redux';
 import { setupTest } from '@test-setup';
 
-jest.setTimeout(10000);
-
 describe('editor recurrence field', () => {
 	test('is set to none as default', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
