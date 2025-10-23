@@ -31,6 +31,7 @@ import {
 } from './calendar-actions-fn';
 import {isLinkChild, isMainRootChild} from '../commons/utilities';
 import {CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS} from '../constants/sidebar';
+import {folderAction} from "../store/actions/calendar-actions";
 
 export type CalendarActionsItems = SingleAction | ActionWithItems;
 
@@ -261,6 +262,23 @@ export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarAc
 		isTrashOrNestedInIt(item) ||
 		(item as LinkFolder).isLink ||
 		isLinkChild(item)
+});
+
+export const syncCalendar = ({ item }: { item: Folder }): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.EXPORT_ICS,
+	icon: 'Sync',
+	label: t('action.sync', 'Sync'),
+	tooltipLabel: noPermissionLabel,
+	onClick: () => folderAction([{
+		op: 'sync',
+		id: item.id
+	}]),
+	disabled:
+			hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+			isTrashOrNestedInIt(item) ||
+			(item as LinkFolder).isLink ||
+			isLinkChild(item) ||
+			(!item.url)
 });
 
 export const importCalendarICSItem = (

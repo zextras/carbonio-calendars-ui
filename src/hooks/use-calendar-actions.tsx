@@ -18,7 +18,7 @@ import {
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
-	sharesInfoItem
+	sharesInfoItem, syncCalendar
 } from '../actions/calendar-actions-items';
 import {ActionsClick} from '../types/actions';
 
@@ -49,6 +49,7 @@ export const useCalendarActions = (
 		findSharesItem({ createModal, closeModal, item }),
 		sharesInfoItem({ item, createModal, closeModal }),
 		exportAppointmentICSItem({ item }),
+		syncCalendar({item}),
 		importCalendar(item, [importCalendarICSItem(item, inputRef), importCalendarFromURL({ createModal, closeModal, item })])
 	];
 
