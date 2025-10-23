@@ -5,59 +5,19 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import styled from '@emotion/styled';
-import {
-	Container,
-	Padding,
-	Text,
-	SelectItem,
-	useSnackbar,
-	AnyColor
-} from '@zextras/carbonio-design-system';
+import { Container, Padding, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS, useFoldersMapByRoot, useRoot, hasId } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { EventType } from '../../types/event';
 import { CalendarNameInput } from '../forms/calendar-name-input';
 import { URLInput } from '../forms/calendar-url-input';
 import { FreeBusyCheckbox } from '../forms/free-busy-checkbox';
 import { SelectColor } from '../forms/select-color';
-
-const Square = styled.div<{ $color?: AnyColor }>`
-	width: 1.125rem;
-	height: 1.125rem;
-	position: relative;
-	top: -0.1875rem;
-	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-	background: ${({ $color }): string | undefined => $color};
-	border-radius: 0.25rem;
-`;
-
-const TextUpperCase = styled(Text)`
-	text-transform: capitalize;
-`;
-
-const getStatusItems = (): SelectItem[] =>
-	CALENDARS_STANDARD_COLORS.map((el, index) => ({
-		background: el.background,
-		label: el.label ?? '',
-		value: index.toString(),
-		customComponent: (
-			<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
-				<Padding left="small">
-					<TextUpperCase>{el.label}</TextUpperCase>
-				</Padding>
-				<Padding right="small">
-					<Square $color={el.color} />
-				</Padding>
-			</Container>
-		)
-	}));
 
 type ActionArgs = {
 	inviteId: string;
@@ -88,7 +48,6 @@ export const NewCalendarModal = ({
 	const [urlValue, setUrlValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const colors = useMemo(() => getStatusItems(), []);
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
@@ -189,7 +148,7 @@ export const NewCalendarModal = ({
 				</Padding>
 			)}
 			<Padding vertical="medium" />
-			<SelectColor colors={colors} setColor={setSelectedColor} />
+			<SelectColor onColorSelected={setSelectedColor} />
 			<Padding vertical="medium" />
 			<FreeBusyCheckbox value={freeBusy} onClick={toggleFreeBusy} />
 			<ModalFooter

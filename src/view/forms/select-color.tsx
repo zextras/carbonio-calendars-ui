@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 import {
@@ -13,6 +13,7 @@ import {
 	Padding,
 	Row,
 	Select,
+	SelectItem,
 	SelectProps,
 	Text
 } from '@zextras/carbonio-design-system';
@@ -34,6 +35,23 @@ const Square = styled.div<{ $color?: AnyColor }>`
 	background: ${({ $color }): string | undefined => $color};
 	border-radius: 0.25rem;
 `;
+
+const getStatusItems = (): SelectItem[] =>
+	CALENDARS_STANDARD_COLORS.map((el, index) => ({
+		background: el.background,
+		label: el.label ?? '',
+		value: index.toString(),
+		customComponent: (
+			<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
+				<Padding left="small">
+					<TextUpperCase>{el.label}</TextUpperCase>
+				</Padding>
+				<Padding right="small">
+					<Square $color={el.color} />
+				</Padding>
+			</Container>
+		)
+	}));
 
 const LabelFactory: SelectProps['LabelFactory'] = ({
 	selected,
@@ -78,21 +96,22 @@ const LabelFactory: SelectProps['LabelFactory'] = ({
 );
 
 export const SelectColor = ({
-	colors,
-	setColor
+	onColorSelected
 }: {
-	colors: any;
-	setColor: (color: number) => void;
-}): React.JSX.Element => (
-	<Select
-		label={'Select color'}
-		onChange={(value): void => {
-			if (value) {
-				setColor(parseInt(value, 10));
-			}
-		}}
-		items={colors}
-		defaultSelection={colors[0]}
-		LabelFactory={LabelFactory}
-	/>
-);
+	onColorSelected: (color: number) => void;
+}): React.JSX.Element => {
+	const colors = useMemo(() => getStatusItems(), []);
+	return (
+		<Select
+			label={'Select color'}
+			onChange={(value): void => {
+				if (value) {
+					onColorSelected(parseInt(value, 10));
+				}
+			}}
+			items={colors}
+			defaultSelection={colors[0]}
+			LabelFactory={LabelFactory}
+		/>
+	);
+};
