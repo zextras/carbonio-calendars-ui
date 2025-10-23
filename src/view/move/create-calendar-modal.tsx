@@ -18,13 +18,6 @@ import { URLInput } from '../forms/calendar-url-input';
 import { FreeBusyCheckbox } from '../forms/free-busy-checkbox';
 import { SelectColor } from '../forms/select-color';
 
-type ActionArgs = {
-	inviteId: string;
-	l: string;
-	id: string;
-	destinationCalendarName: string;
-};
-
 type NewModalProps = {
 	toggleModal?: () => void;
 	modalTitle?: string;

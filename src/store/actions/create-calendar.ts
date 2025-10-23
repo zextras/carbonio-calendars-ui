@@ -14,6 +14,7 @@ type CreateCalendarRequest = {
 	excludeFreeBusy: boolean;
 };
 
+// TODO: add types. If using existing types you will see implementation is based on wrong fields
 export const createCalendar = async ({
 	name,
 	parent,
