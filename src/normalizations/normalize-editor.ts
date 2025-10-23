@@ -17,6 +17,7 @@ import { CalendarEditor, Editor } from '../types/editor';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 
+// TODO: REMOVE IF RELATED TO OLD CHAT PRODUCT
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
 	const room = find(xprop, ['name', CRB_XPROPS.MEETING_ROOM]);
