@@ -55,7 +55,7 @@ export const generateReminderItem = (model: Partial<ReminderItem> = {}): Reminde
 		end: model.end ?? endDate,
 		location: model.location ?? faker.lorem.word(),
 		alarmData: model.alarmData
-			? { ...generateAlarmData(), ...model.alarmData }
+			? [{ ...generateAlarmData(), ...model.alarmData }]
 			: [generateAlarmData()],
 		isOrg: model.isOrg ?? faker.datatype.boolean(),
 		isRecurrent: model.isRecurrent ?? faker.datatype.boolean(),
