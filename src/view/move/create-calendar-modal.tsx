@@ -18,7 +18,7 @@ import { URLInput } from '../forms/calendar-url-input';
 import { FreeBusyCheckbox } from '../forms/free-busy-checkbox';
 import { SelectColor } from '../forms/select-color';
 
-type NewModalProps = {
+type CreateCalendarModalProps = {
 	toggleModal?: () => void;
 	modalTitle?: string;
 	confirmLabel: string;
@@ -36,7 +36,7 @@ export const CreateCalendarModal = ({
 	confirmLabel,
 	fromUrl,
 	folderId
-}: NewModalProps): ReactElement => {
+}: CreateCalendarModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const [inputValue, setInputValue] = useState('');
 	const [urlValue, setUrlValue] = useState('');
