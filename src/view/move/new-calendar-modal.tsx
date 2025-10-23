@@ -10,13 +10,9 @@ import {
 	Container,
 	Input,
 	Padding,
-	Select,
 	Text,
 	Checkbox,
-	Row,
-	Icon,
 	SelectItem,
-	SelectProps,
 	useSnackbar,
 	AnyColor
 } from '@zextras/carbonio-design-system';
@@ -29,6 +25,8 @@ import { ModalHeader } from '../../commons/modal-header';
 import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { EventType } from '../../types/event';
+import { CalendarNameInput } from '../forms/calendar-name-input';
+import { SelectColor } from '../forms/select-color';
 
 const Square = styled.div<{ $color?: AnyColor }>`
 	width: 1.125rem;
@@ -40,54 +38,10 @@ const Square = styled.div<{ $color?: AnyColor }>`
 	border-radius: 0.25rem;
 `;
 
-const ColorContainer = styled(Container)`
-	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-`;
 const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
 
-const LabelFactory: SelectProps['LabelFactory'] = ({
-	selected,
-	label,
-	open,
-	focus
-}): ReactElement => (
-	<ColorContainer
-		orientation="horizontal"
-		width="fill"
-		crossAlignment="center"
-		mainAlignment="space-between"
-		borderRadius="half"
-		background={'gray5'}
-		padding={{
-			all: 'small'
-		}}
-	>
-		<Row width="100%" takeAvailableSpace mainAlignment="space-between">
-			<Row
-				orientation="vertical"
-				crossAlignment="flex-start"
-				mainAlignment="flex-start"
-				padding={{ left: 'small' }}
-			>
-				<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
-					{label}
-				</Text>
-				<TextUpperCase>{selected?.[0].label}</TextUpperCase>
-			</Row>
-			<Padding right="small">
-				<Square $color={CALENDARS_STANDARD_COLORS[Number(selected[0].value)].color} />
-			</Padding>
-		</Row>
-		<Icon
-			size="large"
-			icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
-			color={open || focus ? 'primary' : 'secondary'}
-			style={{ alignSelf: 'center' }}
-		/>
-	</ColorContainer>
-);
 const getStatusItems = (): SelectItem[] =>
 	CALENDARS_STANDARD_COLORS.map((el, index) => ({
 		background: el.background,
@@ -125,7 +79,7 @@ export const NewModal = ({
 	onClose,
 	toggleModal,
 	event,
-		url,
+	url,
 	action,
 	folderId
 }: NewModalProps): ReactElement => {
@@ -208,8 +162,6 @@ export const NewModal = ({
 		onClose();
 	}, [onClose]);
 
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
-
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	return (
 		<Container
@@ -222,22 +174,20 @@ export const NewModal = ({
 				title={t('folder.modal.new.title2', 'New calendar creation')}
 				onClose={onCloseModal}
 			/>
-			{url && <><Input
-					label={t('label.url', 'URL')}
-					backgroundColor="gray5"
-					value={urlValue}
-					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						setUrlValue(e.target.value);
-					}}
-			/><Padding vertical="medium" /></>}
-			<Input
-				label={placeholder}
-				backgroundColor="gray5"
-				value={inputValue}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-					setInputValue(e.target.value);
-				}}
-			/>
+			{url && (
+				<>
+					<Input
+						label={t('label.url', 'URL')}
+						backgroundColor="gray5"
+						value={urlValue}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+							setUrlValue(e.target.value);
+						}}
+					/>
+					<Padding vertical="medium" />
+				</>
+			)}
+			<CalendarNameInput value={inputValue} setValue={setInputValue} />
 			{showDupWarning && (
 				<Padding all="small">
 					<Text size="small" color="error">
@@ -246,17 +196,7 @@ export const NewModal = ({
 				</Padding>
 			)}
 			<Padding vertical="medium" />
-			<Select
-				label={'Select color'}
-				onChange={(value): void => {
-					if (value) {
-						setSelectedColor(parseInt(value, 10));
-					}
-				}}
-				items={colors}
-				defaultSelection={colors[0]}
-				LabelFactory={LabelFactory}
-			/>
+			<SelectColor colors={colors} setColor={setSelectedColor} />
 			<Padding vertical="medium" />
 			<Checkbox
 				value={freeBusy}
