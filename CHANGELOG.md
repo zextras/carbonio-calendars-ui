@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.17.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.17.0...v1.17.1) (2025-09-19)
+
+
+### Bug Fixes
+
+* mutiple imported ICS could not be deleted ([9516e8d](https://github.com/zextras/carbonio-calendars-ui/commit/9516e8d141d12005cb57c1ab071413855e36305c))
+* pass comp field to CancelAppointment ([207bc29](https://github.com/zextras/carbonio-calendars-ui/commit/207bc29fed9aec07208866b4e89c839bc18f485d))
+* set the comp field of the CounterAppointment request when it is set on the invite ([d04dcd4](https://github.com/zextras/carbonio-calendars-ui/commit/d04dcd4d9bbfae7deb9859f1adb38d7e541fe5e9))
+
 ## [1.17.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.16.5...v1.17.0) (2025-08-22)
 
 

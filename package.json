@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.17.0",
+	"version": "1.17.1",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"engines": {
@@ -10,6 +10,7 @@
 	"scripts": {
 		"build": "sdk build",
 		"deploy": "sdk deploy",
+		"sdk-install": "sdk install",
 		"start": "sdk watch",
 		"prepublishOnly": "pinst --disable",
 		"postpublish": "pinst --enable",
@@ -61,7 +62,7 @@
 		"@types/react-widgets-moment": "^4.0.3",
 		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#devel",
 		"@zextras/carbonio-ui-configs": "^2.1.0",
-		"@zextras/carbonio-ui-sdk": "^2.2.0-devel.4",
+		"@zextras/carbonio-ui-sdk": "2.2.0-devel.5",
 		"babel-plugin-transform-import-meta": "^2.2.1",
 		"eslint-plugin-jest-dom": "^4.0.3",
 		"eslint-plugin-notice": "^0.9.10",
@@ -91,7 +92,7 @@
 		"@zextras/carbonio-ui-commons": "2.0.0-devel.1",
 		"@zextras/carbonio-ui-preview": "3.3.0-devel.1",
 		"@zextras/carbonio-ui-soap-lib": "1.0.3",
-		"@zextras/carbonio-ui-text-composer": "^1.0.0-devel.1",
+		"@zextras/carbonio-ui-text-composer": "1.0.0-devel.1",
 		"core-js": "^3.39.0",
 		"darkreader": "^4.9.79",
 		"date-arithmetic": "^4.1.0",

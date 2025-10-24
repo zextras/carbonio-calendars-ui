@@ -116,10 +116,10 @@ describe('invite response component', () => {
 				const organizer = mailMsg.invite[0].comp[0].or.d;
 				const title = mailMsg.invite[0].comp[0].name;
 				const organizerString = await screen.findByText(`${organizer} invited you to an event`);
-				const titleString = await screen.findByText(title);
+				const boldTitleString = await screen.findByText(title);
 				expect(organizerString).toBeVisible();
-				expect(titleString).toBeVisible();
-				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
+				expect(boldTitleString).toBeVisible();
+				expect(boldTitleString).toHaveStyle('font-weight: bold');
 			});
 			test('a string with the user local time of the event', async () => {
 				setupFoldersStore();
