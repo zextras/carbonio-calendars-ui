@@ -16,7 +16,6 @@ import { reducers } from '../../../store/redux';
 import { AvailabilitySlots } from '../../../test/mocks/network/msw/handle-get-free-busy';
 import { getSetupServer } from '@jest-setup';
 import { setupTest } from '@test-setup';
-import 'jest-styled-components';
 
 const handleGetFreeBusy = (customResponse: Array<AvailabilitySlots>): void => {
 	getSetupServer().use(

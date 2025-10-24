@@ -34,7 +34,6 @@ export const MessagePart = ({ fullInvite }: MessageProps): ReactElement => (
 			padding={{ left: 'small' }}
 		>
 			<BodyMessageRenderer
-				fragment={fullInvite.fragment}
 				htmlDescription={fullInvite.htmlDescription}
 				textDescription={fullInvite.textDescription}
 			/>

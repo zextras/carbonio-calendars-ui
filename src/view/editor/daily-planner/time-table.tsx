@@ -6,8 +6,8 @@
 
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { map } from 'lodash';
-import styled from 'styled-components';
 
 import { TimetableHeader } from './time-table-header';
 import { TimeTableLegend } from './time-table-legend';

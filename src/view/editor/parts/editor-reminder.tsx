@@ -5,6 +5,7 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Select,
 	Icon,
@@ -17,7 +18,6 @@ import {
 import type { TFunction } from 'i18next';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorReminder } from '../../../store/selectors/editor';

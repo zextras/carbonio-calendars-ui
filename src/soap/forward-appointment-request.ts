@@ -9,14 +9,25 @@ import { ForwardAppointmentRequest, ForwardAppointmentResponse } from '../types/
 
 export const forwardAppointmentRequest = async ({
 	id,
-	attendees
+	attendees,
+	messageParts
 }: {
 	id: string;
 	attendees: Array<string>;
+	messageParts: Array<{ ct: string; content: string }>;
 }): Promise<ForwardAppointmentResponse | ErrorSoapResponse> =>
 	legacySoapFetch<ForwardAppointmentRequest, ForwardAppointmentResponse>('ForwardAppointment', {
 		_jsns: 'urn:zimbraMail',
-
 		id,
-		m: { e: attendees.map((attendee) => ({ a: attendee, t: 't' })) }
+		m: {
+			e: attendees.map((attendee) => ({ a: attendee, t: 't' })),
+			...(messageParts.length > 0
+				? {
+						mp: {
+							ct: 'multipart/alternative',
+							mp: messageParts
+						}
+					}
+				: {})
+		}
 	});

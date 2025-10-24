@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { addBoard } from '@zextras/carbonio-shell-ui';
+import { Folders } from '@zextras/carbonio-ui-commons';
 import { pick } from 'lodash';
 import { Dispatch } from 'redux';
 
-import { Folders } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../../constants';
 import { Editor } from '../../types/editor';

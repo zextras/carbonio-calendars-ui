@@ -5,14 +5,14 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
+import { useFolder } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 
 import { ImageAndIconPart } from './image-and-icon-part';
-import { useFolder } from '@zextras/carbonio-ui-commons';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';

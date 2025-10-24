@@ -5,13 +5,11 @@
  */
 import React, { ComponentProps, ReactComponentElement } from 'react';
 
+import styled from '@emotion/styled';
 import { Container } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
 
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
-import { useInvite } from '../../hooks/use-invite';
-import { hasDescription } from '../../utils/invite';
 import { AttachmentsBlock } from '../event-panel-view/attachments-block';
 import { DetailsPart } from '../event-panel-view/details-part';
 import { DisplayerHeader } from '../event-panel-view/event-panel-view';
@@ -19,6 +17,7 @@ import { MessagePart } from '../event-panel-view/message-part';
 import { ParticipantsPart } from '../event-panel-view/participants-part';
 import { ReminderPart } from '../event-panel-view/reminder-part';
 import { ReplyButtonsPart } from '../event-panel-view/reply-buttons-part';
+import { useInvite } from 'hooks/use-invite';
 
 const BodyContainer = styled(Container)`
 	overflow-x: hidden;
@@ -73,7 +72,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 								<StyledDivider />
 							</>
 						)}
-						{invite && hasDescription(invite) && (
+						{invite && (
 							<Container>
 								<MessagePart fullInvite={invite} />
 								<StyledDivider />

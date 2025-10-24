@@ -17,8 +17,6 @@ import { setupTest } from '@test-setup';
 import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
-jest.setTimeout(20000);
-
 shell.getUserSettings.mockImplementation(() => ({
 	...defaultSettings,
 	prefs: {

@@ -66,6 +66,24 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 		[]
 	);
 
+	const errorLabels = {
+		singleResourceUnavailable: t(
+			'attendee_equipment_unavailable',
+			'Equipment not available at the selected time of the event'
+		),
+		multipleResourcesUnavailable: t(
+			'attendees_equipments_unavailable',
+			'One or more Equipments are not available at the selected time of the event'
+		),
+		invalidResource: t(
+			'equipment_invalid',
+			'One or more items of equipment are invalid. Try editing them or entering a new one.'
+		),
+		duplicateResources: t(
+			'duplicate_equipment_error',
+			'One or more items of equipment were selected multiple times. Consider removing the duplicates.'
+		)
+	};
 	return (
 		<EditorResourceComponent
 			onChange={onChange}
@@ -73,23 +91,8 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			onSearchOptions={onSearchOptions}
 			placeholder={t('label.equipment', 'Equipment')}
 			resourcesValue={equipmentChipValue}
-			warningLabel={t(
-				'attendees_equipments_unavailable',
-				'One or more Equipments are not available at the selected time of the event'
-			)}
 			disabled={disabled?.equipment}
-			singleWarningLabel={t(
-				'attendee_equipment_unavailable',
-				'Equipment not available at the selected time of the event'
-			)}
-			invalidInputErrorLabel={t(
-				'equipment_invalid',
-				'One or more items of equipment are invalid. Try editing them or entering a new one.'
-			)}
-			duplicateChipsErrorLabel={t(
-				'duplicate_equipment_error',
-				'One or more items of equipment were selected multiple times. Consider removing the duplicates.'
-			)}
+			errorLabels={errorLabels}
 		/>
 	);
 };

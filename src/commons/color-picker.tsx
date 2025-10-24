@@ -14,10 +14,10 @@ import {
 	Container,
 	SingleSelectionOnChange
 } from '@zextras/carbonio-design-system';
+import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 import { TFunction } from 'i18next';
 
 import { ColorContainer, Square, TextUpperCase } from './styled-components';
-import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 
 type LabelFactoryProps = {
 	selected: Array<{ label: string; value: string }>;

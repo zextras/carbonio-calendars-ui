@@ -5,6 +5,8 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo } from 'react';
 
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import {
 	Container,
 	Button,
@@ -15,7 +17,6 @@ import {
 	AnyColor
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import styled, { css } from 'styled-components';
 
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
@@ -24,9 +25,8 @@ const CustomContainer = styled(Container)<{ $color?: AnyColor }>`
 	border: 0.0625rem solid;
 	border-radius: 0.25rem;
 	height: fit-content;
-	${({ $color = 'primary', theme }): ReturnType<typeof css> => css`
-		${pseudoClasses(theme, $color, 'border-color')};
-	`};
+	${({ $color = 'primary', theme }): ReturnType<typeof css> =>
+		pseudoClasses(theme, $color, 'border-color')};
 `;
 
 const CustomButton = styled(Button)`

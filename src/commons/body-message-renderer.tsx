@@ -12,6 +12,7 @@ import { replace } from 'lodash';
 import { ROOM_DIVIDER } from '../constants';
 import { HtmlMessageRenderer } from './html-message-renderer';
 import { replaceLinkToAnchor } from './utilities';
+import { InviteDescription } from 'types/store/invite';
 
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
 
@@ -66,29 +67,55 @@ const EmptyBody = (): React.JSX.Element => (
 );
 
 export const BodyMessageRenderer = ({
-	fragment,
 	htmlDescription,
 	textDescription,
 	fontSize
 }: {
-	fragment: string | undefined;
-	htmlDescription: { _content: string }[] | undefined;
-	textDescription: { _content: string }[] | undefined;
+	htmlDescription: Array<InviteDescription>;
+	textDescription: Array<InviteDescription>;
 	fontSize?: keyof typeof Theme.sizes.font;
 }): React.JSX.Element => {
-	if (!fragment) {
-		return <EmptyBody />;
+	const processedHtmlContent = useMemo(() => {
+		const htmlContent = htmlDescription?.[0]?._content;
+		if (!htmlContent) return null;
+
+		const roomHtmlDesc = roomValidationRegEx?.exec(htmlContent)?.[0];
+		const cleanedHtml = roomHtmlDesc ? replace(htmlContent, roomHtmlDesc, '') : htmlContent;
+		const htmlBody = extractHtmlBody(cleanedHtml);
+		const trimmedHtmlBody = htmlBody.trim();
+
+		// Check if HTML is empty or contains only empty tags
+		if (!trimmedHtmlBody || trimmedHtmlBody === '"') return null;
+
+		// Check for empty HTML body structures
+		const emptyHtmlPattern = /<html[^>]*>\s*<body[^>]*>\s*<\/body>\s*<\/html>/i;
+		if (emptyHtmlPattern.test(trimmedHtmlBody)) return null;
+
+		return trimmedHtmlBody;
+	}, [htmlDescription]);
+
+	const processedTextContent = useMemo(() => {
+		const textContent = textDescription?.[0]?._content;
+		if (!textContent) return null;
+
+		const roomTextDesc = roomValidationRegEx?.exec(textContent)?.[0];
+		const cleanedText = roomTextDesc ? replace(textContent, roomTextDesc, '') : textContent;
+		const textBody = extractBody(cleanedText);
+		const trimmedTextBody = textBody.trim();
+
+		// Filter out invalid content like single quote or empty strings
+		if (!trimmedTextBody || trimmedTextBody === '"') return null;
+
+		return trimmedTextBody;
+	}, [textDescription]);
+
+	if (processedHtmlContent) {
+		return <HtmlMessageRenderer htmlContent={processedHtmlContent} />;
 	}
 
-	if (htmlDescription?.[0]?._content) {
-		const originalHtml = htmlDescription[0]._content;
-		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
-		const htmlContent = roomHtmlDesc ? replace(originalHtml, roomHtmlDesc, '') : originalHtml;
-		return <HtmlMessageRenderer htmlContent={extractHtmlBody(htmlContent)} />;
+	if (processedTextContent) {
+		return <TextMessageRenderer text={processedTextContent} fontSize={fontSize} />;
 	}
 
-	const originalText = textDescription?.[0]?._content ?? '';
-	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
-	const textContent = roomTextDesc ? replace(originalText, roomTextDesc, '') : originalText;
-	return <TextMessageRenderer text={extractBody(textContent)} fontSize={fontSize} />;
+	return <EmptyBody />;
 };

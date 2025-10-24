@@ -7,43 +7,13 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { useTheme } from '@zextras/carbonio-design-system';
 import moment from 'moment-timezone';
-import { useTheme } from 'styled-components';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { reducers } from '../../store/redux';
-import mockedData from '../../test/generators';
 import { generateReminderItem } from '../../test/generators/reminder';
-import { Appointment } from '../../types/store/appointments';
-import { Invite } from '../../types/store/invite';
-import { AppointmentsSlice, InvitesSlice } from '../../types/store/store';
 import { setupHook, setupTest, screen } from '@test-setup';
-
-const initializeMockedStore = ({
-	invite,
-	appointment
-}: {
-	invite?: Invite;
-	appointment?: Appointment;
-}): ReturnType<typeof configureStore> => {
-	const mockedInviteSlice: Partial<InvitesSlice> = {
-		invites: invite ? { [invite.id]: invite } : {}
-	};
-
-	const mockedAppointmentSlice: Partial<AppointmentsSlice> = {
-		appointments: appointment ? { [appointment.id]: appointment } : {}
-	};
-
-	const mockedStore = mockedData.store.mockReduxStore({
-		invites: mockedInviteSlice,
-		appointments: mockedAppointmentSlice
-	});
-
-	return configureStore({
-		reducer: combineReducers(reducers),
-		preloadedState: mockedStore
-	});
-};
 
 describe('Appointment Reminder Item', () => {
 	it('should render the icon', () => {
@@ -98,6 +68,193 @@ describe('Appointment Reminder Item', () => {
 		expect(screen.getByText(timeText)).toBeVisible();
 	});
 
+	it('should render a button to snooze the reminder if the appointment is not started yet and user is not organizer', async () => {
+		const reminderItem = generateReminderItem({
+			start: moment().add(1, 'hour').toDate(),
+			isOrg: false,
+			alarmData: [
+				{
+					alarmInstStart: moment().add(1, 'hour').valueOf(),
+					alarm: [
+						{
+							action: 'DISPLAY',
+							desc: { description: 'description' },
+							trigger: [
+								{
+									rel: [
+										{
+											neg: 'true',
+											related: 'START'
+										}
+									]
+								}
+							]
+						}
+					],
+					compNum: 0,
+					invId: 0,
+					loc: '',
+					name: '',
+					nextAlarm: 0
+				}
+			]
+		});
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={jest.fn}
+				removeReminder={jest.fn}
+				setActiveReminder={jest.fn}
+			/>,
+			{ store }
+		);
+
+		// Snooze button should be visible
+		const snoozeButton = await screen.findByTestId('icon: ClockOutline');
+		expect(snoozeButton).toBeVisible();
+	});
+
+	it('should render a button to set a new time for the appointment if the appointment is started and user is organizer', async () => {
+		const reminderItem = generateReminderItem({
+			start: moment().subtract(1, 'hour').toDate(),
+			isOrg: true,
+			alarmData: [
+				{
+					alarmInstStart: moment().add(1, 'hour').valueOf(),
+					alarm: [
+						{
+							action: 'DISPLAY',
+							desc: { description: 'description' },
+							trigger: [
+								{
+									rel: [
+										{
+											neg: 'true',
+											related: 'START'
+										}
+									]
+								}
+							]
+						}
+					],
+					compNum: 0,
+					invId: 0,
+					loc: '',
+					name: '',
+					nextAlarm: 0
+				}
+			]
+		});
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={jest.fn}
+				removeReminder={jest.fn}
+				setActiveReminder={jest.fn}
+			/>,
+			{ store }
+		);
+
+		// Reschedule button should be visible
+		const rescheduleButton = await screen.findByTestId('icon: CalendarOutline');
+		expect(rescheduleButton).toBeVisible();
+	});
+
+	it('should render a button to dismiss the reminder', async () => {
+		const reminderItem = generateReminderItem();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={jest.fn}
+				removeReminder={jest.fn}
+				setActiveReminder={jest.fn}
+			/>,
+			{ store }
+		);
+
+		const dismissButton = await screen.findByTestId('icon: BellOffOutline');
+		expect(dismissButton).toBeVisible();
+	});
+
+	it('should call setActiveReminder and toggleModal when reschedule button is clicked', async () => {
+		const setActiveReminder = jest.fn();
+		const toggleModal = jest.fn();
+		const reminderItem = generateReminderItem({
+			start: moment().subtract(1, 'hour').toDate(),
+			isOrg: true,
+			alarmData: [
+				{
+					alarmInstStart: moment().add(1, 'hour').valueOf(),
+					alarm: [
+						{
+							action: 'DISPLAY',
+							desc: { description: 'description' },
+							trigger: [
+								{
+									rel: [
+										{
+											neg: 'true',
+											related: 'START'
+										}
+									]
+								}
+							]
+						}
+					],
+					compNum: 0,
+					invId: 0,
+					loc: '',
+					name: '',
+					nextAlarm: 0
+				}
+			]
+		});
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const { user } = setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={toggleModal}
+				removeReminder={jest.fn}
+				setActiveReminder={setActiveReminder}
+			/>,
+			{ store }
+		);
+
+		const rescheduleButton = await screen.findByTestId('icon: CalendarOutline');
+		await user.click(rescheduleButton);
+
+		expect(setActiveReminder).toHaveBeenCalledWith(reminderItem);
+		expect(toggleModal).toHaveBeenCalled();
+	});
+
+	it('should call removeReminder when dismiss icon button is clicked', async () => {
+		const removeReminder = jest.fn();
+		const reminderItem = generateReminderItem();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const { user } = setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={jest.fn}
+				removeReminder={removeReminder}
+				setActiveReminder={jest.fn}
+			/>,
+			{ store }
+		);
+
+		const dismissButton = await screen.findByTestId('icon: BellOffOutline');
+		await user.click(dismissButton);
+
+		expect(removeReminder).toHaveBeenCalledWith(reminderItem.key);
+	});
+
 	it.todo('should render the appointment status');
 
 	it.todo("should render a button to snooze the reminder if the appointment isn't started yet");
@@ -141,7 +298,7 @@ describe('Appointment Reminder Item', () => {
 			expect(screen.getByText(/show details/i)).toBeVisible();
 		});
 
-		it('should render the text with a specific color', () => {
+		it('should render the text with a specific color', async () => {
 			const reminderItem = generateReminderItem({ location: faker.internet.url() });
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const {
@@ -160,11 +317,7 @@ describe('Appointment Reminder Item', () => {
 
 			const showDetailsText = screen.getByText(/show details/i);
 
-			/*
-			 * FIXME change the color variant from hover to regular as soon as
-			 *  the https://github.com/testing-library/jest-dom/issues/594 issue is fixed
-			 */
-			expect(showDetailsText).toHaveStyle({ color: theme.palette.info.hover });
+			expect(showDetailsText).toHaveStyle({ color: theme.palette.info.regular });
 		});
 
 		it('should render the text with underline', () => {

@@ -5,6 +5,7 @@
  */
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
 
+import { matchers } from '@emotion/jest';
 import {
 	act,
 	ByRoleMatcher,
@@ -76,6 +77,8 @@ const customQueries = {
 	findAllByRoleWithIcon,
 	findByRoleWithIcon
 };
+
+expect.extend(matchers);
 
 const queriesExtended = { ...queries, ...customQueries };
 

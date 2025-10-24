@@ -5,6 +5,7 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Container,
 	Padding,
@@ -18,7 +19,6 @@ import {
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, useRoot, Grant } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 
 import { isLinkChild } from '../../../commons/utilities';
 

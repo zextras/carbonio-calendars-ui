@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import styled from '@emotion/styled';
 import { IconCheckbox } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
 
 export const ResizedIconCheckbox = styled(IconCheckbox)`
   [class^='Padding__Comp'] {
