@@ -12,11 +12,11 @@ import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { CalendarNameInput } from '../../forms/calendar-name-input';
+import { URLInput } from '../../forms/calendar-url-input';
+import { FreeBusyCheckbox } from '../../forms/free-busy-checkbox';
+import { SelectColor } from '../../forms/select-color';
 import { createCalendar } from '../../store/actions/create-calendar';
-import { CalendarNameInput } from '../forms/calendar-name-input';
-import { URLInput } from '../forms/calendar-url-input';
-import { FreeBusyCheckbox } from '../forms/free-busy-checkbox';
-import { SelectColor } from '../forms/select-color';
 
 type CreateCalendarModalProps = {
 	toggleModal?: () => void;

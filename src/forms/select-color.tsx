@@ -18,7 +18,7 @@ import {
 	Text
 } from '@zextras/carbonio-design-system';
 
-import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
+import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 
 const ColorContainer = styled(Container)`
 	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
