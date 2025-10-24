@@ -30,35 +30,38 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 		[showNewFolderModal]
 	);
 
-	const moveAppt = (data: any): void => {
-		dispatch(moveAppointmentRequest(data)).then((res: any) => {
-			if (res.type.includes('fulfilled')) {
-				createSnackbar({
-					key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
-					replace: true,
-					severity: 'info',
-					hideButton: true,
-					label: hasId(event.resource.calendar, FOLDERS.TRASH)
-						? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
-								data.destinationCalendarName
-							}`
-						: `${t('message.snackbar.appt_moved', 'Appointment moved successfully to')} ${
-								data.destinationCalendarName
-							}`,
-					autoHideTimeout: 3000
-				});
-			} else {
-				createSnackbar({
-					key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
-					replace: true,
-					severity: 'error',
-					hideButton: true,
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000
-				});
-			}
-		});
-	};
+	const moveAppt = useCallback(
+		(data: any): void => {
+			dispatch(moveAppointmentRequest(data)).then((res: any) => {
+				if (res.type.includes('fulfilled')) {
+					createSnackbar({
+						key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
+						replace: true,
+						severity: 'info',
+						hideButton: true,
+						label: hasId(event.resource.calendar, FOLDERS.TRASH)
+							? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
+									data.destinationCalendarName
+								}`
+							: `${t('message.snackbar.appt_moved', 'Appointment moved successfully to')} ${
+									data.destinationCalendarName
+								}`,
+						autoHideTimeout: 3000
+					});
+				} else {
+					createSnackbar({
+						key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
+						replace: true,
+						severity: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
+				}
+			});
+		},
+		[createSnackbar, dispatch, event.resource.calendar]
+	);
 
 	const onCreated = useCallback(
 		// TODO: this type is any because it was like that in the original code
