@@ -45,7 +45,7 @@ async function typeURL(user: UserEvent, value: string): Promise<void> {
 	await user.type(urlInput, value);
 }
 
-async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Promise<void> {
+async function performImportFromURL(user: UserEvent, element: HTMLElement): Promise<void> {
 	await user.rightClick(element);
 	const importCalendarAction = await screen.findByText('action.calendar_upload');
 	await user.hover(importCalendarAction);
@@ -96,7 +96,7 @@ describe('SidebarIntegration tests', () => {
 		const user = await setupIntegrationTest({ calendar: myCalendar });
 
 		const myFolderElement = await screen.findByText('My Calendar');
-		await openImportFromURLModal(user, myFolderElement);
+		await performImportFromURL(user, myFolderElement);
 		const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
 		expect(importFromURLModal).toBeInTheDocument();
 		const url = 'https://example.com/calendar/calendar.ics';
