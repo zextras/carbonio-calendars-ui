@@ -46,7 +46,7 @@ describe('useSecondaryBarTreePrimaryAccount', () => {
 				},
 				{
 					id: SIDEBAR_ROOT_SUBSECTION.GROUPS,
-					label: 'Groups',
+					label: 'Calendar groups',
 					items: expect.any(Array),
 					onClose: expect.any(Function),
 					onOpen: expect.any(Function),
