@@ -8,7 +8,7 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { Folder, FOLDERS } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import SecondaryBar from './secondary-bar';
@@ -58,6 +58,16 @@ async function performSync(user: UserEvent, element: HTMLElement): Promise<void>
 	await user.click(importCalendarAction);
 }
 
+async function setupIntegrationTest({ calendar }: { calendar: Folder }): Promise<UserEvent> {
+	const store = configureStore({
+		reducer: combineReducers(reducers)
+	});
+	populateFoldersStore({ customFolders: [calendar] });
+	const { user } = setupTest(<SecondaryBar expanded />, { store });
+	waitAnimationsToComplete();
+	return user;
+}
+
 async function fillForm({
 	user,
 	calendarName,
@@ -79,23 +89,18 @@ describe('SidebarIntegration tests', () => {
 	});
 
 	it('should create an external calendar when using "import from URL"', async () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
 		const myCalendar = generateFolder({
 			name: 'My Calendar',
 			id: 'my-calendar'
 		});
-		populateFoldersStore({ customFolders: [myCalendar] });
-		const { user } = setupTest(<SecondaryBar expanded />, { store });
-		const myFolderElement = await screen.findByText('My Calendar');
+		const user = await setupIntegrationTest({ calendar: myCalendar });
 
-		waitAnimationsToComplete();
+		const myFolderElement = await screen.findByText('My Calendar');
 		await openImportFromURLModal(user, myFolderElement);
 		const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
 		expect(importFromURLModal).toBeInTheDocument();
 		const url = 'https://example.com/calendar/calendar.ics';
-		const calendarName = 'External Calendar';
+		const calendarName = 'ICS Calendar';
 		const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
 		await fillForm({ user, url, calendarName });
 		const request = await createFolderApi;
@@ -105,19 +110,14 @@ describe('SidebarIntegration tests', () => {
 		expect(importFromURLModal).not.toBeInTheDocument();
 	});
 	it('should sync the folder when "Sync" action clicked', async () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
 		const externalCalendar = generateFolder({
 			name: 'External Calendar',
 			id: 'external-calendar',
 			url: 'https://external/calendar.ics'
 		});
-		populateFoldersStore({ customFolders: [externalCalendar] });
-		const { user } = setupTest(<SecondaryBar expanded />, { store });
+		const user = await setupIntegrationTest({ calendar: externalCalendar });
 		const myFolderElement = await screen.findByText('External Calendar');
 
-		waitAnimationsToComplete();
 		const syncApi = createSoapAPIInterceptor<FolderActionRequest>('Batch');
 		await performSync(user, myFolderElement);
 		const request = await syncApi;
