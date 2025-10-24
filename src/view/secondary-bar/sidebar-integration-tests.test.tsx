@@ -15,6 +15,7 @@ import SecondaryBar from './secondary-bar';
 import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 import { reducers } from '../../store/redux';
 import { CreateFolderRequest } from '../../types/soap/createFolder';
+import { FolderActionRequest } from '../../types/soap/soap-actions';
 import { setupTest, UserEvent } from '@test-setup';
 import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { generateFolder } from '@test-utils/folders/folders-generator';
@@ -51,6 +52,11 @@ async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Pr
 	const importFromURL = await screen.findByText('action.import_calendar_from_url');
 	await user.click(importFromURL);
 }
+async function performSync(user: UserEvent, element: HTMLElement): Promise<void> {
+	await user.rightClick(element);
+	const importCalendarAction = await screen.findByText('action.sync');
+	await user.click(importCalendarAction);
+}
 
 async function fillForm({
 	user,
@@ -71,18 +77,18 @@ describe('SidebarIntegration tests', () => {
 	beforeAll(() => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
+
 	it('should create an external calendar when using "import from URL"', async () => {
 		const store = configureStore({
 			reducer: combineReducers(reducers)
 		});
-		const myFolder = generateFolder({
-			name: 'My Folder',
-			id: 'my-folder'
+		const myCalendar = generateFolder({
+			name: 'My Calendar',
+			id: 'my-calendar'
 		});
-		populateFoldersStore({ customFolders: [myFolder] });
-
+		populateFoldersStore({ customFolders: [myCalendar] });
 		const { user } = setupTest(<SecondaryBar expanded />, { store });
-		const myFolderElement = await screen.findByText('My Folder');
+		const myFolderElement = await screen.findByText('My Calendar');
 
 		waitAnimationsToComplete();
 		await openImportFromURLModal(user, myFolderElement);
@@ -97,5 +103,27 @@ describe('SidebarIntegration tests', () => {
 		expect(request.folder.name).toBe(calendarName);
 		expect(request.folder.url).toBe(url);
 		expect(importFromURLModal).not.toBeInTheDocument();
+	});
+	it('should sync the folder when "Sync" action clicked', async () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		const externalCalendar = generateFolder({
+			name: 'External Calendar',
+			id: 'external-calendar',
+			url: 'https://external/calendar.ics'
+		});
+		populateFoldersStore({ customFolders: [externalCalendar] });
+		const { user } = setupTest(<SecondaryBar expanded />, { store });
+		const myFolderElement = await screen.findByText('External Calendar');
+
+		waitAnimationsToComplete();
+		const syncApi = createSoapAPIInterceptor<FolderActionRequest>('Batch');
+		await performSync(user, myFolderElement);
+		const request = await syncApi;
+
+		const batchRequest = request.FolderActionRequest[0];
+		expect(batchRequest.action.op).toBe('sync');
+		expect(batchRequest.action.id).toBe('external-calendar');
 	});
 });

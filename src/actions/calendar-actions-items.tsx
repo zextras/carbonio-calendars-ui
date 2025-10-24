@@ -266,7 +266,7 @@ export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarAc
 });
 
 export const syncCalendar = ({ item }: { item: Folder }): CalendarActionsItems => ({
-	id: FOLDER_ACTIONS.EXPORT_ICS,
+	id: FOLDER_ACTIONS.SYNC,
 	icon: 'Sync',
 	label: t('action.sync', 'Sync'),
 	tooltipLabel: noPermissionLabel,

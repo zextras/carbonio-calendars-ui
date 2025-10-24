@@ -359,6 +359,7 @@ export const generateFolder = (model: Partial<Folder & { oname: string }> = {}):
 		id: model.id ?? getNextFolderId(),
 		uuid: model.uuid ?? faker.string.uuid(),
 		name: model.name ?? name,
+		url: model.url ?? undefined,
 		absFolderPath: model.absFolderPath ?? `/${name}`,
 		l: model.l ?? FOLDERS.USER_ROOT,
 		luuid: model.luuid ?? rootUuid,
