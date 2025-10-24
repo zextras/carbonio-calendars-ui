@@ -19,7 +19,7 @@ const config: Config = {
 	collectCoverageFrom: [
 		'src/**/*.{js,ts}(x)?',
 		'!**/__mocks__/**', // Exclude mock files
-		'!**/integration-tests/**', // Exclude integration tests
+		'!src/integration-tests/**', // Exclude integration tests
 		'!**/__tests__/**', // Exclude test files
 		'!**/*.test.{js,jsx,ts,tsx}', // Exclude test files
 		'!**/*.spec.{js,jsx,ts,tsx}', // Exclude test files
