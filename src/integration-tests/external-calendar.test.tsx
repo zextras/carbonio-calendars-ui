@@ -4,47 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React from 'react';
+import { screen } from '@testing-library/react';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { configureStore } from '@reduxjs/toolkit';
-import { act, screen } from '@testing-library/react';
-import { Folder, FOLDERS } from '@zextras/carbonio-ui-commons';
-import { combineReducers } from 'redux';
-
-import SecondaryBar from './secondary-bar';
-import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
-import { reducers } from '../../store/redux';
-import { CreateFolderRequest } from '../../types/soap/createFolder';
-import { setupTest, UserEvent } from '@test-setup';
+import { mockExpandedFolders, setupIntegrationTest, typeCalendarName, typeURL } from './utils';
+import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
+import { CreateFolderRequest } from '../types/soap/createFolder';
+import { UserEvent } from '@test-setup';
 import { mockSyncApiOk } from '@test-utils/api/sync-folder';
-import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
-import { populateFoldersStore } from '@test-utils/store/folders';
-
-// TODO: I think we should write tests using these utilities.
-//  The idea is to think about behavior and not low-level details of the testing framework
-function waitAnimationsToComplete(): void {
-	act(() => jest.advanceTimersByTime(1000));
-}
-
-function mockExpandedFolders(folderIds: Array<string>): void {
-	useLocalStorage.mockReturnValue([folderIds, jest.fn()]);
-}
-
-async function typeCalendarName(user: UserEvent, value: string): Promise<void> {
-	const urlInput = screen.getByRole('textbox', {
-		name: 'label.type_name_here'
-	});
-	return user.type(urlInput, value);
-}
-
-async function typeURL(user: UserEvent, value: string): Promise<void> {
-	const urlInput = screen.getByRole('textbox', {
-		name: 'label.url'
-	});
-	await user.type(urlInput, value);
-}
 
 async function performImportFromURL(user: UserEvent, element: HTMLElement): Promise<void> {
 	await user.rightClick(element);
@@ -58,16 +27,6 @@ async function performSync(user: UserEvent, element: HTMLElement): Promise<void>
 	await user.rightClick(element);
 	const importCalendarAction = await screen.findByText('action.sync');
 	await user.click(importCalendarAction);
-}
-
-async function setupIntegrationTest({ calendar }: { calendar: Folder }): Promise<UserEvent> {
-	const store = configureStore({
-		reducer: combineReducers(reducers)
-	});
-	populateFoldersStore({ customFolders: [calendar] });
-	const { user } = setupTest(<SecondaryBar expanded />, { store });
-	waitAnimationsToComplete();
-	return user;
 }
 
 async function fillForm({
@@ -85,7 +44,7 @@ async function fillForm({
 	await user.click(confirmButton);
 }
 
-describe('SidebarIntegration tests', () => {
+describe('External Calendar Integration Tests', () => {
 	beforeAll(() => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});

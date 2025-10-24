@@ -45,7 +45,7 @@ export const CreateCalendarModal = ({
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
-	const title = modalTitle || t('folder.modal.new.title2', 'New calendar creation');
+	const title = modalTitle ?? t('folder.modal.new.title2', 'New calendar creation');
 
 	const folders = useFoldersMapByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
