@@ -192,7 +192,8 @@ export const moveAppointmentToTrash = createAsyncThunk<
 			inst,
 			s,
 			m,
-			isOrganizer
+			isOrganizer,
+			comp: invite?.compNum ?? 0
 		});
 		if (response?.error) {
 			return rejectWithValue(response);

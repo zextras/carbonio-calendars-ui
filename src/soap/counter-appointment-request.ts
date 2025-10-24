@@ -31,7 +31,7 @@ export const counterAppointmentRequest = async ({
 }): Promise<CounterAppointmentReturnType> => {
 	const res: CounterAppointmentReturnType = await legacySoapFetch('CounterAppointment', {
 		_jsns: 'urn:zimbraMail',
-		comp: '0',
+		comp: appt.compNum ?? 0,
 		id: appt.inviteId?.includes('-') ? appt.inviteId : undefined,
 		m: {
 			e: generateParticipantInformation(appt),
