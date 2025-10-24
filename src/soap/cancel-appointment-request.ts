@@ -12,6 +12,7 @@ type Props = {
 	isOrganizer: boolean;
 	m: any;
 	s: number;
+	comp: number;
 };
 
 export type CancelAppointmentRejectedType = { error: boolean; m?: never; Fault: any };
@@ -26,21 +27,22 @@ export const cancelAppointmentRequest = async ({
 	id,
 	isOrganizer,
 	m,
-	s
+	s,
+	comp
 }: Props): Promise<CancelAppointmentReturnType> => {
 	const body = deleteSingleInstance
 		? {
 				_jsns: 'urn:zimbraMail',
 				inst,
 				id,
-				comp: '0',
+				comp,
 				s,
 				m: isOrganizer ? m : { ...m, e: [] }
 			}
 		: {
 				_jsns: 'urn:zimbraMail',
 				id,
-				comp: '0',
+				comp,
 				m: isOrganizer ? m : { ...m, e: [] }
 			};
 	const response: CancelAppointmentReturnType = await legacySoapFetch('CancelAppointment', body);
