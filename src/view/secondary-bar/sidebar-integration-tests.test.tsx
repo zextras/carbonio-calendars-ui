@@ -21,6 +21,8 @@ import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
+// TODO: I think we should write tests using these utilities.
+//  The idea is to think about behavior and not low-level details of the testing framework
 function waitAnimationsToComplete(): void {
 	act(() => jest.advanceTimersByTime(1000));
 }
@@ -84,13 +86,16 @@ describe('SidebarIntegration tests', () => {
 
 		waitAnimationsToComplete();
 		await openImportFromURLModal(user, myFolderElement);
+		const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
+		expect(importFromURLModal).toBeInTheDocument();
 		const url = 'https://example.com/calendar/calendar.ics';
 		const calendarName = 'External Calendar';
-		const apiInterceptor = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
+		const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
 		await fillForm({ user, url, calendarName });
-		const request = await apiInterceptor;
+		const request = await createFolderApi;
 
 		expect(request.folder.name).toBe(calendarName);
 		expect(request.folder.url).toBe(url);
+		expect(importFromURLModal).not.toBeInTheDocument();
 	});
 });
