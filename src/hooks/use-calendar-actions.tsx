@@ -23,15 +23,6 @@ import {
 	sharesInfoItem,
 	syncCalendar
 } from '../actions/calendar-actions-items';
-import { ActionsClick } from '../types/actions';
-
-type CalendarActionsProps = {
-	id: string;
-	icon: string;
-	label: string;
-	onClick: (e: ActionsClick) => void;
-	disabled?: boolean;
-};
 
 export const useCalendarActions = (
 	item: Folder,
@@ -52,7 +43,7 @@ export const useCalendarActions = (
 		findSharesItem({ createModal, closeModal, item }),
 		sharesInfoItem({ item, createModal, closeModal }),
 		exportAppointmentICSItem({ item }),
-		syncCalendar({ item }),
+		syncCalendar({ item, createSnackbar }),
 		importCalendar(item, [
 			importCalendarICSItem(item, inputRef),
 			importCalendarFromURL({ createModal, closeModal, item })

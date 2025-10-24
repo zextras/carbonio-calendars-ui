@@ -6,6 +6,7 @@
 
 export const FOLDER_OPERATIONS = {
 	COLOR: 'color',
+	SYNC: 'sync',
 	RENAME: 'rename',
 	MOVE: 'move',
 	DELETE: 'delete',

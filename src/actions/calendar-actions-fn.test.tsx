@@ -16,14 +16,32 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
-	sharesInfo
+	sharesInfo,
+	syncCalendarFn
 } from './calendar-actions-fn';
 import mockedData from '../test/generators';
 import { getSetupServer } from '@jest-setup';
+import { mockSyncApiFault } from '@test-utils/api/sync-folder';
+import { generateFolder } from '@test-utils/folders/folders-generator';
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 
 describe('calendar-actions-fn', () => {
+	describe('sync', () => {
+		it('should display an error snackbar when sync Fault', async () => {
+			const createSnackbar = jest.fn();
+			const item = generateFolder({ id: 'my-calendar', url: 'https://localhost/my.ics' });
+			const syncApi = mockSyncApiFault();
+			syncCalendarFn({ item, createSnackbar });
+			await syncApi;
+			await waitFor(() => {
+				expect(createSnackbar).toHaveBeenCalled();
+			});
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({ key: 'calendar-sync-error' })
+			);
+		});
+	});
 	test('new calendar fn on click create modal is called once', () => {
 		const createModal = jest.fn();
 		const closeModal = jest.fn();

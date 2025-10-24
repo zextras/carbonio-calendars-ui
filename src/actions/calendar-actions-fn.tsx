@@ -5,9 +5,14 @@
  */
 import React from 'react';
 
-import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
+import {
+	CloseModalFn,
+	CreateModalFn,
+	CreateSnackbarFn,
+	CreateSnackbarFnArgs
+} from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbonio-ui-commons';
+import { Folder, getRoot, isTrashOrNestedInIt, ResFolder } from '@zextras/carbonio-ui-commons';
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
@@ -26,6 +31,36 @@ import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
 
+const handleActionResponse = ({
+	createSnackbar,
+	response,
+	snackbarSuccess,
+	snackbarFailure
+}: {
+	createSnackbar: CreateSnackbarFn;
+	response: any;
+	snackbarSuccess: CreateSnackbarFnArgs;
+	snackbarFailure: Omit<CreateSnackbarFnArgs, 'label'>;
+}): void => {
+	if (!('Fault' in response)) {
+		createSnackbar({
+			replace: true,
+			severity: 'info',
+			hideButton: true,
+			autoHideTimeout: 3000,
+			...snackbarSuccess
+		});
+	} else {
+		createSnackbar({
+			replace: true,
+			severity: 'error',
+			hideButton: true,
+			autoHideTimeout: 3000,
+			label: t('label.error_try_again', 'Something went wrong, please try again'),
+			...snackbarFailure
+		});
+	}
+};
 export const newCalendar =
 	({
 		createModal,
@@ -263,7 +298,34 @@ export const deleteCalendar =
 			true
 		);
 	};
-
+export const syncCalendarFn = ({
+	item,
+	createSnackbar
+}: {
+	item: { id: string };
+	createSnackbar: CreateSnackbarFn;
+}): void => {
+	folderAction({
+		op: 'sync',
+		id: item.id
+	})
+		.then((response) =>
+			handleActionResponse({
+				response,
+				createSnackbar,
+				snackbarFailure: {
+					key: `calendar-sync-error`
+				},
+				snackbarSuccess: {
+					key: `calendar-sync-ok`,
+					label: t('message.snackbar.sync', 'Calendar synced successfully')
+				}
+			})
+		)
+		.catch(() => {
+			console.error('');
+		});
+};
 export const removeFromList =
 	({
 		item,

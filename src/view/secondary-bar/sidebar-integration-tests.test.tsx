@@ -15,8 +15,8 @@ import SecondaryBar from './secondary-bar';
 import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 import { reducers } from '../../store/redux';
 import { CreateFolderRequest } from '../../types/soap/createFolder';
-import { FolderActionRequest } from '../../types/soap/soap-actions';
 import { setupTest, UserEvent } from '@test-setup';
+import { mockSyncApi } from '@test-utils/api/sync-folder';
 import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
@@ -38,6 +38,7 @@ async function typeCalendarName(user: UserEvent, value: string): Promise<void> {
 	});
 	return user.type(urlInput, value);
 }
+
 async function typeURL(user: UserEvent, value: string): Promise<void> {
 	const urlInput = screen.getByRole('textbox', {
 		name: 'label.url'
@@ -52,6 +53,7 @@ async function performImportFromURL(user: UserEvent, element: HTMLElement): Prom
 	const importFromURL = await screen.findByText('action.import_calendar_from_url');
 	await user.click(importFromURL);
 }
+
 async function performSync(user: UserEvent, element: HTMLElement): Promise<void> {
 	await user.rightClick(element);
 	const importCalendarAction = await screen.findByText('action.sync');
@@ -96,6 +98,7 @@ describe('SidebarIntegration tests', () => {
 		const user = await setupIntegrationTest({ calendar: myCalendar });
 
 		const myFolderElement = await screen.findByText('My Calendar');
+
 		await performImportFromURL(user, myFolderElement);
 		const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
 		expect(importFromURLModal).toBeInTheDocument();
@@ -103,8 +106,8 @@ describe('SidebarIntegration tests', () => {
 		const calendarName = 'ICS Calendar';
 		const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
 		await fillForm({ user, url, calendarName });
-		const request = await createFolderApi;
 
+		const request = await createFolderApi;
 		expect(request.folder.name).toBe(calendarName);
 		expect(request.folder.url).toBe(url);
 		expect(importFromURLModal).not.toBeInTheDocument();
@@ -118,7 +121,7 @@ describe('SidebarIntegration tests', () => {
 		const user = await setupIntegrationTest({ calendar: externalCalendar });
 		const myFolderElement = await screen.findByText('External Calendar');
 
-		const syncApi = createSoapAPIInterceptor<FolderActionRequest>('Batch');
+		const syncApi = mockSyncApi();
 		await performSync(user, myFolderElement);
 		const request = await syncApi;
 

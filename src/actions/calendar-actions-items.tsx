@@ -28,24 +28,25 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
-	sharesInfo
+	sharesInfo,
+	syncCalendarFn
 } from './calendar-actions-fn';
 import { isLinkChild, isMainRootChild } from '../commons/utilities';
 import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
-import { folderAction } from '../store/actions/calendar-actions';
+import { ActionsClick } from '../types/actions';
 
 export type CalendarActionsItems = SingleAction | ActionWithItems;
 
-type SingleAction = {
+export type SingleAction = {
 	id: CalendarActionsId;
 	icon: string;
 	disabled: boolean;
 	label: string;
-	onClick: (ev: React.SyntheticEvent | KeyboardEvent) => void;
+	onClick: (ev?: ActionsClick) => void;
 	tooltipLabel: string;
 };
 
-type ActionWithItems = {
+export type ActionWithItems = {
 	id: CalendarActionsId;
 	icon: string;
 	disabled: boolean;
@@ -265,18 +266,18 @@ export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarAc
 		isLinkChild(item)
 });
 
-export const syncCalendar = ({ item }: { item: Folder }): CalendarActionsItems => ({
+export const syncCalendar = ({
+	item,
+	createSnackbar
+}: {
+	item: Folder;
+	createSnackbar: CreateSnackbarFn;
+}): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SYNC,
 	icon: 'Sync',
 	label: t('action.sync', 'Sync'),
 	tooltipLabel: noPermissionLabel,
-	onClick: () =>
-		folderAction([
-			{
-				op: 'sync',
-				id: item.id
-			}
-		]),
+	onClick: () => syncCalendarFn({ item, createSnackbar }),
 	disabled:
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		isTrashOrNestedInIt(item) ||
