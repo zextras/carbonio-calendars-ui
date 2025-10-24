@@ -57,8 +57,12 @@ type GenericRequest = {
 	_jsns: 'urn:zimbra';
 	onerror?: 'continue';
 };
-
-export type FolderActionRequest = GenericRequest & {
+export type FolderActionRequest = {
+	action: FolderAction;
+	_jsns: 'urn:zimbraMail';
+	requestId?: number;
+};
+export type FolderActionBatchRequest = GenericRequest & {
 	FolderActionRequest: Array<{
 		action: FolderAction;
 		_jsns: 'urn:zimbraMail';
@@ -81,7 +85,7 @@ export type CreateMountpointRequest = GenericRequest & {
 	}>;
 };
 
-export type SoapRequests = FolderActionRequest | CreateMountpointRequest;
+export type SoapRequests = FolderActionBatchRequest | CreateMountpointRequest;
 
 type ZimbraRequest = {
 	_jsns: 'urn:zimbraMail';

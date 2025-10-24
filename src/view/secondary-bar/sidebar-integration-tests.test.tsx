@@ -125,8 +125,7 @@ describe('SidebarIntegration tests', () => {
 		await performSync(user, myFolderElement);
 		const request = await syncApi;
 
-		const batchRequest = request.FolderActionRequest[0];
-		expect(batchRequest.action.op).toBe('sync');
-		expect(batchRequest.action.id).toBe('external-calendar');
+		expect(request.action.op).toBe('sync');
+		expect(request.action.id).toBe('external-calendar');
 	});
 });

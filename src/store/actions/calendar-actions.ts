@@ -9,7 +9,7 @@ import { batchRequest } from '../../soap/batch-request';
 import { folderActionRequest } from '../../soap/folder-action-request';
 import {
 	FolderAction,
-	FolderActionRequest,
+	FolderActionBatchRequest,
 	FolderActionResponse
 } from '../../types/soap/soap-actions';
 
@@ -17,7 +17,7 @@ export const folderAction = async (
 	actions: Array<FolderAction> | FolderAction
 ): Promise<FolderActionResponse> => {
 	if (isArray(actions)) {
-		const body: FolderActionRequest = {
+		const body: FolderActionBatchRequest = {
 			_jsns: 'urn:zimbra',
 			onerror: 'continue',
 			FolderActionRequest: map(actions, (action, idx) => ({

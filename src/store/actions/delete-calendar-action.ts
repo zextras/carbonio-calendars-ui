@@ -7,13 +7,13 @@ import { isArray, map } from 'lodash';
 
 import { batchRequest } from '../../soap/batch-request';
 import { deleteCalendarRequest } from '../../soap/delete-calendar-request';
-import { FolderAction, FolderActionRequest } from '../../types/soap/soap-actions';
+import { FolderAction, FolderActionBatchRequest } from '../../types/soap/soap-actions';
 
 export const deleteCalendarAction = async (
 	actions: Array<FolderAction> | FolderAction
 ): Promise<any> => {
 	if (isArray(actions)) {
-		const body: FolderActionRequest = {
+		const body: FolderActionBatchRequest = {
 			_jsns: 'urn:zimbra',
 			onerror: 'continue',
 			FolderActionRequest: map(actions, (action, idx) => ({

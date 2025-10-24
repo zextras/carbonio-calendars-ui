@@ -30,7 +30,6 @@ import { EditModal } from './modals/edit-modal/edit-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
-import { isOk } from '../soap/type-guard';
 
 const handleActionResponse = ({
 	createSnackbar,
@@ -177,29 +176,22 @@ export const moveToRoot =
 			e.stopPropagation();
 		}
 		const root = getRoot(item.id);
-		folderAction({ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }).then((res) => {
-			if (isOk(res)) {
-				createSnackbar({
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }).then((response) =>
+			handleActionResponse({
+				createSnackbar,
+				response,
+				snackbarSuccess: {
 					key: `calendar-moved-root`,
-					replace: true,
 					severity: isTrashOrNestedInIt(item) ? 'success' : 'info',
-					hideButton: true,
 					label: isTrashOrNestedInIt(item)
 						? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
-						: t('message.snackbar.calendar_moved_to_root_folder', 'Calendar moved to Root folder'),
-					autoHideTimeout: 3000
-				});
-			} else {
-				createSnackbar({
-					key: `calendar-moved-root-error`,
-					replace: true,
-					severity: 'error',
-					hideButton: true,
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000
-				});
-			}
-		});
+						: t('message.snackbar.calendar_moved_to_root_folder', 'Calendar moved to Root folder')
+				},
+				snackbarFailure: {
+					key: `calendar-moved-root-error`
+				}
+			})
+		);
 	};
 
 export const emptyTrash =
@@ -304,23 +296,19 @@ export const syncCalendarFn = ({
 	folderAction({
 		op: 'sync',
 		id: item.id
-	})
-		.then((response) =>
-			handleActionResponse({
-				response,
-				createSnackbar,
-				snackbarFailure: {
-					key: `calendar-sync-error`
-				},
-				snackbarSuccess: {
-					key: `calendar-sync-ok`,
-					label: t('message.snackbar.sync', 'Calendar synced successfully')
-				}
-			})
-		)
-		.catch(() => {
-			console.error('');
-		});
+	}).then((response) =>
+		handleActionResponse({
+			response,
+			createSnackbar,
+			snackbarFailure: {
+				key: `calendar-sync-error`
+			},
+			snackbarSuccess: {
+				key: `calendar-sync-ok`,
+				label: t('message.snackbar.sync', 'Calendar synced successfully')
+			}
+		})
+	);
 };
 
 export const removeFromList =
@@ -335,27 +323,19 @@ export const removeFromList =
 		if (e) {
 			e.stopPropagation();
 		}
-		folderAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then((res) => {
-			if (isOk(res)) {
-				createSnackbar({
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then((response) =>
+			handleActionResponse({
+				response,
+				createSnackbar,
+				snackbarSuccess: {
 					key: `shared-calendar-removed`,
-					replace: true,
-					severity: 'info',
-					hideButton: true,
-					label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully'),
-					autoHideTimeout: 3000
-				});
-			} else {
-				createSnackbar({
-					key: `shared-calendar-removed-error`,
-					replace: true,
-					severity: 'error',
-					hideButton: true,
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000
-				});
-			}
-		});
+					label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully')
+				},
+				snackbarFailure: {
+					key: `shared-calendar-removed-error`
+				}
+			})
+		);
 	};
 
 export const sharesInfo =
