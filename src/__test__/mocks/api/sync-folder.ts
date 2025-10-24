@@ -5,12 +5,14 @@
  */
 import { HttpResponse } from 'msw';
 
-import { FolderActionRequest } from '../../../types/soap/soap-actions';
+import { FolderActionRequest, FolderActionResponseOk } from '../../../types/soap/soap-actions';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const apiAction = 'FolderAction';
-export const mockSyncApi = (): Promise<FolderActionRequest> =>
-	createSoapAPIInterceptor<FolderActionRequest>(apiAction);
+export const mockSyncApiOk = (
+	response = { _jsns: 'urn:zimbraMail' as const }
+): Promise<FolderActionRequest> =>
+	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>(apiAction, response);
 
 export const mockSyncApiError = (): Promise<FolderActionRequest> =>
 	createSoapAPIInterceptor(apiAction, HttpResponse.error());

@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { findLabel, ShareCalendarRoleOptions } from '../../settings/components/utils';
+import { isOk } from '../../soap/type-guard';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
@@ -226,7 +227,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		const folderActionToSend = folderActions.length > 1 ? folderActions : folderActions[0];
 
 		folderAction(folderActionToSend).then((res) => {
-			if (!res.Fault) {
+			if (isOk(res)) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,

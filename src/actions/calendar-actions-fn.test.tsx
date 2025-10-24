@@ -21,7 +21,7 @@ import {
 } from './calendar-actions-fn';
 import mockedData from '../test/generators';
 import { getSetupServer } from '@jest-setup';
-import { mockSyncApiFault } from '@test-utils/api/sync-folder';
+import { mockSyncApiFault, mockSyncApiOk } from '@test-utils/api/sync-folder';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
@@ -39,6 +39,19 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({ key: 'calendar-sync-error' })
+			);
+		});
+		it('should display a success snackbar when sync response ok', async () => {
+			const createSnackbar = jest.fn();
+			const item = generateFolder({ id: 'my-calendar', url: 'https://localhost/my.ics' });
+			const syncApi = mockSyncApiOk();
+			syncCalendarFn({ item, createSnackbar });
+			await syncApi;
+			await waitFor(() => {
+				expect(createSnackbar).toHaveBeenCalled();
+			});
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({ key: 'calendar-sync-ok' })
 			);
 		});
 	});

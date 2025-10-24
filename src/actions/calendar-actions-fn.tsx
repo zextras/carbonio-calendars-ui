@@ -30,6 +30,7 @@ import { EditModal } from './modals/edit-modal/edit-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
+import { isOk } from '../soap/type-guard';
 
 const handleActionResponse = ({
 	createSnackbar,
@@ -176,34 +177,29 @@ export const moveToRoot =
 			e.stopPropagation();
 		}
 		const root = getRoot(item.id);
-		folderAction({ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }).then(
-			(res: { Fault?: string }) => {
-				if (!res.Fault) {
-					createSnackbar({
-						key: `calendar-moved-root`,
-						replace: true,
-						severity: isTrashOrNestedInIt(item) ? 'success' : 'info',
-						hideButton: true,
-						label: isTrashOrNestedInIt(item)
-							? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
-							: t(
-									'message.snackbar.calendar_moved_to_root_folder',
-									'Calendar moved to Root folder'
-								),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `calendar-moved-root-error`,
-						replace: true,
-						severity: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000
-					});
-				}
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }).then((res) => {
+			if (isOk(res)) {
+				createSnackbar({
+					key: `calendar-moved-root`,
+					replace: true,
+					severity: isTrashOrNestedInIt(item) ? 'success' : 'info',
+					hideButton: true,
+					label: isTrashOrNestedInIt(item)
+						? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
+						: t('message.snackbar.calendar_moved_to_root_folder', 'Calendar moved to Root folder'),
+					autoHideTimeout: 3000
+				});
+			} else {
+				createSnackbar({
+					key: `calendar-moved-root-error`,
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
 			}
-		);
+		});
 	};
 
 export const emptyTrash =
@@ -326,6 +322,7 @@ export const syncCalendarFn = ({
 			console.error('');
 		});
 };
+
 export const removeFromList =
 	({
 		item,
@@ -338,8 +335,8 @@ export const removeFromList =
 		if (e) {
 			e.stopPropagation();
 		}
-		folderAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then((res: { Fault?: string }) => {
-			if (!res.Fault) {
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then((res) => {
+			if (isOk(res)) {
 				createSnackbar({
 					key: `shared-calendar-removed`,
 					replace: true,

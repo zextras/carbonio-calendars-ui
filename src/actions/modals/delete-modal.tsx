@@ -17,6 +17,7 @@ import {
 import { Trans, useTranslation } from 'react-i18next';
 
 import { FOLDER_OPERATIONS } from '../../constants/api';
+import { isOk } from '../../soap/type-guard';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { deleteCalendarAction } from '../../store/actions/delete-calendar-action';
 import { FolderAction } from '../../types/soap/soap-actions';
@@ -27,7 +28,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 
 	const restoreEvent = useCallback((): void => {
 		folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
-			if (!res.Fault) {
+			if (isOk(res)) {
 				createSnackbar({
 					key: 'send',
 					replace: true,

@@ -243,8 +243,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		const actionsArray = compact([actionRename, actionColor, actionFreeBusy]);
 		if (actionsArray.length) {
 			const actions = actionsArray.length > 1 ? actionsArray : actionsArray[0];
-			folderAction(actions).then((res: { Fault?: string }) => {
-				if (!res.Fault) {
+			folderAction(actions).then((res) => {
+				if (!('Fault' in res)) {
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,

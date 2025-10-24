@@ -16,7 +16,7 @@ import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 import { reducers } from '../../store/redux';
 import { CreateFolderRequest } from '../../types/soap/createFolder';
 import { setupTest, UserEvent } from '@test-setup';
-import { mockSyncApi } from '@test-utils/api/sync-folder';
+import { mockSyncApiOk } from '@test-utils/api/sync-folder';
 import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
@@ -121,7 +121,7 @@ describe('SidebarIntegration tests', () => {
 		const user = await setupIntegrationTest({ calendar: externalCalendar });
 		const myFolderElement = await screen.findByText('External Calendar');
 
-		const syncApi = mockSyncApi();
+		const syncApi = mockSyncApiOk();
 		await performSync(user, myFolderElement);
 		const request = await syncApi;
 

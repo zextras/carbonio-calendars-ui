@@ -3,11 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
+import { ErrorSoapBodyResponse, legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
-import { FolderAction } from '../types/soap/soap-actions';
+import { FolderAction, FolderActionResponse } from '../types/soap/soap-actions';
 
-export const folderActionRequest = async (action: FolderAction): Promise<any> =>
+export const folderActionRequest = async (
+	action: FolderAction
+): Promise<FolderActionResponse | ErrorSoapBodyResponse> =>
 	legacySoapFetch('FolderAction', {
 		action,
 		_jsns: 'urn:zimbraMail'

@@ -20,6 +20,7 @@ import moment from 'moment';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
+import { isOk } from '../soap/type-guard';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
@@ -395,7 +396,7 @@ export function recursiveToggleCheck({
 		op
 	}));
 	folderAction(actions).then((res) => {
-		if (op === FOLDER_OPERATIONS.CHECK && !res.Fault) {
+		if (op === FOLDER_OPERATIONS.CHECK && isOk(res)) {
 			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
 			dispatch(getMiniCal({ start, end })).then((response) => {
 				const updateFolder = getUpdateFolder();

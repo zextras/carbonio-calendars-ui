@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { ErrorSoapResponse } from '@zextras/carbonio-shell-ui';
+import { ErrorSoapResponse, JSNS } from '@zextras/carbonio-shell-ui';
 import { Grant } from '@zextras/carbonio-ui-commons';
+import { ErrorSoapBodyResponse } from '@zextras/carbonio-ui-soap-lib';
 
 export type Contact = {
 	id: string;
@@ -64,6 +65,14 @@ export type FolderActionRequest = GenericRequest & {
 		requestId?: number;
 	}>;
 };
+
+// TODO: the modules are a mess, the APIs return soap api types, there is no module separation.
+//  Consider having the API (soap) layer return the Fault, but the internal domain handle the response
+//  using a different type (e.g.: {error: }, not rely on "Fault", which is a specific SOAP API response)
+export type FolderActionResponseOk = {
+	_jsns: typeof JSNS.mail;
+};
+export type FolderActionResponse = FolderActionResponseOk | ErrorSoapBodyResponse;
 
 export type CreateMountpointRequest = GenericRequest & {
 	CreateMountpointRequest: Array<{
