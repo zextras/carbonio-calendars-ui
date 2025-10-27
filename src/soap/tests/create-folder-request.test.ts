@@ -61,6 +61,8 @@ describe('createFolderRequest', () => {
 			faultyResponse
 		);
 
-		expect(createFolderRequest(reqActionParams)).rejects.toThrow(faultyResponse.Fault.Reason.Text);
+		await expect(createFolderRequest(reqActionParams)).resolves.toMatchObject({
+			errors: { generic: expect.anything() }
+		});
 	});
 });
