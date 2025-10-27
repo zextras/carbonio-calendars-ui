@@ -135,5 +135,6 @@ describe('External Calendar Integration Tests', () => {
 			expect(request.action.id).toBe('external-calendar');
 			expect(await screen.findByText('message.snackbar.sync')).toBeVisible();
 		});
+		it.todo('should display an error snackbar when sync fails');
 	});
 });
