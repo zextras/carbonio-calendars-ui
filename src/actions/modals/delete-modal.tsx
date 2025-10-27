@@ -61,7 +61,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 			id: folder.id,
 			op: operation.type
 		}).then((res) => {
-			if (!res.Fault) {
+			if (isOk(res)) {
 				createSnackbar({
 					key: 'send',
 					replace: true,
