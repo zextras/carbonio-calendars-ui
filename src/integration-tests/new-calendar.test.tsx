@@ -13,7 +13,7 @@ import { UserEvent } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
-async function clickNewCalendar(user: UserEvent, element: HTMLElement): Promise<void> {
+async function openNewCalendarModal(user: UserEvent, element: HTMLElement): Promise<void> {
 	await user.rightClick(element);
 	const newCalendarAction = await screen.findByText('label.new_calendar');
 	await user.click(newCalendarAction);
@@ -44,7 +44,7 @@ describe('New Calendar Integration Tests', () => {
 
 		const myFolderElement = await screen.findByText('My Calendar');
 
-		await clickNewCalendar(user, myFolderElement);
+		await openNewCalendarModal(user, myFolderElement);
 		const newCalendarModal = await screen.findByText(/New calendar creation/i);
 		expect(newCalendarModal).toBeInTheDocument();
 		const calendarName = 'Awesome Calendar';
