@@ -6,7 +6,7 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { mockExpandedFolders, setupIntegrationTest, typeCalendarName } from './utils';
+import { mockExpandedFolders, setupIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
@@ -18,18 +18,6 @@ async function openEditCalendarPermissionsModal(
 	await user.rightClick(element);
 	const newCalendarAction = await screen.findByText('label.new_calendar');
 	await user.click(newCalendarAction);
-}
-
-async function fillForm({
-	user,
-	calendarName
-}: {
-	user: UserEvent;
-	calendarName: string;
-}): Promise<void> {
-	await typeCalendarName(user, calendarName);
-	const editCalendarAction = await screen.findByText('action.edit_and_share_calendar');
-	await user.click(editCalendarAction);
 }
 
 describe('Calendar Permissions Integration Tests', () => {
