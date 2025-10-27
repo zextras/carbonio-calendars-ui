@@ -3,20 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { screen } from '@testing-library/react';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { screen, waitFor } from '@testing-library/react';
+import { Folder, FOLDERS } from '@zextras/carbonio-ui-commons';
 
 import { mockExpandedFolders, setupIntegrationTest, typeCalendarName } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
-import { CreateFolderRequest } from '../types/soap/createFolder';
 import { UserEvent } from '@test-setup';
+import { mockCreateCalendarApiOk, mockCreateCalendarFault } from '@test-utils/api/create-calendar';
 import { generateFolder } from '@test-utils/folders/folders-generator';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
-async function openNewCalendarModal(user: UserEvent, element: HTMLElement): Promise<void> {
+async function openNewCalendarModal(user: UserEvent, element: HTMLElement): Promise<HTMLElement> {
 	await user.rightClick(element);
 	const newCalendarAction = await screen.findByText('label.new_calendar');
 	await user.click(newCalendarAction);
+	return screen.findByText(/New calendar creation/i);
 }
 
 async function fillForm({
@@ -29,6 +29,13 @@ async function fillForm({
 	await typeCalendarName(user, calendarName);
 	const confirmButton = await screen.findByText('label.create');
 	await user.click(confirmButton);
+}
+
+function generateTestCalendar(): Folder {
+	return generateFolder({
+		name: 'My Calendar',
+		id: 'my-calendar'
+	});
 }
 
 describe('New Calendar Integration Tests', () => {
@@ -44,15 +51,45 @@ describe('New Calendar Integration Tests', () => {
 
 		const myFolderElement = await screen.findByText('My Calendar');
 
-		await openNewCalendarModal(user, myFolderElement);
-		const newCalendarModal = await screen.findByText(/New calendar creation/i);
+		const newCalendarModal = await openNewCalendarModal(user, myFolderElement);
 		expect(newCalendarModal).toBeInTheDocument();
 		const calendarName = 'Awesome Calendar';
-		const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
+		const createFolderApi = mockCreateCalendarApiOk({
+			_jsns: 'urn:zimbraMail',
+			folder: [
+				{
+					id: 'new-id',
+					uuid: 'new-uuid',
+					name: calendarName,
+					activesyncdisabled: false,
+					recursive: false,
+					deletable: false
+				}
+			]
+		});
 		await fillForm({ user, calendarName });
 
 		const request = await createFolderApi;
 		expect(request.folder.name).toBe(calendarName);
-		expect(newCalendarModal).not.toBeInTheDocument();
+		await waitFor(() => {
+			expect(newCalendarModal).not.toBeInTheDocument();
+		});
+	});
+
+	it('should display a snackbar error when create fails', async () => {
+		const myCalendar = generateTestCalendar();
+		const user = await setupIntegrationTest({ calendar: myCalendar });
+
+		const myFolderElement = await screen.findByText('My Calendar');
+
+		const newCalendarModal = await openNewCalendarModal(user, myFolderElement);
+		expect(newCalendarModal).toBeInTheDocument();
+		const calendarName = 'Awesome Calendar';
+		const createFolderApi = mockCreateCalendarFault('something went wrong');
+		await fillForm({ user, calendarName });
+
+		await createFolderApi;
+		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
+		expect(newCalendarModal).toBeInTheDocument();
 	});
 });

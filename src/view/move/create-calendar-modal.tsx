@@ -108,7 +108,6 @@ export const CreateCalendarModal = ({
 						autoHideTimeout: 3000,
 						hideButton: true
 					});
-					onClose();
 				}
 			});
 		} else {
