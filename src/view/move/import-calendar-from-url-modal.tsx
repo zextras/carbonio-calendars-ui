@@ -22,13 +22,11 @@ import { createCalendar } from '../../store/actions/create-calendar';
 type ImportCalendarFromURLModalProps = {
 	toggleModal?: () => void;
 	onClose: () => void;
-	onCreated?: (response: any) => void;
 	folderId: string;
 };
 
 export const ImportCalendarFromUrlModal = ({
 	onClose,
-	onCreated,
 	toggleModal,
 	folderId
 }: ImportCalendarFromURLModalProps): ReactElement => {
@@ -85,7 +83,6 @@ export const ImportCalendarFromUrlModal = ({
 			excludeFreeBusy: freeBusy
 		}).then((response) => {
 			if (!('errors' in response)) {
-				onCreated?.(response);
 				createSnackbar({
 					key: `new`,
 					replace: true,
