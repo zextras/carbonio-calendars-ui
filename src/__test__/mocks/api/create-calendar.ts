@@ -4,10 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { CreateFolderRequest } from '../../../types/soap/createFolder';
+import { CreateFolderRequest, CreateFolderResponse } from '../../../types/soap/createFolder';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const apiAction = 'CreateFolder';
+
+export const mockCreateCalendarApiOk = (
+	response: CreateFolderResponse
+): Promise<CreateFolderRequest> =>
+	createSoapAPIInterceptor<CreateFolderRequest, CreateFolderResponse>(apiAction, response);
 
 export const mockCreateCalendarInvalidURL = (): Promise<CreateFolderRequest> =>
 	createSoapAPIInterceptor(apiAction, {

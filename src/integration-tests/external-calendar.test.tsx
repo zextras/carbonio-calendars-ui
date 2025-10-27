@@ -4,17 +4,18 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
 import { mockExpandedFolders, setupIntegrationTest, typeCalendarName, typeURL } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
-import { CreateFolderRequest } from '../types/soap/createFolder';
 import { UserEvent } from '@test-setup';
-import { mockCreateCalendarInvalidURL } from '@test-utils/api/create-calendar';
+import {
+	mockCreateCalendarApiOk,
+	mockCreateCalendarInvalidURL
+} from '@test-utils/api/create-calendar';
 import { mockSyncApiOk } from '@test-utils/api/sync-folder';
 import { generateFolder } from '@test-utils/folders/folders-generator';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 async function performImportFromURL(user: UserEvent, element: HTMLElement): Promise<void> {
 	await user.rightClick(element);
@@ -65,13 +66,28 @@ describe('External Calendar Integration Tests', () => {
 			expect(importFromURLModal).toBeInTheDocument();
 			const url = 'https://example.com/calendar/calendar.ics';
 			const calendarName = 'ICS Calendar';
-			const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
+			const createFolderApi = mockCreateCalendarApiOk({
+				_jsns: 'urn:zimbraMail',
+				folder: [
+					{
+						id: 'new-calendar',
+						uuid: 'new-calendar-uuid',
+						name: calendarName,
+						url,
+						activesyncdisabled: false,
+						recursive: false,
+						deletable: false
+					}
+				]
+			});
 
 			await fillForm({ user, url, calendarName });
 			const request = await createFolderApi;
 			expect(request.folder.name).toBe(calendarName);
 			expect(request.folder.url).toBe(url);
-			expect(importFromURLModal).not.toBeInTheDocument();
+			await waitFor(() => {
+				expect(importFromURLModal).not.toBeInTheDocument();
+			});
 		});
 
 		it('should display url error when URL invalid', async () => {
@@ -92,7 +108,9 @@ describe('External Calendar Integration Tests', () => {
 			await fillForm({ user, url, calendarName });
 
 			await createFolderApi;
-			expect(await screen.findByText('Invalid URL')).toBeVisible();
+			expect(
+				await screen.findByText('The URL should begin with “http://” or “https://”')
+			).toBeVisible();
 			expect(importFromURLModal).toBeInTheDocument();
 		});
 	});

@@ -31,14 +31,14 @@ export async function setupIntegrationTest({ calendar }: { calendar: Folder }): 
 
 export async function typeCalendarName(user: UserEvent, value: string): Promise<void> {
 	const urlInput = screen.getByRole('textbox', {
-		name: 'label.type_name_here'
+		name: /Calendar name/i
 	});
 	return user.type(urlInput, value);
 }
 
 export async function typeURL(user: UserEvent, value: string): Promise<void> {
 	const urlInput = screen.getByRole('textbox', {
-		name: 'label.url'
+		name: /URL/i
 	});
 	await user.type(urlInput, value);
 }

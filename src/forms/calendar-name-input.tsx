@@ -6,8 +6,8 @@
 import React, { useMemo } from 'react';
 
 import { Input } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import { CalendarNameErrors } from './error-codes';
 import { InputType } from './types';
@@ -17,6 +17,7 @@ export const CalendarNameInput = ({
 	onChange,
 	errors
 }: InputType<string, CalendarNameErrors>): React.JSX.Element => {
+	const [t] = useTranslation();
 	const duplicateNameError = t(
 		'folder.modal.new.duplicate_warning',
 		'A calendar with the same name already exists'

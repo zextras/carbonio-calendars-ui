@@ -6,8 +6,8 @@
 import React, { useMemo } from 'react';
 
 import { Input } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import { URLErrors } from './error-codes';
 import { InputType } from './types';
@@ -17,6 +17,7 @@ export const URLInput = ({
 	onChange,
 	errors
 }: InputType<string, URLErrors>): React.JSX.Element => {
+	const [t] = useTranslation();
 	const urlErrorHttpOrHttps = t(
 		'label.url_http_or_https',
 		'The URL should begin with “http://” or “https://”'
