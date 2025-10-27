@@ -16,7 +16,7 @@ import {
 } from '../soap/errors/error-codes';
 import { UserEvent } from '@test-setup';
 import { mockCreateCalendarApiOk, mockCreateCalendarFault } from '@test-utils/api/create-calendar';
-import { mockSyncApiOk } from '@test-utils/api/sync-folder';
+import { mockSyncApiFault, mockSyncApiOk } from '@test-utils/api/sync-folder';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 
 async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Promise<HTMLElement> {
@@ -53,6 +53,14 @@ function generateTestCalendar(): Folder {
 	return generateFolder({
 		name: 'My Calendar',
 		id: 'my-calendar'
+	});
+}
+
+function generateExternalCalendar(): Folder {
+	return generateFolder({
+		name: 'External Calendar',
+		id: 'external-calendar',
+		url: 'https://external/calendar.ics'
 	});
 }
 
@@ -119,11 +127,7 @@ describe('External Calendar Integration Tests', () => {
 	});
 	describe('Sync', () => {
 		it('should sync the folder when "Sync" action clicked', async () => {
-			const externalCalendar = generateFolder({
-				name: 'External Calendar',
-				id: 'external-calendar',
-				url: 'https://external/calendar.ics'
-			});
+			const externalCalendar = generateExternalCalendar();
 			const user = await setupIntegrationTest({ calendar: externalCalendar });
 			const myFolderElement = await screen.findByText('External Calendar');
 
@@ -135,6 +139,18 @@ describe('External Calendar Integration Tests', () => {
 			expect(request.action.id).toBe('external-calendar');
 			expect(await screen.findByText('message.snackbar.sync')).toBeVisible();
 		});
-		it.todo('should display an error snackbar when sync fails');
+		it('should display an error snackbar when sync fails', async () => {
+			const externalCalendar = generateExternalCalendar();
+			const user = await setupIntegrationTest({ calendar: externalCalendar });
+			const myFolderElement = await screen.findByText('External Calendar');
+
+			const syncApi = mockSyncApiFault();
+			await performSync(user, myFolderElement);
+			const request = await syncApi;
+
+			expect(request.action.op).toBe('sync');
+			expect(request.action.id).toBe('external-calendar');
+			expect(await screen.findByText('label.error_try_again')).toBeVisible();
+		});
 	});
 });
