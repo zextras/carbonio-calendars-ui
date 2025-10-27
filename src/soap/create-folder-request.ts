@@ -13,6 +13,20 @@ import {
 	RequestFolder
 } from 'types/soap/createFolder';
 
+function mapFault(response: ErrorSoapBodyResponse): ApiError {
+	const error = response.Fault.Reason.Text;
+	const errorResponse: ApiError = { errors: {} };
+	if (error === 'url must begin with http: or https:') {
+		errorResponse.errors['create_folder.url.http_or_https'] = error;
+	} else if (error === 'Document parse failed') {
+		errorResponse.errors['create_folder.url.not_a_calendar'] = error;
+	} else if (error.includes('resource unreachable')) {
+		errorResponse.errors['create_folder.url.unreachable'] = error;
+	} else {
+		errorResponse.errors['api.generic_error'] = error;
+	}
+	return errorResponse;
+}
 export const createFolderRequest = async (
 	params: RequestFolder
 ): Promise<CreateFolderResponse | ApiError> =>
@@ -25,7 +39,7 @@ export const createFolderRequest = async (
 	)
 		.then((response) => {
 			if ('Fault' in response) {
-				return { errors: { 'create_folder.invalid_url': response.Fault.Reason.Text } };
+				return mapFault(response);
 			}
 			return response;
 		})
