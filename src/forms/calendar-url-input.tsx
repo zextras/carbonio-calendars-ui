@@ -46,17 +46,15 @@ export const URLInput = ({
 	}, [errors, urlErrorHttpOrHttps, urlErrorNotACalendar, urlErrorUnreachable]);
 	const hasError = !isEmpty(errors);
 	return (
-		<>
-			<Input
-				label={t('label.url', 'URL')}
-				backgroundColor="gray5"
-				value={value}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-					onChange(e.target.value);
-				}}
-				hasError={hasError}
-				description={error}
-			/>
-		</>
+		<Input
+			label={t('label.url', 'URL')}
+			backgroundColor="gray5"
+			value={value}
+			onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+				onChange(e.target.value);
+			}}
+			hasError={hasError}
+			description={error}
+		/>
 	);
 };
