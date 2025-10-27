@@ -5,19 +5,19 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { Container, Padding, Text, useSnackbar } from '@zextras/carbonio-design-system';
+import { Container, Padding, useSnackbar } from '@zextras/carbonio-design-system';
 import { useFoldersMapByRoot, useRoot } from '@zextras/carbonio-ui-commons';
-import { includes, map } from 'lodash';
-import { Simulate } from 'react-dom/test-utils';
+import { includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import reset = Simulate.reset;
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { CalendarNameInput } from '../../forms/calendar-name-input';
 import { URLInput } from '../../forms/calendar-url-input';
 import { FreeBusyCheckbox } from '../../forms/free-busy-checkbox';
 import { SelectColor } from '../../forms/select-color';
+import { CALENDAR_NAME_ALREADY_EXISTS } from '../../soap/error-codes';
+import { CalendarNameErrors } from '../../soap/types';
 import { createCalendar } from '../../store/actions/create-calendar';
 
 type CreateCalendarModalProps = {
@@ -42,8 +42,7 @@ export const CreateCalendarModal = ({
 	const [t] = useTranslation();
 	const [calendarName, setCalendarName] = useState('');
 	const [urlValue, setUrlValue] = useState('');
-	const [urlError, setUrlError] = useState(false);
-	const urlErrorMessage = t('label.url_error', 'Invalid URL');
+	const [urlErrors, setUrlErrors] = useState({});
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const [selectedColor, setSelectedColor] = useState(0);
@@ -53,14 +52,17 @@ export const CreateCalendarModal = ({
 
 	const folders = useFoldersMapByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
-	const showDupWarning = useMemo(
-		() => includes(folderArray, calendarName),
-		[calendarName, folderArray]
-	);
+	const calendarNameErrors = useMemo((): CalendarNameErrors | undefined => {
+		const alreadyExists = includes(folderArray, calendarName);
+		if (alreadyExists) {
+			return { [CALENDAR_NAME_ALREADY_EXISTS]: '' };
+		}
+		return undefined;
+	}, [calendarName, folderArray]);
 	const resetInputs = useCallback(() => {
 		setCalendarName('');
 		setUrlValue('');
-		setUrlError(false);
+		setUrlErrors({});
 		setSelectedColor(0);
 		setFreeBusy(false);
 	}, []);
@@ -70,8 +72,8 @@ export const CreateCalendarModal = ({
 			calendarName.length === 0 ||
 			calendarName === 'Calendar' ||
 			calendarName === 'calendar' ||
-			showDupWarning,
-		[calendarName, showDupWarning]
+			!isEmpty(calendarNameErrors),
+		[calendarName, calendarNameErrors]
 	);
 
 	const onConfirm = (): void => {
@@ -95,8 +97,8 @@ export const CreateCalendarModal = ({
 					});
 					onClose();
 				} else {
-					if (response.errors['create_folder.invalid_url']) {
-						setUrlError(true);
+					if (response.errors.url) {
+						setUrlErrors(response.errors.url);
 						return;
 					}
 					createSnackbar({
@@ -131,25 +133,15 @@ export const CreateCalendarModal = ({
 			<ModalHeader title={title} onClose={onCloseModal} />
 			{fromUrl && (
 				<>
-					<URLInput value={urlValue} onChange={setUrlValue} />
-					{urlError && (
-						<Padding all="small">
-							<Text size="small" color="error">
-								{urlErrorMessage}
-							</Text>
-						</Padding>
-					)}
+					<URLInput value={urlValue} errors={urlErrors} onChange={setUrlValue} />
 					<Padding vertical="medium" />
 				</>
 			)}
-			<CalendarNameInput value={calendarName} onChange={setCalendarName} />
-			{showDupWarning && (
-				<Padding all="small">
-					<Text size="small" color="error">
-						{t('folder.modal.new.duplicate_warning', 'Calendar with the same name already exists')}
-					</Text>
-				</Padding>
-			)}
+			<CalendarNameInput
+				value={calendarName}
+				onChange={setCalendarName}
+				errors={calendarNameErrors}
+			/>
 			<Padding vertical="medium" />
 			<SelectColor onColorSelected={setSelectedColor} />
 			<Padding vertical="medium" />

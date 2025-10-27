@@ -6,7 +6,8 @@
 import { BaseFolder } from '@zextras/carbonio-ui-soap-lib';
 
 import { createFolderRequest } from '../../soap/create-folder-request';
-import { ApiError, RequestFolder } from 'types/soap/createFolder';
+import { ApiError } from '../../soap/types';
+import { RequestFolder } from 'types/soap/createFolder';
 
 type CreateCalendarRequest = {
 	name: string;

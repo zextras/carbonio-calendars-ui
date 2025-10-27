@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-export type InputType<T> = {
+export type InputType<T, X> = {
 	value: T;
+	errors?: X;
 	onChange: (value: T) => void;
 };
