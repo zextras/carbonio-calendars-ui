@@ -8,8 +8,10 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { Container, Padding, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { useFoldersMapByRoot, useRoot } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
+import { Simulate } from 'react-dom/test-utils';
 import { useTranslation } from 'react-i18next';
 
+import reset = Simulate.reset;
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { CalendarNameInput } from '../../forms/calendar-name-input';
@@ -38,8 +40,10 @@ export const CreateCalendarModal = ({
 	folderId
 }: CreateCalendarModalProps): ReactElement => {
 	const [t] = useTranslation();
-	const [inputValue, setInputValue] = useState('');
+	const [calendarName, setCalendarName] = useState('');
 	const [urlValue, setUrlValue] = useState('');
+	const [urlError, setUrlError] = useState(false);
+	const urlErrorMessage = t('label.url_error', 'Invalid URL');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const [selectedColor, setSelectedColor] = useState(0);
@@ -50,30 +54,37 @@ export const CreateCalendarModal = ({
 	const folders = useFoldersMapByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
 	const showDupWarning = useMemo(
-		() => includes(folderArray, inputValue),
-		[inputValue, folderArray]
+		() => includes(folderArray, calendarName),
+		[calendarName, folderArray]
 	);
+	const resetInputs = useCallback(() => {
+		setCalendarName('');
+		setUrlValue('');
+		setUrlError(false);
+		setSelectedColor(0);
+		setFreeBusy(false);
+	}, []);
 	const disabled = useMemo(
 		() =>
-			inputValue.indexOf('/') > -1 ||
-			inputValue.length === 0 ||
-			inputValue === 'Calendar' ||
-			inputValue === 'calendar' ||
+			calendarName.indexOf('/') > -1 ||
+			calendarName.length === 0 ||
+			calendarName === 'Calendar' ||
+			calendarName === 'calendar' ||
 			showDupWarning,
-		[inputValue, showDupWarning]
+		[calendarName, showDupWarning]
 	);
 
 	const onConfirm = (): void => {
-		if (inputValue) {
+		if (calendarName) {
 			createCalendar({
 				parent: (root?.id as '1') ?? '1',
-				name: inputValue,
+				name: calendarName,
 				color: selectedColor,
 				url: urlValue,
 				excludeFreeBusy: freeBusy
-			}).then((newCalendarRes) => {
-				if (!newCalendarRes.Fault) {
-					onCreated?.(newCalendarRes);
+			}).then((response) => {
+				if (!('errors' in response)) {
+					onCreated?.(response);
 					createSnackbar({
 						key: `new`,
 						replace: true,
@@ -84,8 +95,12 @@ export const CreateCalendarModal = ({
 					});
 					onClose();
 				} else {
+					if (response.errors['create_folder.invalid_url']) {
+						setUrlError(true);
+						return;
+					}
 					createSnackbar({
-						key: `move`,
+						key: `error`,
 						replace: true,
 						severity: 'error',
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
@@ -95,19 +110,16 @@ export const CreateCalendarModal = ({
 					onClose();
 				}
 			});
+		} else {
+			resetInputs();
+			onClose();
 		}
-		setInputValue('');
-		setSelectedColor(0);
-		setFreeBusy(false);
-		onClose();
 	};
 
 	const onCloseModal = useCallback(() => {
-		setInputValue('');
-		setSelectedColor(0);
-		setFreeBusy(false);
+		resetInputs();
 		onClose();
-	}, [onClose]);
+	}, [onClose, resetInputs]);
 
 	return (
 		<Container
@@ -120,10 +132,17 @@ export const CreateCalendarModal = ({
 			{fromUrl && (
 				<>
 					<URLInput value={urlValue} onChange={setUrlValue} />
+					{urlError && (
+						<Padding all="small">
+							<Text size="small" color="error">
+								{urlErrorMessage}
+							</Text>
+						</Padding>
+					)}
 					<Padding vertical="medium" />
 				</>
 			)}
-			<CalendarNameInput value={inputValue} onChange={setInputValue} />
+			<CalendarNameInput value={calendarName} onChange={setCalendarName} />
 			{showDupWarning && (
 				<Padding all="small">
 					<Text size="small" color="error">

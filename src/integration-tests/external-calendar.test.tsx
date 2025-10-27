@@ -11,6 +11,7 @@ import { mockExpandedFolders, setupIntegrationTest, typeCalendarName, typeURL } 
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { CreateFolderRequest } from '../types/soap/createFolder';
 import { UserEvent } from '@test-setup';
+import { mockCreateCalendarInvalidURL } from '@test-utils/api/create-calendar';
 import { mockSyncApiOk } from '@test-utils/api/sync-folder';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
@@ -49,42 +50,68 @@ describe('External Calendar Integration Tests', () => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
 
-	it('should create an external calendar when using "import from URL"', async () => {
-		const myCalendar = generateFolder({
-			name: 'My Calendar',
-			id: 'my-calendar'
+	describe('Import', () => {
+		it('should create an external calendar when using "import from URL"', async () => {
+			const myCalendar = generateFolder({
+				name: 'My Calendar',
+				id: 'my-calendar'
+			});
+			const user = await setupIntegrationTest({ calendar: myCalendar });
+
+			const myFolderElement = await screen.findByText('My Calendar');
+
+			await performImportFromURL(user, myFolderElement);
+			const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
+			expect(importFromURLModal).toBeInTheDocument();
+			const url = 'https://example.com/calendar/calendar.ics';
+			const calendarName = 'ICS Calendar';
+			const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
+
+			await fillForm({ user, url, calendarName });
+			const request = await createFolderApi;
+			expect(request.folder.name).toBe(calendarName);
+			expect(request.folder.url).toBe(url);
+			expect(importFromURLModal).not.toBeInTheDocument();
 		});
-		const user = await setupIntegrationTest({ calendar: myCalendar });
 
-		const myFolderElement = await screen.findByText('My Calendar');
+		it('should display url error when URL invalid', async () => {
+			const myCalendar = generateFolder({
+				name: 'My Calendar',
+				id: 'my-calendar'
+			});
+			const user = await setupIntegrationTest({ calendar: myCalendar });
 
-		await performImportFromURL(user, myFolderElement);
-		const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
-		expect(importFromURLModal).toBeInTheDocument();
-		const url = 'https://example.com/calendar/calendar.ics';
-		const calendarName = 'ICS Calendar';
-		const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
-		await fillForm({ user, url, calendarName });
+			const myFolderElement = await screen.findByText('My Calendar');
 
-		const request = await createFolderApi;
-		expect(request.folder.name).toBe(calendarName);
-		expect(request.folder.url).toBe(url);
-		expect(importFromURLModal).not.toBeInTheDocument();
+			await performImportFromURL(user, myFolderElement);
+			const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
+			expect(importFromURLModal).toBeInTheDocument();
+			const url = 'invalid URL';
+			const calendarName = 'ICS Calendar';
+			const createFolderApi = mockCreateCalendarInvalidURL();
+			await fillForm({ user, url, calendarName });
+
+			await createFolderApi;
+			expect(await screen.findByText('Invalid URL')).toBeVisible();
+			expect(importFromURLModal).toBeInTheDocument();
+		});
 	});
-	it('should sync the folder when "Sync" action clicked', async () => {
-		const externalCalendar = generateFolder({
-			name: 'External Calendar',
-			id: 'external-calendar',
-			url: 'https://external/calendar.ics'
+	describe('Sync', () => {
+		it('should sync the folder when "Sync" action clicked', async () => {
+			const externalCalendar = generateFolder({
+				name: 'External Calendar',
+				id: 'external-calendar',
+				url: 'https://external/calendar.ics'
+			});
+			const user = await setupIntegrationTest({ calendar: externalCalendar });
+			const myFolderElement = await screen.findByText('External Calendar');
+
+			const syncApi = mockSyncApiOk();
+			await performSync(user, myFolderElement);
+			const request = await syncApi;
+
+			expect(request.action.op).toBe('sync');
+			expect(request.action.id).toBe('external-calendar');
 		});
-		const user = await setupIntegrationTest({ calendar: externalCalendar });
-		const myFolderElement = await screen.findByText('External Calendar');
-
-		const syncApi = mockSyncApiOk();
-		await performSync(user, myFolderElement);
-		const request = await syncApi;
-
-		expect(request.action.op).toBe('sync');
-		expect(request.action.id).toBe('external-calendar');
 	});
 });

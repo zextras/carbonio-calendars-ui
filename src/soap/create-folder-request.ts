@@ -6,9 +6,16 @@
 import { JSNS } from '@zextras/carbonio-shell-ui';
 import { ErrorSoapBodyResponse, legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
-import { CreateFolderRequest, CreateFolderResponse, RequestFolder } from 'types/soap/createFolder';
+import {
+	ApiError,
+	CreateFolderRequest,
+	CreateFolderResponse,
+	RequestFolder
+} from 'types/soap/createFolder';
 
-export const createFolderRequest = async (params: RequestFolder): Promise<CreateFolderResponse> =>
+export const createFolderRequest = async (
+	params: RequestFolder
+): Promise<CreateFolderResponse | ApiError> =>
 	legacySoapFetch<CreateFolderRequest, CreateFolderResponse | ErrorSoapBodyResponse>(
 		'CreateFolder',
 		{
@@ -18,10 +25,8 @@ export const createFolderRequest = async (params: RequestFolder): Promise<Create
 	)
 		.then((response) => {
 			if ('Fault' in response) {
-				throw new Error(response.Fault.Reason.Text, { cause: response.Fault });
+				return { errors: { 'create_folder.invalid_url': response.Fault.Reason.Text } };
 			}
 			return response;
 		})
-		.catch((error) => {
-			throw new Error(error);
-		});
+		.catch((error) => ({ errors: { 'api.generic_error': error.message } }));

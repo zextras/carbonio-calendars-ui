@@ -3,8 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { BaseFolder } from '@zextras/carbonio-ui-soap-lib';
+
 import { createFolderRequest } from '../../soap/create-folder-request';
-import { RequestFolder } from 'types/soap/createFolder';
+import { ApiError, RequestFolder } from 'types/soap/createFolder';
 
 type CreateCalendarRequest = {
 	name: string;
@@ -14,14 +16,13 @@ type CreateCalendarRequest = {
 	excludeFreeBusy: boolean;
 };
 
-// TODO: add types. If using existing types you will see implementation is based on wrong fields
 export const createCalendar = async ({
 	name,
 	parent,
 	color,
 	url,
 	excludeFreeBusy
-}: CreateCalendarRequest): Promise<any> => {
+}: CreateCalendarRequest): Promise<BaseFolder | ApiError> => {
 	const reqActionParams: RequestFolder = {
 		color,
 		f: excludeFreeBusy ? 'b#' : '#',
@@ -31,7 +32,8 @@ export const createCalendar = async ({
 		view: 'appointment'
 	};
 	const res = await createFolderRequest(reqActionParams);
-	if (res.folder) {
+	// TODO: what if folder is undefined? Should not happen anyway. Else means API was designed wrong or we should throw an error
+	if ('folder' in res) {
 		return res.folder[0];
 	}
 	return res;

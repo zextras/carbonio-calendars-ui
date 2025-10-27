@@ -24,3 +24,8 @@ export type CreateFolderResponse = {
 	folder: BaseFolder[];
 	_jsns: typeof JSNS.mail;
 };
+
+export const ERROR_CODES = ['create_folder.invalid_url'] as const;
+export type ApiError = {
+	errors: Partial<Record<string, string>>;
+};
