@@ -334,7 +334,7 @@ export const importCalendarFromURL = ({
 	item: { id: string; perm?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.NEW,
-	icon: 'Globe',
+	icon: 'Link2Outline',
 	label: t('action.import_calendar_from_url', 'Import Calendar from URL'),
 	disabled:
 		isTrashOrNestedInIt(item) ||
