@@ -76,44 +76,41 @@ export const CreateCalendarModal = ({
 	);
 
 	const onConfirm = (): void => {
-		if (calendarName) {
-			createCalendar({
-				parent: (root?.id as '1') ?? '1',
-				name: calendarName,
-				color: selectedColor,
-				url: urlValue,
-				excludeFreeBusy: freeBusy
-			}).then((response) => {
-				if (!('errors' in response)) {
-					onCreated?.(response);
-					createSnackbar({
-						key: `new`,
-						replace: true,
-						severity: 'success',
-						label: t('message.snackbar.new_calendar_created', 'New calendar created'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
-					onClose();
-				} else {
-					if (response.errors.url) {
-						setUrlErrors(response.errors.url);
-						return;
-					}
-					createSnackbar({
-						key: `error`,
-						replace: true,
-						severity: 'error',
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
+		if (!calendarName) return;
+		if (fromUrl && !urlValue) return;
+		createCalendar({
+			parent: (root?.id as '1') ?? '1',
+			name: calendarName,
+			color: selectedColor,
+			url: urlValue,
+			excludeFreeBusy: freeBusy
+		}).then((response) => {
+			if (!('errors' in response)) {
+				onCreated?.(response);
+				createSnackbar({
+					key: `new`,
+					replace: true,
+					severity: 'success',
+					label: t('message.snackbar.new_calendar_created', 'New calendar created'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+				onClose();
+			} else {
+				if (response.errors.url) {
+					setUrlErrors(response.errors.url);
+					return;
 				}
-			});
-		} else {
-			resetInputs();
-			onClose();
-		}
+				createSnackbar({
+					key: `error`,
+					replace: true,
+					severity: 'error',
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			}
+		});
 	};
 
 	const onCloseModal = useCallback(() => {
