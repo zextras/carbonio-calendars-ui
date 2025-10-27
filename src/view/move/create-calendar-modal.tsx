@@ -7,6 +7,7 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Container, Padding, useSnackbar } from '@zextras/carbonio-design-system';
 import { useFoldersMapByRoot, useRoot } from '@zextras/carbonio-ui-commons';
+import { BaseFolder } from '@zextras/carbonio-ui-soap-lib';
 import { includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -22,7 +23,7 @@ type CreateCalendarModalProps = {
 	toggleModal?: () => void;
 	confirmLabel: string;
 	onClose: () => void;
-	onCreated?: (response: any) => void;
+	onCreated?: (response: BaseFolder) => void;
 	folderId: string;
 };
 

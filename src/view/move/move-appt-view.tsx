@@ -8,6 +8,7 @@ import React, { useState, useCallback, ReactElement, useMemo } from 'react';
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolder, hasId } from '@zextras/carbonio-ui-commons';
+import { BaseFolder } from '@zextras/carbonio-ui-soap-lib';
 
 import { CreateCalendarModal } from './create-calendar-modal';
 import { MoveModal } from './move-modal';
@@ -64,8 +65,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 	);
 
 	const onCreated = useCallback(
-		// TODO: this type is any because it was like that in the original code
-		(response: any) => {
+		(response: BaseFolder) => {
 			moveAppt({
 				inviteId: event.resource.inviteId,
 				l: response.id,
