@@ -5,7 +5,7 @@
  */
 
 import { screen, waitFor } from '@testing-library/react';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { Folder, FOLDERS } from '@zextras/carbonio-ui-commons';
 
 import { mockExpandedFolders, setupIntegrationTest, typeCalendarName, typeURL } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
@@ -25,7 +25,7 @@ async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Pr
 	await user.hover(importCalendarAction);
 	const importFromURL = await screen.findByText('action.import_calendar_from_url');
 	await user.click(importFromURL);
-	return screen.findByText('folder.modal.import_from_url.title2');
+	return screen.findByText('Import Calendar from URL');
 }
 
 async function performSync(user: UserEvent, element: HTMLElement): Promise<void> {
@@ -45,11 +45,11 @@ async function fillForm({
 }): Promise<void> {
 	await typeCalendarName(user, calendarName);
 	await typeURL(user, url);
-	const confirmButton = await screen.findByText('label.import');
+	const confirmButton = await screen.findByText('Import');
 	await user.click(confirmButton);
 }
 
-function generateTestCalendar() {
+function generateTestCalendar(): Folder {
 	return generateFolder({
 		name: 'My Calendar',
 		id: 'my-calendar'

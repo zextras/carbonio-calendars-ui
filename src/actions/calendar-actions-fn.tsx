@@ -30,6 +30,7 @@ import { EditModal } from './modals/edit-modal/edit-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
+import { ImportCalendarFromUrlModal } from '../view/move/import-calendar-from-url-modal';
 
 const handleActionResponse = ({
 	createSnackbar,
@@ -116,12 +117,9 @@ export const importCalendarFromURLFn =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<CreateCalendarModal
-							fromUrl
-							modalTitle={t('folder.modal.import_from_url.title2', 'Import Calendar from URL')}
+						<ImportCalendarFromUrlModal
 							onClose={(): void => closeModal(modalId)}
 							folderId={item.id}
-							confirmLabel={t('label.import', 'Import')}
 						/>
 					</StoreProvider>
 				),
