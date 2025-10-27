@@ -75,6 +75,11 @@ export const CreateCalendarModal = ({
 		[calendarName, calendarNameErrors]
 	);
 
+	const onCloseModal = useCallback(() => {
+		resetInputs();
+		onClose();
+	}, [onClose, resetInputs]);
+
 	const onConfirm = (): void => {
 		if (!calendarName) return;
 		if (fromUrl && !urlValue) return;
@@ -95,7 +100,7 @@ export const CreateCalendarModal = ({
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
-				onClose();
+				onCloseModal();
 			} else {
 				if (response.errors.url) {
 					setUrlErrors(response.errors.url);
@@ -112,11 +117,6 @@ export const CreateCalendarModal = ({
 			}
 		});
 	};
-
-	const onCloseModal = useCallback(() => {
-		resetInputs();
-		onClose();
-	}, [onClose, resetInputs]);
 
 	return (
 		<Container
