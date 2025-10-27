@@ -6,7 +6,7 @@
 import { JSNS } from '@zextras/carbonio-shell-ui';
 import { ErrorSoapBodyResponse, legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
-import { mapGenericError, mapSoapFault } from './error-codes';
+import { mapGenericError, mapSoapFault } from './error-codes-mapper';
 import { ApiError } from './types';
 import { CreateFolderRequest, CreateFolderResponse, RequestFolder } from 'types/soap/createFolder';
 

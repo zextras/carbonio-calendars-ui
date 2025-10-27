@@ -14,10 +14,9 @@ import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { CalendarNameInput } from '../../forms/calendar-name-input';
 import { URLInput } from '../../forms/calendar-url-input';
+import { CALENDAR_NAME_ALREADY_EXISTS, CalendarNameErrors } from '../../forms/error-codes';
 import { FreeBusyCheckbox } from '../../forms/free-busy-checkbox';
 import { SelectColor } from '../../forms/select-color';
-import { CALENDAR_NAME_ALREADY_EXISTS } from '../../soap/error-codes';
-import { CalendarNameErrors } from '../../soap/types';
 import { createCalendar } from '../../store/actions/create-calendar';
 
 type CreateCalendarModalProps = {

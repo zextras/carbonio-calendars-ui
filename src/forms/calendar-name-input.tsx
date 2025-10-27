@@ -9,8 +9,8 @@ import { Input } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
 
+import { CalendarNameErrors } from './error-codes';
 import { InputType } from './types';
-import { CalendarNameErrors } from '../soap/types';
 
 export const CalendarNameInput = ({
 	value,

@@ -7,22 +7,7 @@
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-ui-soap-lib';
 
 import { ApiError } from './types';
-
-export const URL_HTTP_OR_HTTPS_CODE = 'must_begin_with_http_or_https';
-export const URL_NOT_A_CALENDAR = 'not_a_calendar';
-export const URL_UNREACHABLE = 'unreachable';
-
-export const URL_ERROR_CODES = [
-	URL_HTTP_OR_HTTPS_CODE,
-	URL_NOT_A_CALENDAR,
-	URL_UNREACHABLE
-] as const;
-
-export const CALENDAR_NAME_ALREADY_EXISTS = 'duplicated';
-export const CALENDAR_NAME_ERROR_CODES = [CALENDAR_NAME_ALREADY_EXISTS] as const;
-
-export type UrlErrorCode = (typeof URL_ERROR_CODES)[number];
-export type CalendarNameErrorCode = (typeof CALENDAR_NAME_ERROR_CODES)[number];
+import { URL_HTTP_OR_HTTPS_CODE, URL_NOT_A_CALENDAR, URL_UNREACHABLE } from '../forms/error-codes';
 
 export function mapSoapFault(response: ErrorSoapBodyResponse): ApiError {
 	const error = response.Fault.Reason.Text;
