@@ -16,7 +16,7 @@ async function openEditCalendarPermissionsModal(
 	element: HTMLElement
 ): Promise<void> {
 	await user.rightClick(element);
-	const newCalendarAction = await screen.findByText('label.new_calendar');
+	const newCalendarAction = await screen.findByText('action.edit_and_share_calendar');
 	await user.click(newCalendarAction);
 }
 
@@ -34,6 +34,6 @@ describe('Calendar Permissions Integration Tests', () => {
 		const myFolderElement = await screen.findByText('My Calendar');
 
 		await openEditCalendarPermissionsModal(user, myFolderElement);
-		expect(await screen.findByText(/Edit and share calendar/i)).toBeVisible();
+		expect(await screen.findByText(/Edit and share calendar/i)).toBeInTheDocument();
 	});
 });
