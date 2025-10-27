@@ -266,6 +266,7 @@ export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarAc
 		isLinkChild(item)
 });
 
+// TODO: consider passing "t" function or convert these function to hooks in order to avoid shell "t"
 export const syncCalendar = ({
 	item,
 	createSnackbar

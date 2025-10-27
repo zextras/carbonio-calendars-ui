@@ -17,7 +17,7 @@ import {
 import { mockSyncApiOk } from '@test-utils/api/sync-folder';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 
-async function performImportFromURL(user: UserEvent, element: HTMLElement): Promise<void> {
+async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Promise<void> {
 	await user.rightClick(element);
 	const importCalendarAction = await screen.findByText('action.calendar_upload');
 	await user.hover(importCalendarAction);
@@ -42,7 +42,7 @@ async function fillForm({
 }): Promise<void> {
 	await typeCalendarName(user, calendarName);
 	await typeURL(user, url);
-	const confirmButton = await screen.findByText('label.create');
+	const confirmButton = await screen.findByText('label.import');
 	await user.click(confirmButton);
 }
 
@@ -61,7 +61,7 @@ describe('External Calendar Integration Tests', () => {
 
 			const myFolderElement = await screen.findByText('My Calendar');
 
-			await performImportFromURL(user, myFolderElement);
+			await openImportFromURLModal(user, myFolderElement);
 			const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
 			expect(importFromURLModal).toBeInTheDocument();
 			const url = 'https://example.com/calendar/calendar.ics';
@@ -99,7 +99,7 @@ describe('External Calendar Integration Tests', () => {
 
 			const myFolderElement = await screen.findByText('My Calendar');
 
-			await performImportFromURL(user, myFolderElement);
+			await openImportFromURLModal(user, myFolderElement);
 			const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
 			expect(importFromURLModal).toBeInTheDocument();
 			const url = 'invalid URL';
@@ -130,6 +130,7 @@ describe('External Calendar Integration Tests', () => {
 
 			expect(request.action.op).toBe('sync');
 			expect(request.action.id).toBe('external-calendar');
+			expect(await screen.findByText('message.snackbar.sync')).toBeVisible();
 		});
 	});
 });
