@@ -103,6 +103,32 @@ const generateSharedAccountsRoot = (
 	return result;
 };
 
+export const generateUserRoot = (): Folder => {
+	const { identities } = getMocksContext();
+	return {
+		id: '1',
+		uuid: identities.primary.userRootId,
+		name: 'USER_ROOT',
+		absFolderPath: '/',
+		l: '11',
+		luuid: '808e2306-ba25-42f8-9aac-67b3762db30c',
+		checked: false,
+		rev: 1,
+		ms: 1,
+		n: 0,
+		s: 0,
+		i4ms: 399,
+		i4next: 300,
+		activesyncdisabled: false,
+		webOfflineSyncDays: 0,
+		recursive: false,
+		deletable: false,
+		isLink: false,
+		children: [],
+		depth: 0
+	} as Folder;
+};
+
 /**
  *
  */
@@ -110,28 +136,7 @@ export const generateRoots = (): Record<string, Folder> => {
 	const { identities } = getMocksContext();
 
 	return {
-		USER: {
-			id: '1',
-			uuid: identities.primary.userRootId,
-			name: 'USER_ROOT',
-			absFolderPath: '/',
-			l: '11',
-			luuid: '808e2306-ba25-42f8-9aac-67b3762db30c',
-			checked: false,
-			rev: 1,
-			ms: 1,
-			n: 0,
-			s: 0,
-			i4ms: 399,
-			i4next: 300,
-			activesyncdisabled: false,
-			webOfflineSyncDays: 0,
-			recursive: false,
-			deletable: false,
-			isLink: false,
-			children: [],
-			depth: 0
-		},
+		USER: generateUserRoot(),
 		...generateSharedAccountsRoot(identities.primary, identities.sendAs),
 		...generateSharedAccountsRoot(identities.primary, identities.sendOnBehalf)
 	} as Record<string, Folder>;

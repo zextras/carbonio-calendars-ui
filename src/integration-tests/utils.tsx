@@ -7,13 +7,14 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
-import { Folder } from '@zextras/carbonio-ui-commons';
+import { Folder, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import { reducers } from '../store/redux';
 import SecondaryBar from '../view/secondary-bar/secondary-bar';
 import { setupTest, UserEvent } from '@test-setup';
 import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import { generateUserRoot } from '@test-utils/folders/roots-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 function waitAnimationsToComplete(): void {
@@ -22,6 +23,13 @@ function waitAnimationsToComplete(): void {
 export async function setupIntegrationTest({ calendar }: { calendar: Folder }): Promise<UserEvent> {
 	const store = configureStore({
 		reducer: combineReducers(reducers)
+	});
+	const userRoot = generateUserRoot();
+	userRoot.children.push(calendar);
+	useFolderStore.setState({
+		folders: {
+			USER: userRoot
+		}
 	});
 	populateFoldersStore({ customFolders: [calendar] });
 	const { user } = setupTest(<SecondaryBar expanded />, { store });
