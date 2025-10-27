@@ -46,14 +46,6 @@ describe('Calendar Permissions Integration Tests', () => {
 		const myFolderElement = await screen.findByText('My Calendar');
 
 		await openEditCalendarPermissionsModal(user, myFolderElement);
-		const newCalendarModal = await screen.findByText(/Edit and share calendar/i);
-		// expect(newCalendarModal).toBeInTheDocument();
-		// const calendarName = 'Awesome Calendar';
-		// const createFolderApi = createSoapAPIInterceptor<CreateFolderRequest>('CreateFolder');
-		// await fillForm({ user, calendarName });
-		//
-		// const request = await createFolderApi;
-		// expect(request.folder.name).toBe(calendarName);
-		// expect(newCalendarModal).not.toBeInTheDocument();
+		expect(await screen.findByText(/Edit and share calendar/i)).toBeVisible();
 	});
 });
