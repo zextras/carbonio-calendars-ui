@@ -305,7 +305,8 @@ export const syncCalendarFn = ({
 			},
 			snackbarSuccess: {
 				key: `calendar-sync-ok`,
-				label: t('message.snackbar.sync', 'Calendar synced successfully')
+				label: t('message.snackbar.sync', 'Calendar synced successfully'),
+				severity: 'success'
 			}
 		})
 	);
