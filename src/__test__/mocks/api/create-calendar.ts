@@ -14,7 +14,7 @@ export const mockCreateCalendarApiOk = (
 ): Promise<CreateFolderRequest> =>
 	createSoapAPIInterceptor<CreateFolderRequest, CreateFolderResponse>(apiAction, response);
 
-export const mockCreateCalendarInvalidURL = (): Promise<CreateFolderRequest> =>
+export const mockCreateCalendarFault = (error: string): Promise<CreateFolderRequest> =>
 	createSoapAPIInterceptor(apiAction, {
-		Fault: { Reason: { Text: 'url must begin with http: or https:' } }
+		Fault: { Reason: { Text: error } }
 	});

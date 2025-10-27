@@ -11,6 +11,11 @@ import {
 	URL_UNREACHABLE
 } from '../../forms/error-codes';
 import { mapSoapFault } from '../error-codes-mapper';
+import {
+	URL_HTTP_ERROR_CODE,
+	URL_NOT_A_CALENDAR_ERROR_CODE,
+	URL_UNREACHABLE_ERROR_CODE
+} from '../errors/error-codes';
 
 function generateFault(text: string): ErrorSoapBodyResponse {
 	return {
@@ -28,20 +33,17 @@ function generateFault(text: string): ErrorSoapBodyResponse {
 
 describe('ErrorCodeMapper', () => {
 	it('maps url must be http or https error code', () => {
-		const text = 'url must begin with http: or https:';
-		const fault = generateFault(text);
+		const fault = generateFault(URL_HTTP_ERROR_CODE);
 		const apiError = mapSoapFault(fault);
 		expect(apiError.errors.url).toHaveProperty(URL_HTTP_OR_HTTPS_CODE);
 	});
 	it('maps url unreachable error code', () => {
-		const text = 'resource unreachable';
-		const fault = generateFault(text);
+		const fault = generateFault(URL_UNREACHABLE_ERROR_CODE);
 		const apiError = mapSoapFault(fault);
 		expect(apiError.errors.url).toHaveProperty(URL_UNREACHABLE);
 	});
 	it('maps url not a document', () => {
-		const text = 'Document parse failed';
-		const fault = generateFault(text);
+		const fault = generateFault(URL_NOT_A_CALENDAR_ERROR_CODE);
 		const apiError = mapSoapFault(fault);
 		expect(apiError.errors.url).toHaveProperty(URL_NOT_A_CALENDAR);
 	});

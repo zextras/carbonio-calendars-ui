@@ -9,20 +9,23 @@ import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
 import { mockExpandedFolders, setupIntegrationTest, typeCalendarName, typeURL } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
-import { UserEvent } from '@test-setup';
 import {
-	mockCreateCalendarApiOk,
-	mockCreateCalendarInvalidURL
-} from '@test-utils/api/create-calendar';
+	URL_HTTP_ERROR_CODE,
+	URL_NOT_A_CALENDAR_ERROR_CODE,
+	URL_UNREACHABLE_ERROR_CODE
+} from '../soap/errors/error-codes';
+import { UserEvent } from '@test-setup';
+import { mockCreateCalendarApiOk, mockCreateCalendarFault } from '@test-utils/api/create-calendar';
 import { mockSyncApiOk } from '@test-utils/api/sync-folder';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 
-async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Promise<void> {
+async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Promise<HTMLElement> {
 	await user.rightClick(element);
 	const importCalendarAction = await screen.findByText('action.calendar_upload');
 	await user.hover(importCalendarAction);
 	const importFromURL = await screen.findByText('action.import_calendar_from_url');
 	await user.click(importFromURL);
+	return screen.findByText('folder.modal.import_from_url.title2');
 }
 
 async function performSync(user: UserEvent, element: HTMLElement): Promise<void> {
@@ -46,6 +49,13 @@ async function fillForm({
 	await user.click(confirmButton);
 }
 
+function generateTestCalendar() {
+	return generateFolder({
+		name: 'My Calendar',
+		id: 'my-calendar'
+	});
+}
+
 describe('External Calendar Integration Tests', () => {
 	beforeAll(() => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
@@ -53,16 +63,11 @@ describe('External Calendar Integration Tests', () => {
 
 	describe('Import', () => {
 		it('should create an external calendar when using "import from URL"', async () => {
-			const myCalendar = generateFolder({
-				name: 'My Calendar',
-				id: 'my-calendar'
-			});
+			const myCalendar = generateTestCalendar();
 			const user = await setupIntegrationTest({ calendar: myCalendar });
+			const myCalendarElement = await screen.findByText(myCalendar.name);
 
-			const myFolderElement = await screen.findByText('My Calendar');
-
-			await openImportFromURLModal(user, myFolderElement);
-			const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
+			const importFromURLModal = await openImportFromURLModal(user, myCalendarElement);
 			expect(importFromURLModal).toBeInTheDocument();
 			const url = 'https://example.com/calendar/calendar.ics';
 			const calendarName = 'ICS Calendar';
@@ -90,27 +95,25 @@ describe('External Calendar Integration Tests', () => {
 			});
 		});
 
-		it('should display url error when URL invalid', async () => {
-			const myCalendar = generateFolder({
-				name: 'My Calendar',
-				id: 'my-calendar'
-			});
+		test.each`
+			soapFault                        | expected
+			${URL_HTTP_ERROR_CODE}           | ${'The URL should begin with “http://” or “https://”'}
+			${URL_UNREACHABLE_ERROR_CODE}    | ${'This link is invalid, please try to modify it or paste a new one'}
+			${URL_NOT_A_CALENDAR_ERROR_CODE} | ${'This link is not a valid calendar resource, please modify it or paste a new one'}
+		`('should display url error $expected', async ({ soapFault, expected }) => {
+			const myCalendar = generateTestCalendar();
 			const user = await setupIntegrationTest({ calendar: myCalendar });
+			const myCalendarElement = await screen.findByText(myCalendar.name);
 
-			const myFolderElement = await screen.findByText('My Calendar');
-
-			await openImportFromURLModal(user, myFolderElement);
-			const importFromURLModal = await screen.findByText('folder.modal.import_from_url.title2');
+			const importFromURLModal = await openImportFromURLModal(user, myCalendarElement);
 			expect(importFromURLModal).toBeInTheDocument();
-			const url = 'invalid URL';
+			const url = 'value does not represent error response';
 			const calendarName = 'ICS Calendar';
-			const createFolderApi = mockCreateCalendarInvalidURL();
+			const createFolderApi = mockCreateCalendarFault(soapFault);
 			await fillForm({ user, url, calendarName });
 
 			await createFolderApi;
-			expect(
-				await screen.findByText('The URL should begin with “http://” or “https://”')
-			).toBeVisible();
+			expect(await screen.findByText(expected)).toBeVisible();
 			expect(importFromURLModal).toBeInTheDocument();
 		});
 	});
