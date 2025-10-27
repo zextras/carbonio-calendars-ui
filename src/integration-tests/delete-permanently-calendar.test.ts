@@ -1,0 +1,53 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+import { screen } from '@testing-library/react';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+
+import { mockExpandedFolders, setupIntegrationTest } from './utils';
+import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
+import { UserEvent } from '@test-setup';
+import { mockDeletePermanentlyCalendarApiOk } from '@test-utils/api/delete-calendar';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+
+async function openDeletePermanentlyCalendarModal(
+	user: UserEvent,
+	element: HTMLElement
+): Promise<void> {
+	await user.rightClick(element);
+	const deleteCalendarAction = await screen.findByText('label.delete_permanently');
+	await user.click(deleteCalendarAction);
+}
+describe('Delete Calendar Permanently Integration Tests', () => {
+	beforeAll(() => {
+		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
+	});
+
+	it('should permanently delete calendar when confirming delete', async () => {
+		const trashedCalendar = generateFolder({
+			name: 'Trashed Calendar',
+			id: 'my-trashed-calendar',
+			parent: FOLDERS.TRASH,
+			absFolderPath: '/Trash/trashed-folder',
+			depth: 2
+		});
+		const user = await setupIntegrationTest({ calendar: trashedCalendar });
+
+		const myFolderElement = await screen.findByText('Trashed Calendar');
+
+		const restoreCalendarApi = mockDeletePermanentlyCalendarApiOk();
+		await openDeletePermanentlyCalendarModal(user, myFolderElement);
+		const confirmDeleteButton = await screen.findByRole('button', {
+			name: 'Delete'
+		});
+		await user.click(confirmDeleteButton);
+
+		const request = await restoreCalendarApi;
+		expect(request.action.op).toBe('delete');
+		expect(request.action.id).toBe(trashedCalendar.id);
+		expect(await screen.findByText('Calendar permanently deleted')).toBeVisible();
+		expect(confirmDeleteButton).not.toBeInTheDocument();
+	});
+});

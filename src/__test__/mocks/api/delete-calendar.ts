@@ -12,3 +12,8 @@ export const mockMoveCalendarToTrashApiOk = (
 	response = { _jsns: 'urn:zimbraMail' as const }
 ): Promise<FolderActionRequest> =>
 	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>(apiAction, response);
+
+export const mockDeletePermanentlyCalendarApiOk = (
+	response = { _jsns: 'urn:zimbraMail' as const }
+): Promise<FolderActionRequest> =>
+	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>('DeleteCalendar', response);

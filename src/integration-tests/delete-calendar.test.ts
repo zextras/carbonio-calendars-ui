@@ -41,6 +41,7 @@ describe('Delete Calendar Integration Tests', () => {
 		const request = await deleteCalendarApi;
 		expect(request.action.op).toBe('trash');
 		expect(request.action.id).toBe(myCalendar.id);
+		expect(await screen.findByText('Calendar moved to trash')).toBeVisible();
 		expect(confirmDeleteButton).not.toBeInTheDocument();
 	});
 });
