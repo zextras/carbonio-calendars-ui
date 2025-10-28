@@ -27,7 +27,7 @@ import { generateFolder } from '@test-utils/folders/folders-generator';
 
 async function openImportFromURLModal(user: UserEvent, element: HTMLElement): Promise<HTMLElement> {
 	await user.rightClick(element);
-	const importCalendarAction = await screen.findByText('action.calendar_upload');
+	const importCalendarAction = await screen.findByText('label.import');
 	await user.hover(importCalendarAction);
 	const importFromURL = await screen.findByText('action.import_calendar_from_url');
 	await user.click(importFromURL);
