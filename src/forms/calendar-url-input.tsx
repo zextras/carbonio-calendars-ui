@@ -48,7 +48,7 @@ export const URLInput = ({
 	return (
 		<Input
 			label={t('label.url', 'URL')}
-			backgroundColor="gray5"
+			background={'gray5'}
 			value={value}
 			onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 				onChange(e.target.value);
