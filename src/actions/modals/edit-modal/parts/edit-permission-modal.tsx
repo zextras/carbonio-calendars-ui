@@ -26,7 +26,7 @@ import { ModalHeader } from '../../../../commons/modal-header';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { findLabel } from '../../../../settings/components/utils';
-import { isOk } from '../../../../soap/type-guard';
+import { isSuccess } from '../../../../soap/type-guard';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
@@ -59,7 +59,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 			}
 		];
 		folderAction({ id: folder.id, op: FOLDER_OPERATIONS.GRANT, grant: grants }).then((res) => {
-			if (isOk(res)) {
+			if (isSuccess(res)) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,

@@ -33,6 +33,7 @@ export const CalendarNameInput = ({
 	return (
 		<Input
 			label={t('label.type_name_here', 'Calendar name')}
+			background={'gray5'}
 			backgroundColor="gray5"
 			value={value}
 			onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {

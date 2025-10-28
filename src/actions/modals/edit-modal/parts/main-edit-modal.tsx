@@ -44,7 +44,7 @@ import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
-import { isOk } from '../../../../soap/type-guard';
+import { isSuccess } from '../../../../soap/type-guard';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
@@ -245,7 +245,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		if (actionsArray.length) {
 			const actions = actionsArray.length > 1 ? actionsArray : actionsArray[0];
 			folderAction(actions).then((res) => {
-				if (isOk(res)) {
+				if (isSuccess(res)) {
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,

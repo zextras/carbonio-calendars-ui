@@ -23,7 +23,7 @@ import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
-import { isOk } from '../../../../soap/type-guard';
+import { isSuccess } from '../../../../soap/type-guard';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
@@ -63,7 +63,7 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 			zid: grant.gt === SHARE_USER_TYPE.PUBLIC ? PUBLIC_SHARE_ZID : grant.zid,
 			op: FOLDER_OPERATIONS.REVOKE_GRANT
 		}).then((res) => {
-			if (isOk(res)) {
+			if (isSuccess(res)) {
 				sendNotification &&
 					dispatch(
 						sendShareCalendarNotification({
