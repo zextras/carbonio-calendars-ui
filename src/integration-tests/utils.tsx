@@ -74,17 +74,19 @@ export async function setupCalendarViewIntegrationTest({
 }
 
 export async function typeCalendarName(user: UserEvent, value: string): Promise<void> {
-	const urlInput = screen.getByRole('textbox', {
+	const calendarNameInput = screen.getByRole('textbox', {
 		name: /Calendar name/i
 	});
-	return user.type(urlInput, value);
+	await user.click(calendarNameInput);
+	await user.paste(value);
 }
 
 export async function typeURL(user: UserEvent, value: string): Promise<void> {
 	const urlInput = screen.getByRole('textbox', {
 		name: /URL/i
 	});
-	await user.type(urlInput, value);
+	await user.click(urlInput);
+	await user.paste(value);
 }
 
 export function mockExpandedFolders(folderIds: Array<string>): void {
