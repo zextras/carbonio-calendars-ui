@@ -70,9 +70,9 @@ export type FolderActionBatchRequest = GenericRequest & {
 	}>;
 };
 
-// TODO: the modules are a mess, the APIs return soap api types, there is no module separation.
-//  Consider having the API (soap) layer return the Fault, but the internal domain handle the response
-//  using a different type (e.g.: {error: }, not rely on "Fault", which is a specific SOAP API response)
+// TODO: consider having the API (soap) layer return the Fault, but the internal domain handle the response
+//  using a different type (e.g.: {error: }, not rely on "Fault" in the service/core logic,
+//  else our domain is too much coupled to SOAP APIs
 export type FolderActionResponseOk = {
 	_jsns: typeof JSNS.mail;
 };
