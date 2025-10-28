@@ -8,6 +8,7 @@ import { useCallback, useMemo } from 'react';
 import { AccordionItemType } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useTranslation } from 'react-i18next';
 
 import { AccountAccordionItem } from './custom-accordion-components/account-accordion-item';
 import { useAccordionItemOpenStatusStorage } from './use-accordion-item-open-status-storage';
@@ -17,6 +18,7 @@ import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 
 // TODO refactor to split calendars and groups into their own hooks
 export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
+	const [t] = useTranslation();
 	const account = useUserAccount();
 	const groupsItems = useSecondaryBarTreeGroups();
 	const calendarsItems = useSecondaryBarTreePrimaryCalendars(FOLDERS.USER_ROOT);
@@ -48,7 +50,7 @@ export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
 				{
 					id: SIDEBAR_ROOT_SUBSECTION.CALENDARS,
 					open: isOpen(SIDEBAR_ROOT_SUBSECTION.CALENDARS),
-					label: 'Calendars',
+					label: t('label.calendars', 'Calendars'),
 					onOpen: onPrimaryAccountOpen(SIDEBAR_ROOT_SUBSECTION.CALENDARS),
 					onClose: onPrimaryAccountClose(SIDEBAR_ROOT_SUBSECTION.CALENDARS),
 					items: calendarsItems
@@ -56,7 +58,7 @@ export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
 				{
 					id: SIDEBAR_ROOT_SUBSECTION.GROUPS,
 					open: isOpen(SIDEBAR_ROOT_SUBSECTION.GROUPS),
-					label: 'Groups',
+					label: t('label.calendar_groups', 'Calendar groups'),
 					onOpen: onPrimaryAccountOpen(SIDEBAR_ROOT_SUBSECTION.GROUPS),
 					onClose: onPrimaryAccountClose(SIDEBAR_ROOT_SUBSECTION.GROUPS),
 					items: groupsItems
@@ -68,6 +70,7 @@ export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
 			isOpen,
 			onPrimaryAccountOpen,
 			onPrimaryAccountClose,
+			t,
 			calendarsItems,
 			groupsItems
 		]

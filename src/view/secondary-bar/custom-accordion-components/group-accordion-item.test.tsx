@@ -54,8 +54,8 @@ describe('GroupAccordionItem', () => {
 
 			setupTest(<GroupAccordionItem item={item} />, { store });
 
-			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
-			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toHaveStyle(
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendarGroup)).toBeVisible();
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendarGroup)).toHaveStyle(
 				`color: ${theme.palette.text.disabled}`
 			);
 		});
@@ -93,7 +93,7 @@ describe('GroupAccordionItem', () => {
 
 		setupTest(<GroupAccordionItem item={item} />, { store });
 
-		expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
+		expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendarGroup)).toBeVisible();
 	});
 
 	it('should display the icon filled if the group is active', () => {
@@ -109,7 +109,7 @@ describe('GroupAccordionItem', () => {
 
 		setupTest(<GroupAccordionItem item={item} />, { store });
 
-		expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
+		expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendarGroup)).toBeVisible();
 	});
 
 	it('should call the onClick callback when clicked on active group', async () => {
