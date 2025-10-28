@@ -44,10 +44,12 @@ export const useCalendarActions = (
 		sharesInfoItem({ item, createModal, closeModal }),
 		exportAppointmentICSItem({ item }),
 		syncCalendar({ item, createSnackbar }),
-		importCalendar(item, [
-			importCalendarICSItem(item, inputRef),
-			importCalendarFromURL({ createModal, closeModal, item })
-		])
+		window.external_calendar_feature
+			? importCalendar(item, [
+					importCalendarICSItem(item, inputRef),
+					importCalendarFromURL({ createModal, closeModal, item })
+				])
+			: importCalendarICSItem(item, inputRef)
 	];
 
 	return filter(actions, ['disabled', false]);

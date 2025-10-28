@@ -65,6 +65,7 @@ function generateExternalCalendar(): Folder {
 
 describe('External Calendar Integration Tests', () => {
 	beforeAll(() => {
+		window.external_calendar_feature = true;
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
 

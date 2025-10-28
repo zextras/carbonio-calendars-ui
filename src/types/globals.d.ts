@@ -7,6 +7,9 @@
 // Global variables injected by webpack DefinePlugin
 declare global {
 	const BASE_PATH: string;
+	interface Window {
+		external_calendar_feature?: boolean;
+	}
 }
 
 export {};
