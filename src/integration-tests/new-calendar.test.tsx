@@ -43,7 +43,7 @@ describe('New Calendar Integration Tests', () => {
 		const myCalendar = generateCalendar();
 		const user = await setupIntegrationTest({ calendar: myCalendar });
 
-		const myFolderElement = await screen.findByText('My Calendar');
+		const myFolderElement = await screen.findByText(myCalendar.name);
 
 		const newCalendarModal = await openNewCalendarModal(user, myFolderElement);
 		expect(newCalendarModal).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('New Calendar Integration Tests', () => {
 		const myCalendar = generateCalendar();
 		const user = await setupIntegrationTest({ calendar: myCalendar });
 
-		const myFolderElement = await screen.findByText('My Calendar');
+		const myFolderElement = await screen.findByText(myCalendar.name);
 
 		const newCalendarModal = await openNewCalendarModal(user, myFolderElement);
 		expect(newCalendarModal).toBeInTheDocument();
