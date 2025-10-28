@@ -44,6 +44,9 @@ const setDate = ({
 };
 
 describe('useGetDateRangeConvertedToTimezone', () => {
+	beforeEach(() => {
+		jest.setSystemTime(new Date('2022-01-01'));
+	});
 	const differentTimezone = 'Asia/Bangkok';
 	describe('The output string', () => {
 		it('will contain "all Day" if referring to an allDay event', () => {

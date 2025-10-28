@@ -6,7 +6,7 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { generateCalendar, mockExpandedFolders, setupIntegrationTest } from './utils';
+import { generateCalendar, mockExpandedFolders, setupSidebarIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 
@@ -25,7 +25,7 @@ describe('Calendar Permissions Integration Tests', () => {
 	});
 	it('should edit Calendar permissions', async () => {
 		const myCalendar = generateCalendar();
-		const user = await setupIntegrationTest({ calendar: myCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: myCalendar });
 
 		const myFolderElement = await screen.findByText(myCalendar.name);
 

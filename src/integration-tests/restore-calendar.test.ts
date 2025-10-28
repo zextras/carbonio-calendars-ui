@@ -6,7 +6,7 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { generateTrashedCalendar, mockExpandedFolders, setupIntegrationTest } from './utils';
+import { generateTrashedCalendar, mockExpandedFolders, setupSidebarIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 import { mockRestoreCalendarApiOk } from '@test-utils/api/restore-calendar';
@@ -22,7 +22,7 @@ describe('Restore Calendar Integration Tests', () => {
 	});
 	it('should restore calendar when confirming restore', async () => {
 		const trashedCalendar = generateTrashedCalendar();
-		const user = await setupIntegrationTest({ calendar: trashedCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: trashedCalendar });
 
 		const myFolderElement = await screen.findByText('Trashed Calendar');
 

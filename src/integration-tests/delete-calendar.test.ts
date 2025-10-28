@@ -6,7 +6,7 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { generateCalendar, mockExpandedFolders, setupIntegrationTest } from './utils';
+import { generateCalendar, mockExpandedFolders, setupSidebarIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 import {
@@ -19,13 +19,15 @@ async function openDeleteCalendarModal(user: UserEvent, element: HTMLElement): P
 	const deleteCalendarAction = await screen.findByText('action.delete_calendar');
 	await user.click(deleteCalendarAction);
 }
+
 describe('Delete Calendar Integration Tests', () => {
 	beforeAll(() => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
+
 	it('should delete calendar when confirming delete', async () => {
 		const myCalendar = generateCalendar();
-		const user = await setupIntegrationTest({ calendar: myCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: myCalendar });
 		const myFolderElement = await screen.findByText(myCalendar.name);
 
 		await openDeleteCalendarModal(user, myFolderElement);
@@ -44,7 +46,7 @@ describe('Delete Calendar Integration Tests', () => {
 
 	it('should revert trashed calendar when clicking "Undo"', async () => {
 		const myCalendar = generateCalendar();
-		const user = await setupIntegrationTest({ calendar: myCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: myCalendar });
 		const myFolderElement = await screen.findByText(myCalendar.name);
 
 		await openDeleteCalendarModal(user, myFolderElement);

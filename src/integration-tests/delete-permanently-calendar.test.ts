@@ -6,7 +6,7 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { generateTrashedCalendar, mockExpandedFolders, setupIntegrationTest } from './utils';
+import { generateTrashedCalendar, mockExpandedFolders, setupSidebarIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 import {
@@ -29,7 +29,7 @@ describe('Delete Calendar Permanently Integration Tests', () => {
 
 	it('should permanently delete calendar when confirming delete', async () => {
 		const trashedCalendar = generateTrashedCalendar();
-		const user = await setupIntegrationTest({ calendar: trashedCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: trashedCalendar });
 
 		const myFolderElement = await screen.findByText(trashedCalendar.name);
 
@@ -50,7 +50,7 @@ describe('Delete Calendar Permanently Integration Tests', () => {
 	// TODO: Undo doesn't work on delete permanently, not supported by backend. Consider removing the feature
 	it('should revert delete permanently calendar when clicking "Undo"', async () => {
 		const trashedCalendar = generateTrashedCalendar();
-		const user = await setupIntegrationTest({ calendar: trashedCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: trashedCalendar });
 
 		const myFolderElement = await screen.findByText(trashedCalendar.name);
 

@@ -12,7 +12,7 @@ import { http, RequestHandler } from 'msw';
 import { setupServer, SetupServer } from 'msw/node';
 
 import { useLocalStorage } from './__mocks__/@zextras/carbonio-shell-ui';
-import { JEST_DEFAULT_TIMEZONE, JEST_SYSTEM_TIME_DATE } from './src/constants/test-environment';
+import { JEST_DEFAULT_TIMEZONE } from './src/constants/test-environment';
 import { handleAutoCompleteGalRequest } from './src/test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
@@ -101,7 +101,6 @@ beforeEach(() => {
 		...originalDateResolvedOptions,
 		timeZone: JEST_DEFAULT_TIMEZONE
 	});
-	jest.setSystemTime(new Date(JEST_SYSTEM_TIME_DATE));
 });
 
 afterEach(() => {

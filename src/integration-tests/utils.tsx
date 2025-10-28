@@ -7,10 +7,11 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
-import { Folder, FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
+import { Folder, FOLDERS } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import { reducers } from '../store/redux';
+import CalendarView from '../view/calendar/calendar-view';
 import SecondaryBar from '../view/secondary-bar/secondary-bar';
 import { setupTest, UserEvent } from '@test-setup';
 import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
@@ -21,21 +22,55 @@ import { populateFoldersStore } from '@test-utils/store/folders';
 function waitAnimationsToComplete(): void {
 	act(() => jest.advanceTimersByTime(1000));
 }
-export async function setupIntegrationTest({ calendar }: { calendar: Folder }): Promise<UserEvent> {
+
+export async function setupSidebarIntegrationTest({
+	calendar
+}: {
+	calendar: Folder;
+}): Promise<UserEvent> {
 	const store = configureStore({
 		reducer: combineReducers(reducers)
 	});
 	const userRoot = generateUserRoot();
 	userRoot.children.push(calendar);
-	useFolderStore.setState({
-		folders: {
-			USER: userRoot
-		}
-	});
 	populateFoldersStore({ customFolders: [calendar] });
 	const { user } = setupTest(<SecondaryBar expanded />, { store });
 	waitAnimationsToComplete();
 	return user;
+}
+
+type ScreenFunctions = {
+	findByText: (text: string) => Promise<HTMLElement>;
+	findButton: (label: string) => Promise<HTMLElement>;
+};
+const screenFunctions: ScreenFunctions = {
+	findByText: (text: string): Promise<HTMLElement> => screen.findByText(text),
+	findButton: (label: string): Promise<HTMLElement> =>
+		screen.findByRole('button', {
+			name: label
+		})
+};
+
+export async function setupCalendarViewIntegrationTest({
+	calendar
+}: {
+	calendar: Folder;
+}): Promise<{ user: UserEvent; screenFunctions: ScreenFunctions }> {
+	const store = configureStore({
+		reducer: combineReducers(reducers)
+	});
+	const userRoot = generateUserRoot();
+	userRoot.children.push(calendar);
+	populateFoldersStore({ customFolders: [calendar] });
+	const { user } = setupTest(
+		<>
+			<SecondaryBar expanded />
+			<CalendarView />
+		</>,
+		{ store }
+	);
+	waitAnimationsToComplete();
+	return { user, screenFunctions };
 }
 
 export async function typeCalendarName(user: UserEvent, value: string): Promise<void> {

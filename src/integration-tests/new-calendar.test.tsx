@@ -9,7 +9,7 @@ import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import {
 	generateCalendar,
 	mockExpandedFolders,
-	setupIntegrationTest,
+	setupSidebarIntegrationTest,
 	typeCalendarName
 } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
@@ -41,7 +41,7 @@ describe('New Calendar Integration Tests', () => {
 	});
 	it('should create a new Calendar when using "New Calendar" option', async () => {
 		const myCalendar = generateCalendar();
-		const user = await setupIntegrationTest({ calendar: myCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: myCalendar });
 
 		const myFolderElement = await screen.findByText(myCalendar.name);
 
@@ -72,7 +72,7 @@ describe('New Calendar Integration Tests', () => {
 
 	it('should display a snackbar error when create fails', async () => {
 		const myCalendar = generateCalendar();
-		const user = await setupIntegrationTest({ calendar: myCalendar });
+		const user = await setupSidebarIntegrationTest({ calendar: myCalendar });
 
 		const myFolderElement = await screen.findByText(myCalendar.name);
 

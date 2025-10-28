@@ -10,7 +10,7 @@ import { Folder, FOLDERS } from '@zextras/carbonio-ui-commons';
 import {
 	generateCalendar,
 	mockExpandedFolders,
-	setupIntegrationTest,
+	setupSidebarIntegrationTest,
 	typeCalendarName,
 	typeURL
 } from './utils';
@@ -71,7 +71,7 @@ describe('External Calendar Integration Tests', () => {
 	describe('Import', () => {
 		it('should create an external calendar when using "import from URL"', async () => {
 			const myCalendar = generateCalendar();
-			const user = await setupIntegrationTest({ calendar: myCalendar });
+			const user = await setupSidebarIntegrationTest({ calendar: myCalendar });
 			const myCalendarElement = await screen.findByText(myCalendar.name);
 
 			const importFromURLModal = await openImportFromURLModal(user, myCalendarElement);
@@ -109,7 +109,7 @@ describe('External Calendar Integration Tests', () => {
 			${URL_NOT_A_CALENDAR_ERROR_CODE} | ${'This link is not a valid calendar resource, please modify it or paste a new one'}
 		`('should display url error $expected', async ({ soapFault, expected }) => {
 			const myCalendar = generateCalendar();
-			const user = await setupIntegrationTest({ calendar: myCalendar });
+			const user = await setupSidebarIntegrationTest({ calendar: myCalendar });
 			const myCalendarElement = await screen.findByText(myCalendar.name);
 
 			const importFromURLModal = await openImportFromURLModal(user, myCalendarElement);
@@ -127,7 +127,7 @@ describe('External Calendar Integration Tests', () => {
 	describe('Sync', () => {
 		it('should sync the folder when "Sync" action clicked', async () => {
 			const externalCalendar = generateExternalCalendar();
-			const user = await setupIntegrationTest({ calendar: externalCalendar });
+			const user = await setupSidebarIntegrationTest({ calendar: externalCalendar });
 			const myFolderElement = await screen.findByText(externalCalendar.name);
 
 			const syncApi = mockSyncApiOk();
@@ -141,7 +141,7 @@ describe('External Calendar Integration Tests', () => {
 
 		it('should display an error snackbar when sync fails', async () => {
 			const externalCalendar = generateExternalCalendar();
-			const user = await setupIntegrationTest({ calendar: externalCalendar });
+			const user = await setupSidebarIntegrationTest({ calendar: externalCalendar });
 			const myFolderElement = await screen.findByText(externalCalendar.name);
 
 			const syncApi = mockSyncApiFault();
