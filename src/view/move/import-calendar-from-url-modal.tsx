@@ -87,7 +87,7 @@ export const ImportCalendarFromUrlModal = ({
 					key: `new`,
 					replace: true,
 					severity: 'success',
-					label: t('message.snackbar.new_calendar_imported', 'The calendar has been imported'),
+					label: t('message.snackbar.new_calendar_imported', 'New calendar has been imported'),
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
