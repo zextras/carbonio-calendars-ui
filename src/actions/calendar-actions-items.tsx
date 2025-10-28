@@ -314,7 +314,7 @@ export const importCalendar = (
 ): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.UPLOAD,
 	icon: 'Upload',
-	label: t('action.calendar_upload', 'Import'),
+	label: t('label.import', 'Import'),
 	tooltipLabel: noPermissionLabel,
 	items: actions,
 	disabled:
