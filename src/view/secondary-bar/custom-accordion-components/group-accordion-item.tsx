@@ -148,7 +148,7 @@ export const GroupAccordionItem: FC<AccordionItemProps> = (props) => {
 						<Tooltip label={isGroupEmpty ? emptyGroupTooltip : group.name}>
 							<Padding right="small">
 								<Icon
-									icon={checked ? 'Calendar2' : 'CalendarOutline'}
+									icon={checked ? 'GroupCalendar' : 'GroupCalendarOutline'}
 									color={CALENDARS_STANDARD_COLORS[0].color}
 									size="large"
 									disabled={isGroupEmpty}
