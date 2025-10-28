@@ -6,10 +6,9 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { mockExpandedFolders, setupIntegrationTest } from './utils';
+import { generateCalendar, mockExpandedFolders, setupIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
-import { generateFolder } from '@test-utils/folders/folders-generator';
 
 async function openEditCalendarPermissionsModal(
 	user: UserEvent,
@@ -25,13 +24,10 @@ describe('Calendar Permissions Integration Tests', () => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
 	it('should edit Calendar permissions', async () => {
-		const myCalendar = generateFolder({
-			name: 'My Calendar',
-			id: 'my-calendar'
-		});
+		const myCalendar = generateCalendar();
 		const user = await setupIntegrationTest({ calendar: myCalendar });
 
-		const myFolderElement = await screen.findByText('My Calendar');
+		const myFolderElement = await screen.findByText(myCalendar.name);
 
 		await openEditCalendarPermissionsModal(user, myFolderElement);
 		expect(await screen.findByText(/Edit and share calendar/i)).toBeInTheDocument();

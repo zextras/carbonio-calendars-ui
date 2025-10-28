@@ -7,13 +7,14 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
-import { Folder, useFolderStore } from '@zextras/carbonio-ui-commons';
+import { Folder, FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import { reducers } from '../store/redux';
 import SecondaryBar from '../view/secondary-bar/secondary-bar';
 import { setupTest, UserEvent } from '@test-setup';
 import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import { generateFolder } from '@test-utils/folders/folders-generator';
 import { generateUserRoot } from '@test-utils/folders/roots-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
@@ -54,3 +55,19 @@ export async function typeURL(user: UserEvent, value: string): Promise<void> {
 export function mockExpandedFolders(folderIds: Array<string>): void {
 	useLocalStorage.mockReturnValue([folderIds, jest.fn()]);
 }
+
+export const generateCalendar = (): Folder =>
+	generateFolder({
+		name: 'My Calendar',
+		id: 'my-calendar'
+	});
+
+export const generateTrashedCalendar = (): Folder =>
+	generateFolder({
+		name: 'Trashed Calendar',
+		id: 'my-trashed-calendar',
+		// fields required to make restore work
+		parent: FOLDERS.TRASH,
+		absFolderPath: '/Trash/trashed-folder',
+		depth: 2
+	});

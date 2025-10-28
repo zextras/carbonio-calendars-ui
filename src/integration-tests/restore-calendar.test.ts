@@ -6,11 +6,10 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { mockExpandedFolders, setupIntegrationTest } from './utils';
+import { generateTrashedCalendar, mockExpandedFolders, setupIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 import { mockRestoreCalendarApiOk } from '@test-utils/api/restore-calendar';
-import { generateFolder } from '@test-utils/folders/folders-generator';
 
 async function restoreCalendar(user: UserEvent, element: HTMLElement): Promise<void> {
 	await user.rightClick(element);
@@ -22,14 +21,7 @@ describe('Restore Calendar Integration Tests', () => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, FOLDERS.TRASH, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
 	it('should restore calendar when confirming restore', async () => {
-		const trashedCalendar = generateFolder({
-			name: 'Trashed Calendar',
-			id: 'my-trashed-calendar',
-			// fields required to make restore work
-			parent: FOLDERS.TRASH,
-			absFolderPath: '/Trash/trashed-folder',
-			depth: 2
-		});
+		const trashedCalendar = generateTrashedCalendar();
 		const user = await setupIntegrationTest({ calendar: trashedCalendar });
 
 		const myFolderElement = await screen.findByText('Trashed Calendar');

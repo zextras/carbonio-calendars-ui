@@ -4,13 +4,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { screen, waitFor } from '@testing-library/react';
-import { Folder, FOLDERS } from '@zextras/carbonio-ui-commons';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { mockExpandedFolders, setupIntegrationTest, typeCalendarName } from './utils';
+import {
+	generateCalendar,
+	mockExpandedFolders,
+	setupIntegrationTest,
+	typeCalendarName
+} from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 import { mockCreateCalendarApiOk, mockCreateCalendarFault } from '@test-utils/api/create-calendar';
-import { generateFolder } from '@test-utils/folders/folders-generator';
 
 async function openNewCalendarModal(user: UserEvent, element: HTMLElement): Promise<HTMLElement> {
 	await user.rightClick(element);
@@ -31,22 +35,12 @@ async function fillForm({
 	await user.click(confirmButton);
 }
 
-function generateTestCalendar(): Folder {
-	return generateFolder({
-		name: 'My Calendar',
-		id: 'my-calendar'
-	});
-}
-
 describe('New Calendar Integration Tests', () => {
 	beforeAll(() => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
 	it('should create a new Calendar when using "New Calendar" option', async () => {
-		const myCalendar = generateFolder({
-			name: 'My Calendar',
-			id: 'my-calendar'
-		});
+		const myCalendar = generateCalendar();
 		const user = await setupIntegrationTest({ calendar: myCalendar });
 
 		const myFolderElement = await screen.findByText('My Calendar');
@@ -77,7 +71,7 @@ describe('New Calendar Integration Tests', () => {
 	});
 
 	it('should display a snackbar error when create fails', async () => {
-		const myCalendar = generateTestCalendar();
+		const myCalendar = generateCalendar();
 		const user = await setupIntegrationTest({ calendar: myCalendar });
 
 		const myFolderElement = await screen.findByText('My Calendar');

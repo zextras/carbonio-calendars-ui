@@ -6,11 +6,13 @@
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { mockExpandedFolders, setupIntegrationTest } from './utils';
+import { generateTrashedCalendar, mockExpandedFolders, setupIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
-import { mockDeletePermanentlyCalendarApiOk } from '@test-utils/api/delete-calendar';
-import { generateFolder } from '@test-utils/folders/folders-generator';
+import {
+	mockDeletePermanentlyCalendarApiOk,
+	mockUndoDeletePermanentlyCalendarApiOk
+} from '@test-utils/api/delete-calendar';
 
 async function openDeletePermanentlyCalendarModal(
 	user: UserEvent,
@@ -26,16 +28,10 @@ describe('Delete Calendar Permanently Integration Tests', () => {
 	});
 
 	it('should permanently delete calendar when confirming delete', async () => {
-		const trashedCalendar = generateFolder({
-			name: 'Trashed Calendar',
-			id: 'my-trashed-calendar',
-			parent: FOLDERS.TRASH,
-			absFolderPath: '/Trash/trashed-folder',
-			depth: 2
-		});
+		const trashedCalendar = generateTrashedCalendar();
 		const user = await setupIntegrationTest({ calendar: trashedCalendar });
 
-		const myFolderElement = await screen.findByText('Trashed Calendar');
+		const myFolderElement = await screen.findByText(trashedCalendar.name);
 
 		const restoreCalendarApi = mockDeletePermanentlyCalendarApiOk();
 		await openDeletePermanentlyCalendarModal(user, myFolderElement);
@@ -49,5 +45,29 @@ describe('Delete Calendar Permanently Integration Tests', () => {
 		expect(request.action.id).toBe(trashedCalendar.id);
 		expect(await screen.findByText('Calendar permanently deleted')).toBeVisible();
 		expect(confirmDeleteButton).not.toBeInTheDocument();
+	});
+
+	// TODO: Undo doesn't work on delete permanently, not supported by backend. Consider removing the feature
+	it('should revert delete permanently calendar when clicking "Undo"', async () => {
+		const trashedCalendar = generateTrashedCalendar();
+		const user = await setupIntegrationTest({ calendar: trashedCalendar });
+
+		const myFolderElement = await screen.findByText(trashedCalendar.name);
+
+		const restoreCalendarApi = mockDeletePermanentlyCalendarApiOk();
+		await openDeletePermanentlyCalendarModal(user, myFolderElement);
+		const confirmDeleteButton = await screen.findByRole('button', {
+			name: 'Delete'
+		});
+		await user.click(confirmDeleteButton);
+
+		await restoreCalendarApi;
+		const undoButton = await screen.findByText('Undo');
+		const undoDelete = mockUndoDeletePermanentlyCalendarApiOk();
+		expect(undoButton).toBeVisible();
+		await user.click(undoButton);
+		const undoRequest = await undoDelete;
+		expect(undoRequest.action.op).toBe('move');
+		expect(undoRequest.action.id).toBe(trashedCalendar.id);
 	});
 });

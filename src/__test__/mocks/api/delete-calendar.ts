@@ -6,14 +6,25 @@
 import { FolderActionRequest, FolderActionResponseOk } from '../../../types/soap/soap-actions';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
-const apiAction = 'FolderAction';
+const folderAction = 'FolderAction';
+const deleteAction = 'DeleteCalendar';
 
 export const mockMoveCalendarToTrashApiOk = (
 	response = { _jsns: 'urn:zimbraMail' as const }
 ): Promise<FolderActionRequest> =>
-	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>(apiAction, response);
+	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>(folderAction, response);
+
+export const mockUndoMoveCalendarToTrashApiOk = (
+	response = { _jsns: 'urn:zimbraMail' as const }
+): Promise<FolderActionRequest> =>
+	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>(folderAction, response);
 
 export const mockDeletePermanentlyCalendarApiOk = (
 	response = { _jsns: 'urn:zimbraMail' as const }
 ): Promise<FolderActionRequest> =>
-	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>('DeleteCalendar', response);
+	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>(deleteAction, response);
+
+export const mockUndoDeletePermanentlyCalendarApiOk = (
+	response = { _jsns: 'urn:zimbraMail' as const }
+): Promise<FolderActionRequest> =>
+	createSoapAPIInterceptor<FolderActionRequest, FolderActionResponseOk>(folderAction, response);
