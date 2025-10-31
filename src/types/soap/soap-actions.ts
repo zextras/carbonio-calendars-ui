@@ -56,13 +56,13 @@ type GenericRequest = {
 	_jsns: 'urn:zimbra';
 	onerror?: 'continue';
 };
-
+export type BaseFolderActionRequest = {
+	action: FolderAction;
+	_jsns: 'urn:zimbraMail';
+	requestId?: number;
+};
 export type FolderActionRequest = GenericRequest & {
-	FolderActionRequest: Array<{
-		action: FolderAction;
-		_jsns: 'urn:zimbraMail';
-		requestId?: number;
-	}>;
+	FolderActionRequest: Array<BaseFolderActionRequest>;
 };
 
 export type CreateMountpointRequest = GenericRequest & {
