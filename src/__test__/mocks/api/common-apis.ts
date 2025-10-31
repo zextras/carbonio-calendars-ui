@@ -3,10 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { JSNS } from '@zextras/carbonio-shell-ui';
+
 import { BaseFolderActionRequest } from '../../../types/soap/soap-actions';
-import { FolderActionResponseOk } from '@test-utils/api/delete-calendar';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
+export type FolderActionResponseOk = {
+	_jsns: typeof JSNS.mail;
+};
 const folderAction = 'FolderAction';
 export const mockFolderActionRequest = (
 	response = { _jsns: 'urn:zimbraMail' as const }

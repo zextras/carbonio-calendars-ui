@@ -3,17 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { JSNS } from '@zextras/carbonio-shell-ui';
 
 import { BaseFolderActionRequest } from '../../../types/soap/soap-actions';
-import { mockFolderActionRequest } from '@test-utils/api/common-apis';
+import { FolderActionResponseOk, mockFolderActionRequest } from '@test-utils/api/common-apis';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const deleteAction = 'DeleteCalendar';
-
-export type FolderActionResponseOk = {
-	_jsns: typeof JSNS.mail;
-};
 
 export const mockMoveCalendarToTrashApiOk = mockFolderActionRequest;
 
