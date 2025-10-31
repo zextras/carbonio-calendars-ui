@@ -7,7 +7,6 @@ import { faker } from '@faker-js/faker';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
 const name = 'Test event';
-// TODO: define a type for this data. Is there one that can be already used?
 export const eventApiData = {
 	x_uid: faker.string.uuid(),
 	uid: faker.string.uuid(),
