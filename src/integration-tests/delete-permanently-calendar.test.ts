@@ -54,14 +54,14 @@ describe('Delete Calendar Permanently Integration Tests', () => {
 
 		const myFolderElement = await screen.findByText(trashedCalendar.name);
 
-		const restoreCalendarApi = mockDeletePermanentlyCalendarApiOk();
+		const deletePermanentlyCalendarApi = mockDeletePermanentlyCalendarApiOk();
 		await openDeletePermanentlyCalendarModal(user, myFolderElement);
 		const confirmDeleteButton = await screen.findByRole('button', {
 			name: 'Delete'
 		});
 		await user.click(confirmDeleteButton);
 
-		await restoreCalendarApi;
+		await deletePermanentlyCalendarApi;
 		const undoButton = await screen.findByText('Undo');
 		const undoDelete = mockUndoDeletePermanentlyCalendarApiOk();
 		expect(undoButton).toBeVisible();
