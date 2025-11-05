@@ -21,11 +21,7 @@ import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
-<<<<<<< Updated upstream
 import { Trans, useTranslation } from 'react-i18next';
-=======
-import {Trans, useTranslation} from 'react-i18next';
->>>>>>> Stashed changes
 
 import 'moment-timezone';
 import { AvailabilityChecker } from './parts/availability-checker';
@@ -210,7 +206,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Text>
 					)}
 					{method !== MESSAGE_METHOD.COUNTER && (
-<<<<<<< Updated upstream
 						<Trans
 							i18nKey="message.organizer_invited_you"
 							values={{
@@ -221,15 +216,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							components={{ bold: <strong />, text: <Text /> }}
 							t={t}
 						/>
-=======
-                            <Trans
-                                i18nKey='message.organizer_invited_you'
-                                values={{ organizer: invite.organizer?.d ?? invite.organizer?.a, title: mailMsg.subject ?? invite?.name}}
-                                defaults="<text>{{organizer}} invited you to an event <bold>{{title}}</bold></text>"
-                                components={{ bold: <strong />, text: <Text /> }}
-                                t={t}
-                            />
->>>>>>> Stashed changes
 					)}
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
