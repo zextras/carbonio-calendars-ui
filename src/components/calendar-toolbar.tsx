@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { Button, Container, IconButton, Padding, Tooltip } from '@zextras/carbonio-design-system';
+import { Button, Container, Padding, Tooltip } from '@zextras/carbonio-design-system';
 
 export const CalendarToolbar = ({
 	dateLabel,
@@ -28,8 +28,8 @@ export const CalendarToolbar = ({
 		<Button label={todayLabel} type="outlined" onClick={onTodayAction} minWidth={'fit-content'} />
 		<Padding left={'1rem'} />
 		<Tooltip label={leftArrowLabel}>
-			<IconButton
-				iconColor="primary"
+			<Button
+				type={'ghost'}
 				icon="ChevronLeft"
 				onClick={onLeftArrowAction}
 				minWidth={'max-content'}
@@ -37,8 +37,8 @@ export const CalendarToolbar = ({
 		</Tooltip>
 		<Padding horizontal={'.25rem'} />
 		<Tooltip label={rightArrowLabel}>
-			<IconButton
-				iconColor="primary"
+			<Button
+				type={'ghost'}
 				icon="ChevronRight"
 				onClick={onRightArrowAction}
 				minWidth={'max-content'}
