@@ -6,9 +6,11 @@
 
 import React from 'react';
 
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { within } from '@testing-library/react';
 
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
+import { reducers } from '../../../../store/redux';
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from '../constants';
 import { EditorDailyPlanner } from '../daily-planner';
 import { setupTest, screen } from '@test-setup';
@@ -44,8 +46,13 @@ describe('EditorDailyPlanner', () => {
 	it('should render the daily planner component participants even without freebusy information', async () => {
 		const freeBusyInterceptor = mockFreeBusyResponse([]);
 		const workingHoursInterceptor = mockWorkingHoursResponse([]);
-		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
-
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		setupTest(
+			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
+			{ store }
+		);
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 
@@ -63,7 +70,13 @@ describe('EditorDailyPlanner', () => {
 		const interceptor = mockFreeBusyResponse([]);
 		mockWorkingHoursResponse([]);
 
-		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		setupTest(
+			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
+			{ store }
+		);
 		const freeBusyRequest = await interceptor;
 		expect(freeBusyRequest.uid).toBe(
 			'organizer@test.com,attendee1@test.com,attendee2@test.com,meeting.room1@test.com,companyCar@test.com,optionalAttendee1@test.com'
@@ -77,12 +90,17 @@ describe('EditorDailyPlanner', () => {
 		const end = new Date(start);
 		end.setDate(start.getDate() + 1);
 
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
 		setupTest(
 			<EditorDailyPlanner
+				editorId={'1'}
 				startDate={start.getTime()}
 				endDate={end.getTime()}
 				participants={participants}
-			/>
+			/>,
+			{ store }
 		);
 
 		const freeBusyRequest = await interceptor;
@@ -105,7 +123,13 @@ describe('EditorDailyPlanner', () => {
 		]);
 		const workingHoursApiCall = mockWorkingHoursResponse([]);
 
-		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		setupTest(
+			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
+			{ store }
+		);
 		await workingHoursApiCall;
 		await freeBusyApiCall;
 
@@ -129,7 +153,13 @@ describe('EditorDailyPlanner', () => {
 			}
 		]);
 
-		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		setupTest(
+			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
+			{ store }
+		);
 		await freeBusyApiCall;
 		await workingHoursApiCall;
 
@@ -142,7 +172,14 @@ describe('EditorDailyPlanner', () => {
 		const freeBusyInterceptor = mockFreeBusyResponse([]);
 		const workingHoursInterceptor = mockWorkingHoursResponse([]);
 
-		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		setupTest(
+			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
+			{ store }
+		);
+
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 
@@ -158,7 +195,13 @@ describe('EditorDailyPlanner', () => {
 			'GetWorkingHours',
 			buildSoapErrorResponseBody()
 		);
-		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		setupTest(
+			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
+			{ store }
+		);
 		await freeBusyInterceptor;
 		await failingInterceptor;
 		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
@@ -171,7 +214,13 @@ describe('EditorDailyPlanner', () => {
 			'GetFreeBusy',
 			buildSoapErrorResponseBody()
 		);
-		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		setupTest(
+			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
+			{ store }
+		);
 		await workingHoursInterceptor;
 		await failingInterceptor;
 		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
