@@ -110,13 +110,10 @@ describe('Settings view', () => {
 				createSoapAPIInterceptor('GetRights', { ace: [] });
 
 				const { user } = setupTest(<CalendarSettingsView />);
-				expect(screen.getByRole('textbox', { name: /settings.label.enter_email/i })).toHaveValue(
-					'test@demo.com'
-				);
-				await user.clear(screen.getByRole('textbox', { name: /settings.label.enter_email/i }));
-				expect(screen.getByRole('textbox', { name: /settings.label.enter_email/i })).toHaveValue(
-					''
-				);
+				const input = screen.getByRole('textbox', { name: /settings.label.enter_email/i });
+				expect(input).toHaveValue('test@demo.com');
+				await user.clear(input);
+				expect(input).toHaveValue('');
 				await user.click(screen.getByRole('button', { name: /save/i }));
 				expect(await screen.findByText(/label.settings_saved/i)).toBeVisible();
 				expect(screen.queryByText(/settings.invalid_email/i)).not.toBeInTheDocument();
