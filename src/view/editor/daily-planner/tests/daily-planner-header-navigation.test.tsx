@@ -123,6 +123,6 @@ describe('DailyPlannerHeaderNavigation', () => {
 		await user.click(rightArrowButton);
 
 		jest.advanceTimersByTime(300);
-		expect(callbackToSetNewValueInStore).toBeCalledTimes(1);
+		expect(callbackToSetNewValueInStore).toHaveBeenCalledTimes(1);
 	});
 });
