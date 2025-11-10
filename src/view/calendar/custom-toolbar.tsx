@@ -130,7 +130,7 @@ export const CustomToolbar = ({
 			>
 				<CalendarToolbar
 					dateLabel={label}
-					todayLabel={t('label.today', 'today')}
+					resetButtonLabel={t('label.today', 'today')}
 					leftArrowLabel={leftClickLabel}
 					rightArrowLabel={rightClickLabel}
 					onLeftArrowAction={prev}

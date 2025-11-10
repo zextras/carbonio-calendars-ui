@@ -9,7 +9,7 @@ import { Button, Container, Padding, Tooltip } from '@zextras/carbonio-design-sy
 
 export const CalendarToolbar = ({
 	dateLabel,
-	todayLabel,
+	resetButtonLabel,
 	rightArrowLabel,
 	leftArrowLabel,
 	onTodayAction,
@@ -17,7 +17,7 @@ export const CalendarToolbar = ({
 	onLeftArrowAction
 }: {
 	dateLabel: string;
-	todayLabel: string;
+	resetButtonLabel: string;
 	rightArrowLabel: string;
 	leftArrowLabel: string;
 	onTodayAction: () => void;
@@ -25,7 +25,12 @@ export const CalendarToolbar = ({
 	onLeftArrowAction: () => void;
 }): React.JSX.Element => (
 	<>
-		<Button label={todayLabel} type="outlined" onClick={onTodayAction} minWidth={'fit-content'} />
+		<Button
+			label={resetButtonLabel}
+			type="outlined"
+			onClick={onTodayAction}
+			minWidth={'fit-content'}
+		/>
 		<Padding left={'1rem'} />
 		<Tooltip label={leftArrowLabel}>
 			<Button

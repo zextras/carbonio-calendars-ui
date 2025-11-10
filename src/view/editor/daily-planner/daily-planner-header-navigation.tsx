@@ -83,7 +83,7 @@ export const DailyPlannerHeaderNavigation = ({
 	return (
 		<CalendarToolbar
 			dateLabel={dateLabel}
-			todayLabel={t('reset_date', 'Reset Date')}
+			resetButtonLabel={t('reset_date', 'Reset Date')}
 			rightArrowLabel={t('next_day', 'Next day')}
 			leftArrowLabel={t('previous_day', 'Previous day')}
 			onTodayAction={onTodayAction}
