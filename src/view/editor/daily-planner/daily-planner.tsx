@@ -4,24 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React from 'react';
 
 import { Row } from '@zextras/carbonio-design-system';
-import { useUserSettings } from '@zextras/carbonio-shell-ui';
-import { debounce } from 'lodash';
-import { useTranslation } from 'react-i18next';
 
+import { DailyPlannerHeaderNavigation } from './daily-planner-header-navigation';
 import { TimeTable } from './time-table';
 import { Participant, useParticipantsAvailability } from './use-participants-availability';
 import { useParticipantsNonWorkingHours } from './use-participants-non-working-hours';
 import { atMidnight, mapFreeBusyToDailyPlannerRow, onNextDay } from './utils';
-import { CalendarToolbar } from '../../../components/calendar-toolbar';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import {
-	selectEditorOriginalEnd,
-	selectEditorOriginalStart
-} from '../../../store/selectors/editor';
-import { editEditorDate } from '../../../store/slices/editor-slice';
 
 export const EditorDailyPlanner = ({
 	editorId,
@@ -40,17 +31,6 @@ export const EditorDailyPlanner = ({
 	const endOfDay = onNextDay(startOfDay);
 	const startDateEpochMillis = startOfDay.getTime();
 	const endDateEpochMillis = endOfDay.getTime();
-
-	const originalStart = useAppSelector(selectEditorOriginalStart(editorId)) ?? 0;
-	const originalEnd = useAppSelector(selectEditorOriginalEnd(editorId)) ?? 0;
-
-	const dispatch = useAppDispatch();
-	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
-	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
-	const [headerStart, setHeaderStart] = useState(startDate);
-	const [headerEnd, setHeaderEnd] = useState(endDate);
-
-	const [t] = useTranslation();
 
 	const participantAvailabilities = useParticipantsAvailability({
 		participants,
@@ -75,61 +55,10 @@ export const EditorDailyPlanner = ({
 		})
 	);
 
-	const debounceNavigation = useMemo(
-		() =>
-			debounce(
-				(debounceStart: number, debounceEnd: number) => {
-					dispatch(editEditorDate({ id: editorId, start: debounceStart, end: debounceEnd }));
-				},
-				250,
-				{
-					trailing: true,
-					leading: false
-				}
-			),
-		[dispatch, editorId]
-	);
-	const onTodayAction = useCallback(() => {
-		setHeaderStart(originalStart);
-		setHeaderEnd(originalEnd);
-		debounceNavigation(originalStart, originalEnd);
-	}, [debounceNavigation, originalEnd, originalStart]);
-
-	const onRightArrowAction = useCallback(() => {
-		setHeaderStart((prevState) => prevState + 86400000);
-		setHeaderEnd((prevState) => prevState + 86400000);
-		debounceNavigation(headerStart + 86400000, headerEnd + 86400000);
-	}, [debounceNavigation, headerEnd, headerStart]);
-
-	const onLeftArrowAction = useCallback(() => {
-		setHeaderStart((prevState) => prevState - 86400000);
-		setHeaderEnd((prevState) => prevState - 86400000);
-		debounceNavigation(headerStart - 86400000, headerEnd - 86400000);
-	}, [debounceNavigation, headerStart, headerEnd]);
-
-	const dateLabel = useMemo(
-		() =>
-			new Intl.DateTimeFormat(locale, {
-				weekday: 'long',
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric'
-			}).format(headerStart),
-		[locale, headerStart]
-	);
-
 	return (
 		<>
 			<Row width={'fill'} padding={{ top: 'large' }}>
-				<CalendarToolbar
-					dateLabel={dateLabel}
-					todayLabel={t('reset_date', 'Reset Date')}
-					rightArrowLabel={t('next_day', 'Next day')}
-					leftArrowLabel={t('previous_day', 'Previous day')}
-					onTodayAction={onTodayAction}
-					onRightArrowAction={onRightArrowAction}
-					onLeftArrowAction={onLeftArrowAction}
-				/>
+				<DailyPlannerHeaderNavigation editorId={editorId} startDate={startDate} endDate={endDate} />
 			</Row>
 			<Row
 				orientation={'horizontal'}
