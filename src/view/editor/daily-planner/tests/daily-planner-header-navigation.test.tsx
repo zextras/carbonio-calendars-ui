@@ -122,7 +122,15 @@ describe('DailyPlannerHeaderNavigation', () => {
 		await user.click(rightArrowButton);
 		await user.click(rightArrowButton);
 
+		const dateLabel = screen.getByRole('button', { name: /Monday, January 5, 1970/i });
+		expect(dateLabel).toBeVisible();
+
 		jest.advanceTimersByTime(300);
 		expect(callbackToSetNewValueInStore).toHaveBeenCalledTimes(1);
+		expect(callbackToSetNewValueInStore).toHaveBeenCalledWith({
+			end: 345600000,
+			id: '1',
+			start: 345600000
+		});
 	});
 });
