@@ -9,6 +9,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { reducers } from '../../../../store/redux';
+import * as STORE_API from '../../../../store/slices/editor-slice';
 import { DailyPlannerHeaderNavigation } from '../daily-planner-header-navigation';
 import { screen, setupTest } from '@test-setup';
 
@@ -102,5 +103,26 @@ describe('DailyPlannerHeaderNavigation', () => {
 
 		const initialDateLabel = screen.getByRole('button', { name: /Thursday, January 1, 1970/i });
 		expect(initialDateLabel).toBeVisible();
+	});
+	it('will debounce every click to set the new value in store once', async () => {
+		const callbackToSetNewValueInStore = jest.spyOn(STORE_API, 'editEditorDate');
+
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		const { user } = setupTest(
+			<DailyPlannerHeaderNavigation editorId={'1'} startDate={0} endDate={0} />,
+			{ store }
+		);
+		const rightArrowButton = screen.getByRoleWithIcon('button', {
+			icon: TEST_SELECTORS.ICONS.rightArrow
+		});
+		await user.click(rightArrowButton);
+		await user.click(rightArrowButton);
+		await user.click(rightArrowButton);
+		await user.click(rightArrowButton);
+
+		jest.advanceTimersByTime(300);
+		expect(callbackToSetNewValueInStore).toBeCalledTimes(1);
 	});
 });
