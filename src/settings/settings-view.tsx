@@ -276,11 +276,12 @@ export default function CalendarSettingsView(): React.JSX.Element {
 	);
 
 	const saveChanges = useCallback(() => {
+		const forwardInvitesEmail = settingsToUpdate.zimbraPrefCalendarForwardInvitesTo;
 		const isString = (setting: unknown): setting is string => typeof setting === 'string';
 		if (
-			settingsToUpdate.zimbraPrefCalendarForwardInvitesTo &&
-			isString(settingsToUpdate.zimbraPrefCalendarForwardInvitesTo) &&
-			!isValidEmail(settingsToUpdate.zimbraPrefCalendarForwardInvitesTo)
+			forwardInvitesEmail &&
+			isString(forwardInvitesEmail) &&
+			!isValidEmail(forwardInvitesEmail)
 		) {
 			setIsEmailNotValid(!isEmailNotValid);
 			return;
