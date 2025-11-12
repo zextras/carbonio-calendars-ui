@@ -11,13 +11,13 @@ import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
 import { useEditorSendButtonState } from './editor-button-hooks';
-import { onSend } from '../../../commons/editor-save-send-fns';
-import { CALENDAR_ROUTE } from '../../../constants';
-import { StoreProvider } from '../../../store/redux';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditor, selectEditorIsNew } from '../../../store/selectors/editor';
-import { EditorProps } from '../../../types/editor';
-import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
+import { onSend } from 'commons/editor-save-send-fns';
+import { CALENDAR_ROUTE } from 'constants/index';
+import { StoreProvider } from 'store/redux';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
+import { selectEditor, selectEditorIsNew } from 'store/selectors/editor';
+import { EditorProps } from 'types/editor';
+import { SeriesEditWarningModal } from 'view/modals/series-edit-warning-modal';
 
 export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const isNew = useAppSelector(selectEditorIsNew(editorId));

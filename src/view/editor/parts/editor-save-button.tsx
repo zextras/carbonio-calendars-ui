@@ -9,12 +9,12 @@ import { Button, Tooltip, useModal, useSnackbar } from '@zextras/carbonio-design
 import { useTranslation } from 'react-i18next';
 
 import { useEditorResourcesState, useEditorSaveButtonState } from './editor-button-hooks';
-import { onSave } from '../../../commons/editor-save-send-fns';
-import { StoreProvider } from '../../../store/redux';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { EditorProps } from '../../../types/editor';
-import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
+import { onSave } from 'commons/editor-save-send-fns';
+import { StoreProvider } from 'store/redux';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import { selectEditor, selectEditorAttendees, selectEditorIsNew } from 'store/selectors/editor';
+import { EditorProps } from 'types/editor';
+import { SeriesEditWarningModal } from 'view/modals/series-edit-warning-modal';
 
 export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const isNew = useAppSelector(selectEditorIsNew(editorId));

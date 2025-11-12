@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { isValidResource, getDuplicateResourceIds } from './utils';
-import { useAppSelector } from '../../../store/redux/hooks';
+import { useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorTitle,
 	selectEditorDisabled,
@@ -17,8 +17,8 @@ import {
 	selectEditorEquipment,
 	selectEditorAttendees,
 	selectEditorOptionalAttendees
-} from '../../../store/selectors/editor';
-import { Resource, Editor } from '../../../types/editor';
+} from 'store/selectors/editor';
+import { Resource, Editor } from 'types/editor';
 
 export type EditorButtonResourcesState = {
 	title: string | undefined;
