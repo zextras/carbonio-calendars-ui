@@ -3,10 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
-import { debounce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarToolbar } from '../../../components/calendar-toolbar';
@@ -17,7 +16,7 @@ import {
 } from '../../../store/selectors/editor';
 import { editEditorDate } from '../../../store/slices/editor-slice';
 
-const ONE_DAY_IN_MILLIS = 86400000;
+export const ONE_DAY_IN_MILLIS = 86400000;
 
 export const DailyPlannerHeaderNavigation = ({
 	editorId,
@@ -34,41 +33,38 @@ export const DailyPlannerHeaderNavigation = ({
 	const dispatch = useAppDispatch();
 	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
 	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
-	const [headerStart, setHeaderStart] = useState(startDate);
-	const [headerEnd, setHeaderEnd] = useState(endDate);
 
 	const [t] = useTranslation();
-	const debounceNavigation = useMemo(
-		() =>
-			debounce(
-				(debounceStart: number, debounceEnd: number) => {
-					dispatch(editEditorDate({ id: editorId, start: debounceStart, end: debounceEnd }));
-				},
-				250,
-				{
-					trailing: true,
-					leading: false
-				}
-			),
-		[dispatch, editorId]
-	);
+
 	const onTodayAction = useCallback(() => {
-		setHeaderStart(originalStart);
-		setHeaderEnd(originalEnd);
-		debounceNavigation(originalStart, originalEnd);
-	}, [debounceNavigation, originalEnd, originalStart]);
+		dispatch(
+			editEditorDate({
+				id: editorId,
+				start: originalStart,
+				end: originalEnd
+			})
+		);
+	}, [dispatch, editorId, originalStart, originalEnd]);
 
 	const onRightArrowAction = useCallback(() => {
-		setHeaderStart((prevState) => prevState + ONE_DAY_IN_MILLIS);
-		setHeaderEnd((prevState) => prevState + ONE_DAY_IN_MILLIS);
-		debounceNavigation(headerStart + ONE_DAY_IN_MILLIS, headerEnd + ONE_DAY_IN_MILLIS);
-	}, [debounceNavigation, headerEnd, headerStart]);
+		dispatch(
+			editEditorDate({
+				id: editorId,
+				start: startDate + ONE_DAY_IN_MILLIS,
+				end: endDate + ONE_DAY_IN_MILLIS
+			})
+		);
+	}, [dispatch, editorId, startDate, endDate]);
 
 	const onLeftArrowAction = useCallback(() => {
-		setHeaderStart((prevState) => prevState - ONE_DAY_IN_MILLIS);
-		setHeaderEnd((prevState) => prevState - ONE_DAY_IN_MILLIS);
-		debounceNavigation(headerStart - ONE_DAY_IN_MILLIS, headerEnd - ONE_DAY_IN_MILLIS);
-	}, [debounceNavigation, headerStart, headerEnd]);
+		dispatch(
+			editEditorDate({
+				id: editorId,
+				start: startDate - ONE_DAY_IN_MILLIS,
+				end: endDate - ONE_DAY_IN_MILLIS
+			})
+		);
+	}, [dispatch, editorId, startDate, endDate]);
 
 	const dateLabel = useMemo(
 		() =>
@@ -77,9 +73,10 @@ export const DailyPlannerHeaderNavigation = ({
 				year: 'numeric',
 				month: 'long',
 				day: 'numeric'
-			}).format(headerStart),
-		[locale, headerStart]
+			}).format(startDate),
+		[locale, startDate]
 	);
+
 	return (
 		<CalendarToolbar
 			dateLabel={dateLabel}

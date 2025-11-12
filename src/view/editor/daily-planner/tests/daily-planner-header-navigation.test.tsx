@@ -5,14 +5,54 @@
  */
 import React from 'react';
 
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { AnyAction, combineReducers, configureStore, EmptyObject } from '@reduxjs/toolkit';
+import { ToolkitStore } from '@reduxjs/toolkit/src/configureStore';
 
+import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { reducers } from '../../../../store/redux';
-import * as STORE_API from '../../../../store/slices/editor-slice';
-import { DailyPlannerHeaderNavigation } from '../daily-planner-header-navigation';
+import mockedData from '../../../../test/generators';
+import { AppointmentsSlice, EditorSlice, InvitesSlice } from '../../../../types/store/store';
+import {
+	DailyPlannerHeaderNavigation,
+	ONE_DAY_IN_MILLIS
+} from '../daily-planner-header-navigation';
 import { screen, setupTest } from '@test-setup';
 
+const setStore = (): {
+	store: ToolkitStore<
+		EmptyObject & {
+			appointments: AppointmentsSlice;
+			editor: EditorSlice;
+			invites: InvitesSlice;
+		},
+		AnyAction,
+		[]
+	>;
+	editorId: string;
+} => {
+	const store = configureStore({
+		reducer: combineReducers(reducers)
+	});
+	const folder = {
+		absFolderPath: '/Test',
+		id: '5',
+		l: '1',
+		name: 'Test',
+		view: 'appointment'
+	};
+	const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+	const editor = generateEditor({
+		context: {
+			originalStart: 0,
+			originalEnd: 0,
+			folders,
+			dispatch: store.dispatch
+		}
+	});
+	return { store, editorId: editor.id };
+};
 describe('DailyPlannerHeaderNavigation', () => {
 	it('will render a reset button', async () => {
 		const store = configureStore({
@@ -50,87 +90,75 @@ describe('DailyPlannerHeaderNavigation', () => {
 		const dateLabel = screen.getByRole('button', { name: /Thursday, January 1, 1970/i });
 		expect(dateLabel).toBeVisible();
 	});
-	it('will navigate to previous day clicking the left arrow button', async () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
+	it('will subtract 1 day to stored date clicking the left arrow button', async () => {
+		const { store, editorId } = setStore();
+
 		const { user } = setupTest(
-			<DailyPlannerHeaderNavigation editorId={'1'} startDate={0} endDate={0} />,
+			<DailyPlannerHeaderNavigation editorId={editorId} startDate={0} endDate={0} />,
 			{ store }
 		);
 		const leftArrowButton = screen.getByRoleWithIcon('button', {
 			icon: TEST_SELECTORS.ICONS.leftArrow
 		});
 		await user.click(leftArrowButton);
-		const dateLabel = screen.getByRole('button', { name: /Wednesday, December 31, 1969/i });
-
-		expect(dateLabel).toBeVisible();
+		const editorStore = store.getState().editor.editors;
+		expect(editorStore[editorId].start).toEqual(-ONE_DAY_IN_MILLIS);
 	});
-	it('will navigate to next day clicking the right arrow button', async () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
+	it('will add 1 day to stored date clicking the right arrow button', async () => {
+		const { store, editorId } = setStore();
+
 		const { user } = setupTest(
-			<DailyPlannerHeaderNavigation editorId={'1'} startDate={0} endDate={0} />,
+			<DailyPlannerHeaderNavigation editorId={editorId} startDate={0} endDate={0} />,
 			{ store }
 		);
 		const rightArrowButton = screen.getByRoleWithIcon('button', {
 			icon: TEST_SELECTORS.ICONS.rightArrow
 		});
 		await user.click(rightArrowButton);
-		const dateLabel = screen.getByRole('button', { name: /Friday, January 2, 1970/i });
 
-		expect(dateLabel).toBeVisible();
+		const editorStore = store.getState().editor.editors;
+		expect(editorStore[editorId].start).toEqual(ONE_DAY_IN_MILLIS);
 	});
-	it('will reset navigation to starting date clicking the reset button', async () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
-		const { user } = setupTest(
-			<DailyPlannerHeaderNavigation editorId={'1'} startDate={0} endDate={0} />,
+	it('will reset the date to its original date clicking the reset button', async () => {
+		const { store, editorId } = setStore();
+
+		const { user, rerender } = setupTest(
+			<DailyPlannerHeaderNavigation editorId={editorId} startDate={0} endDate={0} />,
 			{ store }
 		);
-		const rightArrowButton = screen.getByRoleWithIcon('button', {
-			icon: TEST_SELECTORS.ICONS.rightArrow
-		});
-		const resetButton = screen.getByRole('button', { name: /Reset Date/i });
-		await user.click(rightArrowButton);
-		await user.click(rightArrowButton);
-		const dateLabel = screen.getByRole('button', { name: /Saturday, January 3, 1970/i });
-		expect(dateLabel).toBeVisible();
 
-		await user.click(resetButton);
-
-		const initialDateLabel = screen.getByRole('button', { name: /Thursday, January 1, 1970/i });
-		expect(initialDateLabel).toBeVisible();
-	});
-	it('will debounce every click to set the new value in store once', async () => {
-		const callbackToSetNewValueInStore = jest.spyOn(STORE_API, 'editEditorDate');
-
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
-		const { user } = setupTest(
-			<DailyPlannerHeaderNavigation editorId={'1'} startDate={0} endDate={0} />,
-			{ store }
+		await user.click(
+			screen.getByRoleWithIcon('button', {
+				icon: TEST_SELECTORS.ICONS.rightArrow
+			})
 		);
-		const rightArrowButton = screen.getByRoleWithIcon('button', {
-			icon: TEST_SELECTORS.ICONS.rightArrow
-		});
-		await user.click(rightArrowButton);
-		await user.click(rightArrowButton);
-		await user.click(rightArrowButton);
-		await user.click(rightArrowButton);
 
-		const dateLabel = screen.getByRole('button', { name: /Monday, January 5, 1970/i });
-		expect(dateLabel).toBeVisible();
+		rerender(
+			<DailyPlannerHeaderNavigation
+				editorId={editorId}
+				startDate={ONE_DAY_IN_MILLIS}
+				endDate={ONE_DAY_IN_MILLIS}
+			/>
+		);
 
-		jest.advanceTimersByTime(300);
-		expect(callbackToSetNewValueInStore).toHaveBeenCalledTimes(1);
-		expect(callbackToSetNewValueInStore).toHaveBeenCalledWith({
-			end: 345600000,
-			id: '1',
-			start: 345600000
-		});
+		await user.click(
+			screen.getByRoleWithIcon('button', {
+				icon: TEST_SELECTORS.ICONS.rightArrow
+			})
+		);
+
+		expect(store.getState().editor.editors[editorId].start).toEqual(ONE_DAY_IN_MILLIS * 2);
+
+		rerender(
+			<DailyPlannerHeaderNavigation
+				editorId={editorId}
+				startDate={ONE_DAY_IN_MILLIS * 2}
+				endDate={ONE_DAY_IN_MILLIS * 2}
+			/>
+		);
+
+		await user.click(screen.getByRole('button', { name: /Reset Date/i }));
+
+		expect(store.getState().editor.editors[editorId].start).toEqual(0);
 	});
 });
