@@ -17,11 +17,9 @@ import {
 import {
 	ZIMBRA_STANDARD_COLORS,
 	useHistoryNavigation,
-	useFoldersMap,
 	useSortedTagsArray
 } from '@zextras/carbonio-ui-commons';
-import { find, reduce, includes } from 'lodash';
-import moment from 'moment';
+import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { openAppointment } from '../../actions/appointment-actions-fn';
@@ -31,48 +29,39 @@ import { getInvite } from '../../store/actions/get-invite';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { useTagExist } from '../tags/tag-actions';
+import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
+import { EventType } from 'types/event';
 
-const SearchListItem = ({ item }) => {
-	const isShared = item?.resource?.l?.includes(':');
-	const calendars = useFoldersMap();
-	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
+const SearchListItem = ({ item }: { item: EventType }): any => {
+	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
+	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
+	const timeString = useGetDateRangeConvertedToTimezone(item.start ?? 0, item.end ?? 0);
+	const tagsFromStore = useSortedTagsArray();
+
 	const { replaceHistory } = useHistoryNavigation();
 
-	const cal = isShared
-		? find(calendars, (f) => `${f.zid}:${f.rid}` === item.resource?.l)
-		: find(calendars, (f) => f.id === item.resource?.l);
-	const [t] = useTranslation();
-
 	const hasAttachments = useMemo(() => item.resource?.flags?.includes('a'), [item.resource?.flags]);
+
 	const showPtstIcon = useMemo(
 		() =>
 			[
 				PARTICIPATION_STATUS.TENTATIVE,
 				PARTICIPATION_STATUS.DECLINED,
 				PARTICIPATION_STATUS.ACCEPTED
-			].includes(item.resource?.ptst),
-		[item.resource?.ptst]
+			].includes(item.resource?.participationStatus),
+		[item.resource?.participationStatus]
 	);
+
 	const [color, icon] = useMemo(() => {
-		if (item.resource?.ptst === PARTICIPATION_STATUS.TENTATIVE) {
+		if (item.resource?.participationStatus === PARTICIPATION_STATUS.TENTATIVE) {
 			return ['warning', 'QuestionMarkOutline'];
 		}
-		if (item.resource?.ptst === PARTICIPATION_STATUS.DECLINED) {
+		if (item.resource?.participationStatus === PARTICIPATION_STATUS.DECLINED) {
 			return ['error', 'CloseOutline'];
 		}
 		return ['success', 'CheckmarkOutline'];
-	}, [item.resource?.ptst]);
-
-	const timeString = useMemo(
-		() =>
-			`${moment.utc(item.resource?.ridZ, 'YYYYMMDD[T]HHmmss[Z]').local()} - ${moment
-				.utc(item.resource?.ridZ, 'YYYYMMDD[T]HHmmss[Z]')
-				.add(item.resource?.dur)
-				.local()
-				.format('HH:mm')}`,
-		[item.resource?.dur, item.resource?.ridZ]
-	);
+	}, [item.resource?.participationStatus]);
 
 	// this is needed to understand if the icons and location can use more space or not and allow code to chose between this style or takeAvailableSpace
 	const iconsStyle = useMemo(
@@ -86,7 +75,6 @@ const SearchListItem = ({ item }) => {
 		[hasAttachments, item.resource?.class, item.resource?.isRecurrent, item.resource?.location]
 	);
 
-	const tagsFromStore = useSortedTagsArray();
 	const tags = useMemo(
 		() =>
 			reduce(
@@ -102,9 +90,10 @@ const SearchListItem = ({ item }) => {
 	);
 
 	const tagIcon = useMemo(() => (tags?.length > 1 ? 'TagsMoreOutline' : 'Tag'), [tags]);
-	const tagIconColor = useMemo(() => (tags?.length === 1 ? tags?.[0]?.color : undefined), [tags]);
+	const tagIconColor = useMemo(() => (tags?.length === 1 ? tags?.[0]?.color : 'black'), [tags]);
 
 	const isTagInStore = useTagExist(tags);
+
 	const showTagIcon = useMemo(
 		() =>
 			item.resource.tags &&
@@ -115,7 +104,7 @@ const SearchListItem = ({ item }) => {
 	);
 
 	const onClick = useCallback(
-		(ev) => {
+		(ev: React.MouseEvent) => {
 			const open = openAppointment({
 				event: item,
 				context: { panelView: PANEL_VIEW.SEARCH, replaceHistory }
@@ -144,7 +133,6 @@ const SearchListItem = ({ item }) => {
 						selecting={false}
 						selected={false}
 						label={item.resource?.organizer?.name || item.resource?.organizer?.email}
-						onClick={() => null}
 						size="large"
 					/>
 				)}
@@ -230,7 +218,7 @@ const SearchListItem = ({ item }) => {
 								</>
 							)}
 						</Row>
-						{cal?.color?.label && (
+						{item.resource.calendar.color?.label && (
 							<>
 								<Padding left="small" />
 								<Row mainAlignment="flex-end">
@@ -238,7 +226,7 @@ const SearchListItem = ({ item }) => {
 										data-testid="CalendarIcon"
 										icon="Calendar2"
 										size="medium"
-										customColor={cal.color.label}
+										color={item.resource.calendar.color?.label}
 									/>
 								</Row>
 							</>
