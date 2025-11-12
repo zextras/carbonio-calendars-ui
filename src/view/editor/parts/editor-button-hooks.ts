@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// Centralized hooks for editor button state (Save / Send)
 import { useMemo } from 'react';
 
 import { useTranslation } from 'react-i18next';
@@ -20,6 +19,8 @@ import {
 import { Resource, Editor } from 'types/editor';
 import { getDuplicateResourceIds, isValidResource } from 'view/editor/parts/utils';
 
+// Centralized hooks for editor button state (Save / Send)
+
 export type EditorButtonResourcesState = {
 	title: string | undefined;
 	disabledFlags: Editor['disabled'];
@@ -27,7 +28,7 @@ export type EditorButtonResourcesState = {
 	equipments: Resource[];
 	hasInvalidResources: boolean;
 	hasDuplicateResources: boolean;
-	hasResourceIssues: boolean; // renamed from hasValidationErrors for clarity
+	hasResourceIssues: boolean;
 };
 
 export const useEditorResourcesState = (editorId: string): EditorButtonResourcesState => {
@@ -63,7 +64,7 @@ export const useEditorResourcesState = (editorId: string): EditorButtonResources
 	};
 };
 
-export const useEditorRecipients = (
+const useEditorRecipients = (
 	editorId: string
 ): { attendeesLength: number; optionalLength: number } => {
 	const attendees = useAppSelector(selectEditorAttendees(editorId)) ?? [];
