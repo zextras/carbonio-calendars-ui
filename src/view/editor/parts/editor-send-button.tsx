@@ -3,91 +3,33 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 
 import { Button, Tooltip, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { closeBoard, useBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
+import { useEditorSendButtonState } from './editor-button-hooks';
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../../../constants';
 import { StoreProvider } from '../../../store/redux';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import {
-	selectEditor,
-	selectEditorAttendees,
-	selectEditorDisabled,
-	selectEditorEquipment,
-	selectEditorIsNew,
-	selectEditorMeetingRoom,
-	selectEditorOptionalAttendees,
-	selectEditorTitle
-} from '../../../store/selectors/editor';
+import { selectEditor, selectEditorIsNew } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
-	const attendees = useAppSelector(selectEditorAttendees(editorId));
-	const title = useAppSelector(selectEditorTitle(editorId));
-	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
-	const meetingRooms = useAppSelector(selectEditorMeetingRoom(editorId));
-	const equipments = useAppSelector(selectEditorEquipment(editorId));
-
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
 	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
-
-	const disabled = useAppSelector(selectEditorDisabled(editorId));
-	const [t] = useTranslation();
 	const board = useBoard();
 	const dispatch = useAppDispatch();
 	const { replaceHistory } = useHistoryNavigation();
-
-	const { isSendDisabled, disabledTooltipLabel } = useMemo(() => {
-		if (disabled?.sendButton) {
-			return {
-				isSendDisabled: true,
-				disabledTooltipLabel: t('label.cannot_send', 'Sending is disabled for this event')
-			};
-		}
-
-		if (!title?.length) {
-			return {
-				isSendDisabled: true,
-				disabledTooltipLabel: t('label.add_event_title_to_send', 'Add event title to send')
-			};
-		}
-
-		if (
-			!attendees?.length &&
-			!optionalAttendees?.length &&
-			!meetingRooms?.length &&
-			!equipments?.length
-		) {
-			return {
-				isSendDisabled: true,
-				disabledTooltipLabel: t(
-					'label.no_recipients',
-					'Add at least one attendee or resource to send'
-				)
-			};
-		}
-
-		return {
-			isSendDisabled: false,
-			disabledTooltipLabel: ''
-		};
-	}, [
-		disabled?.sendButton,
-		title?.length,
-		attendees?.length,
-		optionalAttendees?.length,
-		meetingRooms?.length,
-		equipments?.length,
-		t
-	]);
+	const { isDisabled: isSendDisabled, tooltip: disabledTooltipLabel } =
+		useEditorSendButtonState(editorId);
+	const [t] = useTranslation();
 
 	const onClick = useCallback(() => {
 		if (editor.isSeries && !isNew && !editor.isInstance) {
