@@ -8,7 +8,6 @@ import { useMemo } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-import { isValidResource, getDuplicateResourceIds } from './utils';
 import { useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorTitle,
@@ -19,6 +18,7 @@ import {
 	selectEditorOptionalAttendees
 } from 'store/selectors/editor';
 import { Resource, Editor } from 'types/editor';
+import { getDuplicateResourceIds, isValidResource } from 'view/editor/parts/utils';
 
 export type EditorButtonResourcesState = {
 	title: string | undefined;
