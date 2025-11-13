@@ -36,8 +36,8 @@ export const useEditorResourcesState = (editorId: string): EditorButtonResources
 	const disabledFlags = useAppSelector(selectEditorDisabled(editorId));
 	const meetingRoomsRaw = useAppSelector(selectEditorMeetingRoom(editorId));
 	const equipmentsRaw = useAppSelector(selectEditorEquipment(editorId));
-	const meetingRooms = useMemo(() => (meetingRoomsRaw ?? []) as Resource[], [meetingRoomsRaw]);
-	const equipments = useMemo(() => (equipmentsRaw ?? []) as Resource[], [equipmentsRaw]);
+	const meetingRooms = useMemo(() => meetingRoomsRaw ?? [], [meetingRoomsRaw]);
+	const equipments = useMemo(() => equipmentsRaw ?? [], [equipmentsRaw]);
 
 	const hasInvalidResources = useMemo(
 		() => meetingRooms.concat(equipments).some((r) => !isValidResource(r)),
