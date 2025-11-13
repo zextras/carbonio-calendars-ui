@@ -5,14 +5,13 @@
  */
 import React from 'react';
 
-import { AnyAction, combineReducers, configureStore, EmptyObject } from '@reduxjs/toolkit';
-import { ToolkitStore } from '@reduxjs/toolkit/src/configureStore';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { Store } from 'redux';
 
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
-import { reducers } from '../../../../store/redux';
+import { reducers, RootState } from '../../../../store/redux';
 import mockedData from '../../../../test/generators';
-import { AppointmentsSlice, EditorSlice, InvitesSlice } from '../../../../types/store/store';
 import {
 	DailyPlannerHeaderNavigation,
 	ONE_DAY_IN_MILLIS
@@ -20,15 +19,7 @@ import {
 import { screen, setupTest } from '@test-setup';
 
 const setStore = (): {
-	store: ToolkitStore<
-		EmptyObject & {
-			appointments: AppointmentsSlice;
-			editor: EditorSlice;
-			invites: InvitesSlice;
-		},
-		AnyAction,
-		[]
-	>;
+	store: Store<RootState>;
 	editorId: string;
 } => {
 	const store = configureStore({
