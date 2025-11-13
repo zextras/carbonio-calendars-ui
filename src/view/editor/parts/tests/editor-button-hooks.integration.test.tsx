@@ -35,7 +35,7 @@ describe('Editor button hooks - resource validation and messaging', () => {
 		expect(button).toBeDisabled();
 
 		await user.hover(button);
-		expect(await screen.findByText('Resolve input errors before saving')).toBeInTheDocument();
+		expect(await screen.findByText('Fix input errors to save')).toBeInTheDocument();
 	});
 
 	it('disables Send button and shows duplicate resource tooltip when duplicate equipment entries exist', async () => {
@@ -60,11 +60,7 @@ describe('Editor button hooks - resource validation and messaging', () => {
 		expect(button).toBeDisabled();
 
 		await user.hover(button);
-		expect(
-			await screen.findByText(
-				'Resolve input errors (invalid or duplicate resources) before sending'
-			)
-		).toBeInTheDocument();
+		expect(await screen.findByText('Fix input errors to send')).toBeInTheDocument();
 	});
 
 	it('enables Save button when title and valid resources are present', () => {

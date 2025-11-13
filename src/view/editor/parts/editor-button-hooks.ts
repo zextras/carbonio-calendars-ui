@@ -85,7 +85,7 @@ export const useEditorSaveButtonState = (
 		} else if (!title?.length) {
 			tooltip = t('label.add_event_title_to_save', 'Add event title to save');
 		} else if (hasResourceIssues) {
-			tooltip = t('label.resolve_errors_to_save', 'Resolve input errors before saving');
+			tooltip = t('label.fix_input_errors_to_save', 'Fix input errors to save');
 		}
 	}
 	return { isDisabled, tooltip };
@@ -111,10 +111,7 @@ export const useEditorSendButtonState = (
 		} else if (noRecipients) {
 			tooltip = t('label.no_recipients', 'Add at least one attendee or resource to send');
 		} else if (hasResourceIssues) {
-			tooltip = t(
-				'label.resolve_errors_to_send',
-				'Resolve input errors (invalid or duplicate resources) before sending'
-			);
+			tooltip = t('label.fix_input_errors_to_send', 'Fix input errors to send');
 		}
 	}
 	return { isDisabled, tooltip };
