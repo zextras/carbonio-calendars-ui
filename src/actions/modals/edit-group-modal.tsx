@@ -88,7 +88,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 	);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Folder) => {
-		setSelectedCalendars((prev) => [...prev, selected]);
+		setSelectedCalendars((prev) => [selected, ...prev]);
 	}, []);
 
 	const onConfirm = useCallback((): void => {

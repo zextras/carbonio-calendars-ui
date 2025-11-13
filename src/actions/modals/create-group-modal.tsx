@@ -70,7 +70,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 	);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Folder) => {
-		setSelectedCalendars((prev) => [...prev, selected]);
+		setSelectedCalendars((prev) => [selected, ...prev]);
 	}, []);
 
 	const onConfirm = useCallback((): void => {
