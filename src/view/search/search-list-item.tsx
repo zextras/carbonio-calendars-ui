@@ -14,12 +14,8 @@ import {
 	Padding,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import {
-	ZIMBRA_STANDARD_COLORS,
-	useHistoryNavigation,
-	useSortedTagsArray
-} from '@zextras/carbonio-ui-commons';
-import { reduce, includes } from 'lodash';
+import { useHistoryNavigation, useSortedTagsArray } from '@zextras/carbonio-ui-commons';
+import { includes, filter } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { openAppointment } from '../../actions/appointment-actions-fn';
@@ -28,8 +24,9 @@ import { PARTICIPATION_STATUS } from '../../constants/api';
 import { getInvite } from '../../store/actions/get-invite';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
-import { useTagExist } from '../tags/tag-actions';
+import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
+import { ActionsContext } from 'types/actions';
 import { EventType } from 'types/event';
 
 const SearchListItem = ({ item }: { item: EventType }): any => {
@@ -37,19 +34,16 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 	const dispatch = useAppDispatch();
 	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
 	const timeString = useGetDateRangeConvertedToTimezone(item.start ?? 0, item.end ?? 0);
-	const tagsFromStore = useSortedTagsArray();
-
+	const sortedTagsFromStore = useSortedTagsArray();
 	const { replaceHistory } = useHistoryNavigation();
 
 	const hasAttachments = useMemo(() => item.resource?.flags?.includes('a'), [item.resource?.flags]);
 
 	const showPtstIcon = useMemo(
 		() =>
-			[
-				PARTICIPATION_STATUS.TENTATIVE,
-				PARTICIPATION_STATUS.DECLINED,
-				PARTICIPATION_STATUS.ACCEPTED
-			].includes(item.resource?.participationStatus),
+			item.resource?.participationStatus === PARTICIPATION_STATUS.TENTATIVE ||
+			item.resource?.participationStatus === PARTICIPATION_STATUS.DECLINED ||
+			item.resource?.participationStatus === PARTICIPATION_STATUS.ACCEPTED,
 		[item.resource?.participationStatus]
 	);
 
@@ -75,39 +69,28 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 		[hasAttachments, item.resource?.class, item.resource?.isRecurrent, item.resource?.location]
 	);
 
-	const tags = useMemo(
-		() =>
-			reduce(
-				tagsFromStore,
-				(acc, v) => {
-					if (includes(item?.resource?.tags, v.id))
-						acc.push({ ...v, color: ZIMBRA_STANDARD_COLORS[parseInt(v.color ?? '0', 10)].hex });
-					return acc;
-				},
-				[]
-			),
-		[item?.resource?.tags, tagsFromStore]
+	const matchTags = useMemo(
+		() => filter(sortedTagsFromStore, (tag) => includes(item?.resource?.tags, tag.id)),
+		[item?.resource?.tags, sortedTagsFromStore]
 	);
 
-	const tagIcon = useMemo(() => (tags?.length > 1 ? 'TagsMoreOutline' : 'Tag'), [tags]);
-	const tagIconColor = useMemo(() => (tags?.length === 1 ? tags?.[0]?.color : 'black'), [tags]);
+	const tagIcon = useMemo(() => (matchTags?.length > 1 ? 'TagsMoreOutline' : 'Tag'), [matchTags]);
 
-	const isTagInStore = useTagExist(tags);
-
-	const showTagIcon = useMemo(
+	const tagIconColor = useMemo(
 		() =>
-			item.resource.tags &&
-			item.resource.tags.length !== 0 &&
-			item.resource.tags?.[0] !== '' &&
-			isTagInStore,
-		[isTagInStore, item.resource.tags]
+			CALENDARS_STANDARD_COLORS[
+				matchTags?.length === 1 && matchTags[0].color ? matchTags[0].color : 0
+			].color,
+		[matchTags]
 	);
+
+	const organizerLabel = item.resource?.organizer?.name || item.resource?.organizer?.email;
 
 	const onClick = useCallback(
 		(ev: React.MouseEvent) => {
 			const open = openAppointment({
 				event: item,
-				context: { panelView: PANEL_VIEW.SEARCH, replaceHistory }
+				context: { panelView: PANEL_VIEW.SEARCH, replaceHistory } as ActionsContext
 			});
 			if (!invite) {
 				dispatch(getInvite({ inviteId: item.resource.inviteId })).then(() => {
@@ -128,11 +111,12 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 				mainAlignment="flex-start"
 				padding={{ all: 'small', right: 'large' }}
 			>
-				{(item.resource?.organizer?.name || item.resource?.organizer?.email) && (
+				{organizerLabel && (
 					<Avatar
+						data-testid="avatarAppointment"
 						selecting={false}
 						selected={false}
-						label={item.resource?.organizer?.name || item.resource?.organizer?.email}
+						label={organizerLabel}
 						size="large"
 					/>
 				)}
@@ -173,9 +157,9 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 									</Row>
 								</>
 							)}
-							{showTagIcon && (
+							{matchTags && (
 								<Padding left="small">
-									<Icon data-testid="TagIcon" icon={tagIcon} color={tagIconColor} />
+									<Icon icon={tagIcon} color={tagIconColor} />
 								</Padding>
 							)}
 							{hasAttachments && (
@@ -184,12 +168,7 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 									<Row mainAlignment="flex-end">
 										<Tooltip label={t('has_attachments', 'Has attachments')}>
 											<div>
-												<Icon
-													data-testid="AttachmentIcon"
-													icon="AttachOutline"
-													size="medium"
-													color="gray0"
-												/>
+												<Icon icon="AttachOutline" size="medium" color="gray0" />
 											</div>
 										</Tooltip>
 									</Row>
@@ -201,7 +180,7 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 									<Row mainAlignment="flex-end">
 										<Tooltip label={t('is_private', 'Is private')}>
 											<div>
-												<Icon data-testid="LockIcon" icon="Lock" size="medium" color="gray0" />
+												<Icon icon="Lock" size="medium" color="gray0" />
 											</div>
 										</Tooltip>
 									</Row>
@@ -223,7 +202,6 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 								<Padding left="small" />
 								<Row mainAlignment="flex-end">
 									<Icon
-										data-testid="CalendarIcon"
 										icon="Calendar2"
 										size="medium"
 										color={item.resource.calendar.color?.label}
@@ -270,7 +248,7 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 							<>
 								<Padding left="small" />
 								<Row mainAlignment="flex-end">
-									<Icon data-testid="AppointmentIcon" icon={icon} color={color} size="medium" />
+									<Icon icon={icon} color={color} size="medium" />
 								</Row>
 							</>
 						)}
