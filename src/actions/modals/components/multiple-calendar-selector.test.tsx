@@ -73,4 +73,35 @@ describe('MultipleCalendarSelector', () => {
 		await selectCalendarFromSelector(user, calendar.name);
 		expect(onCalendarChange).toHaveBeenCalledWith(calendar);
 	});
+
+	it('should not render the dropdown when the input is empty', async () => {
+		const calendars = times(2, (index) =>
+			generateFolder({ view: 'appointment', name: `Calendar${index}` })
+		);
+		populateFoldersStore({ view: 'appointment', customFolders: calendars });
+
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		const input = screen.getByPlaceholderText('Type a calendar');
+
+		await user.click(input);
+
+		expect(screen.queryByTestId('dropdown-popper-list')).not.toBeInTheDocument();
+	});
+
+	it('should render the dropdown only when the user starts typing', async () => {
+		const calendars = times(2, (index) =>
+			generateFolder({ view: 'appointment', name: `Calendar${index}` })
+		);
+		populateFoldersStore({ view: 'appointment', customFolders: calendars });
+
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		const input = screen.getByPlaceholderText('Type a calendar');
+
+		await user.click(input);
+		expect(screen.queryByTestId('dropdown-popper-list')).not.toBeInTheDocument();
+
+		await user.type(input, 'Cal');
+		const dropdownList = await screen.findByTestId('dropdown-popper-list');
+		expect(dropdownList).toBeVisible();
+	});
 });

@@ -73,6 +73,9 @@ export const MultipleCalendarSelector = ({
 			namePrefix?: string;
 			excludedIds?: Array<string>;
 		} = {}): InputOptions => {
+			if (!namePrefix || namePrefix.trim() === '') {
+				return [];
+			}
 			// Filter eligible calendars by excluding the calendars with ids in excludedIds
 			const includedCalendars = differenceWith(
 				eligibleSortedCalendars,
