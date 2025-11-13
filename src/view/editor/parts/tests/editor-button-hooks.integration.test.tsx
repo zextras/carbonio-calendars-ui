@@ -180,4 +180,72 @@ describe('Editor button hooks - resource validation and messaging', () => {
 		await user.hover(button);
 		expect(await screen.findByText('Saving is disabled for this event')).toBeInTheDocument();
 	});
+
+	it('handles undefined attendees and optional attendees gracefully in Send button', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				title: 'Event with null recipients',
+				attendees: undefined,
+				optionalAttendees: undefined
+			}
+		});
+
+		const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+
+		const button = screen.getByRole('button', { name: /send/i });
+		expect(button).toBeDisabled();
+		await user.hover(button);
+		expect(
+			await screen.findByText('Add at least one attendee or resource to send')
+		).toBeInTheDocument();
+	});
+
+	it('disables Save button due to resource issues when title is present but resources are invalid', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const invalidEquipment = { label: 'Equipment Without Email', email: '' };
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				title: 'Valid Title Present',
+				equipment: [invalidEquipment]
+			}
+		});
+
+		const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+
+		const button = screen.getByRole('button', { name: /save/i });
+		expect(button).toBeDisabled();
+		await user.hover(button);
+		expect(await screen.findByText('Fix input errors to save')).toBeInTheDocument();
+	});
+
+	it('disables Send button due to resource issues when title and recipients are present but resources are duplicated', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const duplicateRoomEmail = 'room@test.com';
+		const room1 = { label: 'Room A', email: duplicateRoomEmail };
+		const room2 = { label: 'Room B', email: duplicateRoomEmail };
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				title: 'Valid Title',
+				attendees: [DEFAULT_ATTENDEE],
+				meetingRoom: [room1, room2]
+			}
+		});
+
+		const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+
+		const button = screen.getByRole('button', { name: /send/i });
+		expect(button).toBeDisabled();
+		await user.hover(button);
+		expect(await screen.findByText('Fix input errors to send')).toBeInTheDocument();
+	});
 });
