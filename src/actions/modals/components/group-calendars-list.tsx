@@ -24,8 +24,8 @@ export const GroupCalendarsList = ({
 	const [t] = useTranslation();
 
 	const placeholderText = t(
-		'label.group_empty_calendars_list',
-		'There are no calendars in this group yet. Start typing the calendars in the input, then click “+” to add them to the group.'
+		'label.empty_group_calendars_list',
+		'There are no calendars in this group yet.'
 	);
 
 	return (

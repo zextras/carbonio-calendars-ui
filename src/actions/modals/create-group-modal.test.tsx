@@ -134,6 +134,29 @@ describe('CreateGroupModal', () => {
 				expect(screen.getByText(targetCalendar.name)).toBeVisible();
 			});
 
+			it.each(['[Enter]', ','])(
+				'should add the first calendar of the dropdown in the list when the user clicks %s',
+				async (key) => {
+					const targetCalendars = times(2, (index) =>
+						generateFolder({
+							name: `Awesome${index}`,
+							color: faker.number.int({ max: 9 })
+						})
+					);
+					populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+
+					const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+					const input = screen.getByRole('textbox', { name: 'Type a calendar' });
+					await user.type(input, 'Awe');
+					expect(await screen.findByText(targetCalendars[0].name)).toBeVisible();
+					expect(screen.getByText(targetCalendars[1].name)).toBeVisible();
+					await user.keyboard(key);
+					const calendarListItem = await screen.findByTestId('group-calendars-list-item');
+					expect(within(calendarListItem).getByText(targetCalendars[0].name)).toBeVisible();
+					expect(screen.queryByText(targetCalendars[1].name)).not.toBeInTheDocument();
+				}
+			);
+
 			it('should render an updated list of calendars when a new calendar is added', async () => {
 				const targetCalendars = times(2, (index) =>
 					generateFolder({
