@@ -29,7 +29,6 @@ export type MultipleCalendarSelectorProps = {
 type InputOptions = Array<
 	DropdownItem & { value?: { id: string; label: string; isLink: boolean } }
 >;
-const CHIP_INPUT_SEPARATORS = ['Enter', ','];
 
 type SelectedOptionsType = ChipItem<{ id: string; label: string; isLink: boolean }>[];
 
@@ -136,29 +135,10 @@ export const MultipleCalendarSelector = ({
 	);
 
 	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>(
-		({ key, textContent }) => {
-			if (CHIP_INPUT_SEPARATORS.includes(key)) {
-				if (!options?.[0] || !options[0].value) {
-					return;
-				}
-
-				const selectedOption = options[0];
-				const chipItem = {
-					id: selectedOption.id,
-					label: selectedOption.label,
-					value: selectedOption.value
-				};
-
-				onSelectedCalendarsChange([chipItem]);
-				setOptions([]);
-				if (inputRef.current) {
-					inputRef.current.value = '';
-				}
-			} else {
-				setOptions(createOptions({ namePrefix: textContent ?? '' }));
-			}
+		({ textContent }) => {
+			setOptions(createOptions({ namePrefix: textContent ?? '' }));
 		},
-		[createOptions, options, onSelectedCalendarsChange]
+		[createOptions]
 	);
 
 	return (
@@ -171,7 +151,7 @@ export const MultipleCalendarSelector = ({
 			onInputType={onInputType}
 			onChange={onSelectedCalendarsChange}
 			placeholder={t('label.calendars_group_selector.placeholder', 'Type a calendar')}
-			separators={CHIP_INPUT_SEPARATORS.map((key) => ({ key, ctrlKey: false }))}
+			separators={[]}
 		/>
 	);
 };
