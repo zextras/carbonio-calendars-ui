@@ -40,7 +40,7 @@ const baseItem: EventType = {
 		iAmAttendee: false,
 		isException: false,
 		isPrivate: false,
-		status: 'CONF', // or another InviteStatus value
+		status: 'CONF',
 		l: '',
 		location: 'Room 1',
 		locationUrl: '',
