@@ -5,15 +5,7 @@
  */
 import React, { useCallback, useMemo } from 'react';
 
-import {
-	Container,
-	Row,
-	Avatar,
-	Icon,
-	Text,
-	Padding,
-	Tooltip
-} from '@zextras/carbonio-design-system';
+import { Container, Row, Avatar, Icon, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, useSortedTagsArray } from '@zextras/carbonio-ui-commons';
 import { includes, filter } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -29,8 +21,15 @@ import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-con
 import { ActionsContext } from 'types/actions';
 import { EventType } from 'types/event';
 
-const SearchListItem = ({ item }: { item: EventType }): any => {
+const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
 	const [t] = useTranslation();
+
+	const isPrivateLabel = t('is_private', 'Is private');
+	const isRecurrentLabel = t('label.recurrent', 'Recurrent appointment');
+	const hasAttachmentsLabel = t('has_attachments', 'Has attachments');
+	const organizerLabel = item.resource?.organizer?.name ?? item.resource?.organizer?.email;
+	const organizedByLabel = `${t('search.organized_by', 'organized by')} ${organizerLabel}`;
+
 	const dispatch = useAppDispatch();
 	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
 	const timeString = useGetDateRangeConvertedToTimezone(item.start ?? 0, item.end ?? 0);
@@ -57,18 +56,6 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 		return ['success', 'CheckmarkOutline'];
 	}, [item.resource?.participationStatus]);
 
-	// this is needed to understand if the icons and location can use more space or not and allow code to chose between this style or takeAvailableSpace
-	const iconsStyle = useMemo(
-		() =>
-			hasAttachments ||
-			item.resource?.class === 'PRI' ||
-			item.resource?.location ||
-			item?.resource?.isRecurrent
-				? { minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }
-				: undefined,
-		[hasAttachments, item.resource?.class, item.resource?.isRecurrent, item.resource?.location]
-	);
-
 	const matchTags = useMemo(
 		() => filter(sortedTagsFromStore, (tag) => includes(item?.resource?.tags, tag.id)),
 		[item?.resource?.tags, sortedTagsFromStore]
@@ -83,8 +70,6 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 			].color,
 		[matchTags]
 	);
-
-	const organizerLabel = item.resource?.organizer?.name || item.resource?.organizer?.email;
 
 	const onClick = useCallback(
 		(ev: React.MouseEvent) => {
@@ -104,153 +89,109 @@ const SearchListItem = ({ item }: { item: EventType }): any => {
 	);
 
 	return (
-		<Container wrap="nowrap" style={{ cursor: 'default' }} onClick={onClick}>
-			<Row
-				wrap="nowrap"
-				width="fill"
-				mainAlignment="flex-start"
-				padding={{ all: 'small', right: 'large' }}
-			>
-				{organizerLabel && (
-					<Avatar
-						data-testid="avatarAppointment"
-						selecting={false}
-						selected={false}
-						label={organizerLabel}
-						size="large"
-					/>
-				)}
-				<Container
-					style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: ' ellipsis' }}
-					mainAlignment="space-around"
-				>
-					<Row width="fill" wrap="nowrap">
+		<Container
+			orientation="horizontal"
+			width="fill"
+			style={{ cursor: 'default' }}
+			onClick={onClick}
+			padding={{ all: 'small' }}
+		>
+			{organizerLabel && (
+				<Avatar
+					data-testid="avatarAppointment"
+					selecting={false}
+					selected={false}
+					label={organizerLabel}
+					size="large"
+				/>
+			)}
+			<Row takeAvailableSpace wrap="nowrap" height="100%">
+				<Container orientation="vertical" width="fill" padding={{ left: 'large' }}>
+					<Row takeAvailableSpace wrap="nowrap" width="100%" height="100%" gap="8px">
 						{timeString && (
-							<>
-								<Padding left="small" />
-								<Row
-									wrap="nowrap"
-									style={{ minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }}
-									mainAlignment="flex-start"
-								>
-									<Tooltip label={timeString} maxWidth="100%">
-										<Text size="small">{timeString}</Text>
-									</Tooltip>
-								</Row>
-							</>
+							<Row
+								takeAvailableSpace
+								wrap="nowrap"
+								width="100%"
+								style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+							>
+								<Tooltip label={timeString} overflowTooltip>
+									<Text size="small" overflow="ellipsis">
+										{timeString}
+									</Text>
+								</Tooltip>
+							</Row>
 						)}
-						<Row
-							wrap="nowrap"
-							style={iconsStyle}
-							mainAlignment="flex-end"
-							takeAvailableSpace={!iconsStyle}
-						>
-							{item.resource?.isRecurrent && (
-								<>
-									<Padding left="small" />
-									<Row mainAlignment="flex-end">
-										<Tooltip label={t('label.recurrent', 'Recurrent appointment')}>
-											<div>
-												<Icon icon="Repeat" size="medium" color="gray0" />
-											</div>
-										</Tooltip>
-									</Row>
-								</>
-							)}
-							{matchTags && (
-								<Padding left="small">
-									<Icon icon={tagIcon} color={tagIconColor} />
-								</Padding>
-							)}
-							{hasAttachments && (
-								<>
-									<Padding left="small" />
-									<Row mainAlignment="flex-end">
-										<Tooltip label={t('has_attachments', 'Has attachments')}>
-											<div>
-												<Icon icon="AttachOutline" size="medium" color="gray0" />
-											</div>
-										</Tooltip>
-									</Row>
-								</>
-							)}
-							{item.resource?.class === 'PRI' && (
-								<>
-									<Padding left="small" />
-									<Row mainAlignment="flex-end">
-										<Tooltip label={t('is_private', 'Is private')}>
-											<div>
-												<Icon icon="Lock" size="medium" color="gray0" />
-											</div>
-										</Tooltip>
-									</Row>
-								</>
-							)}
-							{item.resource?.location && (
-								<>
-									<Padding left="small" />
-									<Tooltip label={item.resource?.location} maxWidth="100%">
-										<Text size="small" color="secondary">
+						<Row>
+							<Container orientation="horizontal" mainAlignment="flex-end">
+								{item.resource?.isRecurrent && (
+									<Tooltip label={isRecurrentLabel}>
+										<Icon icon="Repeat" size="medium" color="gray0" />
+									</Tooltip>
+								)}
+								{matchTags && <Icon icon={tagIcon} color={tagIconColor} />}
+								{hasAttachments && (
+									<Tooltip label={hasAttachmentsLabel}>
+										<Icon icon="AttachOutline" size="medium" color="gray0" />
+									</Tooltip>
+								)}
+								{item.resource?.class === 'PRI' && (
+									<Tooltip label={isPrivateLabel}>
+										<Icon icon="Lock" size="medium" color="gray0" />
+									</Tooltip>
+								)}
+								{item.resource?.location && (
+									<Tooltip label={item.resource?.location}>
+										<Text size="small" color="secondary" overflow="ellipsis">
 											{item.resource?.location}
 										</Text>
 									</Tooltip>
-								</>
-							)}
-						</Row>
-						{item.resource.calendar.color?.label && (
-							<>
-								<Padding left="small" />
-								<Row mainAlignment="flex-end">
+								)}
+								{item.resource.calendar.color?.label && (
 									<Icon
 										icon="Calendar2"
 										size="medium"
 										color={item.resource.calendar.color?.label}
 									/>
-								</Row>
-							</>
-						)}
+								)}
+							</Container>
+						</Row>
 					</Row>
-					<Row width="fill" wrap="nowrap">
+					<Row takeAvailableSpace wrap="nowrap" width="100%" height="100%" gap="8px">
 						{item.title && (
-							<>
-								<Padding left="small" />
-								<Row
-									style={{ minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }}
-									mainAlignment="flex-start"
-								>
-									<Tooltip label={item.title} maxWidth="100%">
-										<Text size="small">{item.title}</Text>
-									</Tooltip>
-								</Row>
-							</>
+							<Row
+								takeAvailableSpace
+								wrap="nowrap"
+								width="100%"
+								style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+							>
+								<Tooltip label={item.title} overflowTooltip>
+									<Text size="small" overflow="ellipsis">
+										{item.title}
+									</Text>
+								</Tooltip>
+							</Row>
 						)}
-						{item.resource?.organizer?.name && (
-							<>
-								<Padding left="small" />
-								<Row
-									style={{ minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }}
-									mainAlignment="flex-end"
-								>
-									<Tooltip
-										label={`${t('search.organized_by', 'organized by')} ${
-											item.resource?.organizer?.name
-										}`}
-										maxWidth="100%"
-									>
-										<Text size="small" color="secondary">
-											{t('search.organized_by', 'organized by')} {item.resource?.organizer?.name}
-										</Text>
-									</Tooltip>
-								</Row>
-							</>
+						{organizedByLabel && (
+							<Row
+								takeAvailableSpace
+								wrap="nowrap"
+								width="100%"
+								style={{ flexDirection: 'column', alignItems: 'flex-end' }}
+							>
+								<Tooltip label={organizedByLabel} overflowTooltip>
+									<Text size="small" overflow="ellipsis">
+										{organizedByLabel}
+									</Text>
+								</Tooltip>
+							</Row>
 						)}
 						{showPtstIcon && (
-							<>
-								<Padding left="small" />
-								<Row mainAlignment="flex-end">
+							<Row>
+								<Container orientation="horizontal" mainAlignment="flex-end">
 									<Icon icon={icon} color={color} size="medium" />
-								</Row>
-							</>
+								</Container>
+							</Row>
 						)}
 					</Row>
 				</Container>
