@@ -56,7 +56,8 @@ describe('EditorDailyPlannerController', () => {
 		});
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
-		user.click(buttonShowOrganizer);
+		await user.click(buttonShowOrganizer);
+		jest.advanceTimersByTime(250);
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 		const buttonHideOrganizer = screen.getByRole('button', { name: /hide organizer tool/ });
@@ -112,7 +113,9 @@ describe('EditorDailyPlannerController', () => {
 
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
-		user.click(buttonShowOrganizer);
+		await user.click(buttonShowOrganizer);
+		jest.advanceTimersByTime(250);
+
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 		expect(screen.getAllByTestId('row-test@test.com').length).toBe(1);
@@ -134,7 +137,9 @@ describe('EditorDailyPlannerController', () => {
 
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
-		user.click(buttonShowOrganizer);
+		await user.click(buttonShowOrganizer);
+		jest.advanceTimersByTime(250);
+
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 		expect(screen.getAllByTestId('row-test@test.com').length).toBe(2);
@@ -165,7 +170,9 @@ describe('EditorDailyPlannerController', () => {
 
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
-		user.click(buttonShowOrganizer);
+		await user.click(buttonShowOrganizer);
+		jest.advanceTimersByTime(250);
+
 		await workingHoursInterceptor;
 		await waitFor(async () => {
 			expect(screen.getByTestId('time-table')).toBeInTheDocument();
@@ -189,9 +196,11 @@ describe('EditorDailyPlannerController', () => {
 
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
-		user.click(buttonShowOrganizer);
+		await user.click(buttonShowOrganizer);
+		jest.advanceTimersByTime(250);
 
 		const freeBusyRequest = await freeBusyInterceptor;
+
 		await workingHoursInterceptor;
 
 		expect(freeBusyRequest.excludeUid).toBe('123');

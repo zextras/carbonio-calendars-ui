@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
+import { debounce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { DailyPlannerParticipantType } from './types';
@@ -38,6 +39,16 @@ function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 	};
 }
 
+type DebouncedFreeBusyParams = {
+	startDate: number;
+	endDate: number;
+	ids: string;
+	excluded?: string;
+	signal?: AbortSignal;
+};
+
+type DebouncedFreeBusyAction = (args: DebouncedFreeBusyParams) => void;
+
 export function useParticipantsAvailability({
 	participants,
 	startDateEpochMillis,
@@ -58,18 +69,16 @@ export function useParticipantsAvailability({
 	const [t] = useTranslation();
 	const uids = participants.map((p) => p.email).join(',');
 
-	useEffect(() => {
-		const controller = new AbortController();
-		const { signal } = controller;
-		if (uids.length > 0 && previousValue.current !== currentValue) {
-			previousValue.current = currentValue;
+	const freeBusyRequestAction = useCallback(
+		({ startDate, endDate, ids, excluded, signal }: DebouncedFreeBusyParams) => {
 			const newAvailabilities: Record<string, ParticipantAvailability> = {};
+
 			getFreeBusyRequest(
 				{
-					s: startDateEpochMillis,
-					e: endDateEpochMillis,
-					uid: uids,
-					excludeUid: excludeAppointmentUid
+					s: startDate,
+					e: endDate,
+					uid: ids,
+					excludeUid: excluded
 				},
 				signal
 			)
@@ -99,20 +108,48 @@ export function useParticipantsAvailability({
 						hideButton: true
 					});
 				});
+		},
+		[createSnackbar, t]
+	);
+
+	const debounceRequest = useMemo<DebouncedFreeBusyAction>(
+		() =>
+			debounce<DebouncedFreeBusyAction>(
+				({ startDate, endDate, ids, excluded, signal }) => {
+					freeBusyRequestAction({ startDate, endDate, ids, excluded, signal });
+				},
+				250,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
+		[freeBusyRequestAction]
+	);
+
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+		if (uids.length > 0 && previousValue.current !== currentValue) {
+			previousValue.current = currentValue;
+			debounceRequest({
+				signal,
+				startDate: startDateEpochMillis,
+				endDate: endDateEpochMillis,
+				ids: uids,
+				excluded: excludeAppointmentUid
+			});
 		}
 		return () => {
 			controller.abort();
 		};
 	}, [
-		participants,
-		startDateEpochMillis,
-		endDateEpochMillis,
-		participantsAvailability,
-		uids,
 		currentValue,
-		createSnackbar,
-		t,
-		excludeAppointmentUid
+		debounceRequest,
+		endDateEpochMillis,
+		excludeAppointmentUid,
+		startDateEpochMillis,
+		uids
 	]);
 
 	return participantsAvailability;
