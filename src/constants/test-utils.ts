@@ -22,7 +22,9 @@ export const TEST_SELECTORS = {
 		unSelectedCalendarGroup: 'icon: GroupCalendarOutline',
 		emptyGroupWarning: 'icon: AlertCircleOutline',
 		shared: 'icon: Shared',
-		linked: 'icon: Linked'
+		linked: 'icon: Linked',
+		leftArrow: 'icon: ChevronLeft',
+		rightArrow: 'icon: ChevronRight'
 	}
 };
 

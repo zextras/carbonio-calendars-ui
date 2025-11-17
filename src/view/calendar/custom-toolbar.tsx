@@ -10,7 +10,6 @@ import styled from '@emotion/styled';
 import {
 	Container,
 	Button,
-	IconButton,
 	pseudoClasses,
 	Tooltip,
 	Padding,
@@ -18,6 +17,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
+import { CalendarToolbar } from '../../components/calendar-toolbar';
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
@@ -128,45 +128,15 @@ export const CustomToolbar = ({
 				background={'gray5'}
 				padding={{ horizontal: 'small' }}
 			>
-				<Container width="max-content" orientation="horizontal" mainAlignment="flex-start">
-					<Button
-						label={t('label.today', 'today')}
-						type="outlined"
-						onClick={today}
-						minWidth={'fit-content'}
-					/>
-					<Padding left={'1rem'} />
-					<Tooltip label={leftClickLabel}>
-						<IconButton
-							iconColor="primary"
-							icon="ChevronLeft"
-							onClick={prev}
-							minWidth={'max-content'}
-						/>
-					</Tooltip>
-					<Padding horizontal={'.25rem'} />
-					<Tooltip label={rightClickLabel}>
-						<IconButton
-							iconColor="primary"
-							icon="ChevronRight"
-							onClick={next}
-							minWidth={'max-content'}
-						/>
-					</Tooltip>
-				</Container>
-				<Container
-					orientation="horizontal"
-					mainAlignment="flex-start"
-					style={{ minWidth: 0, flexBasis: 'content', flexGrow: 1 }}
-				>
-					<Padding left={'1rem'} />
-					<Button
-						type="ghost"
-						label={label}
-						onClick={(): null => null}
-						data-testid="CurrentDateContainer"
-					/>
-				</Container>
+				<CalendarToolbar
+					dateLabel={label}
+					resetButtonLabel={t('label.today', 'today')}
+					leftArrowLabel={leftClickLabel}
+					rightArrowLabel={rightClickLabel}
+					onLeftArrowAction={prev}
+					onRightArrowAction={next}
+					onResetAction={today}
+				/>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
 					<Padding right={'large'}>
 						<Tooltip label={splitLayoutTooltip}>
