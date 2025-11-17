@@ -67,6 +67,7 @@ export type EventResource = {
 	isException?: boolean;
 	isPrivate?: boolean;
 	status: InviteStatus;
+	l?: string;
 	location: string;
 	locationUrl?: string;
 	fragment: string;
