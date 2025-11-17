@@ -15,8 +15,8 @@ type EventTimeOptions = {
 };
 
 type TimeStringsType = {
-	start: number;
-	end: number;
+	start: number | Date;
+	end: number | Date;
 	options: {
 		timeZone?: string;
 		allDay?: boolean;
@@ -62,8 +62,8 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 };
 
 export const useGetDateRangeConvertedToTimezone = (
-	start: number,
-	end: number,
+	start: number | Date,
+	end: number | Date,
 	options: EventTimeOptions | undefined = {}
 ): string => {
 	const { allDay = false, timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone } =
