@@ -35,6 +35,7 @@ export type ExceptionReference = SingleReference & {
 	fba?: InviteFreeBusy;
 	ptst?: ParticipationStatus;
 	tzo?: number;
+	l?: string;
 };
 
 export type InstanceReference = SingleReference | ExceptionReference;
