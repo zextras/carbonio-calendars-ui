@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { debounce } from 'lodash';
@@ -39,6 +39,16 @@ function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 	};
 }
 
+type DebouncedFreeBusyParams = {
+	startDate: number;
+	endDate: number;
+	ids: string;
+	excluded?: string;
+	signal?: AbortSignal;
+};
+
+type DebouncedFreeBusyAction = (args: DebouncedFreeBusyParams) => void;
+
 export function useParticipantsAvailability({
 	participants,
 	startDateEpochMillis,
@@ -59,47 +69,54 @@ export function useParticipantsAvailability({
 	const [t] = useTranslation();
 	const uids = participants.map((p) => p.email).join(',');
 
-	const debounceRequest = useMemo(
-		() =>
-			debounce(
-				(signal, startDate, endDate, ids, excluded) => {
-					const newAvailabilities: Record<string, ParticipantAvailability> = {};
+	const freeBusyRequestAction = useCallback(
+		({ startDate, endDate, ids, excluded, signal }: DebouncedFreeBusyParams) => {
+			const newAvailabilities: Record<string, ParticipantAvailability> = {};
 
-					getFreeBusyRequest(
-						{
-							s: startDate,
-							e: endDate,
-							uid: ids,
-							excludeUid: excluded
-						},
-						signal
-					)
-						.then((response) => {
-							if ('Fault' in response) {
-								throw new Error('Error fetching free busy data');
-							}
-							response?.usr?.forEach((user) => {
-								newAvailabilities[user.id] = {
-									free: user.f?.map(mapFreeBusyToEvent) ?? [],
-									busy: user.b?.map(mapFreeBusyToEvent) ?? [],
-									tentative: user.t?.map(mapFreeBusyToEvent) ?? [],
-									outOfOffice: user.u?.map(mapFreeBusyToEvent) ?? [],
-									unknown: user.n?.map(mapFreeBusyToEvent) ?? []
-								};
-							});
-							setParticipantsAvailability(newAvailabilities);
-						})
-						.catch(() => {
-							setParticipantsAvailability({});
-							createSnackbar({
-								key: 'get-non-working-hours',
-								replace: false,
-								severity: 'error',
-								label: t('label.error_try_again', 'Something went wrong, please try again'),
-								autoHideTimeout: 3000,
-								hideButton: true
-							});
-						});
+			getFreeBusyRequest(
+				{
+					s: startDate,
+					e: endDate,
+					uid: ids,
+					excludeUid: excluded
+				},
+				signal
+			)
+				.then((response) => {
+					if ('Fault' in response) {
+						throw new Error('Error fetching free busy data');
+					}
+					response?.usr?.forEach((user) => {
+						newAvailabilities[user.id] = {
+							free: user.f?.map(mapFreeBusyToEvent) ?? [],
+							busy: user.b?.map(mapFreeBusyToEvent) ?? [],
+							tentative: user.t?.map(mapFreeBusyToEvent) ?? [],
+							outOfOffice: user.u?.map(mapFreeBusyToEvent) ?? [],
+							unknown: user.n?.map(mapFreeBusyToEvent) ?? []
+						};
+					});
+					setParticipantsAvailability(newAvailabilities);
+				})
+				.catch(() => {
+					setParticipantsAvailability({});
+					createSnackbar({
+						key: 'get-non-working-hours',
+						replace: false,
+						severity: 'error',
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000,
+						hideButton: true
+					});
+				});
+		},
+		[createSnackbar, t]
+	);
+
+	const debounceRequest = useMemo<DebouncedFreeBusyAction>(
+		() =>
+			debounce<DebouncedFreeBusyAction>(
+				({ startDate, endDate, ids, excluded, signal }) => {
+					freeBusyRequestAction({ startDate, endDate, ids, excluded, signal });
 				},
 				250,
 				{
@@ -107,7 +124,7 @@ export function useParticipantsAvailability({
 					leading: false
 				}
 			),
-		[createSnackbar, t]
+		[freeBusyRequestAction]
 	);
 
 	useEffect(() => {
@@ -115,13 +132,13 @@ export function useParticipantsAvailability({
 		const { signal } = controller;
 		if (uids.length > 0 && previousValue.current !== currentValue) {
 			previousValue.current = currentValue;
-			debounceRequest(
+			debounceRequest({
 				signal,
-				startDateEpochMillis,
-				endDateEpochMillis,
-				uids,
-				excludeAppointmentUid
-			);
+				startDate: startDateEpochMillis,
+				endDate: endDateEpochMillis,
+				ids: uids,
+				excluded: excludeAppointmentUid
+			});
 		}
 		return () => {
 			controller.abort();
