@@ -135,7 +135,7 @@ export const CustomToolbar = ({
 					rightArrowLabel={rightClickLabel}
 					onLeftArrowAction={prev}
 					onRightArrowAction={next}
-					onTodayAction={today}
+					onResetAction={today}
 				/>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
 					<Padding right={'large'}>

@@ -12,7 +12,7 @@ export const CalendarToolbar = ({
 	resetButtonLabel,
 	rightArrowLabel,
 	leftArrowLabel,
-	onTodayAction,
+	onResetAction,
 	onRightArrowAction,
 	onLeftArrowAction
 }: {
@@ -20,7 +20,7 @@ export const CalendarToolbar = ({
 	resetButtonLabel: string;
 	rightArrowLabel: string;
 	leftArrowLabel: string;
-	onTodayAction: () => void;
+	onResetAction: () => void;
 	onRightArrowAction: () => void;
 	onLeftArrowAction: () => void;
 }): React.JSX.Element => (
@@ -28,7 +28,7 @@ export const CalendarToolbar = ({
 		<Button
 			label={resetButtonLabel}
 			type="outlined"
-			onClick={onTodayAction}
+			onClick={onResetAction}
 			minWidth={'fit-content'}
 		/>
 		<Padding left={'1rem'} />
