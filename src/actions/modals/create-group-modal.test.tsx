@@ -183,6 +183,29 @@ describe('CreateGroupModal', () => {
 				expect(screen.getAllByTestId('group-calendars-list-item').length).toBe(1);
 				expect(screen.queryByText(targetCalendars[1].name)).not.toBeInTheDocument();
 			});
+
+			it('should add calendars at the beginning of the list', async () => {
+				const targetCalendars = times(3, (index) =>
+					generateFolder({
+						name: `Calendar${index}`,
+						color: faker.number.int({ max: 9 })
+					})
+				);
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+
+				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+				await selectCalendarFromSelector(user, targetCalendars[0].name);
+				await selectCalendarFromSelector(user, targetCalendars[1].name);
+				await selectCalendarFromSelector(user, targetCalendars[2].name);
+
+				const listItems = screen.getAllByTestId('group-calendars-list-item');
+				expect(listItems).toHaveLength(3);
+
+				expect(within(listItems[0]).getByText(targetCalendars[2].name)).toBeVisible();
+				expect(within(listItems[1]).getByText(targetCalendars[1].name)).toBeVisible();
+				expect(within(listItems[2]).getByText(targetCalendars[0].name)).toBeVisible();
+			});
 		});
 	});
 

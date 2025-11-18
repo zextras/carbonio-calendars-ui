@@ -4,15 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { TEST_SELECTORS } from '../../constants/test-utils';
 import { UserEvent, screen } from '@test-setup';
 
 export const selectCalendarFromSelector = async (
 	user: UserEvent,
 	calendarName: string
 ): Promise<void> => {
-	const input = screen.getByRole('textbox', { name: 'Add Calendars' });
+	const input = screen.getByRole('textbox', { name: 'Type a calendar' });
 	await user.type(input, calendarName);
 	await user.click(await screen.findByText(calendarName));
-	await user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar }));
 };

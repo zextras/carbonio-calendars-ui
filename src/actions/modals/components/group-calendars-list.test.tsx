@@ -16,19 +16,13 @@ describe('Group calendars list', () => {
 	it('should render a placeholder text when there is no calendar', () => {
 		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={jest.fn()} />);
 
-		expect(
-			screen.getByText(
-				'There are no calendars in this group yet. Start typing the calendars in the input, then click “+” to add them to the group.'
-			)
-		).toBeVisible();
+		expect(screen.getByText('There are no calendars in this group yet.')).toBeVisible();
 	});
 
 	it('should render a gray colored placeholder text', () => {
 		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={jest.fn()} />);
 
-		const placeholderText = screen.getByText(
-			'There are no calendars in this group yet. Start typing the calendars in the input, then click “+” to add them to the group.'
-		);
+		const placeholderText = screen.getByText('There are no calendars in this group yet.');
 
 		expect(placeholderText).toHaveStyleRule('color', '#828282');
 	});

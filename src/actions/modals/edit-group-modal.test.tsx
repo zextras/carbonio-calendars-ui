@@ -228,6 +228,27 @@ describe('EditGroupModal', () => {
 				expect(screen.getAllByTestId('group-calendars-list-item').length).toBe(2);
 				expect(screen.queryByText(groupCalendars[1].name)).not.toBeInTheDocument();
 			});
+
+			it('should add new calendars at the beginning of the existing list', async () => {
+				const { group, groupCalendars, otherCalendars } = initializeStore({
+					groupCalendarsCount: 1,
+					otherCalendarsCount: 2
+				});
+
+				const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+				expect(screen.getByText(groupCalendars[0].name)).toBeVisible();
+
+				await selectCalendarFromSelector(user, otherCalendars[0].name);
+				await selectCalendarFromSelector(user, otherCalendars[1].name);
+
+				const listItems = screen.getAllByTestId('group-calendars-list-item');
+				expect(listItems).toHaveLength(3);
+
+				expect(within(listItems[0]).getByText(otherCalendars[1].name)).toBeVisible();
+				expect(within(listItems[1]).getByText(otherCalendars[0].name)).toBeVisible();
+				expect(within(listItems[2]).getByText(groupCalendars[0].name)).toBeVisible();
+			});
 		});
 	});
 
@@ -325,9 +346,11 @@ describe('EditGroupModal', () => {
 		it('should call the API with the proper parameters when clicked', async () => {
 			const { group, groupCalendars, otherCalendars } = initializeStore({ otherCalendarsCount: 2 });
 			const groupNewName = faker.word.noun();
-			const groupNewCalendarsIds = [...groupCalendars, ...otherCalendars].map(
-				(calendar) => calendar.id
-			);
+			const groupNewCalendarsIds = [
+				otherCalendars[1].id,
+				otherCalendars[0].id,
+				...groupCalendars.map((cal) => cal.id)
+			];
 
 			const apiResponse = generateApiSuccessResponse();
 
