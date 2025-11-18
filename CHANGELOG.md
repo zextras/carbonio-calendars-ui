@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.17.1...v1.18.0) (2025-11-18)
+
+
+### Features
+
+* [CO-2210]  Disable Save/Send on invalid input, centralize & simplify validation  ([#650](https://github.com/zextras/carbonio-calendars-ui/issues/650)) ([452a2e6](https://github.com/zextras/carbonio-calendars-ui/commit/452a2e6814be2a1bab6d67db95b75446f0765c24))
+* [CO-2214] unify resource availability & validation errors reporting in editor ([#628](https://github.com/zextras/carbonio-calendars-ui/issues/628)) ([2d389dc](https://github.com/zextras/carbonio-calendars-ui/commit/2d389dc4cd82538f544412b0b074170f2ecfcb72))
+* [CO-2291] Use appointment descriptions from email when missing in invite ([#639](https://github.com/zextras/carbonio-calendars-ui/issues/639)) ([2bf4626](https://github.com/zextras/carbonio-calendars-ui/commit/2bf462667021559e9771b5fde1548122d2492cd7))
+* [CO-2292] Add invite message to forwarded appointment ([#637](https://github.com/zextras/carbonio-calendars-ui/issues/637)) ([40c42e9](https://github.com/zextras/carbonio-calendars-ui/commit/40c42e9c7b7c020cd686236fbebbc017d2ead60a))
+* [CO-2338] let the user press the ESC key to close modals ([#629](https://github.com/zextras/carbonio-calendars-ui/issues/629)) ([09d3ca5](https://github.com/zextras/carbonio-calendars-ui/commit/09d3ca518a98cc16b4a9b87a99704e86900cc69b))
+* [CO-2563] Move composer from shell to calendars ([#634](https://github.com/zextras/carbonio-calendars-ui/issues/634)) ([d3aade4](https://github.com/zextras/carbonio-calendars-ui/commit/d3aade4f1f275752a694409f9057abae77241736))
+* change icon and string for snooze action on reminder ([#636](https://github.com/zextras/carbonio-calendars-ui/issues/636)) ([93ab7c1](https://github.com/zextras/carbonio-calendars-ui/commit/93ab7c1cd9df5fc468d77d70ab0778a505598ede))
+* daily planner navigation header ([af8143e](https://github.com/zextras/carbonio-calendars-ui/commit/af8143e150a00d2edda6e1ed0e64d3be204dd72c))
+* improve UX creation and edit on Calendars group ([33dc81d](https://github.com/zextras/carbonio-calendars-ui/commit/33dc81ded31d48f9b7dae1410aee07561740c442))
+* remove select in favour of checkbox for sharing a calendar as public ([6940ddd](https://github.com/zextras/carbonio-calendars-ui/commit/6940ddd7294c6db218e94b76aab33cb41154a81f))
+* tooltips label change ([282fe8b](https://github.com/zextras/carbonio-calendars-ui/commit/282fe8bf9cccdaa0c49e85924fe25c283924892e))
+* tooltips on save and send button reflecting disabled state cause ([2583d49](https://github.com/zextras/carbonio-calendars-ui/commit/2583d49d2a2cf1750092ad11c22600d3dad9d946))
+
+
+### Bug Fixes
+
+* allow removing email from forward invites ([f7026fb](https://github.com/zextras/carbonio-calendars-ui/commit/f7026fb9997767924b056f744a8ef2afbf8ad646))
+* correct icons for calendar groups ([93cf5b4](https://github.com/zextras/carbonio-calendars-ui/commit/93cf5b4bcf87d5eb5bd572ab6e94b8cfd8070ca5))
+* make time based on user region ([b5901d5](https://github.com/zextras/carbonio-calendars-ui/commit/b5901d5e0dcb100ab5fa1b0b627d0cd6bf23e72b))
+* remove hardcoded strings in settings permission description ([362c4d6](https://github.com/zextras/carbonio-calendars-ui/commit/362c4d6d4e373cd1a2490d224ac29fedb10192cb))
+* remove ssr emotion error on console ([353df3f](https://github.com/zextras/carbonio-calendars-ui/commit/353df3f2d01be7566f203036761e9bec06d57c3c))
+* reversed behavior of never and at the moment reminder ([0d68f2a](https://github.com/zextras/carbonio-calendars-ui/commit/0d68f2ad4ed423e87a67ea7a56fa1a298a33d034))
+* tooltip string update ([fde1831](https://github.com/zextras/carbonio-calendars-ui/commit/fde183148945a1f0946e64c64a49375724c89d95))
+* update string whitespace in event description title ([34b18e5](https://github.com/zextras/carbonio-calendars-ui/commit/34b18e5a18b40bac5b9f8b00dd0cfbcc9785d650))
+
 ### [1.17.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.17.0...v1.17.1) (2025-09-19)
 
 
