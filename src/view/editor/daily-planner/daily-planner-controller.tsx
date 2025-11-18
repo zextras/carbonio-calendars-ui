@@ -43,6 +43,7 @@ export const EditorDailyPlannerController = ({
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const sender = useAppSelector(selectSender(editorId));
 	const currentAppointmentUid = useAppSelector(selectEditor(editorId)).uid;
+
 	const equipment = (useAppSelector(selectEditorEquipment(editorId)) ?? []).map((equip) => ({
 		email: equip.email,
 		type: DAILY_PLANNER_PARTICIPANT_TYPE.equipment,
@@ -128,6 +129,7 @@ export const EditorDailyPlannerController = ({
 			</Row>
 			{showDailyPlanner && (
 				<EditorDailyPlanner
+					editorId={editorId}
 					startDate={startDate}
 					endDate={endDate}
 					participants={participants}

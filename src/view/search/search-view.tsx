@@ -232,7 +232,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		search,
 		searchResults.query,
 		isInvalidQuery,
-		t,
 		defaultResultLabel,
 		initialSearchResults,
 		setSpanStart,
@@ -277,9 +276,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				query={query}
-				// TOFIX-SHELL: fix updateQueryFunction inside shell type
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				updateQuery={updateQuery}
 				open={showAdvanceFilters}
 				onClose={(): void => setShowAdvanceFilters(false)}

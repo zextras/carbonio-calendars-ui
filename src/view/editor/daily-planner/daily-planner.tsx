@@ -8,17 +8,20 @@ import React from 'react';
 
 import { Row } from '@zextras/carbonio-design-system';
 
+import { DailyPlannerHeaderNavigation } from './daily-planner-header-navigation';
 import { TimeTable } from './time-table';
 import { Participant, useParticipantsAvailability } from './use-participants-availability';
 import { useParticipantsNonWorkingHours } from './use-participants-non-working-hours';
 import { atMidnight, mapFreeBusyToDailyPlannerRow, onNextDay } from './utils';
 
 export const EditorDailyPlanner = ({
+	editorId,
 	startDate,
 	endDate,
 	participants,
 	currentAppointmentUid
 }: {
+	editorId: string;
 	startDate: number;
 	endDate: number;
 	participants: Participant[];
@@ -53,20 +56,25 @@ export const EditorDailyPlanner = ({
 	);
 
 	return (
-		<Row
-			orientation={'horizontal'}
-			width="fill"
-			mainAlignment={'flex-start'}
-			padding={{ right: '1rem', vertical: '1rem' }}
-			style={{ flexWrap: 'nowrap' }}
-		>
-			<div style={{ width: '100%', position: 'relative' }}>
-				<TimeTable
-					appointmentStartDate={startDate}
-					appointmentEndDate={endDate}
-					rows={participantRows}
-				/>
-			</div>
-		</Row>
+		<>
+			<Row width={'fill'} padding={{ top: 'large' }}>
+				<DailyPlannerHeaderNavigation editorId={editorId} startDate={startDate} endDate={endDate} />
+			</Row>
+			<Row
+				orientation={'horizontal'}
+				width="fill"
+				mainAlignment={'flex-start'}
+				padding={{ right: '1rem', vertical: '1rem' }}
+				style={{ flexWrap: 'nowrap' }}
+			>
+				<div style={{ width: '100%', position: 'relative' }}>
+					<TimeTable
+						appointmentStartDate={startDate}
+						appointmentEndDate={endDate}
+						rows={participantRows}
+					/>
+				</div>
+			</Row>
+		</>
 	);
 };
