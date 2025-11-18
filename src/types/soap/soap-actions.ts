@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ErrorSoapResponse } from '@zextras/carbonio-shell-ui';
-
 import { Grant } from '@zextras/carbonio-ui-commons';
 
 export type Contact = {
@@ -57,13 +56,13 @@ type GenericRequest = {
 	_jsns: 'urn:zimbra';
 	onerror?: 'continue';
 };
-
+export type BaseFolderActionRequest = {
+	action: FolderAction;
+	_jsns: 'urn:zimbraMail';
+	requestId?: number;
+};
 export type FolderActionRequest = GenericRequest & {
-	FolderActionRequest: Array<{
-		action: FolderAction;
-		_jsns: 'urn:zimbraMail';
-		requestId?: number;
-	}>;
+	FolderActionRequest: Array<BaseFolderActionRequest>;
 };
 
 export type CreateMountpointRequest = GenericRequest & {
@@ -81,7 +80,13 @@ type ZimbraRequest = {
 
 export type ForwardAppointmentRequest = ZimbraRequest & {
 	id: string;
-	m: { e: Array<{ a: string; t: string }> };
+	m: {
+		e: Array<{ a: string; t: string }>;
+		mp?: {
+			ct: string;
+			mp: Array<{ ct: string; content: string }>;
+		};
+	};
 };
 
 export type ForwardAppointmentResponse = Record<string, never> | ErrorSoapResponse;

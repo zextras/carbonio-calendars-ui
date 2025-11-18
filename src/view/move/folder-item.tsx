@@ -5,6 +5,7 @@
  */
 import React, { ReactElement } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Container,
 	Text,
@@ -13,7 +14,6 @@ import {
 	AccordionDivider
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import styled from 'styled-components';
 
 const ContainerEl = styled(Container)`
 	overflow-y: auto;

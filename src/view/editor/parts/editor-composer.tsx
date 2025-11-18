@@ -5,18 +5,19 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
+import styled from '@emotion/styled';
+import { t, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { Composer } from '@zextras/carbonio-ui-text-composer';
 import { debounce } from 'lodash';
-import styled from 'styled-components';
 
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorDisabled,
 	selectEditorIsRichText,
 	selectEditorPlainText,
 	selectEditorRichText
-} from '../../../store/selectors/editor';
-import { editEditorText } from '../../../store/slices/editor-slice';
+} from 'store/selectors/editor';
+import { editEditorText } from 'store/slices/editor-slice';
 
 const TextArea = styled.textarea`
 	box-sizing: border-box;
@@ -119,13 +120,7 @@ const PlainComposer = ({ editorId }: { editorId: string }): JSX.Element => {
 	);
 };
 
-const HtmlComposer = ({
-	Composer,
-	editorId
-}: {
-	editorId: string;
-	Composer: React.ComponentType<Record<string, unknown>>;
-}): React.JSX.Element => {
+const HtmlComposer = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const richText = useAppSelector(selectEditorRichText(editorId));
 	const dispatch = useAppDispatch();
@@ -155,31 +150,31 @@ const HtmlComposer = ({
 		[debounceInput]
 	);
 
+	const { prefs } = useUserSettings();
+
 	return (
 		<EditorWrapper>
 			<Composer
 				onEditorChange={onRichTextChange}
-				minHeight="12.5rem"
 				value={richTextValue}
 				disabled={disabled?.composer}
 				data-testid="editor-composer"
-				customInitOptions={{ auto_focus: false }}
+				customInitOptions={{ auto_focus: false, base_url: `${BASE_PATH}` }}
+				accountSettingsPrefs={{
+					zimbraPrefLocale: prefs?.zimbraPrefLocale,
+					zimbraPrefHtmlEditorDefaultFontFamily: prefs?.zimbraPrefHtmlEditorDefaultFontFamily,
+					zimbraPrefHtmlEditorDefaultFontSize: prefs?.zimbraPrefHtmlEditorDefaultFontSize,
+					zimbraPrefHtmlEditorDefaultFontColor: prefs?.zimbraPrefHtmlEditorDefaultFontColor
+				}}
 			/>
 		</EditorWrapper>
 	);
 };
 
 export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement | null => {
-	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	const isRichText = useAppSelector(selectEditorIsRichText(editorId));
 
 	return (
-		<>
-			{composerIsAvailable && isRichText ? (
-				<HtmlComposer Composer={Composer} editorId={editorId} />
-			) : (
-				<PlainComposer editorId={editorId} />
-			)}
-		</>
+		<>{isRichText ? <HtmlComposer editorId={editorId} /> : <PlainComposer editorId={editorId} />}</>
 	);
 };

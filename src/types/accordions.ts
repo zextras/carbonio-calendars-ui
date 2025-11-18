@@ -7,6 +7,7 @@
 import { ComponentType, ReactElement } from 'react';
 
 import { Folder } from '@zextras/carbonio-ui-commons';
+
 import { CalendarGroup } from '../store/zustand/calendar-group-store';
 
 export const isGroupType = (item: Folder | CalendarGroup): item is CalendarGroup =>

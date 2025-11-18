@@ -24,6 +24,12 @@ export const TimeInfoRow = ({
 	timeInfoData: TimeInfoProps;
 	showIcon?: boolean;
 }): ReactElement => {
+	const [t] = useTranslation();
+	const creationTimeZoneTooltip = t(
+		'creation_timezone_tooltip',
+		'Date and time on creation timezone:'
+	);
+
 	const originalDate = useGetDateRangeConvertedToTimezone(
 		timeInfoData.start ?? 0,
 		timeInfoData.end ?? 0,
@@ -32,6 +38,7 @@ export const TimeInfoRow = ({
 			timeZone: timeInfoData.timezone
 		}
 	);
+
 	const localDate = useGetDateRangeConvertedToTimezone(
 		timeInfoData.start ?? 0,
 		timeInfoData.end ?? 0,
@@ -39,17 +46,16 @@ export const TimeInfoRow = ({
 			allDay: timeInfoData.allDay
 		}
 	);
-	const [t] = useTranslation();
 
 	const convertedDateTooltip = useMemo(
 		() => (
 			<>
-				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
+				{creationTimeZoneTooltip}
 				<br />
 				{originalDate}
 			</>
 		),
-		[originalDate, t]
+		[originalDate, creationTimeZoneTooltip]
 	);
 
 	return (

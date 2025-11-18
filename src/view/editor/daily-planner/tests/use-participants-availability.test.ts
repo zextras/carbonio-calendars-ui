@@ -45,6 +45,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
+		jest.advanceTimersByTime(250);
 		expect(result.current).toMatchObject({});
 	});
 
@@ -95,6 +96,7 @@ describe('useParticipantsAvailability', () => {
 			})
 		);
 
+		jest.advanceTimersByTime(250);
 		const request = await mockRequest;
 		expect(request.s).toBe(1000);
 		expect(request.e).toBe(2000);
@@ -113,6 +115,7 @@ describe('useParticipantsAvailability', () => {
 			})
 		);
 
+		jest.advanceTimersByTime(250);
 		const request = await mockRequest;
 		expect(request.excludeUid).toBeUndefined();
 	});
@@ -126,6 +129,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
+		jest.advanceTimersByTime(250);
 		expect(getFreeBusyHandler).not.toHaveBeenCalled();
 	});
 
@@ -148,7 +152,9 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
+		jest.advanceTimersByTime(250);
 		rerender();
+		jest.advanceTimersByTime(250);
 		await waitFor(() => {
 			expect(interceptor.getCalledTimes()).toBe(1);
 		});
@@ -173,6 +179,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
+		jest.advanceTimersByTime(250);
 		await waitFor(() => {
 			expect(interceptor.getCalledTimes()).toBe(1);
 		});
@@ -193,6 +200,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis
 			}
 		});
+		jest.advanceTimersByTime(250);
 		await successFullInterceptor;
 		await waitFor(() => {
 			expect(result.current).toMatchObject({
@@ -206,7 +214,7 @@ describe('useParticipantsAvailability', () => {
 		);
 		const newParticipants = [{ email }, { email: 'newAttendee@test.com' }];
 		rerender({ participants: newParticipants, startDateEpochMillis, endDateEpochMillis });
-
+		jest.advanceTimersByTime(250);
 		await failingInterceptor;
 		await waitFor(() => {
 			expect(result.current).toEqual({});

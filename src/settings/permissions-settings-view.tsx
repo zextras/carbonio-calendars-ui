@@ -5,6 +5,7 @@
  */
 import React, { useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Container,
 	Text,
@@ -13,10 +14,9 @@ import {
 	FormSection,
 	FormSubSection
 } from '@zextras/carbonio-design-system';
-import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { getUserAccount, t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { ContactInputProps } from '@zextras/carbonio-ui-commons';
 import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
-import styled from 'styled-components';
 
 import { permissionsSubSection } from './sub-sections';
 import { PermissionsRightsOptions } from '../constants/api';
@@ -73,10 +73,11 @@ export default function PermissionsSettings({
 					</Row>
 					<Row>
 						<Text overflow="break-word">
-							{t(
-								'settings.permissions_note',
-								'Users provide below must be on this mail system (zextras.com). You may use the full e-mail address or just the username.'
-							)}
+							{t('settings.permissions_description', {
+								defaultValue:
+									'Users provide below must be on this mail system ({{domain}}). You may use the full e-mail address or just the username.',
+								domain: getUserAccount()?.name.split('@')?.[1]
+							})}
 						</Text>
 					</Row>
 				</Container>

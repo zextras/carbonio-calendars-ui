@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, render, waitFor, act } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { reducers } from '../../../store/redux';
@@ -72,14 +72,10 @@ describe('Attachment', () => {
 		};
 
 		const { user } = renderAttachment(props);
-		const attachment = screen.getByText('test-file.pdf');
-		await user.hover(attachment);
-		const downloadButton = screen.getByRole('button');
-		await act(async () => {
-			await user.click(downloadButton);
-		});
+		const downloadButton = screen.getByTestId('action-button');
+		await user.click(downloadButton);
 
-		await waitFor(() => expect(windowOpenSpy).toHaveBeenCalledTimes(1));
+		expect(windowOpenSpy).toHaveBeenCalledTimes(1);
 	});
 
 	test('calls createPreview when a file is set to be viewed with the previer', async () => {
@@ -99,9 +95,7 @@ describe('Attachment', () => {
 
 		const { user } = renderAttachment(props);
 		const previewButton = screen.getByText('test-file.ts');
-		await act(async () => {
-			await user.click(previewButton);
-		});
+		await user.click(previewButton);
 
 		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(0);
 		expect(spyOpen).toHaveBeenCalledWith(
@@ -113,9 +107,7 @@ describe('Attachment', () => {
 	test('calls download service when a file is not set to be viewed with the previer', async () => {
 		const { user } = renderAttachment(baseProps);
 		const previewButton = screen.getByText('test-file.pdf');
-		await act(async () => {
-			await user.click(previewButton);
-		});
+		await user.click(previewButton);
 
 		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(1);
 		expect(previewContextMock.createPreview).toHaveBeenCalledWith(
@@ -137,12 +129,9 @@ describe('Attachment', () => {
 		};
 
 		const { user } = renderAttachment(props);
-		const attachment = screen.getByText('test-file.pdf');
-		await user.hover(attachment);
-		const deleteButton = screen.getByRole('button');
+		const deleteButton = screen.getByTestId('action-button');
 		await user.click(deleteButton);
-		await waitFor(() => {
-			expect(props.removeAttachment).toHaveBeenCalledWith('part1');
-		});
+
+		expect(props.removeAttachment).toHaveBeenCalledWith('part1');
 	});
 });

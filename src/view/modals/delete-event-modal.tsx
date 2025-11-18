@@ -5,13 +5,13 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { size } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 
 import { ModifyStandardMessageModal } from './modify-standard-message-modal';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { CenteredSpinner } from '../../components/CenteredSpinner';

@@ -72,6 +72,7 @@ const normalizeEventResource = ({
 	iAmAttendee: (!iAmOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
 	status: inst?.status ?? appt.status,
 	location: inst?.loc ?? appt.loc,
+	l: inst?.l ?? appt.l,
 	locationUrl: getLocationUrl(inst?.loc ?? appt.loc ?? ''),
 	fragment: (inst as ExceptionReference)?.fr ?? appt.fr,
 	class: inst?.class ?? appt.class,

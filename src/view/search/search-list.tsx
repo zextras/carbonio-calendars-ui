@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 
 import { Container, List, Row, Text, Padding, ListItem } from '@zextras/carbonio-design-system';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { QueryChip } from '@zextras/carbonio-search-ui';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map, sortBy } from 'lodash';
@@ -14,10 +15,11 @@ import moment from 'moment';
 import { AdvancedFilterButton } from './parts/advanced-filter-button';
 import SearchListItem from './search-list-item';
 import ShimmerList from './shimmer-list';
+import { EventType } from 'types/event';
 
 type SearchListProps = {
-	appointments: Array<any>;
-	loadMore: () => any;
+	appointments: Array<EventType>;
+	loadMore: () => void;
 	loading: boolean;
 	searchDisabled: boolean;
 	setShowAdvanceFilters: (show: boolean) => void;

@@ -12,7 +12,7 @@ import { http, RequestHandler } from 'msw';
 import { setupServer, SetupServer } from 'msw/node';
 
 import { useLocalStorage } from './__mocks__/@zextras/carbonio-shell-ui';
-import { JEST_DEFAULT_TIMEZONE, JEST_SYSTEM_TIME_DATE } from './src/constants/test-environment';
+import { JEST_DEFAULT_TIMEZONE } from './src/constants/test-environment';
 import { handleAutoCompleteGalRequest } from './src/test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
@@ -31,15 +31,18 @@ import { handleSendShareNotificationRequest } from './src/test/mocks/network/msw
 import { handleGetShareInfoRequest } from '@test-utils/network/msw/handle-get-share-info';
 import { handleSearchRequest } from 'test/mocks/network/msw/handle-search-request';
 
+// Global test mocks
+declare global {
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	const BASE_PATH: string;
+}
+
+// Set up BASE_PATH mock for TinyMCE asset loading in tests
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(global as any).BASE_PATH = '/test-base-path/';
+
 let server: SetupServer;
-
-/**
- * Default logic to execute before all the tests
- */
-type DefaultBeforeAllTestsProps = {
-	onUnhandledRequest: 'warn' | 'error';
-};
-
 beforeAll(() => {
 	useLocalStorage.mockReturnValue([jest.fn(), jest.fn()]);
 	const handlers: Array<RequestHandler> = [
@@ -98,7 +101,6 @@ beforeEach(() => {
 		...originalDateResolvedOptions,
 		timeZone: JEST_DEFAULT_TIMEZONE
 	});
-	jest.setSystemTime(new Date(JEST_SYSTEM_TIME_DATE));
 });
 
 afterEach(() => {

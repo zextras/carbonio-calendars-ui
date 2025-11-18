@@ -5,6 +5,7 @@
  */
 import React, { FC, ReactElement, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Container,
 	Row,
@@ -20,8 +21,7 @@ import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import { Trans, useTranslation } from 'react-i18next';
 
 import 'moment-timezone';
 import { AvailabilityChecker } from './parts/availability-checker';
@@ -36,7 +36,6 @@ import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-ran
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
-import { hasDescription } from '../../utils/invite';
 
 export function mailToContact(contact: object): Action | undefined {
 	const [mailTo, available] = getAction('contact-list', 'mail-to', [contact]);
@@ -173,8 +172,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		allDay: invite.allDay
 	});
 
-	const messageHasABody = useMemo(() => hasDescription(invite), [invite]);
-
 	const inviteId =
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
@@ -209,18 +206,16 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Text>
 					)}
 					{method !== MESSAGE_METHOD.COUNTER && (
-						<>
-							<Text weight="regular" size="large" style={{ fontSize: '1.125rem' }}>
-								{`${invite.organizer?.d ?? invite.organizer?.a} ${t(
-									'message.invited_you',
-									'invited you to an event'
-								)}`}
-							</Text>
-							<br />
-							<Text weight="bold" size="large" style={{ fontSize: '1.125rem' }}>
-								{mailMsg.subject ? mailMsg.subject : invite?.name}
-							</Text>
-						</>
+						<Trans
+							i18nKey="message.organizer_invited_you"
+							values={{
+								organizer: invite.organizer?.d ?? invite.organizer?.a,
+								title: mailMsg.subject ?? invite?.name
+							}}
+							defaults="<text>{{organizer}} invited you to an event <bold>{{title}}</bold></text>"
+							components={{ bold: <strong />, text: <Text /> }}
+							t={t}
+						/>
 					)}
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
@@ -492,7 +487,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 					)}
 				</Row>
-				{invite && messageHasABody && (
+				{invite && (
 					<Row
 						width="100%"
 						crossAlignment="flex-start"
@@ -507,7 +502,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
 							<BodyMessageRenderer
-								fragment={invite.fragment}
 								htmlDescription={invite.htmlDescription}
 								textDescription={invite.textDescription}
 							/>

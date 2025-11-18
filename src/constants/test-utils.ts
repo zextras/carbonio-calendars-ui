@@ -5,16 +5,26 @@
  */
 export const TEST_SELECTORS = {
 	DROPDOWN: 'dropdown-popper-list',
-	CALENDARS_SELECTOR_INPUT: 'calendar-selector-input',
 	CHIP: 'chip',
+	AVATAR: 'avatar',
 	AVATAR_WRAPPER: 'avatar_box',
 	ICONS: {
 		remove: 'icon: TrashOutline',
 		closeModal: 'icon: Close',
 		closeChip: 'icon: Close',
-		addCalendar: 'icon: Plus',
 		calendarChipAvatar: 'icon: Square2',
-		shareUrlButton: 'icon: Copy'
+		shareUrlButton: 'icon: Copy',
+		tags: 'icon: TagsMoreOutline',
+		tag: 'icon: Tag',
+		selectedCalendar: 'icon: Calendar2',
+		unSelectedCalendar: 'icon: CalendarOutline',
+		selectedCalendarGroup: 'icon: GroupCalendar',
+		unSelectedCalendarGroup: 'icon: GroupCalendarOutline',
+		emptyGroupWarning: 'icon: AlertCircleOutline',
+		shared: 'icon: Shared',
+		linked: 'icon: Linked',
+		leftArrow: 'icon: ChevronLeft',
+		rightArrow: 'icon: ChevronRight'
 	}
 };
 

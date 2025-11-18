@@ -75,6 +75,16 @@ export const selectEditorClass =
 	(state: RootState): Editor['class'] =>
 		state?.editor?.editors?.[id]?.class;
 
+export const selectEditorOriginalStart =
+	(id: string) =>
+	(state: RootState): Editor['originalStart'] =>
+		state?.editor?.editors?.[id]?.originalStart;
+
+export const selectEditorOriginalEnd =
+	(id: string) =>
+	(state: RootState): Editor['originalEnd'] =>
+		state?.editor?.editors?.[id]?.originalEnd;
+
 export const selectEditorStart =
 	(id: string) =>
 	(state: RootState): Editor['start'] =>

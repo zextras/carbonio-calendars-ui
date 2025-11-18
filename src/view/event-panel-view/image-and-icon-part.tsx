@@ -5,8 +5,8 @@
  */
 import React, { ReactElement } from 'react';
 
+import styled from '@emotion/styled';
 import { Avatar, Container } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
 
 import { CalendarsColorType } from '../../types/store/calendars';
 

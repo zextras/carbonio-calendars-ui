@@ -5,11 +5,11 @@
  */
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { Button, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
 import { getOrderedAccountIds, ContactInputItem } from '@zextras/carbonio-ui-commons';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 
 import { AttendeesContactInput } from './attendees-contact-input';
 import {

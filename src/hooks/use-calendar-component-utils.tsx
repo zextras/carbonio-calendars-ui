@@ -223,7 +223,10 @@ export const useCalendarComponentUtils = (): {
 											isEdited
 										/>
 									</StoreProvider>
-								)
+								),
+								onClose: () => {
+									closeModal(modalId);
+								}
 							},
 							true
 						);
@@ -296,7 +299,10 @@ export const useCalendarComponentUtils = (): {
 										onInstance={onSingleInstance}
 									/>
 								</StoreProvider>
-							)
+							),
+							onClose: () => {
+								closeModal(modalId);
+							}
 						},
 						true
 					);
@@ -323,6 +329,8 @@ export const useCalendarComponentUtils = (): {
 						dispatch,
 						folders: calendarFolders,
 						start: moment(e.start).valueOf(),
+						originalStart: moment(e.start).valueOf(),
+						originalEnd: end.valueOf(),
 						end: end.valueOf(),
 						allDay: isAllDay ?? false,
 						freeBusy: isAllDay ? EVENT_DISPLAY_STATUS.FREE : EVENT_DISPLAY_STATUS.BUSY,
