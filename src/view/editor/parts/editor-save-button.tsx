@@ -3,39 +3,35 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 
 import { Button, Tooltip, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import { onSave } from '../../../commons/editor-save-send-fns';
-import { StoreProvider } from '../../../store/redux';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import {
-	selectEditor,
-	selectEditorAttendees,
-	selectEditorDisabled,
-	selectEditorEquipment,
-	selectEditorIsNew,
-	selectEditorMeetingRoom,
-	selectEditorTitle
-} from '../../../store/selectors/editor';
-import { EditorProps } from '../../../types/editor';
-import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
+import { useEditorResourcesState, useEditorSaveButtonState } from './editor-button-hooks';
+import { onSave } from 'commons/editor-save-send-fns';
+import { StoreProvider } from 'store/redux';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
+import { selectEditor, selectEditorAttendees, selectEditorIsNew } from 'store/selectors/editor';
+import { EditorProps } from 'types/editor';
+import { SeriesEditWarningModal } from 'view/modals/series-edit-warning-modal';
 
 export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
-	const title = useAppSelector(selectEditorTitle(editorId));
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
 	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
-	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
-	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
-	const equipmentsLength = useAppSelector(selectEditorEquipment(editorId))?.length;
-	const isSaveDisabled = useMemo(() => disabled?.saveButton || !title?.length, [disabled, title]);
+
+	const { isDisabled: isSaveDisabled, tooltip: disabledTooltipLabel } =
+		useEditorSaveButtonState(editorId);
+	const { meetingRooms, equipments } = useEditorResourcesState(editorId);
 
 	const [t] = useTranslation();
+
+	const meetingRoomLength = meetingRooms.length;
+	const equipmentsLength = equipments.length;
+
 	const dispatch = useAppDispatch();
 
 	const onClick = useCallback(() => {
@@ -97,10 +93,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	]);
 
 	return (
-		<Tooltip
-			label={t('label.add_event_title_to_save', 'Add event title to save')}
-			disabled={!isSaveDisabled}
-		>
+		<Tooltip label={disabledTooltipLabel} disabled={!isSaveDisabled}>
 			<Button
 				label={t('label.save', 'Save')}
 				icon="SaveOutline"
