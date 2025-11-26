@@ -94,7 +94,7 @@ describe('Editor Attendees', () => {
 	});
 
 	describe('ChipInput', () => {
-		it('should display attendee label when available email', () => {
+		it('should display attendee label when available', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			const editor = generateEditor({
