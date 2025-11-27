@@ -19,11 +19,11 @@ const store = configureStore({ reducer: combineReducers(reducers) });
 const chatsIntegrationDataTestId = 'chats-room-component';
 const wscIntegrationDataTestId = 'wsc-room-component';
 
-const FakeChatsIntegrationComponent = jest.fn(
+const FakeChatsIntegrationComponent = vi.fn(
 	(): React.JSX.Element => <div data-testid={chatsIntegrationDataTestId} />
 );
 
-const FakeWscIntegrationComponent = jest.fn(
+const FakeWscIntegrationComponent = vi.fn(
 	(): React.JSX.Element => <div data-testid={wscIntegrationDataTestId} />
 );
 

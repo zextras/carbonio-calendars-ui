@@ -23,9 +23,9 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={jest.fn}
-				removeReminder={jest.fn}
-				setActiveReminder={jest.fn}
+				toggleModal={vi.fn}
+				removeReminder={vi.fn}
+				setActiveReminder={vi.fn}
 			/>,
 			{ store }
 		);
@@ -40,9 +40,9 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={jest.fn}
-				removeReminder={jest.fn}
-				setActiveReminder={jest.fn}
+				toggleModal={vi.fn}
+				removeReminder={vi.fn}
+				setActiveReminder={vi.fn}
 			/>,
 			{ store }
 		);
@@ -58,9 +58,9 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={jest.fn}
-				removeReminder={jest.fn}
-				setActiveReminder={jest.fn}
+				toggleModal={vi.fn}
+				removeReminder={vi.fn}
+				setActiveReminder={vi.fn}
 			/>,
 			{ store }
 		);
@@ -104,9 +104,9 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={jest.fn}
-				removeReminder={jest.fn}
-				setActiveReminder={jest.fn}
+				toggleModal={vi.fn}
+				removeReminder={vi.fn}
+				setActiveReminder={vi.fn}
 			/>,
 			{ store }
 		);
@@ -152,9 +152,9 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={jest.fn}
-				removeReminder={jest.fn}
-				setActiveReminder={jest.fn}
+				toggleModal={vi.fn}
+				removeReminder={vi.fn}
+				setActiveReminder={vi.fn}
 			/>,
 			{ store }
 		);
@@ -171,9 +171,9 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={jest.fn}
-				removeReminder={jest.fn}
-				setActiveReminder={jest.fn}
+				toggleModal={vi.fn}
+				removeReminder={vi.fn}
+				setActiveReminder={vi.fn}
 			/>,
 			{ store }
 		);
@@ -221,7 +221,7 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={toggleModal}
-				removeReminder={jest.fn}
+				removeReminder={vi.fn}
 				setActiveReminder={setActiveReminder}
 			/>,
 			{ store }
@@ -242,9 +242,9 @@ describe('Appointment Reminder Item', () => {
 		const { user } = setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={jest.fn}
+				toggleModal={vi.fn}
 				removeReminder={removeReminder}
-				setActiveReminder={jest.fn}
+				setActiveReminder={vi.fn}
 			/>,
 			{ store }
 		);
@@ -273,9 +273,9 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
+					toggleModal={vi.fn}
+					removeReminder={vi.fn}
+					setActiveReminder={vi.fn}
 				/>,
 				{ store }
 			);
@@ -288,9 +288,9 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
+					toggleModal={vi.fn}
+					removeReminder={vi.fn}
+					setActiveReminder={vi.fn}
 				/>,
 				{ store }
 			);
@@ -308,9 +308,9 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
+					toggleModal={vi.fn}
+					removeReminder={vi.fn}
+					setActiveReminder={vi.fn}
 				/>,
 				{ store }
 			);
@@ -327,9 +327,9 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
+					toggleModal={vi.fn}
+					removeReminder={vi.fn}
+					setActiveReminder={vi.fn}
 				/>,
 				{ store }
 			);
@@ -346,9 +346,9 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
+					toggleModal={vi.fn}
+					removeReminder={vi.fn}
+					setActiveReminder={vi.fn}
 				/>,
 				{ store }
 			);
@@ -365,9 +365,9 @@ describe('Appointment Reminder Item', () => {
 			const { user } = setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
+					toggleModal={vi.fn}
+					removeReminder={vi.fn}
+					setActiveReminder={vi.fn}
 				/>,
 				{ store }
 			);

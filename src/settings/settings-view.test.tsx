@@ -12,8 +12,9 @@ import { saveSettings } from './save-settings';
 import CalendarSettingsView from './settings-view';
 import { screen, setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { Mock } from 'vitest';
 
-const SettingsHeader = jest.fn(({ title, onSave, onCancel, isDirty }) => (
+const SettingsHeader = vi.fn(({ title, onSave, onCancel, isDirty }) => (
 	<div data-testid="settings-header">
 		<h1>{title}</h1>
 		<button onClick={onSave} disabled={!isDirty}>
@@ -23,8 +24,8 @@ const SettingsHeader = jest.fn(({ title, onSave, onCancel, isDirty }) => (
 	</div>
 ));
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
+vi.mock('@zextras/carbonio-ui-commons', () => ({
+	...vi.importActual('@zextras/carbonio-ui-commons'),
 	usePrefs: vi.fn()
 }));
 
@@ -36,11 +37,11 @@ const defaultSettings = {
 };
 
 beforeAll(() => {
-	(shell.SettingsHeader as jest.Mock) = jest.fn(SettingsHeader);
-	(usePrefs as jest.Mock).mockReturnValue(defaultSettings);
+	(shell.SettingsHeader as Mock) = vi.fn(SettingsHeader);
+	(usePrefs as Mock).mockReturnValue(defaultSettings);
 });
 
-jest.mock('./save-settings', () => ({
+vi.mock('./save-settings', () => ({
 	saveSettings: vi.fn()
 }));
 
@@ -76,7 +77,7 @@ describe('Settings view', () => {
 			});
 
 			it('should render a successful snackbar if the save button is clicked', async () => {
-				(saveSettings as jest.Mock).mockResolvedValue({});
+				(saveSettings as Mock).mockResolvedValue({});
 				createSoapAPIInterceptor('GetRights', {});
 				const { user } = setupTest(<CalendarSettingsView />);
 
@@ -101,12 +102,12 @@ describe('Settings view', () => {
 			});
 
 			it('should be able to remove a email set and save', async () => {
-				(usePrefs as jest.Mock).mockReturnValue({
+				(usePrefs as Mock).mockReturnValue({
 					...defaultSettings,
 					zimbraPrefCalendarForwardInvitesTo: 'test@demo.com'
 				});
 
-				(saveSettings as jest.Mock).mockResolvedValue({});
+				(saveSettings as Mock).mockResolvedValue({});
 				createSoapAPIInterceptor('GetRights', { ace: [] });
 
 				const { user } = setupTest(<CalendarSettingsView />);

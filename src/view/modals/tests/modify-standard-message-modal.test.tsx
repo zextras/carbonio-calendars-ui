@@ -19,8 +19,8 @@ describe('modify standard message modal', () => {
 			setupTest(
 				<ModifyStandardMessageModal
 					title={'title'}
-					onClose={jest.fn}
-					onConfirm={jest.fn}
+					onClose={vi.fn}
+					onConfirm={vi.fn}
 					invite={mockedData.getInvite()}
 					confirmLabel={'confirmLabel'}
 				/>
@@ -31,8 +31,8 @@ describe('modify standard message modal', () => {
 			setupTest(
 				<ModifyStandardMessageModal
 					title={'title'}
-					onClose={jest.fn}
-					onConfirm={jest.fn}
+					onClose={vi.fn}
+					onConfirm={vi.fn}
 					invite={mockedData.getInvite()}
 					confirmLabel={'confirmLabel'}
 				/>
@@ -45,7 +45,7 @@ describe('modify standard message modal', () => {
 				<ModifyStandardMessageModal
 					title={'title'}
 					onClose={onClose}
-					onConfirm={jest.fn}
+					onConfirm={vi.fn}
 					invite={mockedData.getInvite()}
 					confirmLabel={'confirmLabel'}
 				/>
@@ -60,8 +60,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 						isEdited
@@ -75,8 +75,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 						isEdited={false}
@@ -94,8 +94,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -106,8 +106,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -118,8 +118,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -133,8 +133,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -150,7 +150,7 @@ describe('modify standard message modal', () => {
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
-							onClose={jest.fn}
+							onClose={vi.fn}
 							onConfirm={onConfirm}
 							invite={mockedData.getInvite()}
 							confirmLabel={'confirmLabel'}
@@ -166,8 +166,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -178,8 +178,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -190,8 +190,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -205,8 +205,8 @@ describe('modify standard message modal', () => {
 				setupTest(
 					<ModifyStandardMessageModal
 						title={'title'}
-						onClose={jest.fn}
-						onConfirm={jest.fn}
+						onClose={vi.fn}
+						onConfirm={vi.fn}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -237,7 +237,7 @@ describe('modify standard message modal', () => {
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
-							onClose={jest.fn}
+							onClose={vi.fn}
 							onConfirm={vi.fn()}
 							invite={mockedData.getInvite()}
 							confirmLabel={'confirmLabel'}
@@ -254,7 +254,7 @@ describe('modify standard message modal', () => {
 						const { user } = setupTest(
 							<ModifyStandardMessageModal
 								title={'title'}
-								onClose={jest.fn}
+								onClose={vi.fn}
 								onConfirm={onConfirm}
 								invite={mockedData.getInvite()}
 								confirmLabel={'confirmLabel'}
@@ -271,7 +271,7 @@ describe('modify standard message modal', () => {
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
-							onClose={jest.fn}
+							onClose={vi.fn}
 							onConfirm={onConfirm}
 							invite={mockedData.getInvite()}
 							confirmLabel={'confirmLabel'}
@@ -294,7 +294,7 @@ describe('modify standard message modal', () => {
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
-							onClose={jest.fn}
+							onClose={vi.fn}
 							onConfirm={onConfirm}
 							invite={mockedData.getInvite()}
 							confirmLabel={'confirmLabel'}

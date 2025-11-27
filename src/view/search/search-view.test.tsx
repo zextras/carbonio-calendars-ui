@@ -16,9 +16,9 @@ import editorSliceReducer from '../../store/slices/editor-slice';
 import invitesSliceReducer from '../../store/slices/invites-slice';
 import { setupTest } from '@test-setup';
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	convertSearchChipToString: jest.fn((chip) => chip.label || chip.value || '')
+vi.mock('@zextras/carbonio-ui-commons', () => ({
+	...vi.importActual('@zextras/carbonio-ui-commons'),
+	convertSearchChipToString: vi.fn((chip) => chip.label || chip.value || '')
 }));
 
 describe('SearchView', () => {
@@ -49,7 +49,7 @@ describe('SearchView', () => {
 	});
 
 	afterEach(() => {
-		jest.restoreAllMocks();
+		vi.restoreAllMocks();
 	});
 
 	it('renders without crashing', (): void => {

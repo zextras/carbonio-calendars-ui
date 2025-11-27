@@ -28,7 +28,7 @@ describe('EditorResourceComponent', () => {
 		email: 'default@example.com',
 		type: 'Location'
 	};
-	const mockSearchOptions = jest.fn(async (_text: string) => [
+	const mockSearchOptions = vi.fn(async (_text: string) => [
 		{
 			id: '1',
 			label: 'DefaultResource',
@@ -111,7 +111,7 @@ describe('EditorResourceComponent', () => {
 				type: 'Location'
 			};
 
-			const mockSearchOptions2 = jest.fn(async (_text: string) => [
+			const mockSearchOptions2 = vi.fn(async (_text: string) => [
 				{
 					id: '1',
 					label: 'DefaultResource',
@@ -509,7 +509,7 @@ describe('EditorResourceComponent', () => {
 		it('shows no error when all resources are valid and available', async () => {
 			const mockUseAttendeesAvailability = vi.fn();
 
-			jest.mock('../../../../hooks/use-attendees-availability', () => ({
+			vi.mock('../../../../hooks/use-attendees-availability', () => ({
 				useAttendeesAvailability: () => mockUseAttendeesAvailability()
 			}));
 
@@ -547,7 +547,7 @@ describe('EditorResourceComponent', () => {
 				expect(screen.queryByText('Duplicate resources detected')).not.toBeInTheDocument();
 			});
 
-			jest.unmock('../../../../hooks/use-attendees-availability');
+			vi.unmock('../../../../hooks/use-attendees-availability');
 		});
 	});
 });

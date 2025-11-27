@@ -51,7 +51,7 @@ const sharedAccountEditorFolder = {
 const addressPrefKey = 'zimbraPrefFromAddress';
 
 jest.mock('../../hooks/use-get-date-range-converted-to-timezone', () => ({
-	getTimeStrings: jest.fn(() => 'Jan 1, 2024 10:00 AM - 11:00 AM')
+	getTimeStrings: vi.fn(() => 'Jan 1, 2024 10:00 AM - 11:00 AM')
 }));
 
 describe('normalize soap message from editor', () => {
@@ -785,7 +785,7 @@ describe('normalize soap message from editor', () => {
 	});
 	describe('generateBodyRequest', () => {
 		beforeEach(() => {
-			jest.clearAllMocks();
+			vi.clearAllMocks();
 		});
 
 		test('should generate plain text message for regular meeting with attendees', () => {
@@ -990,7 +990,7 @@ describe('normalize soap message from editor', () => {
 
 	describe('generateHtmlBodyRequest', () => {
 		beforeEach(() => {
-			jest.clearAllMocks();
+			vi.clearAllMocks();
 		});
 
 		test('should generate HTML message for regular meeting with attendees', () => {

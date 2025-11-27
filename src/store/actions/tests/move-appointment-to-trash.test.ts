@@ -67,7 +67,7 @@ describe('moveAppointmentToTrash', () => {
 	it('should call CancelAppointmentRequest with organizer when invite has valid organizer', async () => {
 		const mockDispatch = vi.fn();
 		const mockState = generateMockState({});
-		const mockGetState = jest.fn(() => mockState as RootState);
+		const mockGetState = vi.fn(() => mockState as RootState);
 		const mockRejectWithValue = vi.fn();
 
 		const thunk = moveAppointmentToTrash(moveAppointmentToTrashParam);
@@ -104,7 +104,7 @@ describe('moveAppointmentToTrash', () => {
 			organizer: {} as InviteOrganizer // No valid organizer
 		});
 		const mockDispatch = vi.fn();
-		const mockGetState = jest.fn(() => mockStateWithNoOrganizer as RootState);
+		const mockGetState = vi.fn(() => mockStateWithNoOrganizer as RootState);
 
 		const thunk = moveAppointmentToTrash(moveAppointmentToTrashParam);
 
@@ -135,7 +135,7 @@ describe('moveAppointmentToTrash', () => {
 			compNum: 42
 		});
 		const mockDispatch = vi.fn();
-		const mockGetState = jest.fn(() => mockStateWithCompNum as RootState);
+		const mockGetState = vi.fn(() => mockStateWithCompNum as RootState);
 
 		const thunk = moveAppointmentToTrash(moveAppointmentToTrashParam);
 
