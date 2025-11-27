@@ -24,14 +24,16 @@ import {
 } from '@testing-library/react';
 import userEvent, { UserEvent as RTLUserEvent } from '@testing-library/user-event';
 import { ModalManager, SnackbarManager, ThemeProvider } from '@zextras/carbonio-design-system';
-import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { MemoryRouter, MemoryRouterProps, Route, RouteProps, Routes } from 'react-router-dom';
 import { Store } from 'redux';
 
 import { getAppI18n } from './i18n/i18n-test-factory';
-import { previewContextMock } from '@test-mocks/@zextras/carbonio-ui-preview';
+import {
+	previewContextMock,
+	PreviewsManagerContext
+} from '@test-mocks/@zextras/carbonio-ui-preview';
 
 type ByRoleWithIconOptions = ByRoleOptions & {
 	icon: string | RegExp;

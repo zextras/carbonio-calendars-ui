@@ -15,7 +15,7 @@ import { setupHook } from '@test-setup';
 describe('use attendees availability', () => {
 	describe('no user interaction - pre-populated editor', () => {
 		test('if there are no participants the request is not sent to the server', () => {
-			const spy = jest.spyOn(handler, 'getFreeBusyRequest');
+			const spy = vi.spyOn(handler, 'getFreeBusyRequest');
 
 			setupHook(useAttendeesAvailability, {
 				initialProps: [moment().valueOf(), []]
@@ -25,7 +25,7 @@ describe('use attendees availability', () => {
 		});
 		test('if there is at least one participant the request is sent to the server once', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 1 });
-			const spy = jest
+			const spy = vi
 				.spyOn(handler, 'getFreeBusyRequest')
 				.mockReturnValueOnce(Promise.resolve({ usr: [{ id: attendees[0].email }] }));
 
@@ -46,7 +46,7 @@ describe('use attendees availability', () => {
 		});
 		test('if there are multiple participants the request is sent to the server once, containing all the participants', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
-			const spy = jest
+			const spy = vi
 				.spyOn(handler, 'getFreeBusyRequest')
 				.mockReturnValue(
 					Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
@@ -69,7 +69,7 @@ describe('use attendees availability', () => {
 		});
 		test('if on rerender start, end, attendees does not change, only the first request is sent', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 1 });
-			const spy = jest
+			const spy = vi
 				.spyOn(handler, 'getFreeBusyRequest')
 				.mockReturnValue(Promise.resolve({ usr: [{ id: attendees[0].email }] }));
 
@@ -94,7 +94,7 @@ describe('use attendees availability', () => {
 		test('removing an attendee will not send the request', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
 			const uid = map(attendees, (attendee) => attendee.email).join(',');
-			const spy = jest
+			const spy = vi
 				.spyOn(handler, 'getFreeBusyRequest')
 				.mockReturnValueOnce(
 					Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
@@ -124,7 +124,7 @@ describe('use attendees availability', () => {
 		test('adding back a removed attendee will not send the request', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
 			const uid = map(attendees, (attendee) => attendee.email).join(',');
-			const spy = jest
+			const spy = vi
 				.spyOn(handler, 'getFreeBusyRequest')
 				.mockReturnValueOnce(
 					Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
@@ -159,7 +159,7 @@ describe('use attendees availability', () => {
 			const allAttendees = mockedData.editor.getRandomAttendees({ length: 2 });
 			const previousAttendees = [allAttendees[0]];
 			const previousuid = map(previousAttendees, (attendee) => attendee.email).join(',');
-			const spy = jest
+			const spy = vi
 				.spyOn(handler, 'getFreeBusyRequest')
 				.mockReturnValueOnce(Promise.resolve({ usr: [{ id: allAttendees[0].email }] }))
 				.mockReturnValueOnce(Promise.resolve({ usr: [{ id: allAttendees[1].email }] }));
@@ -196,7 +196,7 @@ describe('use attendees availability', () => {
 			test('occurs a day before the old start date a new request is sent', async () => {
 				const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
 
-				const spy = jest
+				const spy = vi
 					.spyOn(handler, 'getFreeBusyRequest')
 					.mockReturnValueOnce(
 						Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
@@ -233,7 +233,7 @@ describe('use attendees availability', () => {
 			test('occurs after the old start date and before the end date a new request is not sent', async () => {
 				const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
 
-				const spy = jest
+				const spy = vi
 					.spyOn(handler, 'getFreeBusyRequest')
 					.mockReturnValueOnce(
 						Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
@@ -263,7 +263,7 @@ describe('use attendees availability', () => {
 			test('occurs after the old end date a new request is sent with the new requested start date', async () => {
 				const attendees = mockedData.editor.getRandomAttendees({ length: 1 });
 
-				const spy = jest
+				const spy = vi
 					.spyOn(handler, 'getFreeBusyRequest')
 					.mockReturnValueOnce(Promise.resolve({ usr: [{ id: attendees[0].email }] }));
 
@@ -297,7 +297,7 @@ describe('use attendees availability', () => {
 				test('for the attendee a new request is not sent', async () => {
 					const attendees = mockedData.editor.getRandomAttendees({ length: 1 });
 
-					const spy = jest
+					const spy = vi
 						.spyOn(handler, 'getFreeBusyRequest')
 						.mockReturnValueOnce(Promise.resolve({ usr: [{ id: attendees[0].email }] }));
 
@@ -327,7 +327,7 @@ describe('use attendees availability', () => {
 				test('for all the attendees a new request is not sent', async () => {
 					const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
 
-					const spy = jest
+					const spy = vi
 						.spyOn(handler, 'getFreeBusyRequest')
 						.mockReturnValueOnce(
 							Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
@@ -358,7 +358,7 @@ describe('use attendees availability', () => {
 				test('just for one of the two attendees a new request is sent only for the missing one', async () => {
 					const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
 
-					const spy = jest
+					const spy = vi
 						.spyOn(handler, 'getFreeBusyRequest')
 						.mockReturnValueOnce(Promise.resolve({ usr: [{ id: attendees[0].email }] }))
 						.mockReturnValueOnce(Promise.resolve({ usr: [{ id: attendees[1].email }] }));

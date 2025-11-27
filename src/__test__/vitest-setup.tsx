@@ -7,13 +7,11 @@
 
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
-import { noop } from 'lodash';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { http, RequestHandler } from 'msw';
 import { SetupServer, setupServer } from 'msw/node';
 import { vi, beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
 
-import { useLocalStorage } from '@test-mocks/@zextras/carbonio-shell-ui';
 import { handleGetFolderRequest } from '@test-utils/network/msw/handle-get-folder';
 import { handleGetShareInfoRequest } from '@test-utils/network/msw/handle-get-share-info';
 import { VITEST_DEFAULT_TIMEZONE } from 'constants/test-environment';
@@ -81,7 +79,7 @@ const defaultBeforeAllTests = (
 	server.listen({ onUnhandledRequest });
 
 	// TODO: CHECK IF NEEDED
-	useLocalStorage.mockReturnValue([vi.fn(), vi.fn()]);
+	// useLocalStorage.mockReturnValue([vi.fn(), vi.fn()]);
 };
 
 Object.defineProperty(window, 'open', {
@@ -125,26 +123,6 @@ Object.defineProperty(window, 'IntersectionObserver', {
 			disconnect: vi.fn()
 		};
 	})
-});
-
-class Worker {
-	url: string;
-
-	onmessage: (msg: string) => void;
-
-	constructor(stringUrl: string) {
-		this.url = stringUrl;
-		this.onmessage = noop;
-	}
-
-	postMessage(msg: string): void {
-		this.onmessage(msg);
-	}
-}
-
-Object.defineProperty(window, 'Worker', {
-	writable: true,
-	value: Worker
 });
 
 beforeAll(() => {

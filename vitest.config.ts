@@ -25,7 +25,11 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'jsdom',
-		setupFiles: ['./src/__test__/vitest-setup.tsx', './src/__test__/setup-browser-env.ts'],
+		setupFiles: [
+			'./src/__test__/worker-setup.ts',
+			'./src/__test__/vitest-setup.tsx',
+			'./src/__test__/setup-browser-env.ts'
+		],
 		clearMocks: true,
 		mockReset: true,
 		testTimeout: 20000,

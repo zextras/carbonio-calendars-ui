@@ -28,13 +28,13 @@ describe('edit event item', () => {
 		});
 		const invite = mockedData.getInvite({ event });
 		const context = {
-			createAndApplyTag: jest.fn(),
-			createModal: jest.fn(),
-			closeModal: jest.fn(),
-			createSnackbar: jest.fn(),
-			dispatch: jest.fn(),
-			t: jest.fn(),
-			replaceHistory: jest.fn(),
+			createAndApplyTag: vi.fn(),
+			createModal: vi.fn(),
+			closeModal: vi.fn(),
+			createSnackbar: vi.fn(),
+			dispatch: vi.fn(),
+			t: vi.fn(),
+			replaceHistory: vi.fn(),
 			tags: [
 				{
 					id: '1',
@@ -65,13 +65,13 @@ describe('edit event item', () => {
 			});
 			const invite = mockedData.getInvite({ event });
 			const context = {
-				createAndApplyTag: jest.fn(),
-				createModal: jest.fn(),
-				closeModal: jest.fn(),
-				createSnackbar: jest.fn(),
-				dispatch: jest.fn(),
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				tags: [
 					{
 						id: '1',
@@ -110,13 +110,13 @@ describe('edit event item', () => {
 			});
 			const invite = mockedData.getInvite({ event });
 			const context = {
-				createAndApplyTag: jest.fn(),
-				createModal: jest.fn(),
-				closeModal: jest.fn(),
-				createSnackbar: jest.fn(),
-				dispatch: jest.fn(),
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				tags: [
 					{
 						id: '1',
@@ -147,13 +147,13 @@ describe('edit event item', () => {
 			});
 			const invite = mockedData.getInvite({ event });
 			const context = {
-				createAndApplyTag: jest.fn(),
-				createModal: jest.fn(),
-				closeModal: jest.fn(),
-				createSnackbar: jest.fn(),
-				dispatch: jest.fn(),
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				tags: [
 					{
 						id: '1',
@@ -189,13 +189,13 @@ describe('edit event item', () => {
 			});
 			const invite = mockedData.getInvite({ event });
 			const context = {
-				createAndApplyTag: jest.fn(),
-				createModal: jest.fn(),
-				closeModal: jest.fn(),
-				createSnackbar: jest.fn(),
-				dispatch: jest.fn(),
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				tags: [
 					{
 						id: '1',
