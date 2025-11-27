@@ -182,7 +182,7 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
+				const onClose = vi.fn();
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 				setupTest(
@@ -204,7 +204,7 @@ describe('delete event modal', () => {
 							reducer: combineReducers(reducers),
 							preloadedState: emptyStore
 						});
-						const onClose = jest.fn();
+						const onClose = vi.fn();
 						populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 						setupTest(
@@ -241,7 +241,7 @@ describe('delete event modal', () => {
 							reducer: combineReducers(reducers),
 							preloadedState: emptyStore
 						});
-						const onClose = jest.fn();
+						const onClose = vi.fn();
 						populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 						const { user } = setupTest(
@@ -281,7 +281,7 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -317,8 +317,8 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
-					const composer = jest.fn();
+					const onClose = vi.fn();
+					const composer = vi.fn();
 					const composerSpy = jest
 						.spyOn(shell, 'useIntegratedFunction')
 						.mockReturnValue([composer, true]);
@@ -350,7 +350,7 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
 					const spy = jest.spyOn(soapLib, 'legacySoapFetch');
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
@@ -400,7 +400,7 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -428,7 +428,7 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -462,7 +462,7 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
+				const onClose = vi.fn();
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -493,7 +493,7 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
+				const onClose = vi.fn();
 				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
@@ -539,7 +539,7 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
+				const onClose = vi.fn();
 				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
@@ -578,7 +578,7 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
+				const onClose = vi.fn();
 				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });

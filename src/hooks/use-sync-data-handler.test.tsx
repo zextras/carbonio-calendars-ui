@@ -19,10 +19,10 @@ import { mockSoapSync } from '@test-utils/utils/soap';
 jest.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
 	folderWorker: {
-		postMessage: jest.fn()
+		postMessage: vi.fn()
 	},
 	tagsWorker: {
-		postMessage: jest.fn()
+		postMessage: vi.fn()
 	}
 }));
 

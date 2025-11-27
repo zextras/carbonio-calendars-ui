@@ -19,7 +19,7 @@ import {
 
 jest.mock('react-i18next', () => ({
 	...jest.requireActual('react-i18next'),
-	useTranslation: jest.fn().mockReturnValue({
+	useTranslation: vi.fn().mockReturnValue({
 		t: (_key: string, defaultValue: string) => defaultValue
 	})
 }));

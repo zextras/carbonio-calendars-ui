@@ -46,7 +46,7 @@ shell.getUserSettings.mockImplementation(() => ({
 }));
 
 shell.useBoardHooks.mockImplementation(() => ({
-	updateBoard: jest.fn()
+	updateBoard: vi.fn()
 }));
 
 describe('Editor board wrapper', () => {
@@ -64,7 +64,7 @@ describe('Editor board wrapper', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
+				createSnackbar: vi.fn()
 			}));
 
 			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));

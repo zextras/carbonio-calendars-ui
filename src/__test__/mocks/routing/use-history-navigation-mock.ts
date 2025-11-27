@@ -12,8 +12,8 @@ import * as historyNavigation from '@zextras/carbonio-ui-commons';
  */
 export const mockUseHistoryNavigation = (): HistoryNavigation => {
 	const result = {
-		replaceHistory: jest.fn(),
-		pushHistory: jest.fn()
+		replaceHistory: vi.fn(),
+		pushHistory: vi.fn()
 	} satisfies HistoryNavigation;
 	jest.spyOn(historyNavigation, 'useHistoryNavigation').mockReturnValue(result);
 

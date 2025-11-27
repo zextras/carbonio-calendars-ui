@@ -17,7 +17,7 @@ import { EditorSaveButton } from '../editor-save-button';
 import { setupTest } from '@test-setup';
 
 jest.mock('../../../../commons/editor-save-send-fns', () => ({
-	onSave: jest.fn()
+	onSave: vi.fn()
 }));
 
 const DEFAULT_ATTENDEE = { email: 'user@test.com' };

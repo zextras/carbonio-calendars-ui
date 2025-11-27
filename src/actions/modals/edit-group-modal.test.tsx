@@ -39,7 +39,7 @@ const generateApiSuccessResponse = (): CreateCalendarGroupResponse => ({
 
 const buildProps = ({
 	groupId = faker.number.int().toString(),
-	onClose = jest.fn()
+	onClose = vi.fn()
 }: Partial<EditGroupModalProps> = {}): EditGroupModalProps => ({
 	groupId,
 	onClose
@@ -98,7 +98,7 @@ describe('EditGroupModal', () => {
 
 		it('should call the onClose callback when clicked', async () => {
 			const { group } = initializeStore();
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const { user } = setupTest(
 				<EditGroupModal {...buildProps({ groupId: group.id, onClose })} />
@@ -118,7 +118,7 @@ describe('EditGroupModal', () => {
 		});
 
 		it("should call the onClose callback if the group doesn't exist", () => {
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 			setupTest(
 				<EditGroupModal {...buildProps({ groupId: faker.number.int().toString(), onClose })} />
 			);
@@ -410,7 +410,7 @@ describe('EditGroupModal', () => {
 				ModifyCalendarGroupRequest,
 				ModifyCalendarGroupResponse
 			>('ModifyCalendarGroup', apiResponse);
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const { user } = setupTest(
 				<EditGroupModal {...buildProps({ groupId: group.id, onClose })} />
@@ -452,7 +452,7 @@ describe('EditGroupModal', () => {
 				'ModifyCalendarGroup',
 				apiResponse
 			);
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const { user } = setupTest(
 				<EditGroupModal {...buildProps({ groupId: group.id, onClose })} />

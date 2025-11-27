@@ -26,7 +26,7 @@ import { setupTest } from '@test-setup';
 
 jest.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	useContactInput: jest.fn()
+	useContactInput: vi.fn()
 }));
 describe('Editor Optional Attendees', () => {
 	describe('ChipInput', () => {

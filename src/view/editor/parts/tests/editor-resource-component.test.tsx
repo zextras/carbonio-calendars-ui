@@ -20,7 +20,7 @@ import { EditorResourceComponent } from '../editor-resource-component';
 describe('EditorResourceComponent', () => {
 	let store: ReturnType<typeof configureStore>;
 	let editor: ReturnType<typeof generateEditor>;
-	const onChangeMock = jest.fn();
+	const onChangeMock = vi.fn();
 
 	const defaultResource: Resource = {
 		id: 'r1',
@@ -507,7 +507,7 @@ describe('EditorResourceComponent', () => {
 		});
 
 		it('shows no error when all resources are valid and available', async () => {
-			const mockUseAttendeesAvailability = jest.fn();
+			const mockUseAttendeesAvailability = vi.fn();
 
 			jest.mock('../../../../hooks/use-attendees-availability', () => ({
 				useAttendeesAvailability: () => mockUseAttendeesAvailability()

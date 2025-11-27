@@ -59,5 +59,5 @@ export const EDIT_ACTION: ChipAction = {
 	id: EDIT_ACTION_ID,
 	label: 'Edit',
 	type: 'button',
-	onClick: jest.fn()
+	onClick: vi.fn()
 };

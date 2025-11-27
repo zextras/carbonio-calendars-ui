@@ -40,7 +40,7 @@ describe('modify standard message modal', () => {
 			expect(screen.getByTestId('icon: CloseOutline')).toBeVisible();
 		});
 		it('will call onClose when clicking the close icon ', async () => {
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 			const { user } = setupTest(
 				<ModifyStandardMessageModal
 					title={'title'}
@@ -146,7 +146,7 @@ describe('modify standard message modal', () => {
 			});
 			describe('clicking the button', () => {
 				it('will call onConfirm', async () => {
-					const onConfirm = jest.fn();
+					const onConfirm = vi.fn();
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
@@ -218,12 +218,12 @@ describe('modify standard message modal', () => {
 			});
 			describe('clicking on the button', () => {
 				it('will call onClose', async () => {
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
 							onClose={onClose}
-							onConfirm={jest.fn()}
+							onConfirm={vi.fn()}
 							invite={mockedData.getInvite()}
 							confirmLabel={'confirmLabel'}
 						/>
@@ -232,13 +232,13 @@ describe('modify standard message modal', () => {
 					expect(onClose).toHaveBeenCalled();
 				});
 				it('will call the integrated function', async () => {
-					const integratedFunction = jest.fn();
+					const integratedFunction = vi.fn();
 					shell.useIntegratedFunction.mockReturnValue([integratedFunction, true]);
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
 							onClose={jest.fn}
-							onConfirm={jest.fn()}
+							onConfirm={vi.fn()}
 							invite={mockedData.getInvite()}
 							confirmLabel={'confirmLabel'}
 						/>
@@ -248,9 +248,9 @@ describe('modify standard message modal', () => {
 				});
 				describe('will call the integrated function with prefilled data', () => {
 					it('will pass the onConfirm action', async () => {
-						const integratedFunction = jest.fn();
+						const integratedFunction = vi.fn();
 						shell.useIntegratedFunction.mockReturnValue([integratedFunction, true]);
-						const onConfirm = jest.fn();
+						const onConfirm = vi.fn();
 						const { user } = setupTest(
 							<ModifyStandardMessageModal
 								title={'title'}
@@ -265,9 +265,9 @@ describe('modify standard message modal', () => {
 					});
 				});
 				it('will call the integrated function with prefilled data when isEdited is false', async () => {
-					const integratedFunction = jest.fn();
+					const integratedFunction = vi.fn();
 					shell.useIntegratedFunction.mockReturnValue([integratedFunction, true]);
-					const onConfirm = jest.fn();
+					const onConfirm = vi.fn();
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}
@@ -288,9 +288,9 @@ describe('modify standard message modal', () => {
 					});
 				});
 				it('will call the integrated function with prefilled data when isEdited is true', async () => {
-					const integratedFunction = jest.fn();
+					const integratedFunction = vi.fn();
 					shell.useIntegratedFunction.mockReturnValue([integratedFunction, true]);
-					const onConfirm = jest.fn();
+					const onConfirm = vi.fn();
 					const { user } = setupTest(
 						<ModifyStandardMessageModal
 							title={'title'}

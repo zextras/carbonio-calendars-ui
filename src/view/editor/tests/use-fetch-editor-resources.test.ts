@@ -106,7 +106,7 @@ describe('useFetchEditorResources', () => {
 	});
 
 	it('calls onFailure callback when the request fails', async () => {
-		const onFailureMock = jest.fn();
+		const onFailureMock = vi.fn();
 		mockSearchCalendarMultipleResourcesRequest.mockRejectedValueOnce(new Error('Network error'));
 
 		const { result } = renderHook(() => useFetchEditorResources({ onFailure: onFailureMock }));
@@ -118,7 +118,7 @@ describe('useFetchEditorResources', () => {
 	});
 
 	it('does not call onFailure if the request is aborted', async () => {
-		const onFailureMock = jest.fn();
+		const onFailureMock = vi.fn();
 		const abortError = new Error('Aborted');
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(abortError as any).name = 'AbortError';

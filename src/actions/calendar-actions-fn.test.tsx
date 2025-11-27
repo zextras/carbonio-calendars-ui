@@ -25,8 +25,8 @@ const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 
 describe('calendar-actions-fn', () => {
 	test('new calendar fn on click create modal is called once', () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
 		const item = { id: FOLDERS.CALENDAR };
 		const newCalendarFn = newCalendar({ createModal, closeModal, item });
 		newCalendarFn();
@@ -34,7 +34,7 @@ describe('calendar-actions-fn', () => {
 	});
 	describe('move to root fn - on click request to backend to move the folder under the root', () => {
 		test('when the request is successful it creates an info snackbar', async () => {
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const moveToRootFn = moveToRoot({ createSnackbar, item });
 			await act(async () => {
@@ -52,7 +52,7 @@ describe('calendar-actions-fn', () => {
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
 			// disable console.warn raised by soapFetch
-			jest.spyOn(console, 'warn').mockImplementation(jest.fn());
+			jest.spyOn(console, 'warn').mockImplementation(vi.fn());
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
@@ -62,7 +62,7 @@ describe('calendar-actions-fn', () => {
 					})
 				)
 			);
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const moveToRootFn = moveToRoot({ createSnackbar, item });
 			await act(async () => moveToRootFn());
@@ -79,23 +79,23 @@ describe('calendar-actions-fn', () => {
 		});
 	});
 	test('empty trash fn', () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
 		const emptyTrashFn = emptyTrash({ createModal, closeModal });
 		emptyTrashFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('edit calendar fn', () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
 		const item = { id: FOLDERS.CALENDAR };
 		const editCalendarFn = editCalendar({ createModal, closeModal, item });
 		editCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('delete calendar fn', () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
 		const item = mockedData.calendars.getCalendar();
 		const deleteCalendarFn = deleteCalendar({ createModal, closeModal, item });
 		deleteCalendarFn();
@@ -103,7 +103,7 @@ describe('calendar-actions-fn', () => {
 	});
 	describe('on click request to backend should remove the folder mountpoint', () => {
 		test('when the request is successful it creates an info snackbar', async () => {
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const removeFromListFn = removeFromList({ createSnackbar, item });
 			await act(async () => removeFromListFn());
@@ -119,7 +119,7 @@ describe('calendar-actions-fn', () => {
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
 			// disable console.warn raised by soapFetch
-			jest.spyOn(console, 'warn').mockImplementation(jest.fn());
+			jest.spyOn(console, 'warn').mockImplementation(vi.fn());
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
@@ -129,7 +129,7 @@ describe('calendar-actions-fn', () => {
 					})
 				)
 			);
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const removeFromListFn = removeFromList({ createSnackbar, item });
 			await act(async () => removeFromListFn());
@@ -147,16 +147,16 @@ describe('calendar-actions-fn', () => {
 	});
 	describe('shares info fn', () => {
 		test('Characterization test - if response received does not contain links the creatModal is not called and no action is performed', () => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const sharesInfoFn = sharesInfo({ createModal, closeModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
 		test('Characterization test - if request fails the creatModal is not called and no action is performed', () => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
@@ -172,8 +172,8 @@ describe('calendar-actions-fn', () => {
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
 		test('when the request is successful it calls creatModal once', async () => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 			const item = { id: FOLDERS.CALENDAR };
 
 			getSetupServer().use(
@@ -197,16 +197,16 @@ describe('calendar-actions-fn', () => {
 		});
 	});
 	test('shares calendar fn on click create modal is called once', () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
 		const item = mockedData.calendars.getCalendar();
 		const shareCalendarFn = shareCalendar({ createModal, closeModal, item });
 		shareCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('find shares fn on click create modal is called once', async () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
 		const findSharesFn = findShares({ createModal, closeModal });
 		await act(async () => findSharesFn());
 		await waitFor(() => {
@@ -223,8 +223,8 @@ describe('calendar-actions-fn', () => {
 				})
 			)
 		);
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
 		const findSharesFn = findShares({ createModal, closeModal });
 		findSharesFn();
 		await waitFor(() => {

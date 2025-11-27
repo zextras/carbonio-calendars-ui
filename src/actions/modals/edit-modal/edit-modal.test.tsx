@@ -130,7 +130,7 @@ describe('the edit calendar modal is composed by', () => {
 	describe('the modal header. It is composed by', () => {
 		test('the title "edit and share calendar" which is the same for every folder', () => {
 			setupFoldersStore();
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 				store
@@ -140,7 +140,7 @@ describe('the edit calendar modal is composed by', () => {
 		});
 		test('the close button, on click will call the modal onclose', async () => {
 			setupFoldersStore();
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 				store
@@ -154,7 +154,7 @@ describe('the edit calendar modal is composed by', () => {
 	describe('the modal body. It is composed by', () => {
 		describe('the calendar name input', () => {
 			test('has the label "Calendar name"', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -169,7 +169,7 @@ describe('the edit calendar modal is composed by', () => {
 				expect(title).toBeVisible();
 			});
 			test('it is pre-filled with the calendar name', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -184,7 +184,7 @@ describe('the edit calendar modal is composed by', () => {
 				expect(title).toHaveValue(folder.name);
 			});
 			test('it is disabled for system folders', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -200,7 +200,7 @@ describe('the edit calendar modal is composed by', () => {
 				expect(title).toBeDisabled();
 			});
 			test('hovering the disabled input will show a tooltip explaining why it is disabled', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -222,7 +222,7 @@ describe('the edit calendar modal is composed by', () => {
 			});
 		});
 		test('a row with type of the folder and number of appointments', async () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupFoldersStore();
@@ -238,7 +238,7 @@ describe('the edit calendar modal is composed by', () => {
 		});
 		describe('a color selector', () => {
 			test('has the label "Calendar color"', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -250,7 +250,7 @@ describe('the edit calendar modal is composed by', () => {
 				expect(screen.getByText(/calendar color/i)).toBeVisible();
 			});
 			test('it is pre-filled with the calendar color', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -264,7 +264,7 @@ describe('the edit calendar modal is composed by', () => {
 		});
 		describe('a section to exclude the calendar from the free busy times, composed by', () => {
 			test('a checkbox pre-filled with the free busy value', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -276,7 +276,7 @@ describe('the edit calendar modal is composed by', () => {
 				expect(screen.getByTestId('icon: Square')).toBeVisible();
 			});
 			test(' an informative string to explain the checkbox meaning', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
@@ -292,7 +292,7 @@ describe('the edit calendar modal is composed by', () => {
 		});
 		describe('a section to show all the sharing information of this folder', () => {
 			test('if the folder is not shared with someone, the shared section is unmounted', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
@@ -304,7 +304,7 @@ describe('the edit calendar modal is composed by', () => {
 				expect(sharingSection).not.toBeInTheDocument();
 			});
 			test('if the folder is shared with someone, the shared section should be visible', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
@@ -316,7 +316,7 @@ describe('the edit calendar modal is composed by', () => {
 				expect(sharingSection).toBeVisible();
 			});
 			test('it shows a list of all users this folder has been shared to and their relative roles', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
@@ -331,7 +331,7 @@ describe('the edit calendar modal is composed by', () => {
 			});
 			describe('if the folder is shared also publicly', () => {
 				test('a public user will be in the list', async () => {
-					const closeFn = jest.fn();
+					const closeFn = vi.fn();
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
@@ -343,7 +343,7 @@ describe('the edit calendar modal is composed by', () => {
 					expect(screen.getByText(/public - viewer/i)).toBeVisible();
 				});
 				test('public user has only the revoke action available', async () => {
-					const closeFn = jest.fn();
+					const closeFn = vi.fn();
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
@@ -359,7 +359,7 @@ describe('the edit calendar modal is composed by', () => {
 			describe('normal users have 3 buttons', () => {
 				describe('edit', () => {
 					test('has the label "edit"', async () => {
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
@@ -370,7 +370,7 @@ describe('the edit calendar modal is composed by', () => {
 						expect(screen.getAllByRole('button', { name: /edit/i })[0]).toBeVisible();
 					});
 					test('on click it will open the edit permission modal', async () => {
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
@@ -384,7 +384,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 				describe('revoke', () => {
 					test('has the label "revoke"', async () => {
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
@@ -396,7 +396,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 					test('on click a request to the server will be sent containing only the related user', async () => {
 						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
@@ -418,7 +418,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 				describe('resend', () => {
 					test('has the label "resend"', async () => {
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
@@ -429,7 +429,7 @@ describe('the edit calendar modal is composed by', () => {
 						expect(screen.getAllByRole('button', { name: /resend/i })[0]).toBeVisible();
 					});
 					test('on click a request to the server will be sent containing only the related user invitation', async () => {
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 						const sendAgainSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -452,7 +452,7 @@ describe('the edit calendar modal is composed by', () => {
 		describe('add share button', () => {
 			// more info about it in the related test suite
 			test('on click it will open the share modal', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 
 				setupFoldersStore();
 				const store = configureStore({ reducer: combineReducers(reducers) });
@@ -469,7 +469,7 @@ describe('the edit calendar modal is composed by', () => {
 			});
 			// unmounting the component will discard all the unsaved changes done by the user
 			test('on click it will unmount the edit modal', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				setupFoldersStore();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -490,7 +490,7 @@ describe('the edit calendar modal is composed by', () => {
 					test('if the user change title it will trigger a rename operation', async () => {
 						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -517,7 +517,7 @@ describe('the edit calendar modal is composed by', () => {
 					test('if the user rewrite the same title it will not trigger any operation', async () => {
 						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -541,7 +541,7 @@ describe('the edit calendar modal is composed by', () => {
 					test('if the user change color it will trigger a color operation', async () => {
 						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -562,7 +562,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 					test('if the user select the same color it will not trigger any operation', async () => {
 						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -584,7 +584,7 @@ describe('the edit calendar modal is composed by', () => {
 					test('if the user change the free busy status it will trigger a fb operation', async () => {
 						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -606,7 +606,7 @@ describe('the edit calendar modal is composed by', () => {
 					test('if the user reselect the same free busy status it will not trigger any operation', async () => {
 						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 
-						const closeFn = jest.fn();
+						const closeFn = vi.fn();
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -624,10 +624,10 @@ describe('the edit calendar modal is composed by', () => {
 				});
 				test('if the user changes all of the above it will trigger all the operations in a batch', async () => {
 					// disable console.warn raised by soapFetch
-					jest.spyOn(console, 'warn').mockImplementation(jest.fn());
+					jest.spyOn(console, 'warn').mockImplementation(vi.fn());
 					const spy = jest.spyOn(BatchAction, 'batchRequest');
 
-					const closeFn = jest.fn();
+					const closeFn = vi.fn();
 
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
@@ -673,7 +673,7 @@ describe('the edit calendar modal is composed by', () => {
 
 describe('Edit calendar modal ESC behaviours', () => {
 	test('if the user press ESC while in the main modal it will call the onClose function', async () => {
-		const onCloseFn = jest.fn();
+		const onCloseFn = vi.fn();
 		setupFoldersStore();
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(<EditModal folderId={folder.id} onClose={onCloseFn} />, {
@@ -684,7 +684,7 @@ describe('Edit calendar modal ESC behaviours', () => {
 	});
 
 	test('if the user press ESC while in a sub modal it will close only the submodal and go back to the main one', async () => {
-		const onCloseFn = jest.fn();
+		const onCloseFn = vi.fn();
 		setupFoldersStore();
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(<EditModal folderId={folder.id} onClose={onCloseFn} />, {

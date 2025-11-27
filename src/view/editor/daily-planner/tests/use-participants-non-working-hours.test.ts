@@ -19,12 +19,12 @@ import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 jest.mock('@zextras/carbonio-design-system', () => ({
 	...jest.requireActual('@zextras/carbonio-design-system'),
-	useSnackbar: jest.fn().mockReturnValue(jest.fn())
+	useSnackbar: vi.fn().mockReturnValue(vi.fn())
 }));
 
 jest.mock('react-i18next', () => ({
 	...jest.requireActual('react-i18next'),
-	useTranslation: jest.fn().mockReturnValue([mockTranslation])
+	useTranslation: vi.fn().mockReturnValue([mockTranslation])
 }));
 
 describe('useParticipantsNonWorkingHours', () => {

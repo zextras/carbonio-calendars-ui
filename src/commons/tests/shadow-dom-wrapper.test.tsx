@@ -15,7 +15,7 @@ import { setupTest } from '@test-setup';
 import { useUserSettings } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 
 jest.mock('@zextras/carbonio-shell-ui', () => ({
-	useUserSettings: jest.fn()
+	useUserSettings: vi.fn()
 }));
 
 describe('ShadowDomWrapper', () => {
@@ -40,7 +40,7 @@ describe('ShadowDomWrapper', () => {
 		(useUserSettings as jest.Mock).mockReturnValue({
 			prefs: { carbonioPrefDarkMode: 'enabled' }
 		});
-		const enableDarkReaderFn = jest.fn();
+		const enableDarkReaderFn = vi.fn();
 		(enableDarkReader as jest.Mock).mockImplementation(enableDarkReaderFn);
 
 		const children = <div data-testid="child">Hello, Shadow DOM!</div>;

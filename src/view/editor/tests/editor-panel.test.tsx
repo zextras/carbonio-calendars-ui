@@ -23,7 +23,7 @@ import {
 describe('Editor panel', () => {
 	describe('cleanup', () => {
 		it('should abort the request when the component re-renders', async () => {
-			const abortSpy = jest.fn();
+			const abortSpy = vi.fn();
 
 			const mockSignal = {} as AbortSignal;
 			const mockAbortController = {
@@ -37,7 +37,7 @@ describe('Editor panel', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
+				createSnackbar: vi.fn()
 			}));
 
 			generateEditor({
@@ -70,7 +70,7 @@ describe('Editor panel', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
+				createSnackbar: vi.fn()
 			}));
 
 			generateEditor({
@@ -101,7 +101,7 @@ describe('Editor panel', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
+				createSnackbar: vi.fn()
 			}));
 
 			generateEditor({
@@ -148,7 +148,7 @@ describe('Editor panel', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
+				createSnackbar: vi.fn()
 			}));
 
 			generateEditor({
@@ -195,7 +195,7 @@ describe('Editor panel', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
+				createSnackbar: vi.fn()
 			}));
 
 			generateEditor({
@@ -238,7 +238,7 @@ describe('Editor panel', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
 		shell.getBridgedFunctions.mockImplementation(() => ({
-			createSnackbar: jest.fn()
+			createSnackbar: vi.fn()
 		}));
 
 		generateEditor({

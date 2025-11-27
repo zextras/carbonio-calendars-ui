@@ -43,7 +43,7 @@ jest.mock('@zextras/carbonio-ui-commons', () => {
 	return {
 		__esModule: true,
 		...actual,
-		copyToClipboard: jest.fn().mockImplementation(() => Promise.resolve())
+		copyToClipboard: vi.fn().mockImplementation(() => Promise.resolve())
 	};
 });
 

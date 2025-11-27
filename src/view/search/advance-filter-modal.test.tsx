@@ -33,7 +33,7 @@ describe('AdvancedFilterModal', () => {
 	it('reset filters button should be enabled if query is not empty', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [
 				{
 					id: '1',
@@ -41,11 +41,11 @@ describe('AdvancedFilterModal', () => {
 					value: 'test'
 				}
 			],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 		setupTest(<AdvancedFilterModal {...properties} />);
 
@@ -59,13 +59,13 @@ describe('AdvancedFilterModal', () => {
 	it('reset filters button should be enabled if dateStart is different from default', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
 
@@ -86,13 +86,13 @@ describe('AdvancedFilterModal', () => {
 	it('reset filters button should be enabled if dateEnd is different from default', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
 
@@ -113,13 +113,13 @@ describe('AdvancedFilterModal', () => {
 	it('reset filters button should be disabled when there are no query filters and dates are set to default values', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		setupTest(<AdvancedFilterModal {...properties} />);
@@ -136,7 +136,7 @@ describe('AdvancedFilterModal', () => {
 
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [
 				{
 					id: '1',
@@ -144,11 +144,11 @@ describe('AdvancedFilterModal', () => {
 					value: 'test'
 				}
 			],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: FIXED_TIMESTAMP,
 			dateEnd: FIXED_TIMESTAMP,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
@@ -190,13 +190,13 @@ describe('AdvancedFilterModal', () => {
 		jest.spyOn(console, 'error').mockImplementation();
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
@@ -217,10 +217,10 @@ describe('AdvancedFilterModal', () => {
 
 	it('should update fromDate and call onConfirm when date is selected and search button is clicked', async () => {
 		jest.spyOn(console, 'error').mockImplementation();
-		const updateQuery = jest.fn();
-		const setDateStart = jest.fn();
-		const setDateEnd = jest.fn();
-		const onClose = jest.fn();
+		const updateQuery = vi.fn();
+		const setDateStart = vi.fn();
+		const setDateEnd = vi.fn();
+		const onClose = vi.fn();
 
 		const properties: AdvancedFilterModalProps = {
 			open: true,
@@ -263,10 +263,10 @@ describe('AdvancedFilterModal', () => {
 
 	it('should update endDate and call onConfirm when date is selected and search button is clicked', async () => {
 		jest.spyOn(console, 'error').mockImplementation();
-		const updateQuery = jest.fn();
-		const setDateStart = jest.fn();
-		const setDateEnd = jest.fn();
-		const onClose = jest.fn();
+		const updateQuery = vi.fn();
+		const setDateStart = vi.fn();
+		const setDateEnd = vi.fn();
+		const onClose = vi.fn();
 
 		const properties: AdvancedFilterModalProps = {
 			open: true,
@@ -313,7 +313,7 @@ describe('AdvancedFilterModal', () => {
 	it('should not add duplicate keywords to the query', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [
 				{
 					id: '1',
@@ -321,11 +321,11 @@ describe('AdvancedFilterModal', () => {
 					value: 'test'
 				}
 			],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
@@ -341,7 +341,7 @@ describe('AdvancedFilterModal', () => {
 		it('should exclude AdvancedSearchChip with queryChipsToAdvancedFiltersValue from keywords', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -361,11 +361,11 @@ describe('AdvancedFilterModal', () => {
 						queryChipsToAdvancedFiltersValue: { shared: true }
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
@@ -384,7 +384,7 @@ describe('AdvancedFilterModal', () => {
 		it('should exclude chips with isQueryFilter from keywords', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -398,11 +398,11 @@ describe('AdvancedFilterModal', () => {
 						isQueryFilter: true
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
@@ -421,7 +421,7 @@ describe('AdvancedFilterModal', () => {
 		it('should handle mixed query with regular keywords, AdvancedSearchChip, and isQueryFilter', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -446,11 +446,11 @@ describe('AdvancedFilterModal', () => {
 						isQueryFilter: true
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
@@ -474,13 +474,13 @@ describe('AdvancedFilterModal', () => {
 		it('should handle empty query correctly', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
@@ -494,7 +494,7 @@ describe('AdvancedFilterModal', () => {
 		it('should handle query with only AdvancedSearchChip and isQueryFilter (no regular keywords)', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -509,11 +509,11 @@ describe('AdvancedFilterModal', () => {
 						isQueryFilter: true
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);

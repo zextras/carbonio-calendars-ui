@@ -19,7 +19,7 @@ import {
 	onNextDay
 } from '../utils';
 
-const mockTranslation = jest.fn().mockImplementation((key: string, defaultValue: string) => key);
+const mockTranslation = vi.fn().mockImplementation((key: string, defaultValue: string) => key);
 
 describe('getLocalHoursMinutesFromEpoch', () => {
 	it('should correctly extract hours and minutes from a timestamp', () => {

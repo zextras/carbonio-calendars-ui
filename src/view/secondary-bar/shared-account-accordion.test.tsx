@@ -25,7 +25,7 @@ function setupSharedAccountTest(): {
 } {
 	populateFoldersStore();
 	const mocksContext = getMocksContext();
-	useLocalStorage.mockReturnValue([[], jest.fn()]);
+	useLocalStorage.mockReturnValue([[], vi.fn()]);
 
 	const { sendOnBehalf } = mocksContext.identities;
 	const {
@@ -72,7 +72,7 @@ describe('SharedAccountAccordion', () => {
 	it('should update the open status in local storage when accordion is toggled', async () => {
 		const { sharedAccount } = setupSharedAccountTest();
 
-		const funMock = jest.fn();
+		const funMock = vi.fn();
 		useLocalStorage.mockReturnValue([[], funMock]);
 
 		const { user } = setupTest(<SharedAccountAccordion rootId={sharedAccount.id} />, { store });

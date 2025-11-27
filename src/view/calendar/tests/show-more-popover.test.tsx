@@ -47,7 +47,7 @@ describe('show more popover', () => {
 	});
 
 	test('clicking the close button will call the onClose function', async () => {
-		const onClose = jest.fn();
+		const onClose = vi.fn();
 		const { user } = setupTest(
 			<ShowMorePopover
 				open

@@ -73,7 +73,7 @@ export async function typeURL(user: UserEvent, value: string): Promise<void> {
 }
 
 export function mockExpandedFolders(folderIds: Array<string>): void {
-	useLocalStorage.mockReturnValue([folderIds, jest.fn()]);
+	useLocalStorage.mockReturnValue([folderIds, vi.fn()]);
 }
 
 export const generateCalendar = (): Folder =>

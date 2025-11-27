@@ -29,7 +29,7 @@ import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 jest.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	useContactInput: jest.fn()
+	useContactInput: vi.fn()
 }));
 
 describe('Editor Attendees', () => {

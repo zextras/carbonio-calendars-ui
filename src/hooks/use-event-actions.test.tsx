@@ -19,13 +19,13 @@ import { setupHook, setupTest, screen } from '@test-setup';
 
 jest.mock('@zextras/carbonio-design-system', () => ({
 	...jest.requireActual('@zextras/carbonio-design-system'),
-	useModal: jest.fn()
+	useModal: vi.fn()
 }));
 
 jest.mock('../store/redux/hooks', () => ({
 	...jest.requireActual('../store/redux/hooks'),
-	useAppSelector: jest.fn(),
-	useAppDispatch: jest.fn()
+	useAppSelector: vi.fn(),
+	useAppDispatch: vi.fn()
 }));
 
 function getActionByName(
@@ -37,10 +37,10 @@ function getActionByName(
 		(eventAction: { id: string }) => eventAction.id === forwardActionName
 	);
 }
-const mockCreateModal = jest.fn();
+const mockCreateModal = vi.fn();
 (useModal as jest.Mock).mockReturnValue({
 	createModal: mockCreateModal,
-	closeModal: jest.fn()
+	closeModal: vi.fn()
 });
 
 describe('useEventActions', () => {

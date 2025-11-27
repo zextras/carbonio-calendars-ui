@@ -31,7 +31,7 @@ describe('Shared Calendar modal', () => {
 
 	describe('Modal header', () => {
 		it('should display the title "Share" followed by the calendar name', () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -53,7 +53,7 @@ describe('Shared Calendar modal', () => {
 			expect(screen.getByText(`Share ${title}`)).toBeVisible();
 		});
 		it('should display the close button and on click will call the modal onclose', async () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -82,7 +82,7 @@ describe('Shared Calendar modal', () => {
 	describe('Modal body', () => {
 		describe('the field to enable user to share to public', () => {
 			it('is checked by default if user shared already the calendar to public', () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						gt: SHARE_USER_TYPE.PUBLIC,
@@ -109,7 +109,7 @@ describe('Shared Calendar modal', () => {
 				expect(checkedPublicShare).toBeVisible();
 			});
 			it('is not checked by default if the calendar is not shared with public', () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -135,7 +135,7 @@ describe('Shared Calendar modal', () => {
 				expect(uncheckedPublicShare).toBeVisible();
 			});
 			test('checked on click', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -180,7 +180,7 @@ describe('Shared Calendar modal', () => {
 			expect(publicShareSection).not.toBeInTheDocument();
 		});
 		it('should render every component', async () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -219,7 +219,7 @@ describe('Shared Calendar modal', () => {
 			expect(shareNotes).toBeVisible();
 		});
 		test('the "recipients e-mail addresses" input is empty by default', async () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -245,7 +245,7 @@ describe('Shared Calendar modal', () => {
 		});
 		describe('the field to enable users to see private appointments', () => {
 			test('is not checked by default', () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -271,7 +271,7 @@ describe('Shared Calendar modal', () => {
 				expect(uncheckedPrivate).toBeVisible();
 			});
 			test('checked on click', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -303,7 +303,7 @@ describe('Shared Calendar modal', () => {
 				expect(checkedPrivate).toBeVisible();
 			});
 			test('has an info icon with tooltip', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -334,7 +334,7 @@ describe('Shared Calendar modal', () => {
 		});
 		describe('the role selector to assign to the shared user', () => {
 			test(' viewer is selected by default', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -355,7 +355,7 @@ describe('Shared Calendar modal', () => {
 				expect(screen.getByText(/viewer/i)).toBeVisible();
 			});
 			test('the select has 4 options', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -403,7 +403,7 @@ describe('Shared Calendar modal', () => {
 		});
 		describe('the field to send a notification to the shared user', () => {
 			test('this field is checked by default', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -429,7 +429,7 @@ describe('Shared Calendar modal', () => {
 				expect(sendNotificationCheckbox).toBeInTheDocument();
 			});
 			test('if send notification is checked this field is enabled and empty', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -462,7 +462,7 @@ describe('Shared Calendar modal', () => {
 				expect(standardMessage).toHaveValue('');
 			});
 			test('if send notification is unchecked this field is disabled', async () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -497,7 +497,7 @@ describe('Shared Calendar modal', () => {
 		});
 		describe('the field to add a message to the invitation', () => {
 			test('has the label "add a note to standard message"', () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -523,7 +523,7 @@ describe('Shared Calendar modal', () => {
 				expect(standardMessage).toBeVisible();
 			});
 			test('it is empty by default', () => {
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant = [
 					{
 						zid: '1',
@@ -550,7 +550,7 @@ describe('Shared Calendar modal', () => {
 			});
 		});
 		test('an information note about the share message', () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -576,7 +576,7 @@ describe('Shared Calendar modal', () => {
 	});
 	describe('Modal footer', () => {
 		it('should have the confirm button enabled when share publicly checkbox is clicked', async () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -606,7 +606,7 @@ describe('Shared Calendar modal', () => {
 			expect(confirmButton).toBeEnabled();
 		});
 		it('should have the confirm button disabled when the user did not interact with the modal', async () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -630,7 +630,7 @@ describe('Shared Calendar modal', () => {
 			expect(confirmButton).toBeEnabled();
 		});
 		it('should have the confirm button enabled when at least a chip is inserted without errors', async () => {
-			const closeFn = jest.fn();
+			const closeFn = vi.fn();
 			const grant = [
 				{
 					zid: '1',
@@ -670,7 +670,7 @@ describe('Shared Calendar modal', () => {
 			});
 			test('when public is checked it will trigger a grant operation with grant type public', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
@@ -703,7 +703,7 @@ describe('Shared Calendar modal', () => {
 			});
 			test('when a chip is added it will trigger a grant operation with grant type user', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
@@ -741,7 +741,7 @@ describe('Shared Calendar modal', () => {
 			});
 			test('if allow private appointment is checked it will have the attribute perm with value p', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
@@ -779,7 +779,7 @@ describe('Shared Calendar modal', () => {
 			});
 			test('if role none is selected it will have the attribute perm empty', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
@@ -821,7 +821,7 @@ describe('Shared Calendar modal', () => {
 			});
 			test('if role viewer is selected it will have the attribute perm with value r', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
@@ -863,7 +863,7 @@ describe('Shared Calendar modal', () => {
 			});
 			test('if role editor is selected it will have the attribute perm with value rwidxa', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
@@ -905,7 +905,7 @@ describe('Shared Calendar modal', () => {
 			});
 			test('if role manager is selected it will have the attribute perm with value rwidx', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = jest.fn();
+				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
@@ -948,7 +948,7 @@ describe('Shared Calendar modal', () => {
 			describe('if send notification about this share is checked', () => {
 				test('it will send a share notification to recipients', async () => {
 					const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
-					const closeFn = jest.fn();
+					const closeFn = vi.fn();
 					const grant: Grant[] | undefined = [];
 
 					const { user } = setupTest(
@@ -978,7 +978,7 @@ describe('Shared Calendar modal', () => {
 				});
 				test('and a custom message is added it will send the share notification with the custom message', async () => {
 					const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
-					const closeFn = jest.fn();
+					const closeFn = vi.fn();
 					const grant: Grant[] | undefined = [];
 
 					const { user } = setupTest(

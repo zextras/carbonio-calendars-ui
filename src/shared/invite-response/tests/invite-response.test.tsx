@@ -67,7 +67,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -77,7 +77,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -87,7 +87,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -97,7 +97,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -110,7 +110,7 @@ describe('invite response component', () => {
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 				const organizer = mailMsg.invite[0].comp[0].or.d;
@@ -126,7 +126,7 @@ describe('invite response component', () => {
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 
@@ -166,7 +166,7 @@ describe('invite response component', () => {
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 
@@ -186,7 +186,7 @@ describe('invite response component', () => {
 
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 
@@ -221,7 +221,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					const store = configureStore({ reducer: combineReducers(reducers) });
 
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -242,7 +242,7 @@ describe('invite response component', () => {
 					});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -263,7 +263,7 @@ describe('invite response component', () => {
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 
@@ -278,7 +278,7 @@ describe('invite response component', () => {
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 
@@ -297,7 +297,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -316,7 +316,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -335,7 +335,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -354,7 +354,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -376,7 +376,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -395,7 +395,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -414,7 +414,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -433,7 +433,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -455,7 +455,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -474,7 +474,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -493,7 +493,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -512,7 +512,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -536,7 +536,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -560,7 +560,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -590,7 +590,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -629,7 +629,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -651,7 +651,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -666,7 +666,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -687,7 +687,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -710,7 +710,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -735,7 +735,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -757,7 +757,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -784,7 +784,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -807,7 +807,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -834,7 +834,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -857,7 +857,7 @@ describe('invite response component', () => {
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 							{
 								store
 							}
@@ -885,7 +885,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -898,7 +898,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -918,7 +918,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -931,7 +931,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -952,7 +952,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -965,7 +965,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -981,7 +981,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -991,7 +991,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -1001,7 +1001,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -1011,7 +1011,7 @@ describe('invite response component', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 				store
 			});
 			const container = await screen.findByTestId('invite-response');
@@ -1023,7 +1023,7 @@ describe('invite response component', () => {
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 				const titleString = await screen.findByText(mailMsg.subject);
@@ -1035,7 +1035,7 @@ describe('invite response component', () => {
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 				const titleString = await screen.findByText(mailMsg.subject);
@@ -1051,7 +1051,7 @@ describe('invite response component', () => {
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 
@@ -1072,7 +1072,7 @@ describe('invite response component', () => {
 				});
 				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 					store
 				});
 
@@ -1102,7 +1102,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -1124,7 +1124,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -1146,7 +1146,7 @@ describe('invite response component', () => {
 
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1172,7 +1172,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1204,7 +1204,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1231,7 +1231,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1261,7 +1261,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1288,7 +1288,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1320,7 +1320,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1350,7 +1350,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1383,7 +1383,7 @@ describe('invite response component', () => {
 							);
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
-								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
 								{
 									store
 								}
@@ -1414,7 +1414,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -1436,7 +1436,7 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 							store
 						});
 
@@ -1467,7 +1467,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -1480,7 +1480,7 @@ describe('invite response component', () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -1500,7 +1500,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -1513,7 +1513,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -1534,7 +1534,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 
@@ -1547,7 +1547,7 @@ describe('invite response component', () => {
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
 						store
 					});
 

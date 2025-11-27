@@ -44,7 +44,7 @@ describe('Attachment', () => {
 		id: '1',
 		part: 'part1',
 		isEditor: false,
-		removeAttachment: jest.fn(),
+		removeAttachment: vi.fn(),
 		disabled: false,
 		iconColors: [{ extension: 'pdf', color: 'blue' }],
 		attachment: mockAttachment
@@ -62,7 +62,7 @@ describe('Attachment', () => {
 	});
 
 	test('calls download function when download button is clicked', async () => {
-		const windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(jest.fn());
+		const windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(vi.fn());
 		const props = {
 			...baseProps,
 			id: '1',
@@ -79,7 +79,7 @@ describe('Attachment', () => {
 	});
 
 	test('calls createPreview when a file is set to be viewed with the previer', async () => {
-		const spyOpen = jest.spyOn(window, 'open').mockImplementation(jest.fn());
+		const spyOpen = jest.spyOn(window, 'open').mockImplementation(vi.fn());
 		const unsupportedAttachment = {
 			name: 'test-file.ts',
 			size: 1024,

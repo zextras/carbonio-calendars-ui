@@ -31,7 +31,7 @@ const spyUseIntegratedIntegration = (chatsIsEnabled: boolean, wscIsEnabled: bool
 	jest.spyOn(shell, 'useIntegratedComponent').mockImplementation((id: string) => {
 		if (id === 'room-selector') return [FakeChatsIntegrationComponent, chatsIsEnabled];
 		if (id === 'wsc-room-selector') return [FakeWscIntegrationComponent, wscIsEnabled];
-		return [jest.fn(), false];
+		return [vi.fn(), false];
 	});
 };
 

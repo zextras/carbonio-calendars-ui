@@ -10,7 +10,7 @@ import { useSnackbar } from '@zextras/carbonio-design-system';
 import { useForwardAppointmentSnackbar } from 'view/modals/forward-appointment/use-forward-appointment-snackbar';
 
 jest.mock('@zextras/carbonio-design-system', () => ({
-	useSnackbar: jest.fn()
+	useSnackbar: vi.fn()
 }));
 
 jest.mock('@zextras/carbonio-shell-ui', () => ({
@@ -19,7 +19,7 @@ jest.mock('@zextras/carbonio-shell-ui', () => ({
 }));
 
 describe('useForwardAppointmentSnackbar', () => {
-	const mockCreateSnackbar = jest.fn();
+	const mockCreateSnackbar = vi.fn();
 
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -141,7 +141,7 @@ describe('useForwardAppointmentSnackbar', () => {
 	});
 
 	it('should update callbacks when createSnackbar changes', () => {
-		const mockCreateSnackbar2 = jest.fn();
+		const mockCreateSnackbar2 = vi.fn();
 		const { result, rerender } = renderHook(() => useForwardAppointmentSnackbar());
 
 		const firstShowError = result.current.showErrorSnackbar;

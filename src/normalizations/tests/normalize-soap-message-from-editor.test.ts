@@ -63,7 +63,7 @@ describe('normalize soap message from editor', () => {
 			context: {
 				compNum: 4,
 				folders: {},
-				dispatch: jest.fn()
+				dispatch: vi.fn()
 			}
 		});
 		const body = normalizeSoapMessageFromEditor(editor);
@@ -92,7 +92,7 @@ describe('normalize soap message from editor', () => {
 						attendees,
 						optionalAttendees,
 						folders: {},
-						dispatch: jest.fn()
+						dispatch: vi.fn()
 					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);
@@ -121,7 +121,7 @@ describe('normalize soap message from editor', () => {
 						attendees,
 						optionalAttendees,
 						folders: {},
-						dispatch: jest.fn()
+						dispatch: vi.fn()
 					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);
@@ -145,7 +145,7 @@ describe('normalize soap message from editor', () => {
 					const editor = generateEditor({
 						context: {
 							folders: {},
-							dispatch: jest.fn(),
+							dispatch: vi.fn(),
 							calendar: mainAccountEditorFolder
 						}
 					});
@@ -175,7 +175,7 @@ describe('normalize soap message from editor', () => {
 					const editor = generateEditor({
 						context: {
 							folders: {},
-							dispatch: jest.fn(),
+							dispatch: vi.fn(),
 							calendar: mainAccountEditorFolder
 						}
 					});
@@ -216,7 +216,7 @@ describe('normalize soap message from editor', () => {
 						const editor = generateEditor({
 							context: {
 								folders: {},
-								dispatch: jest.fn(),
+								dispatch: vi.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
@@ -251,7 +251,7 @@ describe('normalize soap message from editor', () => {
 						const editor = generateEditor({
 							context: {
 								folders: {},
-								dispatch: jest.fn(),
+								dispatch: vi.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
@@ -296,7 +296,7 @@ describe('normalize soap message from editor', () => {
 						const editor = generateEditor({
 							context: {
 								folders: {},
-								dispatch: jest.fn(),
+								dispatch: vi.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
@@ -334,7 +334,7 @@ describe('normalize soap message from editor', () => {
 						const editor = generateEditor({
 							context: {
 								folders: {},
-								dispatch: jest.fn(),
+								dispatch: vi.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
@@ -369,7 +369,7 @@ describe('normalize soap message from editor', () => {
 					const editor = generateEditor({
 						context: {
 							folders: {},
-							dispatch: jest.fn(),
+							dispatch: vi.fn(),
 							calendar: sharedEditorFolder
 						}
 					});
@@ -399,7 +399,7 @@ describe('normalize soap message from editor', () => {
 					const editor = generateEditor({
 						context: {
 							folders: {},
-							dispatch: jest.fn(),
+							dispatch: vi.fn(),
 							calendar: sharedEditorFolder
 						}
 					});
@@ -434,7 +434,7 @@ describe('normalize soap message from editor', () => {
 						const editor = generateEditor({
 							context: {
 								folders: {},
-								dispatch: jest.fn(),
+								dispatch: vi.fn(),
 								calendar: sharedEditorFolder,
 								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
@@ -468,7 +468,7 @@ describe('normalize soap message from editor', () => {
 						const editor = generateEditor({
 							context: {
 								folders: {},
-								dispatch: jest.fn(),
+								dispatch: vi.fn(),
 								calendar: sharedEditorFolder,
 								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
@@ -505,7 +505,7 @@ describe('normalize soap message from editor', () => {
 					const editor = generateEditor({
 						context: {
 							folders: {},
-							dispatch: jest.fn(),
+							dispatch: vi.fn(),
 							calendar: sharedEditorFolder,
 							sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 						}
@@ -544,7 +544,7 @@ describe('normalize soap message from editor', () => {
 				const editor = generateEditor({
 					context: {
 						folders: {},
-						dispatch: jest.fn(),
+						dispatch: vi.fn(),
 						calendar: sharedEditorFolder,
 						sender: { email: identities[0].address ?? '', fullName: identities[0].fullName }
 					}
@@ -577,7 +577,7 @@ describe('normalize soap message from editor', () => {
 				const editor = generateEditor({
 					context: {
 						folders: {},
-						dispatch: jest.fn(),
+						dispatch: vi.fn(),
 						calendar: sharedEditorFolder,
 						sender: { email: identities[0].address ?? '', fullName: identities[0].fullName }
 					}
@@ -610,7 +610,7 @@ describe('normalize soap message from editor', () => {
 				const editor = generateEditor({
 					context: {
 						folders: {},
-						dispatch: jest.fn(),
+						dispatch: vi.fn(),
 						calendar: sharedEditorFolder,
 						sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 					}
@@ -642,7 +642,7 @@ describe('normalize soap message from editor', () => {
 				const editor = generateEditor({
 					context: {
 						folders: {},
-						dispatch: jest.fn(),
+						dispatch: vi.fn(),
 						calendar: sharedAccountEditorFolder
 					}
 				});
@@ -673,7 +673,7 @@ describe('normalize soap message from editor', () => {
 				const editor = generateEditor({
 					context: {
 						folders: {},
-						dispatch: jest.fn(),
+						dispatch: vi.fn(),
 						calendar: sharedAccountEditorFolder
 					}
 				});
@@ -705,7 +705,7 @@ describe('normalize soap message from editor', () => {
 				const editor = generateEditor({
 					context: {
 						folders: {},
-						dispatch: jest.fn(),
+						dispatch: vi.fn(),
 						calendar: sharedAccountEditorFolder,
 						sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 					}
@@ -739,7 +739,7 @@ describe('normalize soap message from editor', () => {
 				const editor = generateEditor({
 					context: {
 						folders: {},
-						dispatch: jest.fn(),
+						dispatch: vi.fn(),
 						calendar: sharedAccountEditorFolder,
 						sender: { email: identities[2].address ?? '', fullName: identities[2].fullName }
 					}
@@ -802,7 +802,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					title: 'Test Meeting',
 					location: 'Conference Room',
 					plainText: 'Meeting description',
@@ -831,7 +831,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					room: {
 						label: 'Virtual Room',
 						link: 'https://meet.example.com/room123'
@@ -858,7 +858,7 @@ describe('normalize soap message from editor', () => {
 					attendees: [],
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					plainText: 'Just the description'
 				}
 			});
@@ -881,7 +881,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees,
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					plainText: 'Meeting with optional attendees'
 				}
 			});
@@ -902,7 +902,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					calendar: sharedEditorFolder,
 					plainText: 'Shared calendar meeting'
 				}
@@ -924,7 +924,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					organizer: { email: 'organizer@example.com', fullName: undefined },
 					plainText: 'Meeting with undefined organizer name'
 				}
@@ -946,7 +946,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					room: {
 						label: 'Test Room',
 						link: 'https://example.com/room'
@@ -972,7 +972,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					room: {
 						label: '',
 						link: 'https://example.com/room'
@@ -1007,7 +1007,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					title: 'Test Meeting',
 					location: 'Conference Room',
 					richText: '<b>Meeting description</b>',
@@ -1044,7 +1044,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					room: {
 						label: 'Virtual Room',
 						link: 'https://meet.example.com/room123'
@@ -1072,7 +1072,7 @@ describe('normalize soap message from editor', () => {
 					attendees: [],
 					optionalAttendees: [],
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					richText: '<p>Just the description</p>'
 				}
 			});
@@ -1094,7 +1094,7 @@ describe('normalize soap message from editor', () => {
 					attendees,
 					optionalAttendees,
 					folders: {},
-					dispatch: jest.fn(),
+					dispatch: vi.fn(),
 					richText: '<p>Meeting with optional attendees</p>'
 				}
 			});

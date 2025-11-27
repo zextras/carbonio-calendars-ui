@@ -8,7 +8,7 @@ import { includes } from 'lodash';
 import { getAttachmentsDownloadLink, getAttachmentsPreviewLink } from '../attachment-utils';
 
 jest.mock('lodash', () => ({
-	includes: jest.fn()
+	includes: vi.fn()
 }));
 
 describe('attachment-utils', () => {

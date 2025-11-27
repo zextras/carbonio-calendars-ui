@@ -17,7 +17,7 @@ import { setupTest, screen } from '../../__test__/test-setup';
 import { reducers } from 'store/redux';
 
 beforeAll(() => {
-	useLocalStorage.mockReturnValue([[], jest.fn()]);
+	useLocalStorage.mockReturnValue([[], vi.fn()]);
 });
 
 describe('ExpandedSecondaryBar', () => {

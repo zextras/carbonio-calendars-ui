@@ -21,13 +21,13 @@ import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-int
 
 describe('DeleteCalendarGroupModal', () => {
 	it('should render the specific title ', () => {
-		setupTest(<DeleteCalendarGroupModal groupId={'1'} onClose={jest.fn()} />);
+		setupTest(<DeleteCalendarGroupModal groupId={'1'} onClose={vi.fn()} />);
 
 		expect(screen.getByText('Delete group permanently?')).toBeVisible();
 	});
 
 	it('should render the close icon ', () => {
-		setupTest(<DeleteCalendarGroupModal groupId={'1'} onClose={jest.fn()} />);
+		setupTest(<DeleteCalendarGroupModal groupId={'1'} onClose={vi.fn()} />);
 
 		expect(
 			screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal })
@@ -35,7 +35,7 @@ describe('DeleteCalendarGroupModal', () => {
 	});
 
 	it('calls onClose when the close icon is clicked', async () => {
-		const onClose = jest.fn();
+		const onClose = vi.fn();
 
 		const { user } = setupTest(<DeleteCalendarGroupModal groupId={'1'} onClose={onClose} />);
 		await user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal }));
@@ -44,7 +44,7 @@ describe('DeleteCalendarGroupModal', () => {
 	});
 
 	it('should call onClose when the delete button is clicked', async () => {
-		const onClose = jest.fn();
+		const onClose = vi.fn();
 		const groupId = faker.number.int().toString();
 		const response = {
 			group: {
@@ -77,7 +77,7 @@ describe('DeleteCalendarGroupModal', () => {
 			DeleteCalendarGroupResponse
 		>('DeleteCalendarGroup', response);
 
-		const { user } = setupTest(<DeleteCalendarGroupModal groupId={groupId} onClose={jest.fn()} />);
+		const { user } = setupTest(<DeleteCalendarGroupModal groupId={groupId} onClose={vi.fn()} />);
 		await user.click(screen.getByRole('button', { name: /delete permanently/i }));
 		const apiParams = await apiCallInterceptor;
 
@@ -98,7 +98,7 @@ describe('DeleteCalendarGroupModal', () => {
 			response
 		);
 
-		const { user } = setupTest(<DeleteCalendarGroupModal groupId={groupId} onClose={jest.fn()} />);
+		const { user } = setupTest(<DeleteCalendarGroupModal groupId={groupId} onClose={vi.fn()} />);
 		await user.click(screen.getByRole('button', { name: /delete permanently/i }));
 
 		expect(await screen.findByText('Calendar group permanently deleted')).toBeVisible();
@@ -113,7 +113,7 @@ describe('DeleteCalendarGroupModal', () => {
 			response
 		);
 
-		const { user } = setupTest(<DeleteCalendarGroupModal groupId={groupId} onClose={jest.fn()} />);
+		const { user } = setupTest(<DeleteCalendarGroupModal groupId={groupId} onClose={vi.fn()} />);
 		await user.click(screen.getByRole('button', { name: /delete permanently/i }));
 
 		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();

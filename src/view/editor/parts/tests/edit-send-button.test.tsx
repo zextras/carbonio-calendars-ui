@@ -17,7 +17,7 @@ import { EditorSendButton } from '../editor-send-button';
 import { setupTest } from '@test-setup';
 
 jest.mock('../../../../commons/editor-save-send-fns', () => ({
-	onSend: jest.fn()
+	onSend: vi.fn()
 }));
 
 const DEFAULT_ATTENDEE = { email: 'user@test.com' };

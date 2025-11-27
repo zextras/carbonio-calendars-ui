@@ -25,7 +25,7 @@ const SettingsHeader = jest.fn(({ title, onSave, onCancel, isDirty }) => (
 
 jest.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	usePrefs: jest.fn()
+	usePrefs: vi.fn()
 }));
 
 const defaultSettings = {
@@ -41,7 +41,7 @@ beforeAll(() => {
 });
 
 jest.mock('./save-settings', () => ({
-	saveSettings: jest.fn()
+	saveSettings: vi.fn()
 }));
 
 describe('Settings view', () => {
