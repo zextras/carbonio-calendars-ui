@@ -16,7 +16,7 @@ import { reducers } from '../../../../store/redux';
 import { EditorSaveButton } from '../editor-save-button';
 import { setupTest } from '@test-setup';
 
-jest.mock('../../../../commons/editor-save-send-fns', () => ({
+vi.mock('../../../../commons/editor-save-send-fns', () => ({
 	onSave: vi.fn()
 }));
 

@@ -7,7 +7,7 @@ import { includes } from 'lodash';
 
 import { getAttachmentsDownloadLink, getAttachmentsPreviewLink } from '../attachment-utils';
 
-jest.mock('lodash', () => ({
+vi.mock('lodash', () => ({
 	includes: vi.fn()
 }));
 

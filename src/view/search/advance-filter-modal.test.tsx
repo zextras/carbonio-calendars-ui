@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-jest.mock('@zextras/carbonio-shell-ui', () => ({
+vi.mock('@zextras/carbonio-shell-ui', () => ({
 	t: (key: string, fallback?: string): string => fallback ?? key
 }));
-jest.mock('../../constants/advance-filter-modal', () => ({
+vi.mock('../../constants/advance-filter-modal', () => ({
 	DEFAULT_DATE_START: 1744329600000, // 1744329600000 = April 11, 2025, 00:00:00 UTC
 	DEFAULT_DATE_END: 1745539200000 // 1745539200000 = April 25, 2025, 00:00:00 UTC
 }));

@@ -17,12 +17,12 @@ import {
 } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
-jest.mock('@zextras/carbonio-design-system', () => ({
+vi.mock('@zextras/carbonio-design-system', () => ({
 	...jest.requireActual('@zextras/carbonio-design-system'),
 	useSnackbar: vi.fn().mockReturnValue(vi.fn())
 }));
 
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
 	...jest.requireActual('react-i18next'),
 	useTranslation: vi.fn().mockReturnValue([mockTranslation])
 }));

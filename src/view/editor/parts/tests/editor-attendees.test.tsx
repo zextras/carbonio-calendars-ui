@@ -27,7 +27,7 @@ import { setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
+vi.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
 	useContactInput: vi.fn()
 }));

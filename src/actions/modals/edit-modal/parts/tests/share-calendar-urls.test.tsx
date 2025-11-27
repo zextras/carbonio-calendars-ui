@@ -38,7 +38,7 @@ const BUTTONS = [
 	}
 ];
 
-jest.mock('@zextras/carbonio-ui-commons', () => {
+vi.mock('@zextras/carbonio-ui-commons', () => {
 	const actual = jest.requireActual('@zextras/carbonio-ui-commons');
 	return {
 		__esModule: true,

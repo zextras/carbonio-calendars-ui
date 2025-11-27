@@ -9,11 +9,11 @@ import { useSnackbar } from '@zextras/carbonio-design-system';
 
 import { useForwardAppointmentSnackbar } from 'view/modals/forward-appointment/use-forward-appointment-snackbar';
 
-jest.mock('@zextras/carbonio-design-system', () => ({
+vi.mock('@zextras/carbonio-design-system', () => ({
 	useSnackbar: vi.fn()
 }));
 
-jest.mock('@zextras/carbonio-shell-ui', () => ({
+vi.mock('@zextras/carbonio-shell-ui', () => ({
 	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 	t: (_key: string, defaultValue: string) => defaultValue
 }));

@@ -17,12 +17,12 @@ import {
 import { EventType } from '../types/event';
 import { setupHook, setupTest, screen } from '@test-setup';
 
-jest.mock('@zextras/carbonio-design-system', () => ({
+vi.mock('@zextras/carbonio-design-system', () => ({
 	...jest.requireActual('@zextras/carbonio-design-system'),
 	useModal: vi.fn()
 }));
 
-jest.mock('../store/redux/hooks', () => ({
+vi.mock('../store/redux/hooks', () => ({
 	...jest.requireActual('../store/redux/hooks'),
 	useAppSelector: vi.fn(),
 	useAppDispatch: vi.fn()

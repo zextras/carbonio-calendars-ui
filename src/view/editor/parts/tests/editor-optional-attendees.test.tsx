@@ -24,7 +24,7 @@ import { reducers } from '../../../../store/redux';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
 import { setupTest } from '@test-setup';
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
+vi.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
 	useContactInput: vi.fn()
 }));

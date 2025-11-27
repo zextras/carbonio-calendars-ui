@@ -50,7 +50,7 @@ const sharedAccountEditorFolder = {
 
 const addressPrefKey = 'zimbraPrefFromAddress';
 
-jest.mock('../../hooks/use-get-date-range-converted-to-timezone', () => ({
+vi.mock('../../hooks/use-get-date-range-converted-to-timezone', () => ({
 	getTimeStrings: vi.fn(() => 'Jan 1, 2024 10:00 AM - 11:00 AM')
 }));
 
