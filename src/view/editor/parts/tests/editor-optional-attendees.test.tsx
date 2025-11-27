@@ -10,6 +10,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
 import { DefaultContactInput, useContactInput } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
+import { Mock } from 'vitest';
 
 import {
 	contactInputBuilder,
@@ -24,14 +25,14 @@ import { reducers } from '../../../../store/redux';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
 import { setupTest } from '@test-setup';
 
-vi.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
 	useContactInput: vi.fn()
 }));
 describe('Editor Optional Attendees', () => {
 	describe('ChipInput', () => {
 		beforeEach(() => {
-			(useContactInput as jest.Mock).mockReturnValue(DefaultContactInput);
+			(useContactInput as Mock).mockReturnValue(DefaultContactInput);
 		});
 		it('should display optional attendees using email in store', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
@@ -81,7 +82,7 @@ describe('Editor Optional Attendees', () => {
 		it('should display edit action when new value in ContactInput has an error', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const newValueWithError = { ...MOCK_VALUE, error: true };
-			(useContactInput as jest.Mock).mockReturnValue(
+			(useContactInput as Mock).mockReturnValue(
 				contactInputBuilder({ valuesToAdd: [newValueWithError] })
 			);
 			const editor = generateEditor({
@@ -116,7 +117,7 @@ describe('Editor Optional Attendees', () => {
 
 			const newValueFromAutocomplete = { ...MOCK_VALUE, label: 'test label' };
 
-			(useContactInput as jest.Mock).mockReturnValue(
+			(useContactInput as Mock).mockReturnValue(
 				contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] })
 			);
 

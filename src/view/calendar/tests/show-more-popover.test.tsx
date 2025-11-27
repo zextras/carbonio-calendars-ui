@@ -82,7 +82,7 @@ describe('show more popover', () => {
 		await user.hover(screen.getByTestId('icon: Close'));
 
 		act(() => {
-			jest.advanceTimersByTime(3000);
+			vi.advanceTimersByTime(3000);
 		});
 
 		const closeTooltip = await screen.findByText(/Close/i);

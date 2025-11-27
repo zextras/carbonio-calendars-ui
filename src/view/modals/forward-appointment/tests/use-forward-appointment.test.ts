@@ -38,7 +38,7 @@ describe('useForwardAppointment', () => {
 	];
 
 	beforeEach(() => {
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 	});
 
 	it('should return a function', () => {

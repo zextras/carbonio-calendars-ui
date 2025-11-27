@@ -103,7 +103,7 @@ describe('Editor meeting rooms', () => {
 		await user.type(screen.getByText('Meeting room'), 'resource');
 
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -135,7 +135,7 @@ describe('Editor meeting rooms', () => {
 		await user.type(screen.getByText('Meeting room'), 'resource');
 
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -143,7 +143,7 @@ describe('Editor meeting rooms', () => {
 		await user.click(within(dropdown).getByText(items[0].label));
 		expect(dropdown).not.toBeInTheDocument();
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});

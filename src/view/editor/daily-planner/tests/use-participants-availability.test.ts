@@ -20,13 +20,13 @@ import {
 } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
-vi.mock('@zextras/carbonio-design-system', () => ({
-	...jest.requireActual('@zextras/carbonio-design-system'),
+vi.mock('@zextras/carbonio-design-system', async () => ({
+	...(await vi.importActual('@zextras/carbonio-design-system')),
 	useSnackbar: vi.fn().mockReturnValue(vi.fn())
 }));
 
-vi.mock('react-i18next', () => ({
-	...jest.requireActual('react-i18next'),
+vi.mock('react-i18next', async () => ({
+	...(await vi.importActual('react-i18next')),
 	useTranslation: vi.fn().mockReturnValue([mockTranslation])
 }));
 
@@ -45,7 +45,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		expect(result.current).toMatchObject({});
 	});
 
@@ -96,7 +96,7 @@ describe('useParticipantsAvailability', () => {
 			})
 		);
 
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		const request = await mockRequest;
 		expect(request.s).toBe(1000);
 		expect(request.e).toBe(2000);
@@ -115,7 +115,7 @@ describe('useParticipantsAvailability', () => {
 			})
 		);
 
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		const request = await mockRequest;
 		expect(request.excludeUid).toBeUndefined();
 	});
@@ -129,7 +129,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		expect(getFreeBusyHandler).not.toHaveBeenCalled();
 	});
 
@@ -152,9 +152,9 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		rerender();
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await waitFor(() => {
 			expect(interceptor.getCalledTimes()).toBe(1);
 		});
@@ -179,7 +179,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis: 0
 			})
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await waitFor(() => {
 			expect(interceptor.getCalledTimes()).toBe(1);
 		});
@@ -200,7 +200,7 @@ describe('useParticipantsAvailability', () => {
 				endDateEpochMillis
 			}
 		});
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await successFullInterceptor;
 		await waitFor(() => {
 			expect(result.current).toMatchObject({
@@ -214,7 +214,7 @@ describe('useParticipantsAvailability', () => {
 		);
 		const newParticipants = [{ email }, { email: 'newAttendee@test.com' }];
 		rerender({ participants: newParticipants, startDateEpochMillis, endDateEpochMillis });
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await failingInterceptor;
 		await waitFor(() => {
 			expect(result.current).toEqual({});

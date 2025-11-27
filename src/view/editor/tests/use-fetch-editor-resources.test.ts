@@ -17,7 +17,7 @@ describe('useFetchEditorResources', () => {
 	);
 
 	afterEach(() => {
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 	});
 
 	it('returns true for hasEquipment and hasMeetingRoom when both resources are present', async () => {

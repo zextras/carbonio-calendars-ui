@@ -22,11 +22,11 @@ import { setupTest } from '@test-setup';
 const MOCKED_NOW = new Date('2025-04-18T00:00:00Z');
 
 beforeAll(() => {
-	jest.useFakeTimers().setSystemTime(MOCKED_NOW);
+	vi.useFakeTimers().setSystemTime(MOCKED_NOW);
 });
 
 afterAll(() => {
-	jest.useRealTimers();
+	vi.useRealTimers();
 });
 
 describe('AdvancedFilterModal', () => {

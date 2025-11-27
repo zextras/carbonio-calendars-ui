@@ -665,7 +665,7 @@ describe('Shared Calendar modal', () => {
 		describe('on click', () => {
 			afterEach(async () => {
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 			});
 			test('when public is checked it will trigger a grant operation with grant type public', async () => {

@@ -6,6 +6,7 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useSnackbar } from '@zextras/carbonio-design-system';
+import { Mock } from 'vitest';
 
 import { useForwardAppointmentSnackbar } from 'view/modals/forward-appointment/use-forward-appointment-snackbar';
 
@@ -22,8 +23,8 @@ describe('useForwardAppointmentSnackbar', () => {
 	const mockCreateSnackbar = vi.fn();
 
 	beforeEach(() => {
-		jest.clearAllMocks();
-		(useSnackbar as jest.Mock).mockReturnValue(mockCreateSnackbar);
+		vi.clearAllMocks();
+		(useSnackbar as Mock).mockReturnValue(mockCreateSnackbar);
 	});
 
 	it('should return showErrorSnackbar and showSuccessSnackbar functions', () => {
@@ -146,7 +147,7 @@ describe('useForwardAppointmentSnackbar', () => {
 
 		const firstShowError = result.current.showErrorSnackbar;
 
-		(useSnackbar as jest.Mock).mockReturnValue(mockCreateSnackbar2);
+		(useSnackbar as Mock).mockReturnValue(mockCreateSnackbar2);
 		rerender();
 
 		const secondShowError = result.current.showErrorSnackbar;

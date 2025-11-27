@@ -56,7 +56,7 @@ describe('EditorDailyPlanner', () => {
 			{ store }
 		);
 
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 
@@ -81,7 +81,7 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		const freeBusyRequest = await interceptor;
 		expect(freeBusyRequest.uid).toBe(
 			'organizer@test.com,attendee1@test.com,attendee2@test.com,meeting.room1@test.com,companyCar@test.com,optionalAttendee1@test.com'
@@ -108,7 +108,7 @@ describe('EditorDailyPlanner', () => {
 			{ store }
 		);
 
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		const freeBusyRequest = await interceptor;
 		const expectedStartDate = new Date(start);
 		expectedStartDate.setHours(0, 0, 0, 0);
@@ -136,7 +136,7 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await workingHoursApiCall;
 		await freeBusyApiCall;
 
@@ -167,7 +167,7 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await freeBusyApiCall;
 		await workingHoursApiCall;
 
@@ -188,7 +188,7 @@ describe('EditorDailyPlanner', () => {
 			{ store }
 		);
 
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 
@@ -211,7 +211,7 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await freeBusyInterceptor;
 		await failingInterceptor;
 		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
@@ -231,7 +231,7 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await workingHoursInterceptor;
 		await failingInterceptor;
 		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
@@ -248,7 +248,7 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 
 		await workingHoursInterceptor;
 
@@ -260,7 +260,7 @@ describe('EditorDailyPlanner', () => {
 		await user.click(rightArrowButton);
 		await user.click(rightArrowButton);
 
-		jest.advanceTimersByTime(300);
+		vi.advanceTimersByTime(300);
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
 });

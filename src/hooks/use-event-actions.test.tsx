@@ -6,6 +6,7 @@
 
 import { useModal } from '@zextras/carbonio-design-system';
 import { find, indexOf } from 'lodash';
+import { Mock } from 'vitest';
 
 import { useEventActions } from './use-event-actions';
 import { EVENT_ACTIONS } from '../constants/event-actions';
@@ -17,13 +18,13 @@ import {
 import { EventType } from '../types/event';
 import { setupHook, setupTest, screen } from '@test-setup';
 
-vi.mock('@zextras/carbonio-design-system', () => ({
-	...jest.requireActual('@zextras/carbonio-design-system'),
+vi.mock('@zextras/carbonio-design-system', async () => ({
+	...(await vi.importActual('@zextras/carbonio-design-system')),
 	useModal: vi.fn()
 }));
 
-vi.mock('../store/redux/hooks', () => ({
-	...jest.requireActual('../store/redux/hooks'),
+vi.mock('../store/redux/hooks', async () => ({
+	...(await vi.importActual('../store/redux/hooks')),
 	useAppSelector: vi.fn(),
 	useAppDispatch: vi.fn()
 }));
@@ -38,7 +39,7 @@ function getActionByName(
 	);
 }
 const mockCreateModal = vi.fn();
-(useModal as jest.Mock).mockReturnValue({
+(useModal as Mock).mockReturnValue({
 	createModal: mockCreateModal,
 	closeModal: vi.fn()
 });

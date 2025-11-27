@@ -45,7 +45,7 @@ describe('Custom show more', () => {
 		await user.hover(screen.getByRole('button', { name: `+ ${remainingEvents.length} more` }));
 
 		act(() => {
-			jest.advanceTimersByTime(3000);
+			vi.advanceTimersByTime(3000);
 		});
 
 		expect(screen.getByText(/Show all events/i)).toBeVisible();

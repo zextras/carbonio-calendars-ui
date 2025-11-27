@@ -25,8 +25,8 @@ const generateTag = (model: Partial<Tag> = {}): Tag => ({
 	n: model.n || faker.number.int({ min: 0, max: 1000 })
 });
 
-vi.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
 	useRunSearchIntegration: vi.fn()
 }));
 

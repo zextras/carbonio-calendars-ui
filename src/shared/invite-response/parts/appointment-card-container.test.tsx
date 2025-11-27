@@ -90,7 +90,7 @@ describe('appointment card container component', () => {
 		});
 
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 
 		expect(searchRequestHandler).toHaveBeenCalledTimes(1);

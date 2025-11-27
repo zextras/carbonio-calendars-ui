@@ -16,8 +16,8 @@ import { setupHook } from '@test-setup';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { mockSoapSync } from '@test-utils/utils/soap';
 
-vi.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
 	folderWorker: {
 		postMessage: vi.fn()
 	},

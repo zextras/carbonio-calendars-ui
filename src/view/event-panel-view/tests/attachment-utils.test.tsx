@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { includes } from 'lodash';
+import { Mock } from 'vitest';
 
 import { getAttachmentsDownloadLink, getAttachmentsPreviewLink } from '../attachment-utils';
 
@@ -77,7 +78,7 @@ describe('attachment-utils', () => {
 		});
 
 		it('should return image preview link for image types', () => {
-			(includes as jest.Mock).mockReturnValueOnce(true); // Mocking lodash `includes` return true for image types
+			(includes as Mock).mockReturnValueOnce(true); // Mocking lodash `includes` return true for image types
 
 			const props = {
 				messageId,
@@ -98,7 +99,7 @@ describe('attachment-utils', () => {
 		});
 
 		it('should return pdf preview link for pdf files', () => {
-			(includes as jest.Mock).mockReturnValueOnce(false).mockReturnValueOnce(true);
+			(includes as Mock).mockReturnValueOnce(false).mockReturnValueOnce(true);
 
 			const props = {
 				messageId,
@@ -114,7 +115,7 @@ describe('attachment-utils', () => {
 		});
 
 		it('should return document preview link for document types', () => {
-			(includes as jest.Mock)
+			(includes as Mock)
 				.mockReturnValueOnce(false)
 				.mockReturnValueOnce(false)
 				.mockReturnValueOnce(true);
@@ -148,7 +149,7 @@ describe('attachment-utils', () => {
 		});
 
 		it('should return fallback preview link for unknown attachment types', () => {
-			(includes as jest.Mock).mockReturnValue(false);
+			(includes as Mock).mockReturnValue(false);
 
 			const props = {
 				messageId,

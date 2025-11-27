@@ -148,7 +148,7 @@ describe('delete event modal', () => {
 	const emptyStore = mockedData.store.mockReduxStore({ invites, appointments });
 
 	beforeEach(() => {
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 	});
 	describe('series', () => {
 		describe('The event is created on a shared account', () => {
@@ -262,7 +262,7 @@ describe('delete event modal', () => {
 						);
 
 						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
+							await vi.advanceTimersToNextTimerAsync();
 						});
 
 						expect(spy).toHaveBeenCalledWith(
@@ -273,7 +273,7 @@ describe('delete event modal', () => {
 								})
 							})
 						);
-						jest.clearAllMocks();
+						vi.clearAllMocks();
 					});
 				});
 				test('modal ui sections', () => {
@@ -561,10 +561,10 @@ describe('delete event modal', () => {
 					})
 				);
 
-				jest.clearAllMocks();
+				vi.clearAllMocks();
 
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 				expect(spy).toHaveBeenCalledWith(
 					'SendInviteReply',
@@ -598,9 +598,9 @@ describe('delete event modal', () => {
 					})
 				);
 
-				jest.clearAllMocks();
+				vi.clearAllMocks();
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 
 				expect(spy).not.toHaveBeenCalledWith(

@@ -80,7 +80,7 @@ describe('availability checker component', () => {
 				);
 
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -114,7 +114,7 @@ describe('availability checker component', () => {
 				);
 
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -148,7 +148,7 @@ describe('availability checker component', () => {
 				);
 
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -187,7 +187,7 @@ describe('availability checker component', () => {
 				);
 
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -224,7 +224,7 @@ describe('availability checker component', () => {
 				);
 
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -262,7 +262,7 @@ describe('availability checker component', () => {
 				);
 
 				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
+					await vi.advanceTimersToNextTimerAsync();
 				});
 
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -300,7 +300,7 @@ describe('availability checker component', () => {
 					);
 
 					await act(async () => {
-						await jest.advanceTimersToNextTimerAsync();
+						await vi.advanceTimersToNextTimerAsync();
 					});
 
 					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -338,7 +338,7 @@ describe('availability checker component', () => {
 						);
 
 						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
+							await vi.advanceTimersToNextTimerAsync();
 						});
 
 						expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
@@ -379,7 +379,7 @@ describe('availability checker component', () => {
 						);
 
 						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
+							await vi.advanceTimersToNextTimerAsync();
 						});
 
 						expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);

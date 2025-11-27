@@ -17,8 +17,8 @@ import {
 	createSoapAPIInterceptor
 } from '@test-utils/network/msw/create-api-interceptor';
 
-vi.mock('react-i18next', () => ({
-	...jest.requireActual('react-i18next'),
+vi.mock('react-i18next', async () => ({
+	...(await vi.importActual('react-i18next')),
 	useTranslation: vi.fn().mockReturnValue({
 		t: (_key: string, defaultValue: string) => defaultValue
 	})

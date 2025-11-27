@@ -38,8 +38,8 @@ const BUTTONS = [
 	}
 ];
 
-vi.mock('@zextras/carbonio-ui-commons', () => {
-	const actual = jest.requireActual('@zextras/carbonio-ui-commons');
+vi.mock('@zextras/carbonio-ui-commons', async () => {
+	const actual = await vi.importActual('@zextras/carbonio-ui-commons');
 	return {
 		__esModule: true,
 		...actual,
