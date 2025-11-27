@@ -16,10 +16,6 @@ describe('useFetchEditorResources', () => {
 		'searchCalendarMultipleResourcesRequest'
 	);
 
-	afterEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('returns true for hasEquipment and hasMeetingRoom when both resources are present', async () => {
 		mockSearchCalendarMultipleResourcesRequest.mockResolvedValueOnce({
 			calresource: [

@@ -24,10 +24,6 @@ vi.mock('../../../../commons/editor-save-send-fns', () => ({
 const DEFAULT_ATTENDEE = { email: 'user@test.com' };
 
 describe('EditorSaveButton', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should disable save button when event has no title', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 

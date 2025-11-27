@@ -37,10 +37,6 @@ describe('useForwardAppointment', () => {
 		{ ct: 'text/html', content: '<p>HTML content</p>' }
 	];
 
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should return a function', () => {
 		const { result } = renderHook(() => useForwardAppointment(defaultParams));
 		expect(typeof result.current).toBe('function');

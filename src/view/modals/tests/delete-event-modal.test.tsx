@@ -147,9 +147,6 @@ describe('delete event modal', () => {
 
 	const emptyStore = mockedData.store.mockReduxStore({ invites, appointments });
 
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
 	describe('series', () => {
 		describe('The event is created on a shared account', () => {
 			test.todo('by a different user');
@@ -273,7 +270,6 @@ describe('delete event modal', () => {
 								})
 							})
 						);
-						vi.clearAllMocks();
 					});
 				});
 				test('modal ui sections', () => {
@@ -561,8 +557,6 @@ describe('delete event modal', () => {
 					})
 				);
 
-				vi.clearAllMocks();
-
 				await act(async () => {
 					await vi.advanceTimersToNextTimerAsync();
 				});
@@ -598,7 +592,6 @@ describe('delete event modal', () => {
 					})
 				);
 
-				vi.clearAllMocks();
 				await act(async () => {
 					await vi.advanceTimersToNextTimerAsync();
 				});

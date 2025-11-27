@@ -16,8 +16,8 @@ import editorSliceReducer from '../../store/slices/editor-slice';
 import invitesSliceReducer from '../../store/slices/invites-slice';
 import { setupTest } from '@test-setup';
 
-vi.mock('@zextras/carbonio-ui-commons', () => ({
-	...vi.importActual('@zextras/carbonio-ui-commons'),
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
 	convertSearchChipToString: vi.fn((chip) => chip.label || chip.value || '')
 }));
 

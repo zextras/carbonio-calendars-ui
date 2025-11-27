@@ -23,7 +23,6 @@ describe('useForwardAppointmentSnackbar', () => {
 	const mockCreateSnackbar = vi.fn();
 
 	beforeEach(() => {
-		vi.clearAllMocks();
 		(useSnackbar as Mock).mockReturnValue(mockCreateSnackbar);
 	});
 

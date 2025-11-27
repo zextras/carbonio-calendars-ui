@@ -784,9 +784,6 @@ describe('normalize soap message from editor', () => {
 		});
 	});
 	describe('generateBodyRequest', () => {
-		beforeEach(() => {
-			vi.clearAllMocks();
-		});
 
 		test('should generate plain text message for regular meeting with attendees', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
@@ -989,9 +986,6 @@ describe('normalize soap message from editor', () => {
 	});
 
 	describe('generateHtmlBodyRequest', () => {
-		beforeEach(() => {
-			vi.clearAllMocks();
-		});
 
 		test('should generate HTML message for regular meeting with attendees', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
