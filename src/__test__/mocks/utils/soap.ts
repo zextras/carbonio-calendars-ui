@@ -35,5 +35,5 @@ export const buildSoapErrorResponseBody = ({
 });
 
 export const mockSoapSync = (notify: Array<SoapNotify>): void => {
-	jest.mocked(useSync).mockReturnValue(notify);
+	vi.mocked(useSync).mockReturnValue(notify);
 };

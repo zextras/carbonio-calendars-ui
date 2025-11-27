@@ -55,7 +55,7 @@ describe('TagAccordionItem', () => {
 
 	it('should trigger the search when the tag is clicked', async () => {
 		const runSearchSpy = vi.fn();
-		jest.mocked(useRunSearchIntegration).mockReturnValue(runSearchSpy);
+		vi.mocked(useRunSearchIntegration).mockReturnValue(runSearchSpy);
 
 		const tag = generateTag();
 		const tags = {

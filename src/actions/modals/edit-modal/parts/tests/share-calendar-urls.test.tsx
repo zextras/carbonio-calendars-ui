@@ -118,7 +118,7 @@ describe('ShareCalendarUrl', () => {
 
 			await user.click(screen.getByRole('button', { name: label }));
 
-			expect(jest.mocked(copyToClipboard)).toHaveBeenCalledWith(expectedUrl);
+			expect(vi.mocked(copyToClipboard)).toHaveBeenCalledWith(expectedUrl);
 		});
 
 		it('should show a success snackbar when clicked', async () => {
