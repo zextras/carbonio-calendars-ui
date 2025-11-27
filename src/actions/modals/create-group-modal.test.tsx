@@ -243,7 +243,7 @@ describe('CreateGroupModal', () => {
 			>('CreateCalendarGroup', apiResponse);
 
 			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
-			const createGroupApiSpy = jest.spyOn(createGroupApi, 'createCalendarGroupRequest');
+			const createGroupApiSpy = vi.spyOn(createGroupApi, 'createCalendarGroupRequest');
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.clear(input);
 			await user.type(input, groupName);

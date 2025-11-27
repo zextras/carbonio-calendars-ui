@@ -24,7 +24,7 @@ const checkedIcon = 'icon: CheckmarkSquare';
 
 describe('Shared Calendar modal', () => {
 	beforeEach(() => {
-		jest.spyOn(shell, 'useUserSettings').mockReturnValue(defaultSettings);
+		vi.spyOn(shell, 'useUserSettings').mockReturnValue(defaultSettings);
 	});
 
 	const store = configureStore({ reducer: combineReducers(reducers) });
@@ -168,7 +168,7 @@ describe('Shared Calendar modal', () => {
 			});
 		});
 		test('when zimbraPublicSharingEnabled is FALSE the option "public" is not displayed', async () => {
-			jest.spyOn(shell, 'useUserSettings').mockReturnValue({
+			vi.spyOn(shell, 'useUserSettings').mockReturnValue({
 				...defaultSettings,
 				attrs: { zimbraPublicSharingEnabled: 'FALSE' }
 			});
@@ -669,7 +669,7 @@ describe('Shared Calendar modal', () => {
 				});
 			});
 			test('when public is checked it will trigger a grant operation with grant type public', async () => {
-				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
@@ -702,7 +702,7 @@ describe('Shared Calendar modal', () => {
 				);
 			});
 			test('when a chip is added it will trigger a grant operation with grant type user', async () => {
-				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
@@ -740,7 +740,7 @@ describe('Shared Calendar modal', () => {
 				);
 			});
 			test('if allow private appointment is checked it will have the attribute perm with value p', async () => {
-				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
@@ -778,7 +778,7 @@ describe('Shared Calendar modal', () => {
 				);
 			});
 			test('if role none is selected it will have the attribute perm empty', async () => {
-				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
@@ -820,7 +820,7 @@ describe('Shared Calendar modal', () => {
 				);
 			});
 			test('if role viewer is selected it will have the attribute perm with value r', async () => {
-				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
@@ -862,7 +862,7 @@ describe('Shared Calendar modal', () => {
 				);
 			});
 			test('if role editor is selected it will have the attribute perm with value rwidxa', async () => {
-				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
@@ -904,7 +904,7 @@ describe('Shared Calendar modal', () => {
 				);
 			});
 			test('if role manager is selected it will have the attribute perm with value rwidx', async () => {
-				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
@@ -947,7 +947,7 @@ describe('Shared Calendar modal', () => {
 			});
 			describe('if send notification about this share is checked', () => {
 				test('it will send a share notification to recipients', async () => {
-					const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
+					const sendSpy = vi.spyOn(SendShare, 'sendShareCalendarNotification');
 					const closeFn = vi.fn();
 					const grant: Grant[] | undefined = [];
 
@@ -977,7 +977,7 @@ describe('Shared Calendar modal', () => {
 					);
 				});
 				test('and a custom message is added it will send the share notification with the custom message', async () => {
-					const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
+					const sendSpy = vi.spyOn(SendShare, 'sendShareCalendarNotification');
 					const closeFn = vi.fn();
 					const grant: Grant[] | undefined = [];
 

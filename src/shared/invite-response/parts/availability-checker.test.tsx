@@ -39,7 +39,7 @@ describe('availability checker component', () => {
 			const start = new Date();
 			const end = start.setUTCHours(15, 30, 0, 0);
 
-			const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+			const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 			setupTest(
 				<AvailabilityChecker
 					email={email}
@@ -65,7 +65,7 @@ describe('availability checker component', () => {
 						id: email
 					}
 				];
-				const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+				const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 				handleGetFreeBusy(customResponse);
 
@@ -99,7 +99,7 @@ describe('availability checker component', () => {
 						id: email
 					}
 				];
-				const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+				const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 				handleGetFreeBusy(customResponse);
 
@@ -133,7 +133,7 @@ describe('availability checker component', () => {
 						id: email
 					}
 				];
-				const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+				const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 				handleGetFreeBusy(customResponse);
 
@@ -172,7 +172,7 @@ describe('availability checker component', () => {
 						id: email
 					}
 				];
-				const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+				const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 				handleGetFreeBusy(customResponse);
 
@@ -209,7 +209,7 @@ describe('availability checker component', () => {
 						id: email
 					}
 				];
-				const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+				const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 				handleGetFreeBusy(customResponse);
 
@@ -247,7 +247,7 @@ describe('availability checker component', () => {
 						id: email
 					}
 				];
-				const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+				const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 				handleGetFreeBusy(customResponse);
 
@@ -285,7 +285,7 @@ describe('availability checker component', () => {
 							id: email
 						}
 					];
-					const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+					const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 					handleGetFreeBusy(customResponse);
 
@@ -323,7 +323,7 @@ describe('availability checker component', () => {
 								id: email
 							}
 						];
-						const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+						const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						handleGetFreeBusy(customResponse);
 						const { user } = setupTest(
@@ -363,7 +363,7 @@ describe('availability checker component', () => {
 								id: email
 							}
 						];
-						const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+						const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 
 						handleGetFreeBusy(customResponse);
 						const store = configureStore({ reducer: combineReducers(reducers) });

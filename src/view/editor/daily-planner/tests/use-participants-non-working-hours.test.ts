@@ -99,7 +99,7 @@ describe('useParticipantsNonWorkingHours', () => {
 	});
 
 	it('should not call GetNonWorkingHours API if no participants', async () => {
-		const getWorkingHoursSpy = jest.spyOn(
+		const getWorkingHoursSpy = vi.spyOn(
 			getNonWorkingHoursResponseHandler,
 			'getNonWorkingHoursRequest'
 		);

@@ -236,7 +236,7 @@ describe('delete event modal', () => {
 					test('cancel request will not include other participants', async () => {
 						// it is useful to make sure the cancellation message is not sent to draft participants
 
-						const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+						const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 						const store = configureStore({
 							reducer: combineReducers(reducers),
 							preloadedState: emptyStore
@@ -352,7 +352,7 @@ describe('delete event modal', () => {
 					});
 					const onClose = vi.fn();
 
-					const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+					const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 					const { user } = setupTest(
@@ -494,7 +494,7 @@ describe('delete event modal', () => {
 					preloadedState: emptyStore
 				});
 				const onClose = vi.fn();
-				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+				const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -540,7 +540,7 @@ describe('delete event modal', () => {
 					preloadedState: emptyStore
 				});
 				const onClose = vi.fn();
-				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+				const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -579,7 +579,7 @@ describe('delete event modal', () => {
 					preloadedState: emptyStore
 				});
 				const onClose = vi.fn();
-				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+				const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 

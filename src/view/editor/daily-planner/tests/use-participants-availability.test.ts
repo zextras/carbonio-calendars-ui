@@ -121,7 +121,7 @@ describe('useParticipantsAvailability', () => {
 	});
 
 	it('should not call GetFreeBusy API if no participants', async () => {
-		const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+		const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 		renderHook(() =>
 			useParticipantsAvailability({
 				participants: [],

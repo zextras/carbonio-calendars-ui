@@ -33,7 +33,7 @@ describe('sync data handler', () => {
 
 			populateFoldersStore();
 			const notify = { deleted: ['15'], seq: 0 };
-			const workerSpy = jest.spyOn(folderWorker, 'postMessage');
+			const workerSpy = vi.spyOn(folderWorker, 'postMessage');
 
 			mockSoapSync([notify]);
 

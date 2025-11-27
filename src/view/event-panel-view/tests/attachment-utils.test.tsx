@@ -15,7 +15,7 @@ describe('attachment-utils', () => {
 	const locationOrigin = 'http://localhost';
 
 	beforeAll(() => {
-		jest.spyOn(global.window, 'location', 'get').mockReturnValue({
+		vi.spyOn(global.window, 'location', 'get').mockReturnValue({
 			origin: locationOrigin
 		} as Location);
 	});

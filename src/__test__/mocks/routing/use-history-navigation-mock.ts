@@ -15,7 +15,7 @@ export const mockUseHistoryNavigation = (): HistoryNavigation => {
 		replaceHistory: vi.fn(),
 		pushHistory: vi.fn()
 	} satisfies HistoryNavigation;
-	jest.spyOn(historyNavigation, 'useHistoryNavigation').mockReturnValue(result);
+	vi.spyOn(historyNavigation, 'useHistoryNavigation').mockReturnValue(result);
 
 	return result;
 };

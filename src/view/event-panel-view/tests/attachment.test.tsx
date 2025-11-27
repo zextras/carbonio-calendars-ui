@@ -62,7 +62,7 @@ describe('Attachment', () => {
 	});
 
 	test('calls download function when download button is clicked', async () => {
-		const windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(vi.fn());
+		const windowOpenSpy = vi.spyOn(window, 'open').mockImplementation(vi.fn());
 		const props = {
 			...baseProps,
 			id: '1',
@@ -79,7 +79,7 @@ describe('Attachment', () => {
 	});
 
 	test('calls createPreview when a file is set to be viewed with the previer', async () => {
-		const spyOpen = jest.spyOn(window, 'open').mockImplementation(vi.fn());
+		const spyOpen = vi.spyOn(window, 'open').mockImplementation(vi.fn());
 		const unsupportedAttachment = {
 			name: 'test-file.ts',
 			size: 1024,

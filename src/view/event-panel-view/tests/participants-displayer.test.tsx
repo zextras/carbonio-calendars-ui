@@ -31,7 +31,7 @@ shell.getUserSettings.mockImplementation(() => ({
 describe('participants displayer', () => {
 	test('copy email to clipboard', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const clipboardCopySpy = jest.spyOn(ParticipantDisplayerAction, 'copyEmailToClipboard');
+		const clipboardCopySpy = vi.spyOn(ParticipantDisplayerAction, 'copyEmailToClipboard');
 		const { user } = setupTest(
 			<DisplayedParticipant
 				participant={{
@@ -55,7 +55,7 @@ describe('participants displayer', () => {
 
 	test('send E-mail', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const sendEmailSpy = jest.spyOn(ParticipantDisplayerAction, 'sendMsg');
+		const sendEmailSpy = vi.spyOn(ParticipantDisplayerAction, 'sendMsg');
 		const { user } = setupTest(
 			<DisplayedParticipant
 				participant={{

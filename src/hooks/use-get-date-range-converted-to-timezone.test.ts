@@ -128,7 +128,7 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 					zimbraPrefLocale: undefined
 				}
 			});
-			const browserLanguageGetter = jest.spyOn(window.navigator, 'language', 'get');
+			const browserLanguageGetter = vi.spyOn(window.navigator, 'language', 'get');
 			browserLanguageGetter.mockReturnValueOnce('de');
 
 			const eventStart = setDate({ days: 2 });

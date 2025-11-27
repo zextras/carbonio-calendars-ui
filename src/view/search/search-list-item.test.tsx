@@ -80,7 +80,7 @@ describe('SearchListItem', () => {
 	});
 
 	it('renders organizer Avatar', () => {
-		jest.spyOn(console, 'error').mockImplementation();
+		vi.spyOn(console, 'error').mockImplementation();
 		setupTest(<SearchListItem item={baseItem} />, { store: mockStore });
 		const avatar = screen.getByTestId('avatarAppointment');
 		expect(avatar).toBeVisible();

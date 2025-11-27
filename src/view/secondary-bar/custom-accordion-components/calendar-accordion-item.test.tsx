@@ -86,7 +86,7 @@ describe('CalendarAccordionItem', () => {
 			);
 
 			const item = { id: FOLDERS.CALENDAR };
-			const recursiveToggleCheckMock = jest.spyOn(utilities, 'recursiveToggleCheck');
+			const recursiveToggleCheckMock = vi.spyOn(utilities, 'recursiveToggleCheck');
 
 			const { user } = setupCalendarAccordionItem(item);
 

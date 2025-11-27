@@ -216,7 +216,7 @@ describe('invite response component', () => {
 						rights: { targets: [] },
 						signatures: { signature: [] }
 					}));
-					const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+					const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					const store = configureStore({ reducer: combineReducers(reducers) });
@@ -234,7 +234,7 @@ describe('invite response component', () => {
 					});
 				});
 				test('if the appointment is received by the secondary account, it will be the one used', async () => {
-					const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+					const getFreeBusyHandler = vi.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 					setupFoldersStore();
 					const rootsArray = values(roots);
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
@@ -526,7 +526,7 @@ describe('invite response component', () => {
 				});
 				describe('clicking on any of these buttons will send the reply to the organizer', () => {
 					test('a sendInviteResponse will be sent', async () => {
-						const sendInviteSpy = jest.spyOn(sendInviteResponseHandler, 'sendInviteResponse');
+						const sendInviteSpy = vi.spyOn(sendInviteResponseHandler, 'sendInviteResponse');
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
@@ -550,7 +550,7 @@ describe('invite response component', () => {
 						expect(sendInviteSpy).toHaveBeenCalled();
 					});
 					test('if the "notify organizer" checkbox is checked, it will set updateOrganizer as true', async () => {
-						const sendInviteSpy = jest.spyOn(sendInviteResponseHandler, 'sendInviteResponse');
+						const sendInviteSpy = vi.spyOn(sendInviteResponseHandler, 'sendInviteResponse');
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
@@ -580,7 +580,7 @@ describe('invite response component', () => {
 					});
 					test('if a different calendar destination is set, will send a move appointment request', async () => {
 						setupFoldersStore();
-						const moveAppointmentSpy = jest.spyOn(moveAppointmentHandler, 'moveAppointmentRequest');
+						const moveAppointmentSpy = vi.spyOn(moveAppointmentHandler, 'moveAppointmentRequest');
 
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
@@ -619,7 +619,7 @@ describe('invite response component', () => {
 					});
 					test('selecting the default calendar destination will not send a move appointment request', async () => {
 						setupFoldersStore();
-						const moveAppointmentSpy = jest.spyOn(moveAppointmentHandler, 'moveAppointmentRequest');
+						const moveAppointmentSpy = vi.spyOn(moveAppointmentHandler, 'moveAppointmentRequest');
 
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
@@ -700,7 +700,7 @@ describe('invite response component', () => {
 					test('a board is opened', async () => {
 						setupFoldersStore();
 
-						const boardSpy = jest.spyOn(mockshell, 'addBoard');
+						const boardSpy = vi.spyOn(mockshell, 'addBoard');
 
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
@@ -1137,7 +1137,7 @@ describe('invite response component', () => {
 					describe('clicking on accept will confirm the new time of the appointment', () => {
 						test('a getAppointment request is sent', async () => {
 							setupFoldersStore();
-							const spy = jest.spyOn(handler, 'getAppointment');
+							const spy = vi.spyOn(handler, 'getAppointment');
 							const mailMsg = buildMailMessageType(
 								MESSAGE_METHOD.COUNTER,
 								MESSAGE_TYPE.SINGLE,
@@ -1164,7 +1164,7 @@ describe('invite response component', () => {
 						test('a getInvite request is sent', async () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
 							setupFoldersStore();
-							const getMsgSpy = jest.spyOn(getMsgHandler, 'getMessageRequest');
+							const getMsgSpy = vi.spyOn(getMsgHandler, 'getMessageRequest');
 							const mailMsg = buildMailMessageType(
 								MESSAGE_METHOD.COUNTER,
 								MESSAGE_TYPE.SINGLE,
@@ -1193,7 +1193,7 @@ describe('invite response component', () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
 
 							setupFoldersStore();
-							const modifyAppointmentSpy = jest.spyOn(
+							const modifyAppointmentSpy = vi.spyOn(
 								modifyAppointmentHandler,
 								'modifyAppointment'
 							);

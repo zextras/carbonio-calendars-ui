@@ -11,7 +11,7 @@ import { searchCalendarReturnType } from '../../../soap/search-calendar-resource
 import { useFetchEditorResources } from '../use-fetch-editor-resources';
 
 describe('useFetchEditorResources', () => {
-	const mockSearchCalendarMultipleResourcesRequest = jest.spyOn(
+	const mockSearchCalendarMultipleResourcesRequest = vi.spyOn(
 		searchCalendarResources,
 		'searchCalendarMultipleResourcesRequest'
 	);

@@ -238,7 +238,7 @@ describe('EditorDailyPlanner', () => {
 		expect(errorSnackbar).toBeVisible();
 	});
 	it('will call the API once', async () => {
-		const spy = jest.spyOn(handler, 'getFreeBusyRequest');
+		const spy = vi.spyOn(handler, 'getFreeBusyRequest');
 		const workingHoursInterceptor = mockWorkingHoursResponse([]);
 
 		const store = configureStore({

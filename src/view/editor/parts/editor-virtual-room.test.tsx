@@ -28,7 +28,7 @@ const FakeWscIntegrationComponent = jest.fn(
 );
 
 const spyUseIntegratedIntegration = (chatsIsEnabled: boolean, wscIsEnabled: boolean): void => {
-	jest.spyOn(shell, 'useIntegratedComponent').mockImplementation((id: string) => {
+	vi.spyOn(shell, 'useIntegratedComponent').mockImplementation((id: string) => {
 		if (id === 'room-selector') return [FakeChatsIntegrationComponent, chatsIsEnabled];
 		if (id === 'wsc-room-selector') return [FakeWscIntegrationComponent, wscIsEnabled];
 		return [vi.fn(), false];

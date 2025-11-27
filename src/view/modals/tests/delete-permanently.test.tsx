@@ -108,7 +108,7 @@ describe('delete-permanently', () => {
 	});
 	it('onClick will call itemAction request', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const itemActionSpy = jest.spyOn(itemAction, 'itemActionRequest');
+		const itemActionSpy = vi.spyOn(itemAction, 'itemActionRequest');
 		const { user } = setupTest(
 			<DeletePermanently onClose={jest.fn} event={mockedData.getEvent()} />,
 			{ store }
@@ -118,7 +118,7 @@ describe('delete-permanently', () => {
 	});
 	it('onClick will call itemAction request with delete operation', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const itemActionSpy = jest.spyOn(itemAction, 'itemActionRequest');
+		const itemActionSpy = vi.spyOn(itemAction, 'itemActionRequest');
 		const event = mockedData.getEvent();
 		const { user } = setupTest(<DeletePermanently onClose={jest.fn} event={event} />, { store });
 		await user.click(screen.getByRole('button', { name: 'Delete permanently' }));
@@ -127,7 +127,7 @@ describe('delete-permanently', () => {
 
 	it('onClick will call itemAction request with event id', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const itemActionSpy = jest.spyOn(itemAction, 'itemActionRequest');
+		const itemActionSpy = vi.spyOn(itemAction, 'itemActionRequest');
 		const event = mockedData.getEvent();
 		const { user } = setupTest(<DeletePermanently onClose={jest.fn} event={event} />, { store });
 		await user.click(screen.getByRole('button', { name: 'Delete permanently' }));

@@ -395,7 +395,7 @@ describe('the edit calendar modal is composed by', () => {
 						expect(screen.getAllByRole('button', { name: /revoke/i })[0]).toBeVisible();
 					});
 					test('on click a request to the server will be sent containing only the related user', async () => {
-						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+						const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 						const closeFn = vi.fn();
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
@@ -430,7 +430,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 					test('on click a request to the server will be sent containing only the related user invitation', async () => {
 						const closeFn = vi.fn();
-						const sendAgainSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
+						const sendAgainSpy = vi.spyOn(SendShare, 'sendShareCalendarNotification');
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
@@ -488,7 +488,7 @@ describe('the edit calendar modal is composed by', () => {
 			describe('it will save any changes done to the modal body except for the "sharing of this folder" section', () => {
 				describe('if the user interact with the name', () => {
 					test('if the user change title it will trigger a rename operation', async () => {
-						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+						const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 
 						const closeFn = vi.fn();
 
@@ -515,7 +515,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 					});
 					test('if the user rewrite the same title it will not trigger any operation', async () => {
-						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+						const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 
 						const closeFn = vi.fn();
 
@@ -539,7 +539,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 				describe('if the user interact with the color select', () => {
 					test('if the user change color it will trigger a color operation', async () => {
-						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+						const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 
 						const closeFn = vi.fn();
 
@@ -561,7 +561,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 					});
 					test('if the user select the same color it will not trigger any operation', async () => {
-						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+						const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 						const closeFn = vi.fn();
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
@@ -582,7 +582,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 				describe('if the user interact with the free busy checkbox', () => {
 					test('if the user change the free busy status it will trigger a fb operation', async () => {
-						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+						const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 
 						const closeFn = vi.fn();
 
@@ -604,7 +604,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 					});
 					test('if the user reselect the same free busy status it will not trigger any operation', async () => {
-						const spy = jest.spyOn(FolderAction, 'folderActionRequest');
+						const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 
 						const closeFn = vi.fn();
 
@@ -624,8 +624,8 @@ describe('the edit calendar modal is composed by', () => {
 				});
 				test('if the user changes all of the above it will trigger all the operations in a batch', async () => {
 					// disable console.warn raised by soapFetch
-					jest.spyOn(console, 'warn').mockImplementation(vi.fn());
-					const spy = jest.spyOn(BatchAction, 'batchRequest');
+					vi.spyOn(console, 'warn').mockImplementation(vi.fn());
+					const spy = vi.spyOn(BatchAction, 'batchRequest');
 
 					const closeFn = vi.fn();
 

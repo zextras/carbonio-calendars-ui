@@ -369,7 +369,7 @@ describe('Editor equipment', () => {
 			)
 		);
 
-		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+		const consoleSpy = vi.spyOn(console, 'warn').mockImplementation();
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
 		await user.type(screen.getByText('Equipment'), 'test');

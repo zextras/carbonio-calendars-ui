@@ -45,7 +45,7 @@ describe('SearchView', () => {
 	};
 
 	beforeEach(() => {
-		jest.spyOn(console, 'warn').mockImplementation(() => {});
+		vi.spyOn(console, 'warn').mockImplementation(() => {});
 	});
 
 	afterEach(() => {

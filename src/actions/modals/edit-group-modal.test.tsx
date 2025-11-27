@@ -361,7 +361,7 @@ describe('EditGroupModal', () => {
 
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
-			const modifyGroupApiSpy = jest.spyOn(modifyGroupApi, 'modifyCalendarGroupRequest');
+			const modifyGroupApiSpy = vi.spyOn(modifyGroupApi, 'modifyCalendarGroupRequest');
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.clear(input);
 			await user.type(input, groupNewName);
