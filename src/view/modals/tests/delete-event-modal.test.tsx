@@ -10,13 +10,13 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
 
+import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import * as soapLib from '../../../../__mocks__/@zextras/carbonio-ui-soap-lib';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { DeleteEventModal } from '../delete-event-modal';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 describe('delete event modal', () => {
@@ -315,7 +315,7 @@ describe('delete event modal', () => {
 					});
 					const onClose = vi.fn();
 					const composer = vi.fn();
-					const composerSpy = jest
+					const composerSpy = vi
 						.spyOn(shell, 'useIntegratedFunction')
 						.mockReturnValue([composer, true]);
 

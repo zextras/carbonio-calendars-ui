@@ -784,7 +784,6 @@ describe('normalize soap message from editor', () => {
 		});
 	});
 	describe('generateBodyRequest', () => {
-
 		test('should generate plain text message for regular meeting with attendees', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
 			shell.getUserAccount.mockImplementation(() => userAccount);
@@ -986,7 +985,6 @@ describe('normalize soap message from editor', () => {
 	});
 
 	describe('generateHtmlBodyRequest', () => {
-
 		test('should generate HTML message for regular meeting with attendees', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
 			shell.getUserAccount.mockImplementation(() => userAccount);

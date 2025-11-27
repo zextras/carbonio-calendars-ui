@@ -344,7 +344,7 @@ describe('Editor meeting rooms', () => {
 			)
 		);
 
-		const consoleSpy = vi.spyOn(console, 'warn').mockImplementation();
+		const consoleSpy = vi.spyOn(console, 'warn');
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
 		await user.type(screen.getByText('Meeting room'), 'test');

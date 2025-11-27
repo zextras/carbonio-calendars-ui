@@ -24,8 +24,8 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={vi.fn}
-				removeReminder={vi.fn}
-				setActiveReminder={vi.fn}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
 			/>,
 			{ store }
 		);
@@ -41,8 +41,8 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={vi.fn}
-				removeReminder={vi.fn}
-				setActiveReminder={vi.fn}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
 			/>,
 			{ store }
 		);
@@ -59,8 +59,8 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={vi.fn}
-				removeReminder={vi.fn}
-				setActiveReminder={vi.fn}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
 			/>,
 			{ store }
 		);
@@ -105,8 +105,8 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={vi.fn}
-				removeReminder={vi.fn}
-				setActiveReminder={vi.fn}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
 			/>,
 			{ store }
 		);
@@ -153,8 +153,8 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={vi.fn}
-				removeReminder={vi.fn}
-				setActiveReminder={vi.fn}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
 			/>,
 			{ store }
 		);
@@ -172,8 +172,8 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={vi.fn}
-				removeReminder={vi.fn}
-				setActiveReminder={vi.fn}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
 			/>,
 			{ store }
 		);
@@ -221,7 +221,7 @@ describe('Appointment Reminder Item', () => {
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
 				toggleModal={toggleModal}
-				removeReminder={vi.fn}
+				removeReminder={vi.fn()}
 				setActiveReminder={setActiveReminder}
 			/>,
 			{ store }
@@ -244,7 +244,7 @@ describe('Appointment Reminder Item', () => {
 				reminderItem={reminderItem}
 				toggleModal={vi.fn}
 				removeReminder={removeReminder}
-				setActiveReminder={vi.fn}
+				setActiveReminder={vi.fn()}
 			/>,
 			{ store }
 		);
@@ -274,8 +274,8 @@ describe('Appointment Reminder Item', () => {
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
 					toggleModal={vi.fn}
-					removeReminder={vi.fn}
-					setActiveReminder={vi.fn}
+					removeReminder={vi.fn()}
+					setActiveReminder={vi.fn()}
 				/>,
 				{ store }
 			);
@@ -289,8 +289,8 @@ describe('Appointment Reminder Item', () => {
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
 					toggleModal={vi.fn}
-					removeReminder={vi.fn}
-					setActiveReminder={vi.fn}
+					removeReminder={vi.fn()}
+					setActiveReminder={vi.fn()}
 				/>,
 				{ store }
 			);
@@ -309,8 +309,8 @@ describe('Appointment Reminder Item', () => {
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
 					toggleModal={vi.fn}
-					removeReminder={vi.fn}
-					setActiveReminder={vi.fn}
+					removeReminder={vi.fn()}
+					setActiveReminder={vi.fn()}
 				/>,
 				{ store }
 			);
@@ -328,8 +328,8 @@ describe('Appointment Reminder Item', () => {
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
 					toggleModal={vi.fn}
-					removeReminder={vi.fn}
-					setActiveReminder={vi.fn}
+					removeReminder={vi.fn()}
+					setActiveReminder={vi.fn()}
 				/>,
 				{ store }
 			);
@@ -347,8 +347,8 @@ describe('Appointment Reminder Item', () => {
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
 					toggleModal={vi.fn}
-					removeReminder={vi.fn}
-					setActiveReminder={vi.fn}
+					removeReminder={vi.fn()}
+					setActiveReminder={vi.fn()}
 				/>,
 				{ store }
 			);
@@ -366,8 +366,8 @@ describe('Appointment Reminder Item', () => {
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
 					toggleModal={vi.fn}
-					removeReminder={vi.fn}
-					setActiveReminder={vi.fn}
+					removeReminder={vi.fn()}
+					setActiveReminder={vi.fn()}
 				/>,
 				{ store }
 			);

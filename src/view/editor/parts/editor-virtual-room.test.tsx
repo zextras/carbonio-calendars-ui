@@ -11,8 +11,8 @@ import { screen } from '@testing-library/react';
 
 import { EditorVirtualRoom } from './editor-virtual-room';
 import { reducers } from '../../../store/redux';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 
 const store = configureStore({ reducer: combineReducers(reducers) });
 

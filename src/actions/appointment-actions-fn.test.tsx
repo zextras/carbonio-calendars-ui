@@ -14,7 +14,7 @@ import mockedData from '../test/generators';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
 shell.getUserSettings.mockImplementation(() => ({

@@ -187,7 +187,7 @@ describe('AdvancedFilterModal', () => {
 	});
 
 	it('should set queryToBe when Search button is pressed', async () => {
-		vi.spyOn(console, 'error').mockImplementation();
+		vi.spyOn(console, 'error');
 		const properties: AdvancedFilterModalProps = {
 			open: true,
 			onClose: vi.fn(),
@@ -216,7 +216,7 @@ describe('AdvancedFilterModal', () => {
 	});
 
 	it('should update fromDate and call onConfirm when date is selected and search button is clicked', async () => {
-		vi.spyOn(console, 'error').mockImplementation();
+		vi.spyOn(console, 'error');
 		const updateQuery = vi.fn();
 		const setDateStart = vi.fn();
 		const setDateEnd = vi.fn();
@@ -262,7 +262,7 @@ describe('AdvancedFilterModal', () => {
 	});
 
 	it('should update endDate and call onConfirm when date is selected and search button is clicked', async () => {
-		vi.spyOn(console, 'error').mockImplementation();
+		vi.spyOn(console, 'error');
 		const updateQuery = vi.fn();
 		const setDateStart = vi.fn();
 		const setDateEnd = vi.fn();

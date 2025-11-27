@@ -20,7 +20,7 @@ describe('modify standard message modal', () => {
 				<ModifyStandardMessageModal
 					title={'title'}
 					onClose={vi.fn}
-					onConfirm={vi.fn}
+					onConfirm={vi.fn()}
 					invite={mockedData.getInvite()}
 					confirmLabel={'confirmLabel'}
 				/>
@@ -32,7 +32,7 @@ describe('modify standard message modal', () => {
 				<ModifyStandardMessageModal
 					title={'title'}
 					onClose={vi.fn}
-					onConfirm={vi.fn}
+					onConfirm={vi.fn()}
 					invite={mockedData.getInvite()}
 					confirmLabel={'confirmLabel'}
 				/>
@@ -45,7 +45,7 @@ describe('modify standard message modal', () => {
 				<ModifyStandardMessageModal
 					title={'title'}
 					onClose={onClose}
-					onConfirm={vi.fn}
+					onConfirm={vi.fn()}
 					invite={mockedData.getInvite()}
 					confirmLabel={'confirmLabel'}
 				/>
@@ -61,7 +61,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 						isEdited
@@ -76,7 +76,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 						isEdited={false}
@@ -95,7 +95,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -107,7 +107,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -119,7 +119,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -134,7 +134,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -167,7 +167,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -179,7 +179,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -191,7 +191,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>
@@ -206,7 +206,7 @@ describe('modify standard message modal', () => {
 					<ModifyStandardMessageModal
 						title={'title'}
 						onClose={vi.fn}
-						onConfirm={vi.fn}
+						onConfirm={vi.fn()}
 						invite={mockedData.getInvite()}
 						confirmLabel={'confirmLabel'}
 					/>

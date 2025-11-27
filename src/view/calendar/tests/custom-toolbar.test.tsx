@@ -58,9 +58,7 @@ describe('calendar toolbar', () => {
 		});
 
 		test('should be enabled if calendarView is set to day', () => {
-			setupTest(
-				<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="day" />
-			);
+			setupTest(<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="day" />);
 
 			expect(screen.getByRoleWithIcon('button', { icon: 'icon: WeekViewOutline' })).toBeEnabled();
 		});

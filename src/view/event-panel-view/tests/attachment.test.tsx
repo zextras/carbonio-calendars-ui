@@ -11,8 +11,8 @@ import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { reducers } from '../../../store/redux';
 import { Attachment } from '../attachment';
+import { previewContextMock } from '@test-mocks/@zextras/carbonio-ui-preview';
 import { setupTest, UserEvent } from '@test-setup';
-import { previewContextMock } from '@test-utils/carbonio-ui-preview';
 
 const setupFoldersStore = (): void => {
 	useFolderStore.setState(() => ({

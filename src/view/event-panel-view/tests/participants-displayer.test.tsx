@@ -13,8 +13,8 @@ import { PARTICIPATION_STATUS } from '../../../constants/api';
 import * as ParticipantDisplayerAction from '../../../store/actions/participant-displayer-actions';
 import { reducers } from '../../../store/redux';
 import { DisplayedParticipant } from '../participants-displayer';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
 shell.getUserSettings.mockImplementation(() => ({

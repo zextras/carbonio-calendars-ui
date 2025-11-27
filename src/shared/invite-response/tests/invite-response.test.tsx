@@ -535,12 +535,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const accept = await screen.findByRole('button', {
 							name: /accept/i
@@ -559,12 +556,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const accept = await screen.findByRole('button', {
 							name: /accept/i
@@ -589,12 +583,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const calendar = await screen.findByText(folder.name);
 						await user.click(calendar);
@@ -628,12 +619,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const accept = await screen.findByRole('button', {
 							name: /accept/i
@@ -686,12 +674,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -709,12 +694,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -734,12 +716,9 @@ describe('invite response component', () => {
 							false
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -756,12 +735,9 @@ describe('invite response component', () => {
 						const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, true);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -783,12 +759,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -806,12 +779,9 @@ describe('invite response component', () => {
 						const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SERIES, true);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -833,12 +803,9 @@ describe('invite response component', () => {
 						);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -856,12 +823,9 @@ describe('invite response component', () => {
 						const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.EXCEPT, true);
 						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
-						const { user } = setupTest(
-							<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
-							{
-								store
-							}
-						);
+						const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+							store
+						});
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
@@ -1193,10 +1157,7 @@ describe('invite response component', () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
 
 							setupFoldersStore();
-							const modifyAppointmentSpy = vi.spyOn(
-								modifyAppointmentHandler,
-								'modifyAppointment'
-							);
+							const modifyAppointmentSpy = vi.spyOn(modifyAppointmentHandler, 'modifyAppointment');
 							const mailMsg = buildMailMessageType(
 								MESSAGE_METHOD.COUNTER,
 								MESSAGE_TYPE.SINGLE,

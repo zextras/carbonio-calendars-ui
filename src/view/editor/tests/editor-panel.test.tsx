@@ -30,7 +30,7 @@ describe('Editor panel', () => {
 				abort: abortSpy,
 				signal: mockSignal
 			};
-			const abortControllerSpy = jest
+			const abortControllerSpy = vi
 				.spyOn(global, 'AbortController')
 				.mockImplementation(() => mockAbortController as unknown as AbortController);
 

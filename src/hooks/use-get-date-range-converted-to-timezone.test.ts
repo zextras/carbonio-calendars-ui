@@ -5,8 +5,8 @@
  */
 
 import { useGetDateRangeConvertedToTimezone } from './use-get-date-range-converted-to-timezone';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupHook } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
 /*
