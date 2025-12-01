@@ -100,13 +100,16 @@ export const editEditorAttachmentsReducer = (
 	{ editors }: EditorSlice,
 	{ payload }: PayloadAction<AttachmentFilesPayload>
 ): void => {
-	if (payload?.id && editors?.[payload?.id]) {
-		// eslint-disable-next-line no-param-reassign
-		editors[payload.id].attachmentFiles = payload.attachmentFiles;
-		// eslint-disable-next-line no-param-reassign
-		editors[payload.id].attach = payload?.attach;
-	}
+	if (!payload?.id || !editors?.[payload.id]) return;
+	const editor = editors[payload.id];
+	editor.attachmentFiles = payload.attachmentFiles ?? [];
+	editor.attach = {
+		...editor.attach,
+		aid: (payload.attachmentFiles ?? []).filter((f) => f.aid).map((f) => f.aid) as string[],
+		mp: payload.attach?.mp ?? editor.attach?.mp ?? []
+	};
 };
+
 export const editSenderReducer = (
 	{ editors }: EditorSlice,
 	{ payload }: PayloadAction<SenderPayload>
