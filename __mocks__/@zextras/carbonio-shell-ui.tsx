@@ -103,3 +103,11 @@ export const useIntegratedFunction: Mock<typeof shell.useIntegratedFunction> = v
 		return [fn, false];
 	}
 );
+
+export const JSNS = {
+	account: 'urn:zimbraAccount',
+	admin: 'urn:zimbraAdmin',
+	mail: 'urn:zimbraMail',
+	all: 'urn:zimbra',
+	sync: 'urn:zimbraSync'
+};

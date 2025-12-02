@@ -119,7 +119,7 @@ describe('invite response component', () => {
 				const boldTitleString = await screen.findByText(title);
 				expect(organizerString).toBeVisible();
 				expect(boldTitleString).toBeVisible();
-				expect(boldTitleString).toHaveStyle('font-weight: bold');
+				expect(boldTitleString).toHaveStyle('font-weight: bolder');
 			});
 			test('a string with the user local time of the event', async () => {
 				setupFoldersStore();

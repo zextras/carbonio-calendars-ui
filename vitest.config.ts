@@ -31,9 +31,10 @@ export default defineConfig({
 			'./src/__test__/setup-browser-env.ts'
 		],
 		clearMocks: true,
-		mockReset: true,
+		// mockReset: true,
+		restoreMocks: true,
 		maxWorkers: '50%',
-		testTimeout: 20000,
+		testTimeout: 5000,
 		reporters: ['default', 'junit'],
 		coverage: {
 			enabled: true,
@@ -42,6 +43,11 @@ export default defineConfig({
 			reportsDirectory: 'coverage',
 			include: ['src/**/*.{ts,tsx}'],
 			exclude: ['**/__test__/**', '**/tests/**', '**/mocks/**', '**/*.test.{js,jsx,ts,tsx}']
+		},
+		environmentOptions: {
+			jsdom: {
+				url: 'http://localhost'
+			}
 		}
 	}
 });

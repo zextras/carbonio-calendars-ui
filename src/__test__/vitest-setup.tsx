@@ -77,9 +77,6 @@ const defaultBeforeAllTests = (
 
 	server = setupServer(...handlers);
 	server.listen({ onUnhandledRequest });
-
-	// TODO: CHECK IF NEEDED
-	// useLocalStorage.mockReturnValue([vi.fn(), vi.fn()]);
 };
 
 Object.defineProperty(window, 'open', {

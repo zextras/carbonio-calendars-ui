@@ -48,10 +48,11 @@ describe('ExpandedSecondaryBar', () => {
 	});
 
 	it('should render the divider', () => {
-		setupTest(<ExpandedSecondaryBar />);
-		configureStore({
+		const store = configureStore({
 			reducer: combineReducers(reducers)
 		});
+
+		setupTest(<ExpandedSecondaryBar />, { store });
 
 		expect(screen.getByTestId('divider')).toBeVisible();
 	});

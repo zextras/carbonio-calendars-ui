@@ -147,32 +147,7 @@ describe('delete event modal', () => {
 
 	const emptyStore = mockedData.store.mockReduxStore({ invites, appointments });
 
-	describe('series', () => {
-		describe('The event is created on a shared account', () => {
-			test.todo('by a different user');
-			test.todo('by the current user');
-		});
-		describe('he is the organizer', () => {
-			describe('there is a participant', () => {
-				describe('deleting a draft', () => {
-					test.todo('wont open the modal to send cancellation');
-					test.todo('cancel request will not include other participants');
-				});
-				test.todo('organizer can send a custom cancellation message');
-				test.todo('organizer can send a standard cancellation message');
-			});
-			test.todo('if there is not a participant you can only delete the event');
-		});
-		describe('he is not the organizer', () => {
-			test.todo('he can notify the organizer');
-			test.todo('he can avoid to notify the organizer');
-		});
-	});
 	describe('instance', () => {
-		describe('The event is created on a shared account', () => {
-			test.todo('by a different user');
-			test.todo('by the current user');
-		});
 		describe('he is the organizer', () => {
 			test('modal doesnt have a notify organizer section', () => {
 				const store = configureStore({
