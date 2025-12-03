@@ -233,9 +233,7 @@ describe('delete event modal', () => {
 							})
 						);
 
-						await act(async () => {
-							await vi.advanceTimersToNextTimerAsync();
-						});
+						await vi.advanceTimersToNextTimerAsync();
 
 						expect(spy).toHaveBeenCalledWith(
 							'CancelAppointment',
@@ -567,9 +565,7 @@ describe('delete event modal', () => {
 					})
 				);
 
-				await act(async () => {
-					await vi.advanceTimersToNextTimerAsync();
-				});
+				await vi.advanceTimersToNextTimerAsync();
 
 				expect(spy).not.toHaveBeenCalledWith(
 					'SendInviteReply',

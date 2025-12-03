@@ -24,5 +24,5 @@ export const legacyXmlSoapFetch = getXmlSoapFetch();
 
 export const legacySoapFetch = getSoapFetch();
 
-// export const useSync: Mock<typeof soapLib.useSync> = vi.fn(() => []);
+export const useSync: Mock<typeof soapLib.useSync> = vi.fn(() => []);
 // export const useInfoRefresh: Mock<typeof soapLib.useInfoRefresh> = vi.fn();

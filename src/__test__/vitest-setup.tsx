@@ -6,7 +6,7 @@
  */
 
 import '@testing-library/jest-dom';
-import { configure } from '@testing-library/react';
+// import { configure } from '@testing-library/react';
 import moment from 'moment-timezone';
 import { http, RequestHandler } from 'msw';
 import { SetupServer, setupServer } from 'msw/node';
@@ -32,13 +32,14 @@ import { handleSendInviteReplyRequest } from 'test/mocks/network/msw/handle-send
 import { handleSendShareNotificationRequest } from 'test/mocks/network/msw/handle-send-share-notification';
 
 vi.mock('@zextras/carbonio-shell-ui');
+vi.mock('@zextras/carbonio-ui-soap-lib');
 
 // Setup MSW mock server
 let server = setupServer();
 
-configure({
-	asyncUtilTimeout: 2000
-});
+// configure({
+// 	asyncUtilTimeout: 2000
+// });
 
 /**
  * Default logic to execute before all the tests

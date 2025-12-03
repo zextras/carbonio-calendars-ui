@@ -29,7 +29,9 @@ shell.getUserSettings.mockImplementation(() => ({
 }));
 
 const editorId = 'new-1';
-vi.spyOn(editorUtils, 'getNewId').mockReturnValue(editorId);
+beforeEach(() => {
+	vi.spyOn(editorUtils, 'getNewId').mockReturnValue(editorId);
+});
 
 describe('actions', () => {
 	describe('Copy', () => {
