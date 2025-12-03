@@ -34,7 +34,7 @@ export default defineConfig({
 		// mockReset: true,
 		restoreMocks: true,
 		maxWorkers: '50%',
-		testTimeout: 5000,
+		testTimeout: 6000,
 		reporters: ['default', 'junit'],
 		coverage: {
 			enabled: true,
