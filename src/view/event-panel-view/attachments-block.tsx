@@ -54,9 +54,7 @@ export const AttachmentsBlock = ({
 	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
 	const theme = useTheme();
-
 	const attachmentsCount = useMemo(() => attachments.length, [attachments]);
-
 	const actionsDownloadLink = useMemo(() => {
 		const attachmentsParts = map(attachments, 'name');
 		return id
@@ -69,25 +67,19 @@ export const AttachmentsBlock = ({
 	}, [attachments, id, subject]);
 
 	const removeAttachment = useCallback(
-		(part: string) => {
-			const attachmentFiles = filter(attachments, (attachment) =>
-				attachment.name ? attachment.name !== part : !attachment.aid || attachment.aid !== part
+		(partOrAid: string) => {
+			const updatedAttachments = attachments.filter(
+				(att) => att.aid !== partOrAid && att.name !== partOrAid
 			);
 			if (onAttachmentsChange) {
 				onAttachmentsChange(
 					{
-						aid: reduce(
-							attachmentFiles,
-							(acc, item) => (item.aid ? [...acc, item.aid] : acc),
-							[] as string[]
-						),
-						mp: reduce(
-							attachmentFiles,
-							(acc, item) => (item.name && id ? [...acc, { part: item.name, mid: id }] : acc),
-							[] as Array<{ part: string; mid: string }>
-						)
+						aid: updatedAttachments.filter((att) => att.aid).map((att) => att.aid) as string[],
+						mp: updatedAttachments
+							.filter((att) => att.name && id)
+							.map((att) => ({ part: att.name, mid: id }) as { part: string; mid: string })
 					},
-					attachmentFiles
+					updatedAttachments
 				);
 			}
 		},
