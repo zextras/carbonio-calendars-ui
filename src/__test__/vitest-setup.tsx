@@ -154,6 +154,41 @@ Object.defineProperty(HTMLMediaElement.prototype, 'play', {
 	value: vi.fn().mockResolvedValue(undefined)
 });
 
+// Suppress CSS parsing errors from jsdom/cssstyle when encountering CSS variables
+// This is a known issue with jsdom not fully supporting CSS custom properties in shorthand declarations
+const originalConsoleError = console.error;
+console.error = (...args: unknown[]): void => {
+	const message = String(args[0] || '');
+	// Filter out CSS parsing errors
+	if (
+		message.includes('Could not parse CSS stylesheet') ||
+		message.includes('Cannot create property') ||
+		message.includes('Error: Could not parse CSS')
+	) {
+		return;
+	}
+	originalConsoleError.apply(console, args);
+};
+
+// Patch CSSStyleDeclaration.setProperty to prevent errors with CSS variables
+const originalSetProperty = CSSStyleDeclaration.prototype.setProperty;
+CSSStyleDeclaration.prototype.setProperty = function (
+	this: CSSStyleDeclaration,
+	property: string,
+	value: string | null,
+	priority?: string
+): void {
+	try {
+		return originalSetProperty.call(this, property, value, priority);
+	} catch (error) {
+		// Silently ignore CSS parsing errors for CSS variables
+		if (error instanceof TypeError && error.message.includes('Cannot create property')) {
+			return undefined;
+		}
+		throw error;
+	}
+};
+
 beforeAll(() => {
 	defaultBeforeAllTests();
 });
