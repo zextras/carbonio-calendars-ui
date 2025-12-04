@@ -12,12 +12,11 @@ import { Board } from '@zextras/carbonio-shell-ui';
 import { defaultEditor } from './common';
 import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import { generateEditor } from '../../../commons/editor-generator';
-import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from '../../../constants';
+import { CALENDAR_BOARD_ID } from '../../../constants';
 import { reducers } from '../../../store/redux';
 import { Editor } from '../../../types/editor';
 import BoardEditPanel from '../editor-board-wrapper';
 import { setupTest } from '@test-setup';
-import defaultSettings from '@test-utils/settings/default-settings';
 
 const initBoard = ({
 	editorId,
@@ -34,21 +33,6 @@ const initBoard = ({
 	editor: { ...defaultEditor, id: editorId, isNew }
 });
 
-shell.getUserSettings.mockImplementation(() => ({
-	...defaultSettings,
-	prefs: {
-		...defaultSettings.prefs,
-		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
-		zimbraPrefCalendarDefaultApptDuration: '60m',
-		zimbraPrefCalendarApptReminderWarningTime: '5',
-		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
-	}
-}));
-
-shell.useBoardHooks.mockImplementation(() => ({
-	updateBoard: vi.fn()
-}));
-
 describe('Editor board wrapper', () => {
 	describe('rendering', () => {
 		it('it does not render without board id', async () => {
@@ -62,10 +46,6 @@ describe('Editor board wrapper', () => {
 
 		it('it renders with board id', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: vi.fn()
-			}));
 
 			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
 			generateEditor({

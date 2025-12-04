@@ -22,6 +22,9 @@ export default defineConfig({
 		}),
 		tsconfigPaths()
 	],
+	define: {
+		BASE_PATH: JSON.stringify('/calendars')
+	},
 	test: {
 		globals: true,
 		environment: 'jsdom',
@@ -34,10 +37,10 @@ export default defineConfig({
 		// mockReset: true,
 		restoreMocks: true,
 		maxWorkers: '50%',
-		testTimeout: 6000,
-		reporters: ['default', 'junit'],
+		testTimeout: 5000,
+		reporters: ['default' /* , 'junit' */],
 		coverage: {
-			enabled: true,
+			enabled: false,
 			provider: 'v8',
 			reporter: ['text', 'cobertura', 'lcov'],
 			reportsDirectory: 'coverage',

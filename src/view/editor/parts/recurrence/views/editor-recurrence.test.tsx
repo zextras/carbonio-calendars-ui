@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, act, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 
 import { EditorRecurrence } from './editor-recurrence';
 import { generateEditor } from '../../../../../commons/editor-generator';
@@ -15,14 +15,12 @@ import { reducers } from '../../../../../store/redux';
 import { setupTest } from '@test-setup';
 
 describe('editor recurrence field', () => {
-	test('is set to none as default', async () => {
+	test('is set to none as default', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		await act(async () => {
-			await setupTest(<EditorRecurrence editorId={editor.id} />, {
-				store
-			});
+		setupTest(<EditorRecurrence editorId={editor.id} />, {
+			store
 		});
 
 		expect(editor.recur).toBeUndefined();
@@ -36,9 +34,7 @@ describe('editor recurrence field', () => {
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/none/i));
-		});
+		await user.click(screen.getByText(/none/i));
 
 		const dropdownPopperEl = screen.getByTestId(TEST_SELECTORS.DROPDOWN);
 
@@ -56,12 +52,8 @@ describe('editor recurrence field', () => {
 		const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
 			store
 		});
-		await act(async () => {
-			await user.click(screen.getByText(/none/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByRole('button', { name: /custom/i }));
-		});
+		await user.click(screen.getByText(/none/i));
+		await user.click(screen.getByRole('button', { name: /custom/i }));
 
 		expect(screen.getByTestId('modal')).toBeInTheDocument();
 	});

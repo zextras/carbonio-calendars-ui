@@ -7,12 +7,12 @@ import React from 'react';
 
 import * as shell from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '@zextras/carbonio-ui-commons';
+import { Mock } from 'vitest';
 
 import { saveSettings } from './save-settings';
 import CalendarSettingsView from './settings-view';
 import { screen, setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
-import { Mock } from 'vitest';
 
 const SettingsHeader = vi.fn(({ title, onSave, onCancel, isDirty }) => (
 	<div data-testid="settings-header">
@@ -24,8 +24,8 @@ const SettingsHeader = vi.fn(({ title, onSave, onCancel, isDirty }) => (
 	</div>
 ));
 
-vi.mock('@zextras/carbonio-ui-commons', () => ({
-	...vi.importActual('@zextras/carbonio-ui-commons'),
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
 	usePrefs: vi.fn()
 }));
 

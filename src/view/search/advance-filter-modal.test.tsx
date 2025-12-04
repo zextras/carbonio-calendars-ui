@@ -3,13 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-vi.mock('@zextras/carbonio-shell-ui', () => ({
-	t: (key: string, fallback?: string): string => fallback ?? key
-}));
-vi.mock('../../constants/advance-filter-modal', () => ({
-	DEFAULT_DATE_START: 1744329600000, // 1744329600000 = April 11, 2025, 00:00:00 UTC
-	DEFAULT_DATE_END: 1745539200000 // 1745539200000 = April 25, 2025, 00:00:00 UTC
-}));
 
 import React from 'react';
 
@@ -19,14 +12,19 @@ import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 import { setupTest } from '@test-setup';
 
+vi.mock('@zextras/carbonio-shell-ui', () => ({
+	t: (key: string, fallback?: string): string => fallback ?? key
+}));
+
+vi.mock('../../constants/advance-filter-modal', () => ({
+	DEFAULT_DATE_START: 1744329600000, // 1744329600000 = April 11, 2025, 00:00:00 UTC
+	DEFAULT_DATE_END: 1745539200000 // 1745539200000 = April 25, 2025, 00:00:00 UTC
+}));
+
 const MOCKED_NOW = new Date('2025-04-18T00:00:00Z');
 
 beforeAll(() => {
 	vi.useFakeTimers().setSystemTime(MOCKED_NOW);
-});
-
-afterAll(() => {
-	vi.useRealTimers();
 });
 
 describe('AdvancedFilterModal', () => {

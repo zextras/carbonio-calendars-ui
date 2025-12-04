@@ -123,6 +123,37 @@ Object.defineProperty(window, 'IntersectionObserver', {
 	})
 });
 
+Object.defineProperty(window, 'Notification', {
+	writable: true,
+	value: vi.fn(function NotificationMock(title: string, options?: NotificationOptions) {
+		return {
+			title,
+			body: options?.body,
+			onclick: null,
+			onshow: null,
+			onerror: null,
+			onclose: null,
+			close: vi.fn()
+		};
+	})
+});
+
+Object.defineProperty(window.Notification, 'requestPermission', {
+	writable: true,
+	value: vi.fn().mockResolvedValue('granted')
+});
+
+Object.defineProperty(window.Notification, 'permission', {
+	writable: true,
+	value: 'granted'
+});
+
+// Mock HTMLMediaElement.play() for audio notifications
+Object.defineProperty(HTMLMediaElement.prototype, 'play', {
+	writable: true,
+	value: vi.fn().mockResolvedValue(undefined)
+});
+
 beforeAll(() => {
 	defaultBeforeAllTests();
 });
