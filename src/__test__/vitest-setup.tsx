@@ -201,6 +201,22 @@ if (!Promise.withResolvers) {
 	};
 }
 
+export const abortSpy = vi.fn();
+
+Object.defineProperty(window, 'AbortController', {
+	writable: true,
+	value: vi.fn(function AbortControllerMock() {
+		return {
+			abort: abortSpy,
+			signal: {
+				aborted: false,
+				addEventListener: vi.fn(),
+				removeEventListener: vi.fn()
+			}
+		};
+	})
+});
+
 beforeAll(() => {
 	defaultBeforeAllTests();
 });
@@ -214,7 +230,7 @@ beforeEach(() => {
 		...originalDateResolvedOptions,
 		timeZone: VITEST_DEFAULT_TIMEZONE
 	});
-
+	// Set fake timers to a fixed date (January 1, 1970, 00:00:00 UTC)
 	vi.useFakeTimers({ shouldAdvanceTime: true });
 	vi.setSystemTime(new Date('1970-01-01T00:00:00.000Z'));
 	// useDistributionListsStore.getState().reset();
