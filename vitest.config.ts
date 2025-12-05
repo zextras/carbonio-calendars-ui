@@ -28,6 +28,11 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'jsdom',
+		server: {
+			deps: {
+				inline: ['@zextras/carbonio-ui-preview']
+			}
+		},
 		setupFiles: [
 			'./src/__test__/worker-setup.ts',
 			'./src/__test__/vitest-setup.tsx',
