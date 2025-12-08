@@ -26,7 +26,7 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { getUserSettings, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import {
 	FOLDER_VIEW,
 	FOLDERS,
@@ -161,6 +161,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
 	const { setModal, onClose, setActiveGrant } = useEditModalContext();
+
+	const { zimbraFeatureSharingEnabled } = getUserSettings().attrs;
 
 	const colors = useGetStatusItems();
 
@@ -463,24 +465,25 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 												<GranteeChip grant={item} />
 											</StyledContainer>
 											<Container orientation="horizontal" mainAlignment="flex-end" width={'fit'}>
-												{item.gt !== SHARE_USER_TYPE.PUBLIC && (
-													<>
-														<Tooltip
-															label={t('tooltip.edit', 'Edit share properties')}
-															placement="top"
-														>
-															<Button
-																type="outlined"
-																label={t('label.edit', 'Edit')}
-																onClick={(): void => {
-																	onEdit(item);
-																}}
-																size="small"
-															/>
-														</Tooltip>
-														<Padding horizontal="extrasmall" />
-													</>
-												)}
+												{zimbraFeatureSharingEnabled === 'TRUE' &&
+													item.gt !== SHARE_USER_TYPE.PUBLIC && (
+														<>
+															<Tooltip
+																label={t('tooltip.edit', 'Edit share properties')}
+																placement="top"
+															>
+																<Button
+																	type="outlined"
+																	label={t('label.edit', 'Edit')}
+																	onClick={(): void => {
+																		onEdit(item);
+																	}}
+																	size="small"
+																/>
+															</Tooltip>
+															<Padding horizontal="extrasmall" />
+														</>
+													)}
 												<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
 													<Button
 														type="outlined"
@@ -492,25 +495,29 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 														size="small"
 													/>
 												</Tooltip>
-												{item.gt !== SHARE_USER_TYPE.PUBLIC && (
-													<>
-														<Padding horizontal="extrasmall" />
-														<Tooltip
-															label={t('tooltip.resend', 'Send mail notification about this share')}
-															placement="top"
-															maxWidth="18.75rem"
-														>
-															<Button
-																type="outlined"
-																label={t('label.resend', 'Resend')}
-																onClick={(): void => {
-																	onResend(item);
-																}}
-																size="small"
-															/>
-														</Tooltip>
-													</>
-												)}
+												{zimbraFeatureSharingEnabled === 'TRUE' &&
+													item.gt !== SHARE_USER_TYPE.PUBLIC && (
+														<>
+															<Padding horizontal="extrasmall" />
+															<Tooltip
+																label={t(
+																	'tooltip.resend',
+																	'Send mail notification about this share'
+																)}
+																placement="top"
+																maxWidth="18.75rem"
+															>
+																<Button
+																	type="outlined"
+																	label={t('label.resend', 'Resend')}
+																	onClick={(): void => {
+																		onResend(item);
+																	}}
+																	size="small"
+																/>
+															</Tooltip>
+														</>
+													)}
 											</Container>
 										</Container>
 									))}
@@ -528,7 +535,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				onConfirm={onConfirm}
 				confirmLabel={t('label.ok', 'OK')}
 				confirmDisabled={disabled}
-				onSecondaryAction={onShare}
+				onSecondaryAction={zimbraFeatureSharingEnabled === 'TRUE' ? onShare : undefined}
 				secondaryActionLabel={t('label.add_share', 'Add share')}
 			/>
 		</Container>
