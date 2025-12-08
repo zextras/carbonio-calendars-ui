@@ -69,12 +69,11 @@ describe('CreateGroupModal', () => {
 			expect(screen.getByPlaceholderText('Group Name*')).toBeVisible();
 		});
 
-		it('should render an input field with a default value', () => {
+		it('should render an input field with a empty default value and disabled save button', () => {
 			setupTest(<CreateGroupModal onClose={jest.fn()} />);
 
-			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue(
-				'New Calendar Group'
-			);
+			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue('');
+			expect(screen.getByRole('button', { name: /Create group/i })).toBeDisabled();
 		});
 
 		it('should render an helper text', () => {
@@ -85,9 +84,9 @@ describe('CreateGroupModal', () => {
 
 		it('should render an error message when the group name is invalid', async () => {
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-
 			const input = screen.getByPlaceholderText('Group Name*');
-			await user.clear(input);
+
+			await user.type(input, '/invalid-group-name');
 
 			expect(screen.getByText('Type a group name to save changes')).toBeVisible();
 		});
@@ -102,8 +101,20 @@ describe('CreateGroupModal', () => {
 
 		it('should render the texts with a red foreground color when the group name is invalid', async () => {
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-
 			const input = screen.getByPlaceholderText('Group Name*');
+
+			await user.type(input, '/invalid-group-name');
+
+			expect(screen.getByText('Group Name*')).toHaveStyle('color: rgb(215, 73, 66)');
+			expect(screen.getByText('Type a group name to save changes')).toHaveStyle(
+				'color: rgb(215, 73, 66)'
+			);
+		});
+		it('should render the texts with a red foreground color when the group name is empty but state is dirty', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+			const input = screen.getByPlaceholderText('Group Name*');
+
+			await user.type(input, 'valid-group-name');
 			await user.clear(input);
 
 			expect(screen.getByText('Group Name*')).toHaveStyle('color: rgb(215, 73, 66)');

@@ -31,19 +31,12 @@ type CreateGroupModalProps = {
 export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
-	const [groupName, setGroupName] = useState(
-		t('folder.modal.creategroup.default_group_name', 'New Calendar Group')
-	);
+	const [groupName, setGroupName] = useState('');
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
-
+	const [isDirty, setIsDirty] = useState<boolean>(false);
 	const selectedCalendarsIds = useMemo(
 		() => map(selectedCalendars, (item) => item.id),
 		[selectedCalendars]
-	);
-
-	const isDirty = useMemo(
-		() => groupName !== '' || selectedCalendars.length > 0,
-		[groupName, selectedCalendars]
 	);
 
 	const isGroupNameValid = useMemo(
@@ -63,11 +56,13 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 
 	const groupNameDescription = useMemo(
 		() =>
-			isGroupNameValid
-				? undefined
-				: t('label.invalid_group_name', 'Type a group name to save changes'),
-		[isGroupNameValid, t]
+			isDirty && !isGroupNameValid
+				? t('label.invalid_group_name', 'Type a group name to save changes')
+				: undefined,
+		[isDirty, isGroupNameValid, t]
 	);
+
+	const hasError = isDirty && !isGroupNameValid;
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Folder) => {
 		setSelectedCalendars((prev) => [selected, ...prev]);
@@ -139,10 +134,11 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				<Input
 					label={groupNameInputLabel}
 					description={groupNameDescription}
-					hasError={!isGroupNameValid}
-					backgroundColor="gray5"
+					hasError={hasError}
+					background="gray5"
 					value={groupName}
 					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+						if (!isDirty) setIsDirty(true);
 						setGroupName(e.target.value);
 					}}
 				/>
