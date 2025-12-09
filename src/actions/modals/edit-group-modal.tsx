@@ -79,13 +79,22 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 		[t]
 	);
 
-	const groupNameDescription = useMemo(
-		() =>
-			isGroupNameValid
-				? undefined
-				: t('label.invalid_group_name', 'Type a group name to save changes'),
-		[isGroupNameValid, t]
-	);
+	const groupNameDescription = useMemo(() => {
+		if (isDirty) {
+			if (!groupName.length) {
+				return t('label.empty_group_name', 'Type a group name to save changes');
+			}
+
+			if (!isGroupNameValid) {
+				return t(
+					'label.invalid_group_name',
+					'This group name is invalid. Please avoid using special characters'
+				);
+			}
+		}
+
+		return t('label.newgroup.note', 'This group will appear in your personal account.');
+	}, [isDirty, isGroupNameValid, groupName, t]);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Folder) => {
 		setSelectedCalendars((prev) => [selected, ...prev]);

@@ -88,7 +88,10 @@ describe('CreateGroupModal', () => {
 
 			await user.type(input, '/invalid-group-name');
 
-			expect(screen.getByText('Type a group name to save changes')).toBeVisible();
+			const warningMessage = screen.getByText(
+				'This group name is invalid. Please avoid using special characters'
+			);
+			expect(warningMessage).toBeVisible();
 		});
 
 		it('should not render an error message when the group name is valid', async () => {
@@ -106,9 +109,12 @@ describe('CreateGroupModal', () => {
 			await user.type(input, '/invalid-group-name');
 
 			expect(screen.getByText('Group Name*')).toHaveStyle('color: rgb(215, 73, 66)');
-			expect(screen.getByText('Type a group name to save changes')).toHaveStyle(
-				'color: rgb(215, 73, 66)'
+
+			const warningMessage = screen.getByText(
+				'This group name is invalid. Please avoid using special characters'
 			);
+			expect(warningMessage).toBeVisible();
+			expect(warningMessage).toHaveStyle('color: rgb(215, 73, 66)');
 		});
 		it('should render the texts with a red foreground color when the group name is empty but state is dirty', async () => {
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);

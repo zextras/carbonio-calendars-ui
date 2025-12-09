@@ -54,13 +54,22 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 		[t]
 	);
 
-	const groupNameDescription = useMemo(
-		() =>
-			isDirty && !isGroupNameValid
-				? t('label.invalid_group_name', 'Type a group name to save changes')
-				: undefined,
-		[isDirty, isGroupNameValid, t]
-	);
+	const groupNameDescription = useMemo(() => {
+		if (isDirty) {
+			if (!groupName.length) {
+				return t('label.empty_group_name', 'Type a group name to save changes');
+			}
+
+			if (!isGroupNameValid) {
+				return t(
+					'label.invalid_group_name',
+					'This group name is invalid. Please avoid using special characters'
+				);
+			}
+		}
+
+		return t('label.newgroup.note', 'This group will appear in your personal account.');
+	}, [isDirty, isGroupNameValid, groupName, t]);
 
 	const hasError = isDirty && !isGroupNameValid;
 
@@ -142,10 +151,6 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 						setGroupName(e.target.value);
 					}}
 				/>
-				<Padding top="small" />
-				<Text size="extrasmall" color="gray1">
-					{t('label.newgroup.note', 'This group will appear in your personal account.')}
-				</Text>
 				<Padding vertical="small" />
 				<Divider />
 				<Padding vertical="small" />
