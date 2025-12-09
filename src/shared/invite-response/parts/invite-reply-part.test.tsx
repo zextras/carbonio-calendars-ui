@@ -59,7 +59,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 	describe('Calendar selector rendering', () => {
 		test('renders calendar selector component', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
 
 			const calendarSelector = await screen.findByTestId(CALENDAR_SELECTOR_TEST_ID);
@@ -68,7 +68,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 
 		test('displays "Scheduled in" label for calendar selector', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
 
 			const scheduledInLabel = await screen.findByText('Scheduled in');
@@ -92,6 +92,21 @@ describe('InviteReplyPart - Calendar Selection', () => {
 	});
 
 	describe('Calendar selection interaction', () => {
+		test('initializes with parent calendar selected and maintains state when accepting without calendar change', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+				parent: defaultCalendar.id
+			});
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
+
+			await waitFor(() => {
+				expect(screen.getByText('Calendar')).toBeVisible();
+			});
+
+			const acceptButton = await screen.findByRole('button', { name: /Accept/i });
+			expect(acceptButton).toBeEnabled();
+		});
+
 		test('allows user to select a different calendar', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
 				parent: defaultCalendar.id
