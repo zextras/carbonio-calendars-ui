@@ -33,6 +33,10 @@ vi.mock('@zextras/carbonio-ui-commons', async () => ({
 	useContactInput: vi.fn()
 }));
 
+beforeEach(() => {
+	vi.setSystemTime(new Date('1970-01-01T00:00:00.000Z'));
+});
+
 describe('Editor Attendees', () => {
 	beforeEach(() => {
 		(useContactInput as Mock).mockReturnValue(DefaultContactInput);

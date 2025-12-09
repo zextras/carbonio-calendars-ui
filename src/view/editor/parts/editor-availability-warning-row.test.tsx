@@ -21,12 +21,11 @@ import { reducers } from '../../../store/redux';
 import { setupTest } from '@test-setup';
 
 const dateFormat = 'YYYY/MM/DD';
+const attendeeId = faker.internet.email();
 
 describe('editor availability warning row', () => {
 	describe('getIsBusyAtTimeOfTheEvent', () => {
 		test('When an attendee is not busy at the time of the event the function return false', () => {
-			const attendeeId = faker.internet.email();
-
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
@@ -49,9 +48,7 @@ describe('editor availability warning row', () => {
 
 			expect(isBusy).toBe(false);
 		});
-		// (start > slot.s && start < slot.e)
 		test('If the appointment starts while attendee is busy the function return true', () => {
-			const attendeeId = faker.internet.email();
 			const slotS = moment().subtract(15, 'minutes').valueOf();
 			const slotE = moment().add(15, 'minutes').valueOf();
 			const item = {
@@ -66,6 +63,7 @@ describe('editor availability warning row', () => {
 			const end = moment().add(30, 'minutes').valueOf();
 			const attendeesAvailabilityList = [item];
 			const isAllDay = false;
+			console.log(!!item);
 			const isBusy = getIsBusyAtTimeOfTheEvent(
 				item,
 				start,
@@ -78,7 +76,6 @@ describe('editor availability warning row', () => {
 		});
 		// (end > slot.s && end < slot.e)
 		test('If the appointment ends while attendee is busy the function return true', () => {
-			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
 			const item = {
@@ -105,7 +102,6 @@ describe('editor availability warning row', () => {
 		});
 		// (start < slot.s && end > slot.e)
 		test('If the appointment starts before the attendee is busy but ends after the attendee is busy the function return true', () => {
-			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(15, 'minutes').valueOf();
 			const item = {
@@ -132,7 +128,6 @@ describe('editor availability warning row', () => {
 		});
 		// start === slot.s
 		test('If the appointment starts when the attendee has another appointment starting at the same time the function return true', () => {
-			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
 			const item = {
@@ -159,7 +154,6 @@ describe('editor availability warning row', () => {
 		});
 		// end === slot.e
 		test('If the appointment ends when the attendee has another appointment ending at the same time the function return true', () => {
-			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
 
@@ -192,7 +186,7 @@ describe('editor availability warning row', () => {
 
 			const start = moment().valueOf();
 			const end = moment().add(1, 'day').valueOf();
-			const attendeeId = faker.internet.email();
+
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
@@ -221,7 +215,6 @@ describe('editor availability warning row', () => {
 			const start = moment().startOf('day').valueOf();
 			const end = moment().add(1, 'day').startOf('day').valueOf();
 
-			const attendeeId = faker.internet.email();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
@@ -250,7 +243,6 @@ describe('editor availability warning row', () => {
 			const start = moment().valueOf();
 			const end = moment().add(30, 'minutes').valueOf();
 
-			const attendeeId = faker.internet.email();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
@@ -276,7 +268,6 @@ describe('editor availability warning row', () => {
 			const start = moment().valueOf();
 			const end = moment().add(30, 'minutes').valueOf();
 
-			const attendeeId = faker.internet.email();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
@@ -301,8 +292,6 @@ describe('editor availability warning row', () => {
 		test('If the appointment is all day for more than 1 day and the attendee is not busy the function return false', () => {
 			const start = moment().valueOf();
 			const end = moment().add(2, 'days').valueOf();
-
-			const attendeeId = faker.internet.email();
 
 			const item = {
 				id: attendeeId,
