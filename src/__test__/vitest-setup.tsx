@@ -230,7 +230,6 @@ beforeEach(() => {
 		...originalDateResolvedOptions,
 		timeZone: VITEST_DEFAULT_TIMEZONE
 	});
-	// Set fake timers to a fixed date (January 1, 1970, 00:00:00 UTC)
 	vi.useFakeTimers({ shouldAdvanceTime: true });
 	// useDistributionListsStore.getState().reset();
 });
