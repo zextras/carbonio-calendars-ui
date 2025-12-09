@@ -6,23 +6,29 @@
 
 import { renderHook, waitFor } from '@testing-library/react';
 
-import * as searchCalendarResources from '../../../soap/search-calendar-resources-request';
 import { searchCalendarReturnType } from '../../../soap/search-calendar-resources-request';
 import { useFetchEditorResources } from '../use-fetch-editor-resources';
 
-describe('useFetchEditorResources', () => {
-	const mockSearchCalendarMultipleResourcesRequest = vi.spyOn(
-		searchCalendarResources,
-		'searchCalendarMultipleResourcesRequest'
-	);
+// vi.spyOn() cannot bypass MSW because the actual HTTP request is still made. Use of vi.mock() with vi.hoisted()
+//  to completely replace the module implementation, which prevents the HTTP
+// request from being made at all and bypasses MSW
 
+const { mockSearchCalendarMultipleResourcesRequest } = vi.hoisted(() => ({
+	mockSearchCalendarMultipleResourcesRequest: vi.fn()
+}));
+
+vi.mock('../../../soap/search-calendar-resources-request', () => ({
+	searchCalendarMultipleResourcesRequest: mockSearchCalendarMultipleResourcesRequest
+}));
+
+describe('useFetchEditorResources', () => {
 	it('returns true for hasEquipment and hasMeetingRoom when both resources are present', async () => {
 		mockSearchCalendarMultipleResourcesRequest.mockResolvedValueOnce({
 			calresource: [
 				{ _attrs: { zimbraCalResType: 'Location' } },
 				{ _attrs: { zimbraCalResType: 'Equipment' } }
 			]
-		} as unknown as searchCalendarReturnType);
+		} as searchCalendarReturnType);
 
 		const { result } = renderHook(() => useFetchEditorResources());
 
