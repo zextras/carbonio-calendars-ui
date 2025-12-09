@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.18.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.1...v1.18.2) (2025-12-09)
+
+
+### Bug Fixes
+
+* display the translated name for 'Calendar' and 'Trash' system calendars ([d745b8d](https://github.com/zextras/carbonio-calendars-ui/commit/d745b8d081c3e67c4fb99257cc0b5cb73b809733))
+
 ### [1.18.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.0...v1.18.1) (2025-12-09)
 
 
