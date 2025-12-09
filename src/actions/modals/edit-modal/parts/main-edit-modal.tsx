@@ -33,7 +33,9 @@ import {
 	useFoldersMap,
 	Folder,
 	Grant,
-	hasId
+	hasId,
+	allowedActionOnSharedAccount,
+	FolderActionsType
 } from '@zextras/carbonio-ui-commons';
 import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -528,7 +530,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				onConfirm={onConfirm}
 				confirmLabel={t('label.ok', 'OK')}
 				confirmDisabled={disabled}
-				onSecondaryAction={onShare}
+				onSecondaryAction={
+					allowedActionOnSharedAccount(folder, FolderActionsType.SHARE) ? onShare : undefined
+				}
 				secondaryActionLabel={t('label.add_share', 'Add share')}
 			/>
 		</Container>
