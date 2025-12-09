@@ -73,6 +73,7 @@ const normalizeEditorFromMailMessage = (
 const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): ReactElement => {
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
 	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(null);
+	const [selectedCalendarId, setSelectedCalendarId] = useState<string>(message.parent);
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
@@ -168,8 +169,11 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 				</Container>
 				<Container width="65%" mainAlignment="flex-start">
 					<CalendarSelector
-						calendarId={message.parent}
-						onCalendarChange={(cal): void => setActiveCalendar(cal)}
+						calendarId={selectedCalendarId}
+						onCalendarChange={(cal): void => {
+							setActiveCalendar(cal);
+							setSelectedCalendarId(cal.id);
+						}}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash
 					/>
