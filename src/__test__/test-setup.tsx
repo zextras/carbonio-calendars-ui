@@ -30,10 +30,6 @@ import { MemoryRouter, MemoryRouterProps, Route, RouteProps, Routes } from 'reac
 import { Store } from 'redux';
 
 import { getAppI18n } from './i18n/i18n-test-factory';
-import {
-	previewContextMock,
-	PreviewsManagerContext
-} from '@test-mocks/@zextras/carbonio-ui-preview';
 
 type ByRoleWithIconOptions = ByRoleOptions & {
 	icon: string | RegExp;
@@ -129,9 +125,7 @@ export const ProvidersWrapper = ({
 							<StoreProvider store={store}>
 								<I18nextProvider i18n={i18n}>
 									<SnackbarManager>
-										<PreviewsManagerContext.Provider value={previewContextMock}>
-											<ModalManager>{children}</ModalManager>
-										</PreviewsManagerContext.Provider>
+										<ModalManager>{children}</ModalManager>
 									</SnackbarManager>
 								</I18nextProvider>
 							</StoreProvider>

@@ -78,7 +78,7 @@ describe('Attachment', () => {
 		expect(windowOpenSpy).toHaveBeenCalledTimes(1);
 	});
 
-	test('calls createPreview when a file is set to be viewed with the previer', async () => {
+	test('calls createPreview when a file is set to be viewed with the previewer', async () => {
 		const spyOpen = vi.spyOn(window, 'open').mockImplementation(vi.fn());
 		const unsupportedAttachment = {
 			name: 'test-file.ts',
@@ -104,7 +104,7 @@ describe('Attachment', () => {
 		);
 	});
 
-	test('calls download service when a file is not set to be viewed with the previer', async () => {
+	test('calls download service when a file is not set to be viewed with the previewer', async () => {
 		const { user } = renderAttachment(baseProps);
 		const previewButton = screen.getByText('test-file.pdf');
 		await user.click(previewButton);

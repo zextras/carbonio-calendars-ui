@@ -53,7 +53,9 @@ describe('Editor Attendees', () => {
 		setupTest(<EditorAttendees editorId={editor.id} />, { store });
 
 		await shareInfoInterceptor;
-		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
+		await waitFor(async () => {
+			expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
+		});
 	});
 	it('should display attendee not available when already busy during current appointment', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });

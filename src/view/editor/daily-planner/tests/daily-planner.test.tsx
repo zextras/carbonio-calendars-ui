@@ -7,7 +7,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { within } from '@testing-library/react';
+import { waitFor, within } from '@testing-library/react';
 
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import * as handler from '../../../../soap/get-free-busy-request';
@@ -211,7 +211,6 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		vi.advanceTimersByTime(250);
 		await freeBusyInterceptor;
 		await failingInterceptor;
 		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
@@ -231,11 +230,12 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		vi.advanceTimersByTime(250);
 		await workingHoursInterceptor;
 		await failingInterceptor;
-		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
-		expect(errorSnackbar).toBeVisible();
+		await waitFor(async () => {
+			const errorSnackbar = await screen.findByText('Something went wrong, please try again');
+			expect(errorSnackbar).toBeVisible();
+		});
 	});
 	it('will call the API once', async () => {
 		const spy = vi.spyOn(handler, 'getFreeBusyRequest');
