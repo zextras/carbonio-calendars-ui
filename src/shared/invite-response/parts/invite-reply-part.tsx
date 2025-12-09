@@ -19,22 +19,15 @@ import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-u
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
-import { generateEditor } from '../../../commons/editor-generator';
-import { CALENDAR_BOARD_ID } from '../../../constants';
-import { PARTICIPATION_STATUS } from '../../../constants/api';
-import {
-	getEquipments,
-	getMeetingRooms,
-	getVirtualRoom
-} from '../../../normalizations/normalize-editor';
-import { useAppDispatch } from '../../../store/redux/hooks';
-import { Editor } from '../../../types/editor';
-import type {
-	InviteReplyPartArguments,
-	InviteResponseArguments
-} from '../../../types/integrations';
-import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
+import { generateEditor } from 'commons/editor-generator';
+import { PARTICIPATION_STATUS } from 'constants/api';
+import { CALENDAR_BOARD_ID } from 'constants/index';
+import { getEquipments, getMeetingRooms, getVirtualRoom } from 'normalizations/normalize-editor';
+import { useAppDispatch } from 'store/redux/hooks';
+import { Editor } from 'types/editor';
+import type { InviteReplyPartArguments, InviteResponseArguments } from 'types/integrations';
+import { CalendarSelector } from 'view/editor/parts/calendar-selector';
 
 const normalizeEditorFromMailMessage = (
 	messageData: InviteResponseArguments['mailMsg']
@@ -72,13 +65,16 @@ const normalizeEditorFromMailMessage = (
 
 const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): ReactElement => {
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
-	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(null);
-	const [selectedCalendarId, setSelectedCalendarId] = useState<string>(message.parent);
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const calendarFolders = useFoldersMap();
 	const { replaceHistory } = useHistoryNavigation();
+
+	const [selectedCalendarId, setSelectedCalendarId] = useState<string>(message.parent);
+	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(
+		() => calendarFolders[message.parent] ?? null
+	);
 
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];
