@@ -23,7 +23,7 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={vi.fn}
+				toggleModal={vi.fn()}
 				removeReminder={vi.fn()}
 				setActiveReminder={vi.fn()}
 			/>,
@@ -40,7 +40,7 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={vi.fn}
+				toggleModal={vi.fn()}
 				removeReminder={vi.fn()}
 				setActiveReminder={vi.fn()}
 			/>,
@@ -58,7 +58,7 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={vi.fn}
+				toggleModal={vi.fn()}
 				removeReminder={vi.fn()}
 				setActiveReminder={vi.fn()}
 			/>,
@@ -104,7 +104,7 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={vi.fn}
+				toggleModal={vi.fn()}
 				removeReminder={vi.fn()}
 				setActiveReminder={vi.fn()}
 			/>,
@@ -152,7 +152,7 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={vi.fn}
+				toggleModal={vi.fn()}
 				removeReminder={vi.fn()}
 				setActiveReminder={vi.fn()}
 			/>,
@@ -171,7 +171,7 @@ describe('Appointment Reminder Item', () => {
 		setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={vi.fn}
+				toggleModal={vi.fn()}
 				removeReminder={vi.fn()}
 				setActiveReminder={vi.fn()}
 			/>,
@@ -242,7 +242,7 @@ describe('Appointment Reminder Item', () => {
 		const { user } = setupTest(
 			<AppointmentReminderItem
 				reminderItem={reminderItem}
-				toggleModal={vi.fn}
+				toggleModal={vi.fn()}
 				removeReminder={removeReminder}
 				setActiveReminder={vi.fn()}
 			/>,
@@ -273,7 +273,7 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={vi.fn}
+					toggleModal={vi.fn()}
 					removeReminder={vi.fn()}
 					setActiveReminder={vi.fn()}
 				/>,
@@ -288,7 +288,7 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={vi.fn}
+					toggleModal={vi.fn()}
 					removeReminder={vi.fn()}
 					setActiveReminder={vi.fn()}
 				/>,
@@ -308,7 +308,7 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={vi.fn}
+					toggleModal={vi.fn()}
 					removeReminder={vi.fn()}
 					setActiveReminder={vi.fn()}
 				/>,
@@ -327,7 +327,7 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={vi.fn}
+					toggleModal={vi.fn()}
 					removeReminder={vi.fn()}
 					setActiveReminder={vi.fn()}
 				/>,
@@ -346,7 +346,7 @@ describe('Appointment Reminder Item', () => {
 			setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={vi.fn}
+					toggleModal={vi.fn()}
 					removeReminder={vi.fn()}
 					setActiveReminder={vi.fn()}
 				/>,
@@ -365,7 +365,7 @@ describe('Appointment Reminder Item', () => {
 			const { user } = setupTest(
 				<AppointmentReminderItem
 					reminderItem={reminderItem}
-					toggleModal={vi.fn}
+					toggleModal={vi.fn()}
 					removeReminder={vi.fn()}
 					setActiveReminder={vi.fn()}
 				/>,

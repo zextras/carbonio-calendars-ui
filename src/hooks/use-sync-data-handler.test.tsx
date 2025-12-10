@@ -162,6 +162,8 @@ describe('sync data handler', () => {
 				});
 			});
 			test('it wont add folders to the groups', () => {
+				// Reset calendar group state to ensure test isolation.
+				// This prevents state leakage between tests and avoids future regressions if test setup changes.
 				const emptyStore = mockedData.store.mockReduxStore();
 				const store = configureStore({
 					reducer: combineReducers(reducers),
