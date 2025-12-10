@@ -233,7 +233,7 @@ describe('EditorDailyPlanner', () => {
 		await workingHoursInterceptor;
 		await failingInterceptor;
 		await waitFor(async () => {
-			const errorSnackbar = await screen.findByText('Something went wrong, please try again');
+			const errorSnackbar = screen.getByText('Something went wrong, please try again');
 			expect(errorSnackbar).toBeVisible();
 		});
 	});

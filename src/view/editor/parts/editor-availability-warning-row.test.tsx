@@ -63,7 +63,6 @@ describe('editor availability warning row', () => {
 			const end = moment().add(30, 'minutes').valueOf();
 			const attendeesAvailabilityList = [item];
 			const isAllDay = false;
-			console.log(!!item);
 			const isBusy = getIsBusyAtTimeOfTheEvent(
 				item,
 				start,

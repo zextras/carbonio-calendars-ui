@@ -6,7 +6,6 @@
  */
 
 import '@testing-library/jest-dom';
-// import { configure } from '@testing-library/react';
 import moment from 'moment-timezone';
 import { http, RequestHandler } from 'msw';
 import { SetupServer, setupServer } from 'msw/node';
@@ -37,10 +36,6 @@ vi.mock('@zextras/carbonio-ui-soap-lib');
 
 // Setup MSW mock server
 let server = setupServer();
-
-// configure({
-// 	asyncUtilTimeout: 2000
-// });
 
 /**
  * Default logic to execute before all the tests
@@ -191,7 +186,11 @@ CSSStyleDeclaration.prototype.setProperty = function (
 };
 
 if (!Promise.withResolvers) {
-	Promise.withResolvers = function <T>() {
+	Promise.withResolvers = function withResolvers<T>(): {
+		promise: Promise<T>;
+		resolve: (value: T | PromiseLike<T>) => void;
+		reject: (reason?: any) => void;
+	} {
 		let resolve: (value: T | PromiseLike<T>) => void;
 		let reject: (reason?: any) => void;
 		const promise = new Promise<T>((res, rej) => {
