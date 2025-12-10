@@ -8,10 +8,10 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, render } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import * as PreviewModule from '@zextras/carbonio-ui-preview';
 
 import { reducers } from '../../../store/redux';
 import { Attachment } from '../attachment';
-import { previewContextMock } from '@test-mocks/@zextras/carbonio-ui-preview';
 import { setupTest, UserEvent } from '@test-setup';
 
 const setupFoldersStore = (): void => {
@@ -29,6 +29,14 @@ const renderAttachment = (props: any): { user: UserEvent } & ReturnType<typeof r
 	});
 
 	return setupTest(<Attachment {...props} />, { store });
+};
+
+const createPreviewSpy = vi.fn();
+const contextValue = {
+	createPreview: createPreviewSpy,
+	initPreview: vi.fn(),
+	openPreview: vi.fn(),
+	emptyPreview: vi.fn()
 };
 
 describe('Attachment', () => {
@@ -93,11 +101,15 @@ describe('Attachment', () => {
 			attachment: unsupportedAttachment
 		};
 
+		vi.spyOn(PreviewModule, 'PreviewsManagerContext', 'get').mockReturnValue(
+			React.createContext(contextValue) as unknown as typeof PreviewModule.PreviewsManagerContext
+		);
+
 		const { user } = renderAttachment(props);
 		const previewButton = screen.getByText('test-file.ts');
 		await user.click(previewButton);
 
-		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(0);
+		expect(createPreviewSpy).toHaveBeenCalledTimes(0);
 		expect(spyOpen).toHaveBeenCalledWith(
 			'/service/home/~/?auth=co&id=1&part=test-file.ts&disp=a',
 			'_blank'
@@ -105,12 +117,16 @@ describe('Attachment', () => {
 	});
 
 	test('calls download service when a file is not set to be viewed with the previewer', async () => {
+		vi.spyOn(PreviewModule, 'PreviewsManagerContext', 'get').mockReturnValue(
+			React.createContext(contextValue) as unknown as typeof PreviewModule.PreviewsManagerContext
+		);
+
 		const { user } = renderAttachment(baseProps);
 		const previewButton = screen.getByText('test-file.pdf');
 		await user.click(previewButton);
 
-		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(1);
-		expect(previewContextMock.createPreview).toHaveBeenCalledWith(
+		expect(createPreviewSpy).toHaveBeenCalledTimes(1);
+		expect(createPreviewSpy).toHaveBeenCalledWith(
 			expect.objectContaining({
 				src: expect.any(String),
 				previewType: expect.any(String),
