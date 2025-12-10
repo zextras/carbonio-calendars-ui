@@ -34,7 +34,7 @@ describe('show more popover', () => {
 			<ShowMorePopover
 				open
 				events={events}
-				onClose={vi.fn}
+				onClose={vi.fn()}
 				date={date}
 				anchorRef={React.createRef()}
 			/>,
@@ -70,7 +70,7 @@ describe('show more popover', () => {
 			<ShowMorePopover
 				open
 				events={events}
-				onClose={vi.fn}
+				onClose={vi.fn()}
 				date={date}
 				anchorRef={React.createRef()}
 			/>,
@@ -93,7 +93,7 @@ describe('show more popover', () => {
 			<ShowMorePopover
 				open
 				events={events}
-				onClose={vi.fn}
+				onClose={vi.fn()}
 				date={date}
 				anchorRef={React.createRef()}
 			/>,

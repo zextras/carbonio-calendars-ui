@@ -21,7 +21,7 @@ import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 describe('delete-permanently', () => {
 	it('renders a title', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(<DeletePermanently onClose={vi.fn} event={mockedData.getEvent()} />, { store });
+		setupTest(<DeletePermanently onClose={vi.fn()} event={mockedData.getEvent()} />, { store });
 
 		expect(
 			screen.getByText('Are you sure you want to delete this appointment permanently?')
@@ -32,7 +32,7 @@ describe('delete-permanently', () => {
 
 		setupTest(
 			<DeletePermanently
-				onClose={vi.fn}
+				onClose={vi.fn()}
 				event={mockedData.getEvent({ resource: { isRecurrent: true } })}
 			/>,
 			{ store }
@@ -47,7 +47,7 @@ describe('delete-permanently', () => {
 
 		setupTest(
 			<DeletePermanently
-				onClose={vi.fn}
+				onClose={vi.fn()}
 				event={mockedData.getEvent({ resource: { isRecurrent: true } })}
 			/>,
 			{ store }
@@ -63,7 +63,7 @@ describe('delete-permanently', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupTest(
 			<DeletePermanently
-				onClose={vi.fn}
+				onClose={vi.fn()}
 				event={mockedData.getEvent({ resource: { isRecurrent: true } })}
 			/>,
 			{ store }
@@ -77,7 +77,7 @@ describe('delete-permanently', () => {
 	});
 	it('renders a single event description', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(<DeletePermanently onClose={vi.fn} event={mockedData.getEvent()} />, { store });
+		setupTest(<DeletePermanently onClose={vi.fn()} event={mockedData.getEvent()} />, { store });
 
 		expect(
 			screen.getByText(
@@ -87,19 +87,19 @@ describe('delete-permanently', () => {
 	});
 	it('renders a button', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(<DeletePermanently onClose={vi.fn} event={mockedData.getEvent()} />, { store });
+		setupTest(<DeletePermanently onClose={vi.fn()} event={mockedData.getEvent()} />, { store });
 
 		expect(screen.getByRole('button', { name: 'Delete permanently' })).toBeVisible();
 	});
 	it('is enabled by default', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(<DeletePermanently onClose={vi.fn} event={mockedData.getEvent()} />, { store });
+		setupTest(<DeletePermanently onClose={vi.fn()} event={mockedData.getEvent()} />, { store });
 
 		expect(screen.getByRole('button', { name: 'Delete permanently' })).toBeEnabled();
 	});
 	it('has an error background color', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(<DeletePermanently onClose={vi.fn} event={mockedData.getEvent()} />, { store });
+		setupTest(<DeletePermanently onClose={vi.fn()} event={mockedData.getEvent()} />, { store });
 		const { result } = setupHook(useTheme, { store });
 
 		expect(screen.getByRole('button', { name: 'Delete permanently' })).toHaveStyle(
@@ -110,7 +110,7 @@ describe('delete-permanently', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const itemActionSpy = vi.spyOn(itemAction, 'itemActionRequest');
 		const { user } = setupTest(
-			<DeletePermanently onClose={vi.fn} event={mockedData.getEvent()} />,
+			<DeletePermanently onClose={vi.fn()} event={mockedData.getEvent()} />,
 			{ store }
 		);
 		await user.click(screen.getByRole('button', { name: 'Delete permanently' }));
@@ -120,7 +120,7 @@ describe('delete-permanently', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const itemActionSpy = vi.spyOn(itemAction, 'itemActionRequest');
 		const event = mockedData.getEvent();
-		const { user } = setupTest(<DeletePermanently onClose={vi.fn} event={event} />, { store });
+		const { user } = setupTest(<DeletePermanently onClose={vi.fn()} event={event} />, { store });
 		await user.click(screen.getByRole('button', { name: 'Delete permanently' }));
 		expect(itemActionSpy).toHaveBeenCalledWith(expect.objectContaining({ op: 'delete' }));
 	});
@@ -129,14 +129,14 @@ describe('delete-permanently', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const itemActionSpy = vi.spyOn(itemAction, 'itemActionRequest');
 		const event = mockedData.getEvent();
-		const { user } = setupTest(<DeletePermanently onClose={vi.fn} event={event} />, { store });
+		const { user } = setupTest(<DeletePermanently onClose={vi.fn()} event={event} />, { store });
 		await user.click(screen.getByRole('button', { name: 'Delete permanently' }));
 		expect(itemActionSpy).toHaveBeenCalledWith(expect.objectContaining({ id: event.resource.id }));
 	});
 	it('on success a successful snackbar will appear', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const event = mockedData.getEvent();
-		const { user } = setupTest(<DeletePermanently onClose={vi.fn} event={event} />, { store });
+		const { user } = setupTest(<DeletePermanently onClose={vi.fn()} event={event} />, { store });
 		await user.click(screen.getByRole('button', { name: 'Delete permanently' }));
 
 		expect(await screen.findByText('Permanent deletion completed successfully')).toBeVisible();
@@ -149,7 +149,7 @@ describe('delete-permanently', () => {
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const event = mockedData.getEvent();
-		const { user } = setupTest(<DeletePermanently onClose={vi.fn} event={event} />, { store });
+		const { user } = setupTest(<DeletePermanently onClose={vi.fn()} event={event} />, { store });
 		await user.click(screen.getByRole('button', { name: 'Delete permanently' }));
 		await interceptor;
 		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
