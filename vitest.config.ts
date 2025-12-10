@@ -43,7 +43,7 @@ export default defineConfig({
 		restoreMocks: true,
 		maxWorkers: '50%',
 		testTimeout: 5000,
-		reporters: ['default' /* , 'junit' */],
+		reporters: ['default', 'junit'],
 		coverage: {
 			enabled: true,
 			provider: 'v8',

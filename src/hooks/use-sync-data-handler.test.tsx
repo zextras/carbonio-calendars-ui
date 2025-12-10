@@ -162,8 +162,12 @@ describe('sync data handler', () => {
 				});
 			});
 			test('it wont add folders to the groups', () => {
-				const store = configureStore({ reducer: combineReducers(reducers) });
-				useCalendarGroupStore.setState((state) => state);
+				const emptyStore = mockedData.store.mockReduxStore();
+				const store = configureStore({
+					reducer: combineReducers(reducers),
+					preloadedState: emptyStore
+				});
+				useCalendarGroupStore.setState({ groups: {} });
 				populateFoldersStore();
 				const notify = {
 					created: {
@@ -181,7 +185,11 @@ describe('sync data handler', () => {
 		});
 		describe('deleted', () => {
 			test('it will remove the group from the store', () => {
-				const store = configureStore({ reducer: combineReducers(reducers) });
+				const emptyStore = mockedData.store.mockReduxStore();
+				const store = configureStore({
+					reducer: combineReducers(reducers),
+					preloadedState: emptyStore
+				});
 				useCalendarGroupStore.setState({
 					groups: {
 						134: {
