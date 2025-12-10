@@ -25,7 +25,7 @@ const createEditorAttendeeFromContactInput = (contact: ContactInputItem): Editor
 
 const createContactChip = (attendee: EditorChipAttendees): ContactInputItem => ({
 	id: attendee.email,
-	label: attendee.email,
+	label: attendee.fullName ?? attendee.label ?? attendee.email,
 	value: {
 		id: attendee.email,
 		email: attendee.email,

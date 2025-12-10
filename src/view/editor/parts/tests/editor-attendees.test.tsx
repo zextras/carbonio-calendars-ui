@@ -101,7 +101,7 @@ describe('Editor Attendees', () => {
 	});
 
 	describe('ChipInput', () => {
-		it('should always display attendee email', () => {
+		it('should display attendee label when available', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			const editor = generateEditor({
@@ -109,6 +109,20 @@ describe('Editor Attendees', () => {
 					dispatch: store.dispatch,
 					folders: {},
 					attendees: [{ email: 'email1@test.com', label: 'test label' }]
+				}
+			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+			expect(within(screen.getByTestId('chip')).getByText('test label')).toBeVisible();
+		});
+
+		it('should display attendee email when label is not available', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					attendees: [{ email: 'email1@test.com' }]
 				}
 			});
 			setupTest(<EditorAttendees editorId={editor.id} />, { store });
