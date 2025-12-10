@@ -38,17 +38,16 @@ describe('ShadowDomWrapper', () => {
 	});
 
 	it('enables darkreader when dark mode is enabled', async () => {
+		(enableDarkReader as Mock).mockClear();
 		(useUserSettings as Mock).mockReturnValue({
 			prefs: { carbonioPrefDarkMode: 'enabled' }
 		});
-		const enableDarkReaderFn = vi.fn();
-		(enableDarkReader as Mock).mockImplementation(enableDarkReaderFn);
 
 		const children = <div data-testid="child">Hello, Shadow DOM!</div>;
 		setupTest(<ShadowDomWrapper>{children}</ShadowDomWrapper>);
 
 		await waitFor(() => {
-			expect(enableDarkReaderFn).toHaveBeenCalledTimes(1);
+			expect(enableDarkReader).toHaveBeenCalledTimes(1);
 		});
 	});
 

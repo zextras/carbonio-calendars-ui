@@ -7,7 +7,7 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
 
 import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
@@ -530,9 +530,8 @@ describe('delete event modal', () => {
 					})
 				);
 
-				await act(async () => {
-					await vi.advanceTimersToNextTimerAsync();
-				});
+				await vi.advanceTimersByTimeAsync(5000);
+
 				expect(spy).toHaveBeenCalledWith(
 					'SendInviteReply',
 					expect.objectContaining({

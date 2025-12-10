@@ -31,6 +31,7 @@ import { handleSearchRequest } from 'test/mocks/network/msw/handle-search-reques
 import { handleSendInviteReplyRequest } from 'test/mocks/network/msw/handle-send-invite-reply';
 import { handleSendShareNotificationRequest } from 'test/mocks/network/msw/handle-send-share-notification';
 
+vi.mock('darkreader');
 vi.mock('@zextras/carbonio-shell-ui');
 vi.mock('@zextras/carbonio-ui-soap-lib');
 
