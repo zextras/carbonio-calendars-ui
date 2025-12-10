@@ -12,6 +12,11 @@ import { VITEST_DEFAULT_TIMEZONE } from './src/constants/test-environment';
 
 process.env.TZ = VITEST_DEFAULT_TIMEZONE;
 
+const junitReporter: ['junit', { outputFile: string; console: boolean }] = [
+	'junit',
+	{ outputFile: 'junit.xml', console: false }
+];
+
 export default defineConfig({
 	plugins: [
 		react({
@@ -43,11 +48,11 @@ export default defineConfig({
 		restoreMocks: true,
 		maxWorkers: '50%',
 		testTimeout: 5000,
-		reporters: ['default', 'junit'],
+		reporters: ['default', junitReporter],
 		coverage: {
 			enabled: true,
 			provider: 'v8',
-			reporter: ['text', 'cobertura', 'lcov'],
+			reporter: ['cobertura', 'lcov'],
 			reportsDirectory: 'coverage',
 			include: ['src/**/*.{ts,tsx}'],
 			exclude: ['**/__test__/**', '**/tests/**', '**/mocks/**', '**/*.test.{js,jsx,ts,tsx}']

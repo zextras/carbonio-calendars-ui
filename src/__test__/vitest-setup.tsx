@@ -231,7 +231,6 @@ beforeEach(() => {
 		timeZone: VITEST_DEFAULT_TIMEZONE
 	});
 	vi.useFakeTimers({ shouldAdvanceTime: true });
-	// useDistributionListsStore.getState().reset();
 });
 
 afterEach(() => {
