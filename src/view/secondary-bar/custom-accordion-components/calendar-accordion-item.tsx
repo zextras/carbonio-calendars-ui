@@ -26,12 +26,12 @@ import {
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import {
 	FOLDERS,
-	getFolderTranslatedName,
 	useFolder,
 	Folder,
 	ROOT_NAME,
 	getRootAccountId,
-	useRoot
+	useRoot,
+	getFolderIdParts
 } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
@@ -109,20 +109,30 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 		});
 	}, [dispatch, end, calendar, query, start]);
 
+	const folderName = useMemo((): string => {
+		const { id } = getFolderIdParts(calendarId);
+		if (id === FOLDERS.CALENDAR) {
+			return t('label.calendar', 'Calendar');
+		}
+
+		if (id === FOLDERS.TRASH) {
+			return t('label.trash', 'Trash');
+		}
+
+		return calendar?.name ?? '';
+	}, [calendar?.name, calendarId, t]);
+
 	const accordionItem = useMemo<AccordionItemType | null>(() => {
 		if (!calendar) {
 			return null;
 		}
 		return {
 			...calendar,
-			label:
-				calendar.id === FOLDERS.USER_ROOT
-					? displayName
-					: (getFolderTranslatedName({ folderId: calendar.id, folderName: calendar.name }) ?? ''),
+			label: folderName,
 			icon: getFolderIcon({ item: calendar, checked: calendar.checked ?? false }),
 			iconColor: setCalendarColor({ color: calendar.color, rgb: calendar.rgb }).color
 		} as AccordionItemType;
-	}, [calendar, displayName]);
+	}, [calendar, folderName]);
 
 	const sharedStatusIcon = useMemo<React.ReactNode>(() => {
 		if (!calendar) {
