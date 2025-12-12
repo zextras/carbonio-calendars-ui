@@ -162,7 +162,7 @@ describe('ReminderPart', () => {
 		async ({ alarmValue, label, expectedReminder }) => {
 			setupFoldersStore();
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			const modifyAppointmentSpy = jest.spyOn(modifyAppointmentHandler, 'modifyAppointment');
+			const modifyAppointmentSpy = vi.spyOn(modifyAppointmentHandler, 'modifyAppointment');
 
 			const { user } = setupTest(
 				<ReminderPart alarmString={label} invite={{ ...invite, alarmValue }} event={mockEvent} />,

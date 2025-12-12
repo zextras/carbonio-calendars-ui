@@ -13,13 +13,13 @@ import { combineReducers } from 'redux';
 import { reducers } from '../store/redux';
 import CalendarView from '../view/calendar/calendar-view';
 import SecondaryBar from '../view/secondary-bar/secondary-bar';
+import { useLocalStorage } from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest, UserEvent } from '@test-setup';
-import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 function waitAnimationsToComplete(): void {
-	act(() => jest.advanceTimersByTime(1000));
+	act(() => vi.advanceTimersByTime(1000));
 }
 
 export async function setupSidebarIntegrationTest({
@@ -73,7 +73,7 @@ export async function typeURL(user: UserEvent, value: string): Promise<void> {
 }
 
 export function mockExpandedFolders(folderIds: Array<string>): void {
-	useLocalStorage.mockReturnValue([folderIds, jest.fn()]);
+	useLocalStorage.mockReturnValue([folderIds, vi.fn()]);
 }
 
 export const generateCalendar = (): Folder =>

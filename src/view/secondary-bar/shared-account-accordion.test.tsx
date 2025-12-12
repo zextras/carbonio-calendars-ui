@@ -12,8 +12,8 @@ import { getRootsArray } from '@zextras/carbonio-ui-commons';
 
 import { SharedAccountAccordion } from './shared-account-accordion';
 import { reducers } from '../../store/redux';
+import { useLocalStorage } from '@test-mocks/@zextras/carbonio-shell-ui';
 import { screen, setupTest } from '@test-setup';
-import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { getMocksContext } from '@test-utils/utils/mocks-context';
 
@@ -25,7 +25,7 @@ function setupSharedAccountTest(): {
 } {
 	populateFoldersStore();
 	const mocksContext = getMocksContext();
-	useLocalStorage.mockReturnValue([[], jest.fn()]);
+	useLocalStorage.mockReturnValue([[], vi.fn()]);
 
 	const { sendOnBehalf } = mocksContext.identities;
 	const {
@@ -72,7 +72,7 @@ describe('SharedAccountAccordion', () => {
 	it('should update the open status in local storage when accordion is toggled', async () => {
 		const { sharedAccount } = setupSharedAccountTest();
 
-		const funMock = jest.fn();
+		const funMock = vi.fn();
 		useLocalStorage.mockReturnValue([[], funMock]);
 
 		const { user } = setupTest(<SharedAccountAccordion rootId={sharedAccount.id} />, { store });

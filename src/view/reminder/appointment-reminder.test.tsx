@@ -179,7 +179,7 @@ describe('appointment reminders', () => {
 		const diff = event2.resource.alarmData[0].alarmInstStart - today;
 
 		act(() => {
-			jest.advanceTimersByTime(diff + 12345);
+			vi.advanceTimersByTime(diff + 12345);
 		});
 
 		expect(screen.getByTestId('reminder-modal')).toBeInTheDocument();
@@ -201,7 +201,7 @@ describe('appointment reminders', () => {
 		});
 
 		act(() => {
-			jest.advanceTimersByTime(1000);
+			vi.advanceTimersByTime(1000);
 		});
 
 		expect(screen.queryByTestId('reminder-modal')).not.toBeInTheDocument();

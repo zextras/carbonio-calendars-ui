@@ -17,7 +17,7 @@ import { generateGroupCalendar, populateGroupsStore } from '../../test/generator
 describe('useSecondaryBarTreePrimaryAccount', () => {
 	it('should return an object with the correct structure', () => {
 		// Mock the useLocalStorage hook to simulate localStorage containing the id '1'
-		useLocalStorage.mockReturnValue([[], jest.fn()]);
+		useLocalStorage.mockReturnValue([[], vi.fn()]);
 
 		populateFoldersStore({ view: 'appointment' });
 		const groups = [generateGroupCalendar()];

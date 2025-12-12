@@ -20,7 +20,7 @@ describe('MultipleCalendarSelector', () => {
 	it('should render the MultipleCalendarSelector with the correct placeholder', () => {
 		populateFoldersStore({ view: 'appointment' });
 
-		setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		setupTest(<MultipleCalendarSelector onCalendarChange={vi.fn()} />);
 
 		expect(screen.getByPlaceholderText('Type a calendar')).toBeVisible();
 	});
@@ -31,7 +31,7 @@ describe('MultipleCalendarSelector', () => {
 		);
 		populateFoldersStore({ view: 'appointment', customFolders: calendars });
 
-		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={vi.fn()} />);
 		await user.type(screen.getByPlaceholderText('Type a calendar'), 'Ca');
 		const dropdownList = await screen.findByTestId('dropdown-popper-list');
 		calendars.forEach((calendar) => {
@@ -42,7 +42,7 @@ describe('MultipleCalendarSelector', () => {
 	it('should not render the trash calendar in the dropdown list when the user clicks on the input', async () => {
 		populateFoldersStore({ view: 'appointment' });
 
-		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={vi.fn()} />);
 		await user.type(screen.getByPlaceholderText('Type a calendar'), 'Tr');
 		const dropdownList = await screen.findByTestId('dropdown-popper-list');
 		expect(within(dropdownList).queryByText(/trash/i)).not.toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('MultipleCalendarSelector', () => {
 		});
 		populateFoldersStore({ view: 'appointment', customFolders: [trashedCalendar] });
 
-		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={vi.fn()} />);
 		await user.type(screen.getByPlaceholderText('Type a calendar'), trashedCalendarName);
 		const dropdownList = await screen.findByTestId('dropdown-popper-list');
 		expect(within(dropdownList).queryByText(trashedCalendarName)).not.toBeInTheDocument();
@@ -68,7 +68,7 @@ describe('MultipleCalendarSelector', () => {
 		const calendar = generateFolder({ view: 'appointment' });
 		populateFoldersStore({ view: 'appointment', customFolders: [calendar] });
 
-		const onCalendarChange = jest.fn();
+		const onCalendarChange = vi.fn();
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={onCalendarChange} />);
 		await selectCalendarFromSelector(user, calendar.name);
 		expect(onCalendarChange).toHaveBeenCalledWith(calendar);
@@ -80,7 +80,7 @@ describe('MultipleCalendarSelector', () => {
 		);
 		populateFoldersStore({ view: 'appointment', customFolders: calendars });
 
-		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={vi.fn()} />);
 		const input = screen.getByPlaceholderText('Type a calendar');
 
 		await user.click(input);
@@ -94,7 +94,7 @@ describe('MultipleCalendarSelector', () => {
 		);
 		populateFoldersStore({ view: 'appointment', customFolders: calendars });
 
-		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={vi.fn()} />);
 		const input = screen.getByPlaceholderText('Type a calendar');
 
 		await user.click(input);

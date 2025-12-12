@@ -17,7 +17,7 @@ import { reducers } from 'store/redux';
 
 describe('TagsAccordion', () => {
 	it('should render the tags accordion with the correct items', () => {
-		useLocalStorage.mockReturnValue([[SIDEBAR_ITEMS.TAGS], jest.fn()]);
+		useLocalStorage.mockReturnValue([[SIDEBAR_ITEMS.TAGS], vi.fn()]);
 		populateFoldersStore();
 		const store = configureStore({
 			reducer: combineReducers(reducers)

@@ -16,7 +16,7 @@ describe('Group calendars list item', () => {
 	it('should render the name of the calendar', () => {
 		const calendar = generateGroupCalendar();
 
-		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
+		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={vi.fn()} />);
 
 		expect(screen.getByText(calendar.name)).toBeVisible();
 	});
@@ -24,7 +24,7 @@ describe('Group calendars list item', () => {
 	it('should render the color of the calendar', () => {
 		const calendar = generateGroupCalendar();
 
-		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
+		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={vi.fn()} />);
 
 		const square = screen.getByTestId('colored-square');
 		expect(square).toHaveStyleRule(
@@ -36,7 +36,7 @@ describe('Group calendars list item', () => {
 	it('should render a button to remove the calendar', () => {
 		const calendar = generateGroupCalendar();
 
-		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
+		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={vi.fn()} />);
 
 		expect(
 			screen.getByRoleWithIcon('button', { name: /remove/i, icon: TEST_SELECTORS.ICONS.remove })
@@ -45,7 +45,7 @@ describe('Group calendars list item', () => {
 
 	it('should call the callback when the remove button is clicked', async () => {
 		const calendar = generateGroupCalendar();
-		const onRemove = jest.fn();
+		const onRemove = vi.fn();
 
 		const { user } = setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={onRemove} />);
 		await user.click(screen.getByRole('button', { name: /remove/i }));

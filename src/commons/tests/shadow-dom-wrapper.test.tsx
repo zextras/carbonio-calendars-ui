@@ -9,18 +9,19 @@ import '@testing-library/jest-dom';
 
 import { render, screen, waitFor } from '@testing-library/react';
 import { enable as enableDarkReader } from 'darkreader';
+import { Mock } from 'vitest';
 
 import { ShadowDomWrapper } from '../shadow-dom-wrapper';
+import { useUserSettings } from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
-import { useUserSettings } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 
-jest.mock('@zextras/carbonio-shell-ui', () => ({
-	useUserSettings: jest.fn()
+vi.mock('@zextras/carbonio-shell-ui', () => ({
+	useUserSettings: vi.fn()
 }));
 
 describe('ShadowDomWrapper', () => {
 	it('renders children inside shadow DOM when dark mode is disabled', () => {
-		(useUserSettings as jest.Mock).mockReturnValue({
+		(useUserSettings as Mock).mockReturnValue({
 			prefs: { carbonioPrefDarkMode: 'disabled' }
 		});
 
@@ -37,22 +38,21 @@ describe('ShadowDomWrapper', () => {
 	});
 
 	it('enables darkreader when dark mode is enabled', async () => {
-		(useUserSettings as jest.Mock).mockReturnValue({
+		(enableDarkReader as Mock).mockClear();
+		(useUserSettings as Mock).mockReturnValue({
 			prefs: { carbonioPrefDarkMode: 'enabled' }
 		});
-		const enableDarkReaderFn = jest.fn();
-		(enableDarkReader as jest.Mock).mockImplementation(enableDarkReaderFn);
 
 		const children = <div data-testid="child">Hello, Shadow DOM!</div>;
 		setupTest(<ShadowDomWrapper>{children}</ShadowDomWrapper>);
 
 		await waitFor(() => {
-			expect(enableDarkReaderFn).toHaveBeenCalledTimes(1);
+			expect(enableDarkReader).toHaveBeenCalledTimes(1);
 		});
 	});
 
 	it('renders children inside shadow DOM when dark mode is enabled', () => {
-		(useUserSettings as jest.Mock).mockReturnValue({
+		(useUserSettings as Mock).mockReturnValue({
 			prefs: { carbonioPrefDarkMode: 'enabled' }
 		});
 

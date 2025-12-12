@@ -11,8 +11,8 @@ import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
 import { setupTest } from '@test-setup';
 
 describe('SetNewAppointmentTimeModal', () => {
-	const toggleModal = jest.fn();
-	const setNewTime = jest.fn();
+	const toggleModal = vi.fn();
+	const setNewTime = vi.fn();
 
 	it('renders the modal header with the correct title', () => {
 		setupTest(<SetNewAppointmentTimeModal toggleModal={toggleModal} setNewTime={setNewTime} />);

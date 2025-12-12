@@ -104,7 +104,7 @@ describe('Editor equipment', () => {
 		await user.type(screen.getByText('Equipment'), 'resource');
 
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -134,14 +134,14 @@ describe('Editor equipment', () => {
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 		await user.type(screen.getByText('Equipment'), 'resource');
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
 		await user.click(within(dropdown).getByText(items[0].label));
 		expect(dropdown).not.toBeInTheDocument();
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
@@ -369,7 +369,7 @@ describe('Editor equipment', () => {
 			)
 		);
 
-		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+		const consoleSpy = vi.spyOn(console, 'warn');
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
 		await user.type(screen.getByText('Equipment'), 'test');

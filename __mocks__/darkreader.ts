@@ -4,4 +4,4 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export const enable = jest.fn();
+export const enable = vi.fn();

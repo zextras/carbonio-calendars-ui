@@ -13,7 +13,7 @@ import { setupHook } from '../../__test__/test-setup';
 
 describe('useSecondaryBarTreeTags', () => {
 	it('should render the tags aggregator accordion item', () => {
-		useLocalStorage.mockReturnValue([[], jest.fn()]);
+		useLocalStorage.mockReturnValue([[], vi.fn()]);
 		const tags = {
 			'1': {
 				id: '1',

@@ -19,9 +19,9 @@ const EMAIL_1 = 'user1@example.com';
 const EMAIL_2 = 'user2@example.com';
 
 describe('useForwardAppointment', () => {
-	const mockOnSuccess = jest.fn();
-	const mockOnError = jest.fn();
-	const mockOnComplete = jest.fn();
+	const mockOnSuccess = vi.fn();
+	const mockOnError = vi.fn();
+	const mockOnComplete = vi.fn();
 
 	const defaultParams = {
 		eventId: 'event-123',
@@ -36,10 +36,6 @@ describe('useForwardAppointment', () => {
 		{ ct: 'text/plain', content: 'Plain text content' },
 		{ ct: 'text/html', content: '<p>HTML content</p>' }
 	];
-
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
 
 	it('should return a function', () => {
 		const { result } = renderHook(() => useForwardAppointment(defaultParams));
@@ -178,7 +174,7 @@ describe('useForwardAppointment', () => {
 
 		const firstHandler = result.current;
 
-		rerender({ ...defaultParams, onSuccess: jest.fn() });
+		rerender({ ...defaultParams, onSuccess: vi.fn() });
 
 		const secondHandler = result.current;
 

@@ -22,7 +22,7 @@ describe('CreateGroupAccordionItem', () => {
 		const { user } = setupTest(<CreateGroupAccordionItem />);
 		await user.click(screen.getByRole('button', { name: /create new group/i }));
 		act(() => {
-			jest.advanceTimersByTime(MODAL_ANIMATION_DURATION);
+			vi.advanceTimersByTime(MODAL_ANIMATION_DURATION);
 		});
 
 		expect(screen.getByText(/create new calendar group/i)).toBeVisible();

@@ -30,7 +30,6 @@ import { MemoryRouter, MemoryRouterProps, Route, RouteProps, Routes } from 'reac
 import { Store } from 'redux';
 
 import { getAppI18n } from './i18n/i18n-test-factory';
-import { previewContextMock, PreviewsManagerContext } from '@test-utils/carbonio-ui-preview';
 
 type ByRoleWithIconOptions = ByRoleOptions & {
 	icon: string | RegExp;
@@ -78,7 +77,7 @@ const customQueries = {
 	findByRoleWithIcon
 };
 
-expect.extend(matchers);
+expect.extend({ toHaveStyleRule: matchers.toHaveStyleRule });
 
 const queriesExtended = { ...queries, ...customQueries };
 
@@ -126,9 +125,7 @@ export const ProvidersWrapper = ({
 							<StoreProvider store={store}>
 								<I18nextProvider i18n={i18n}>
 									<SnackbarManager>
-										<PreviewsManagerContext.Provider value={previewContextMock}>
-											<ModalManager>{children}</ModalManager>
-										</PreviewsManagerContext.Provider>
+										<ModalManager>{children}</ModalManager>
 									</SnackbarManager>
 								</I18nextProvider>
 							</StoreProvider>
@@ -166,17 +163,23 @@ type SetupOptions = {
 
 export type UserEvent = ReturnType<(typeof userEvent)['setup']> & {
 	readonly rightClick: (target: Element) => Promise<void>;
+	readonly pasteInto: (target: Element, text: string) => Promise<void>;
 };
 
 export function setupTest(
 	ui: ReactElement,
 	{ setupOptions, ...customRenderOptions }: SetupOptions = {}
 ): { user: UserEvent } & ReturnType<typeof render> {
-	const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime, ...setupOptions });
+	const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime, ...setupOptions });
 	const rightClick = (target: Element): Promise<void> =>
 		user.pointer({ target, keys: '[MouseRight]' });
+	const pasteInto = async (target: Element, text: string): Promise<void> => {
+		await user.click(target);
+		await user.paste(text);
+	};
+
 	return {
-		user: { ...user, rightClick },
+		user: { ...user, rightClick, pasteInto },
 		...customRender(ui, customRenderOptions)
 	};
 }
@@ -206,17 +209,13 @@ export function setupHook<TProps extends unknown[], TResult>(
 		result,
 		unmount,
 		rerender,
-		user: userEvent.setup({ advanceTimers: jest.advanceTimersByTime, ...setupOptions })
+		user: userEvent.setup({ advanceTimers: vi.advanceTimersByTime, ...setupOptions })
 	};
 }
 
 export function makeListItemsVisible(): void {
-	const { calls, instances } = (
-		window.IntersectionObserver as jest.Mock<
-			IntersectionObserver,
-			[callback: IntersectionObserverCallback, options?: IntersectionObserverInit]
-		>
-	).mock;
+	const { calls, instances } = (window.IntersectionObserver as ReturnType<typeof vi.fn>).mock;
+
 	calls.forEach((call, index) => {
 		const [onChange] = call;
 		// trigger the intersection on the observed element
@@ -235,8 +234,8 @@ export function makeListItemsVisible(): void {
 }
 
 export function triggerLoadMore(): void {
-	const { calls, instances } = (window.IntersectionObserver as jest.Mock<IntersectionObserver>)
-		.mock;
+	const mockIntersectionObserver = window.IntersectionObserver as ReturnType<typeof vi.fn>;
+	const { calls, instances } = mockIntersectionObserver.mock;
 
 	const [onChange] = calls[calls.length - 1];
 	const instance = instances[instances.length - 1];
