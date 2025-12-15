@@ -175,7 +175,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				<Padding vertical="medium" />
 				<Input
 					label={groupNameInputLabel}
-					backgroundColor="gray5"
+					background="gray5"
 					value={groupName}
 					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 						setGroupName(e.target.value);
@@ -187,7 +187,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				<Divider />
 				<Padding vertical="small" />
 				<Container crossAlignment="flex-start">
-					<Text weight="bold" size="large">
+					<Text weight="bold" size="small">
 						{t('label.editgroup.calendars', 'Calendars in this group')}
 					</Text>
 				</Container>
@@ -205,6 +205,14 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.editgroup.footer', 'Save changes')}
 				confirmDisabled={isConfirmDisabled}
+				confirmTooltip={
+					isConfirmDisabled && isDirty
+						? t(
+								'folder.modal.create_calendar_group.disabled_tooltip',
+								'Please fill in all required field correctly.'
+							)
+						: undefined
+				}
 			/>
 		</Container>
 	);

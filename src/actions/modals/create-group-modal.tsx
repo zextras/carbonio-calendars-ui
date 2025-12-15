@@ -155,7 +155,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				<Divider />
 				<Padding vertical="small" />
 				<Container crossAlignment="flex-start">
-					<Text weight="bold" size="large">
+					<Text weight="bold" size="small">
 						{t('label.newgroup.calendars', 'Calendars in this group')}
 					</Text>
 				</Container>
@@ -173,6 +173,14 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.creategroup.footer', 'Create Group')}
 				confirmDisabled={isConfirmDisabled}
+				confirmTooltip={
+					isConfirmDisabled
+						? t(
+								'folder.modal.create_calendar_group.disabled_tooltip',
+								'Please fill in all required field correctly.'
+							)
+						: undefined
+				}
 			/>
 		</Container>
 	);
