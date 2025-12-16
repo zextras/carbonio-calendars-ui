@@ -70,9 +70,7 @@ describe('Shared Calendar modal', () => {
 				/>,
 				{ store }
 			);
-			const closeBtn = within(screen.getByTestId('ShareCalendarModal')).getByTestId(
-				'icon: CloseOutline'
-			);
+			const closeBtn = within(screen.getByTestId('ShareCalendarModal')).getByTestId('icon: Close');
 
 			await user.click(closeBtn);
 
