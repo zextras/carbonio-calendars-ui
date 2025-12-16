@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.18.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.2...v1.18.3) (2025-12-16)
+
+
+### Bug Fixes
+
+* improve description for public link generation ([9443fe2](https://github.com/zextras/carbonio-calendars-ui/commit/9443fe252ad1ea79af688d7e7c693b3afb94f90e))
+* improve description for public link generation ([b5305cb](https://github.com/zextras/carbonio-calendars-ui/commit/b5305cb80c2418ee4fd60a2e348b21fea1ce9fb2))
+
 ### [1.18.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.1...v1.18.2) (2025-12-09)
 
 
