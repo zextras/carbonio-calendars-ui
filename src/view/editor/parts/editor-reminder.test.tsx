@@ -11,8 +11,8 @@ import { screen } from '@testing-library/react';
 import { EditorReminder } from './editor-reminder';
 import { generateEditor } from '../../../commons/editor-generator';
 import { reducers } from '../../../store/redux';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
 shell.getUserSettings.mockImplementation(() => ({

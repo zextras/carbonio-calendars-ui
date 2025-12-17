@@ -16,7 +16,7 @@ import { reducers } from 'store/redux';
 
 describe('PrimaryAccountAccordion', () => {
 	it('should render the primary account email', () => {
-		useLocalStorage.mockReturnValue([[], jest.fn()]);
+		useLocalStorage.mockReturnValue([[], vi.fn()]);
 		populateFoldersStore();
 		const mockedContext = getMocksContext();
 		const store = configureStore({

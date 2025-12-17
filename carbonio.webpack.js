@@ -45,6 +45,14 @@ const customizeConfig = (config, pkg, options, mode) => {
 		})
 	);
 
+	newConfig.module.rules = [
+		...config.module.rules,
+		{
+			test: /\.m?js$/,
+			resolve: { fullySpecified: false }
+		}
+	];
+
 	return newConfig;
 };
 

@@ -74,6 +74,8 @@ describe('DailyPlannerHeaderNavigation', () => {
 		expect(rightArrowButton).toBeVisible();
 	});
 	it('will render a localized date', async () => {
+		vi.setSystemTime(new Date('1970-01-01T00:00:00.000Z'));
+
 		const store = configureStore({
 			reducer: combineReducers(reducers)
 		});

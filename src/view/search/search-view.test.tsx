@@ -16,9 +16,9 @@ import editorSliceReducer from '../../store/slices/editor-slice';
 import invitesSliceReducer from '../../store/slices/invites-slice';
 import { setupTest } from '@test-setup';
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	convertSearchChipToString: jest.fn((chip) => chip.label || chip.value || '')
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
+	convertSearchChipToString: vi.fn((chip) => chip.label || chip.value || '')
 }));
 
 describe('SearchView', () => {
@@ -35,21 +35,21 @@ describe('SearchView', () => {
 		useQuery: (): [
 			QueryChip[],
 			(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
-		] => [[], jest.fn()],
+		] => [[], vi.fn()],
 		ResultsHeader: ({ label, labelType }: { label: string; labelType?: string }): JSX.Element => (
 			<div data-testid={RESULTS_HEADER_TEST_ID} data-label-type={labelType}>
 				{label}
 			</div>
 		),
-		useDisableSearch: (): [boolean, (searchDisabled: boolean) => void] => [false, jest.fn()]
+		useDisableSearch: (): [boolean, (searchDisabled: boolean) => void] => [false, vi.fn()]
 	};
 
 	beforeEach(() => {
-		jest.spyOn(console, 'warn').mockImplementation(() => {});
+		vi.spyOn(console, 'warn').mockImplementation(() => {});
 	});
 
 	afterEach(() => {
-		jest.restoreAllMocks();
+		vi.restoreAllMocks();
 	});
 
 	it('renders without crashing', (): void => {
@@ -64,7 +64,7 @@ describe('SearchView', () => {
 
 	it('displays result label when query is provided', (): void => {
 		const mockQuery = [{ id: '1', label: 'test' }];
-		const mockUpdateQuery = jest.fn();
+		const mockUpdateQuery = vi.fn();
 		const props = {
 			...defaultProps,
 			useQuery: (): [
@@ -79,7 +79,7 @@ describe('SearchView', () => {
 	describe('Special characters detection', () => {
 		it('should detect special characters in regular keywords', (): void => {
 			const mockQuery = [{ id: '1', label: 'test:query' }];
-			const mockUpdateQuery = jest.fn();
+			const mockUpdateQuery = vi.fn();
 			const props = {
 				...defaultProps,
 				useQuery: (): [
@@ -101,7 +101,7 @@ describe('SearchView', () => {
 					queryChipsToAdvancedFiltersValue: { flagged: true }
 				}
 			];
-			const mockUpdateQuery = jest.fn();
+			const mockUpdateQuery = vi.fn();
 			const props = {
 				...defaultProps,
 				useQuery: (): [
@@ -123,7 +123,7 @@ describe('SearchView', () => {
 					isQueryFilter: true
 				}
 			];
-			const mockUpdateQuery = jest.fn();
+			const mockUpdateQuery = vi.fn();
 			const props = {
 				...defaultProps,
 				useQuery: (): [
@@ -151,7 +151,7 @@ describe('SearchView', () => {
 					isQueryFilter: true
 				}
 			];
-			const mockUpdateQuery = jest.fn();
+			const mockUpdateQuery = vi.fn();
 			const props = {
 				...defaultProps,
 				useQuery: (): [
@@ -167,7 +167,7 @@ describe('SearchView', () => {
 
 		it('should NOT detect special characters when query is empty', (): void => {
 			const mockQuery: any[] = [];
-			const mockUpdateQuery = jest.fn();
+			const mockUpdateQuery = vi.fn();
 			const props = {
 				...defaultProps,
 				useQuery: (): [
@@ -186,7 +186,7 @@ describe('SearchView', () => {
 				{ id: '1', label: 'test!query' },
 				{ id: '2', label: 'another#query' }
 			];
-			const mockUpdateQuery = jest.fn();
+			const mockUpdateQuery = vi.fn();
 			const props = {
 				...defaultProps,
 				useQuery: (): [

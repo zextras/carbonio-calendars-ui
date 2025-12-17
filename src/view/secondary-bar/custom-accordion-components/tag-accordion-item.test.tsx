@@ -25,9 +25,9 @@ const generateTag = (model: Partial<Tag> = {}): Tag => ({
 	n: model.n || faker.number.int({ min: 0, max: 1000 })
 });
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	useRunSearchIntegration: jest.fn()
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
+	useRunSearchIntegration: vi.fn()
 }));
 
 describe('TagAccordionItem', () => {
@@ -54,8 +54,8 @@ describe('TagAccordionItem', () => {
 	});
 
 	it('should trigger the search when the tag is clicked', async () => {
-		const runSearchSpy = jest.fn();
-		jest.mocked(useRunSearchIntegration).mockReturnValue(runSearchSpy);
+		const runSearchSpy = vi.fn();
+		vi.mocked(useRunSearchIntegration).mockReturnValue(runSearchSpy);
 
 		const tag = generateTag();
 		const tags = {

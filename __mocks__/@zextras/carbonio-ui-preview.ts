@@ -4,4 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export * from '@test-utils/carbonio-ui-preview';
+import React from 'react';
+
+export const previewContextMock = {
+	createPreview: vi.fn(),
+	initPreview: vi.fn(),
+	openPreview: vi.fn(),
+	emptyPreview: vi.fn()
+};
+
+export const PreviewsManagerContext = React.createContext(previewContextMock);

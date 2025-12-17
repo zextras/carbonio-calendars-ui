@@ -21,7 +21,7 @@ export const EDIT_ACTION: ChipAction = {
 	id: EDIT_ACTION_ID,
 	label: 'Edit',
 	type: 'button',
-	onClick: jest.fn()
+	onClick: vi.fn()
 };
 export const MOCK_VALUE = {
 	id: '123',
@@ -50,7 +50,7 @@ export const MOCK_DL = {
 	actions: [EDIT_ACTION]
 };
 
-export const spyDefaultValue = jest.fn();
+export const spyDefaultValue = vi.fn();
 
 type ContactInputBuilder = (props: ContactInputProps) => React.JSX.Element;
 

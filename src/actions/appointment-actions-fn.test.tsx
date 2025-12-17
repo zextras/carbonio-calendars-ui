@@ -14,7 +14,7 @@ import mockedData from '../test/generators';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
 shell.getUserSettings.mockImplementation(() => ({
@@ -29,12 +29,14 @@ shell.getUserSettings.mockImplementation(() => ({
 }));
 
 const editorId = 'new-1';
-jest.spyOn(editorUtils, 'getNewId').mockReturnValue(editorId);
+beforeEach(() => {
+	vi.spyOn(editorUtils, 'getNewId').mockReturnValue(editorId);
+});
 
 describe('actions', () => {
 	describe('Copy', () => {
 		test('on action will open an editor', async () => {
-			const boardSpy = jest.spyOn(shell, 'addBoard');
+			const boardSpy = vi.spyOn(shell, 'addBoard');
 			const folder = {
 				absFolderPath: '/Test',
 				id: '5',
@@ -44,7 +46,7 @@ describe('actions', () => {
 			};
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -55,8 +57,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -73,7 +75,7 @@ describe('actions', () => {
 			};
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -84,8 +86,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -104,7 +106,7 @@ describe('actions', () => {
 			};
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -127,8 +129,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -152,7 +154,7 @@ describe('actions', () => {
 			];
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: foldersArray });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -177,8 +179,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -202,7 +204,7 @@ describe('actions', () => {
 			];
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: foldersArray });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -227,8 +229,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -258,7 +260,7 @@ describe('actions', () => {
 		}
 
 		test('email sent to all attendees and organizer', async () => {
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -280,9 +282,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, invite, context });
 			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
@@ -299,7 +301,7 @@ describe('actions', () => {
 
 		test('exclude yourself from recipients', async () => {
 			const mySelf = shell.mockedAccount;
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -319,9 +321,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, invite, context });
 			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
@@ -333,7 +335,7 @@ describe('actions', () => {
 		});
 
 		test('cc optional attendees', async () => {
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -355,9 +357,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, invite, context });
 			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
@@ -373,7 +375,7 @@ describe('actions', () => {
 		});
 
 		test('null invite is fetched remotely', async () => {
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -389,9 +391,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, context });
 			await waitFor(() => {

@@ -21,6 +21,9 @@ describe('FindSharesAccordionItem', () => {
 
 		setupTest(<FindSharesAccordionItem />);
 
+		const button = screen.getByRole('button', { name: 'Find shares' });
+		await button.click();
+
 		expect(apiInterceptor).resolves.toBeDefined();
 	});
 });

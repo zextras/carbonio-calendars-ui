@@ -11,27 +11,27 @@ import { screen } from '@testing-library/react';
 
 import { EditorVirtualRoom } from './editor-virtual-room';
 import { reducers } from '../../../store/redux';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 
 const store = configureStore({ reducer: combineReducers(reducers) });
 
 const chatsIntegrationDataTestId = 'chats-room-component';
 const wscIntegrationDataTestId = 'wsc-room-component';
 
-const FakeChatsIntegrationComponent = jest.fn(
+const FakeChatsIntegrationComponent = vi.fn(
 	(): React.JSX.Element => <div data-testid={chatsIntegrationDataTestId} />
 );
 
-const FakeWscIntegrationComponent = jest.fn(
+const FakeWscIntegrationComponent = vi.fn(
 	(): React.JSX.Element => <div data-testid={wscIntegrationDataTestId} />
 );
 
 const spyUseIntegratedIntegration = (chatsIsEnabled: boolean, wscIsEnabled: boolean): void => {
-	jest.spyOn(shell, 'useIntegratedComponent').mockImplementation((id: string) => {
+	vi.spyOn(shell, 'useIntegratedComponent').mockImplementation((id: string) => {
 		if (id === 'room-selector') return [FakeChatsIntegrationComponent, chatsIsEnabled];
 		if (id === 'wsc-room-selector') return [FakeWscIntegrationComponent, wscIsEnabled];
-		return [jest.fn(), false];
+		return [vi.fn(), false];
 	});
 };
 

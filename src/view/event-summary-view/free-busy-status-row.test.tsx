@@ -10,8 +10,8 @@ import { screen } from '@testing-library/react';
 
 import { FreeBusyStatusRow } from './free-busy-status-row';
 import { EVENT_DISPLAY_STATUS } from '../../constants/api';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 
 describe('free busy status row', () => {
 	test.each`

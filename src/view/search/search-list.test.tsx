@@ -14,10 +14,10 @@ import { setupTest } from '@test-setup';
 describe('SearchList', () => {
 	const defaultProps = {
 		appointments: [],
-		loadMore: jest.fn(),
+		loadMore: vi.fn(),
 		loading: false,
 		searchDisabled: false,
-		setShowAdvanceFilters: jest.fn(),
+		setShowAdvanceFilters: vi.fn(),
 		query: [{ id: '1', label: 'test' }]
 	};
 

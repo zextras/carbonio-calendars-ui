@@ -14,13 +14,13 @@ import { setupTest } from '@test-setup';
 
 describe('Group calendars list', () => {
 	it('should render a placeholder text when there is no calendar', () => {
-		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={jest.fn()} />);
+		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={vi.fn()} />);
 
 		expect(screen.getByText('There are no calendars in this group yet.')).toBeVisible();
 	});
 
 	it('should render a gray colored placeholder text', () => {
-		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={jest.fn()} />);
+		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={vi.fn()} />);
 
 		const placeholderText = screen.getByText('There are no calendars in this group yet.');
 
@@ -30,7 +30,7 @@ describe('Group calendars list', () => {
 	it('should not render a placeholder text when there is at least one calendar', () => {
 		const calendars = [generateGroupCalendar()];
 
-		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={jest.fn()} />);
+		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={vi.fn()} />);
 
 		expect(
 			screen.queryByText(
@@ -42,7 +42,7 @@ describe('Group calendars list', () => {
 	it('should render the names of all given calendars', () => {
 		const calendars = times(42, (index) => generateGroupCalendar({ name: `Calendar ${index}` }));
 
-		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={jest.fn()} />);
+		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={vi.fn()} />);
 
 		calendars.forEach((calendar) => {
 			expect(screen.getByText(calendar.name)).toBeVisible();
@@ -52,7 +52,7 @@ describe('Group calendars list', () => {
 	it('should call the onCalendarRemove callback when a calendar is removed', async () => {
 		const calendars = [generateGroupCalendar()];
 
-		const onCalendarRemove = jest.fn();
+		const onCalendarRemove = vi.fn();
 		const { user } = setupTest(
 			<GroupCalendarsList calendars={calendars} onCalendarRemove={onCalendarRemove} />
 		);

@@ -70,7 +70,7 @@ describe('custom-event', () => {
 
 		await user.click(screen.getByTestId('calendar-event-inner-container'));
 		act(() => {
-			jest.advanceTimersByTime(250);
+			vi.advanceTimersByTime(250);
 		});
 		expect(useAppStatusStore.getState().summaryViewRef.current).toBeInTheDocument();
 	});

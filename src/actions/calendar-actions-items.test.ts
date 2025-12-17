@@ -90,8 +90,8 @@ describe('calendar actions items', () => {
 	describe('newCalendarItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = { id: FOLDERS.CALENDAR };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const newItem = newCalendarItem({ createModal, closeModal, item });
 			expect(newItem).toStrictEqual(
@@ -115,8 +115,8 @@ describe('calendar actions items', () => {
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
 			{ id: `${randomUUID}:154`, perm: 'r' }
 		])(genericTestTitleForEachCases, (item) => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const newItem = newCalendarItem({ createModal, closeModal, item });
 			expect(newItem).toStrictEqual(
@@ -129,7 +129,7 @@ describe('calendar actions items', () => {
 	describe('moveToRootItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = { id: '10', absFolderPath: '/Calendar', depth: 1 };
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 
 			const moveItem = moveToRootItem({ createSnackbar, item });
 			expect(moveItem).toStrictEqual(
@@ -154,7 +154,7 @@ describe('calendar actions items', () => {
 			childFolder, // testing isLinkChild === true
 			folder // testing owner is defined
 		])(genericTestTitleForEachCases, (item) => {
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			setupFoldersStore();
 
 			const moveToRoot = moveToRootItem({ createSnackbar, item });
@@ -165,7 +165,7 @@ describe('calendar actions items', () => {
 			);
 		});
 		test('return label "label.restore_calendar" if nested in trash', () => {
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			const item = { id: '152', depth: 2, absFolderPath: TRASH_SUB_FOLDER_PATH };
 			const moveToRoot = moveToRootItem({ createSnackbar, item });
 			expect(moveToRoot).toStrictEqual(
@@ -175,7 +175,7 @@ describe('calendar actions items', () => {
 			);
 		});
 		test('return label "action.move_to_root" if not nested in trash', () => {
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			const item = { id: '152', depth: 2 };
 			const moveToRoot = moveToRootItem({ createSnackbar, item });
 			expect(moveToRoot).toStrictEqual(
@@ -188,8 +188,8 @@ describe('calendar actions items', () => {
 	describe('emptyTrashItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = { id: FOLDERS.TRASH, n: 2, children: [] };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const empty = emptyTrashItem({ createModal, closeModal, item });
 			expect(empty).toStrictEqual(
@@ -205,8 +205,8 @@ describe('calendar actions items', () => {
 		});
 		test('return tooltipLabel "trash is already empty" when n is 0 and children is an empty array', () => {
 			const trash = { id: FOLDERS.TRASH, n: 0, children: [] };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
@@ -217,8 +217,8 @@ describe('calendar actions items', () => {
 		});
 		test('return disabled set to true when folder is not trash', () => {
 			const trash = { id: FOLDERS.CALENDAR, n: 1, children: [] };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
@@ -229,8 +229,8 @@ describe('calendar actions items', () => {
 		});
 		test('return disabled set to true when n === 0 and children.length === 0', () => {
 			const trash = { id: FOLDERS.TRASH, n: 0, children: [] };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
@@ -241,8 +241,8 @@ describe('calendar actions items', () => {
 		});
 		test('return disabled set to false when n > 0', () => {
 			const trash = { id: FOLDERS.TRASH, n: 1, children: [] };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
@@ -253,8 +253,8 @@ describe('calendar actions items', () => {
 		});
 		test('return disabled set to false when children.length > 0', () => {
 			const trash = { id: FOLDERS.TRASH, n: 0, children: [{ id: '1235' } as Folder] };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
@@ -267,8 +267,8 @@ describe('calendar actions items', () => {
 	describe('editCalendarItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = { id: FOLDERS.CALENDAR, absFolderPath: '/Calendar' };
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const editItem = editCalendarItem({ createModal, closeModal, item });
 			expect(editItem).toStrictEqual(
@@ -290,8 +290,8 @@ describe('calendar actions items', () => {
 			{ id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH }
 		])(genericTestTitleForEachCases, (item) => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const editItem = editCalendarItem({ createModal, closeModal, item });
 			expect(editItem).toStrictEqual(
@@ -308,8 +308,8 @@ describe('calendar actions items', () => {
 				id: '153',
 				absFolderPath: '/randomFolder'
 			};
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const deleteItem = deleteCalendarItem({ createModal, closeModal, item });
 			expect(deleteItem).toStrictEqual(
@@ -331,8 +331,8 @@ describe('calendar actions items', () => {
 				absFolderPath: TRASH_SUB_FOLDER_PATH
 			}
 		])('return "label.delete_permanently" when the calendar is nested in trash', (item) => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const deleteItem = deleteCalendarItem({ createModal, closeModal, item });
 			expect(deleteItem).toStrictEqual(
@@ -354,8 +354,8 @@ describe('calendar actions items', () => {
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
 			const deleteItem = deleteCalendarItem({ createModal, closeModal, item });
 			expect(deleteItem).toStrictEqual(
@@ -367,7 +367,7 @@ describe('calendar actions items', () => {
 	});
 	describe('removeFromListItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			setupFoldersStore();
 
 			const removeFromList = removeFromListItem({ createSnackbar, item: folder });
@@ -398,7 +398,7 @@ describe('calendar actions items', () => {
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
-			const createSnackbar = jest.fn();
+			const createSnackbar = vi.fn();
 			setupFoldersStore();
 			const removeFromList = removeFromListItem({ createSnackbar, item });
 			expect(removeFromList).toStrictEqual(
@@ -410,8 +410,8 @@ describe('calendar actions items', () => {
 	});
 	describe('sharesInfoItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 			setupFoldersStore();
 
 			const sharesInfo = sharesInfoItem({ createModal, closeModal, item: folder });
@@ -442,8 +442,8 @@ describe('calendar actions items', () => {
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 			setupFoldersStore();
 			const sharesInfo = sharesInfoItem({ createModal, closeModal, item });
 			expect(sharesInfo).toStrictEqual(
@@ -455,8 +455,8 @@ describe('calendar actions items', () => {
 	});
 	describe('shareCalendarItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 			setupFoldersStore();
 
 			const shareCalendar = shareCalendarItem({ createModal, closeModal, item: childFolder });
@@ -488,8 +488,8 @@ describe('calendar actions items', () => {
 			},
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 			setupFoldersStore();
 			const shareCalendar = shareCalendarItem({ createModal, closeModal, item });
 			expect(shareCalendar).toStrictEqual(

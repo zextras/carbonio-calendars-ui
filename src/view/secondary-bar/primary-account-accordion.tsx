@@ -14,5 +14,5 @@ export const PrimaryAccountAccordion = (): React.JSX.Element => {
 
 	const primaryAccountItems = useMemo(() => [primaryAccountItem], [primaryAccountItem]);
 
-	return <Accordion items={primaryAccountItems} />;
+	return <Accordion items={primaryAccountItems} disableTransition />;
 };

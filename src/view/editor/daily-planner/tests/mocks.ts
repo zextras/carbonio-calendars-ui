@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export const mockTranslation = jest
+export const mockTranslation = vi
 	.fn()
 	.mockImplementation((key: string, defaultValue: string) => key);
