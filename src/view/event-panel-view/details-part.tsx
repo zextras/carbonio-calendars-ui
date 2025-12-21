@@ -13,6 +13,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import { ImageAndIconPart } from './image-and-icon-part';
+import { useNeverSentWarningLabel } from '../../hooks/use-never-sent-warning-label';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
@@ -20,6 +21,7 @@ import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { FreeBusyStatusRowComponent } from '../event-summary-view/free-busy-status-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
+import { NeverSentWarningRow } from '../event-summary-view/never-sent-warning-row';
 import TagsRow from '../event-summary-view/tags-row';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
@@ -142,6 +144,8 @@ export const DetailsPart = ({
 		return subject;
 	}, [event.resource.class, subject, t]);
 
+	const neverSentWarningLabel = useNeverSentWarningLabel(invite.attendees);
+
 	return calendar ? (
 		<Container
 			mainAlignment="flex-start"
@@ -186,7 +190,7 @@ export const DetailsPart = ({
 				</Row>
 			</Row>
 			<Padding top={'medium'} />
-			{inviteNeverSent && <InviteNeverSentRow />}
+			<NeverSentWarningRow neverSent={inviteNeverSent} label={neverSentWarningLabel} />
 		</Container>
 	) : null;
 };

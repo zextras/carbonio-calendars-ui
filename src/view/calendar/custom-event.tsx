@@ -28,6 +28,7 @@ import { TagIconComponent } from '../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
+import { useNeverSentWarningLabel } from '../../hooks/use-never-sent-warning-label';
 import { StoreProvider } from '../../store/redux';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { EventType } from '../../types/event';
@@ -185,6 +186,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
 
 	const iAmAttendee = !event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer;
+	const neverSentWarningLabel = useNeverSentWarningLabel();
+
 	return (
 		<CustomEventFreeBusyStatus
 			color={event.resource.calendar.color.color}
@@ -242,10 +245,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 								)}
 								{event.resource.inviteNeverSent && (
 									<CustomEventIcon
-										tooltipLabel={t(
-											'event.action.invitation_not_sent_yet',
-											'The invitation has not been sent yet'
-										)}
+										tooltipLabel={neverSentWarningLabel}
 										isIconVisible={event.resource.inviteNeverSent}
 										iconColor={'error'}
 										iconName={'AlertCircleOutline'}

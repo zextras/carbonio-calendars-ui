@@ -5,25 +5,25 @@
  */
 import React, { ReactElement } from 'react';
 
-import styled from '@emotion/styled';
 import { Icon, Row, Text } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
 
-const WarningText = styled(Text)`
-	color: #d74942;
-`;
-
-export const NeverSentWarningRow = ({ neverSent }: { neverSent: boolean }): ReactElement => (
+export const NeverSentWarningRow = ({
+	neverSent,
+	label
+}: {
+	neverSent: boolean;
+	label: string;
+}): ReactElement => (
 	<>
 		{neverSent && (
-			<Row width="fill" mainAlignment="flex-start" padding={{ all: 'small' }}>
+			<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 				<Row padding={{ right: 'small' }}>
-					<Icon color="#D74942" icon="AlertCircleOutline" />
+					<Icon color="error" icon="AlertCircleOutline" />
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
-					<WarningText overflow="break-word">
-						{t('label.invitation_not_sent', "You haven't sent the invitation to the attendees yet")}
-					</WarningText>
+					<Text color="error" overflow="break-word">
+						{label}
+					</Text>
 				</Row>
 			</Row>
 		)}

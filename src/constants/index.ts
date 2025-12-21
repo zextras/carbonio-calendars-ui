@@ -45,7 +45,11 @@ export const DATE_FORMAT = {
 	UTC: 'YYYYMMDD[T]HHmmss[Z]'
 };
 
-export const UPDATE_VIEW_EVENT = 'updateView';
+export const INVITE_NEVER_SENT_WARNING_LABELS = {
+	DEFAULT: "You haven't sent the invitation yet",
+	ATTENDEES: "You haven't sent the invitation to the attendees yet",
+	RESOURCES: "You haven't sent the request for the resources yet"
+};
 
 export const DAYS_PER_WEEK = 7;
 export const HOURS_PER_DAY = 24;
