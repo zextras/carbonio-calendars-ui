@@ -59,7 +59,7 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 			),
 		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
 	);
-	const neverSentWarningLabel = useNeverSentWarningLabel();
+	const neverSentWarningLabel = useNeverSentWarningLabel(invite?.attendees);
 
 	if (!event) {
 		return null;
