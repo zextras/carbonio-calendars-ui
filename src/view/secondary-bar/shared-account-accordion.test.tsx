@@ -79,13 +79,14 @@ describe('SharedAccountAccordion', () => {
 
 		const accordionButton = screen.getAllByRole('button');
 		await user.click(accordionButton[0]);
-		expect(screen.getByText('Calendar')).toBeVisible();
+		const calendarElement = screen.getByText('Calendar');
+		expect(calendarElement).toBeVisible();
 
 		expect(funMock).toHaveBeenLastCalledWith([sharedAccount.id]);
 
 		await user.click(accordionButton[0]);
 		await waitFor(() => {
-			expect(screen.getByText('Calendar')).not.toBeVisible();
+			expect(calendarElement).not.toBeVisible();
 		});
 
 		expect(funMock).toHaveBeenLastCalledWith([]);
