@@ -10,6 +10,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
 import { CONTACT_TYPES, DefaultContactInput, useContactInput } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
+import { Mock } from 'vitest';
 
 import {
 	contactInputBuilder,
@@ -27,14 +28,18 @@ import { setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	useContactInput: jest.fn()
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
+	useContactInput: vi.fn()
 }));
+
+beforeEach(() => {
+	vi.setSystemTime(new Date('1970-01-01T00:00:00.000Z'));
+});
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
-		(useContactInput as jest.Mock).mockReturnValue(DefaultContactInput);
+		(useContactInput as Mock).mockReturnValue(DefaultContactInput);
 	});
 
 	it('should display error snackbar when failing to get account ids', async () => {
@@ -52,7 +57,9 @@ describe('Editor Attendees', () => {
 		setupTest(<EditorAttendees editorId={editor.id} />, { store });
 
 		await shareInfoInterceptor;
-		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
+		await waitFor(async () => {
+			expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
+		});
 	});
 	it('should display attendee not available when already busy during current appointment', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
@@ -189,7 +196,7 @@ describe('Editor Attendees', () => {
 
 			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: true };
 
-			(useContactInput as jest.Mock).mockReturnValue(
+			(useContactInput as Mock).mockReturnValue(
 				contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] })
 			);
 			const editor = generateEditor({
@@ -217,7 +224,7 @@ describe('Editor Attendees', () => {
 		it('should display attendee not available action when already busy during current appointment', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
-			(useContactInput as jest.Mock).mockReturnValue(contactInputBuilder());
+			(useContactInput as Mock).mockReturnValue(contactInputBuilder());
 			const attendeeEmail = 'email1@test.com';
 			const appointmentStart = new Date(2024, 10, 1, 10, 30);
 			const appointmentEnd = new Date(2024, 10, 1, 12, 30);
@@ -271,7 +278,7 @@ describe('Editor Attendees', () => {
 
 			const newValueFromAutocomplete = { ...MOCK_VALUE, label: 'test label' };
 
-			(useContactInput as jest.Mock).mockReturnValue(
+			(useContactInput as Mock).mockReturnValue(
 				contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] })
 			);
 
@@ -299,7 +306,7 @@ describe('Editor Attendees', () => {
 		it('should display a distribution list from store as distribution list', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
-			(useContactInput as jest.Mock).mockReturnValue(contactInputBuilder());
+			(useContactInput as Mock).mockReturnValue(contactInputBuilder());
 			const dlEmail = 'dl1@test.com';
 			const editor = generateEditor({
 				context: {

@@ -38,21 +38,24 @@ const generateApiSuccessResponse = (
 });
 
 describe('CreateGroupModal', () => {
-	it('renders modal title', () => {
-		setupTest(<CreateGroupModal onClose={jest.fn()} />);
+	it('should render the modal with a specific title', () => {
+		setupTest(<CreateGroupModal onClose={vi.fn()} />);
+    
 		expect(screen.getByText('Create new Calendar Group')).toBeVisible();
 	});
 
 	describe('close icon', () => {
-		it('renders icon', () => {
-			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+		it('should render icon', () => {
+			setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
 			expect(
 				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal })
 			).toBeVisible();
 		});
 
-		it('calls onClose on click', async () => {
-			const onClose = jest.fn();
+		it('should call the onClose callback when clicked', async () => {
+			const onClose = vi.fn();
+
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
 			await user.click(
 				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal })
@@ -62,45 +65,45 @@ describe('CreateGroupModal', () => {
 	});
 
 	describe('group name', () => {
-		it('renders input with placeholder', () => {
-			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+		it('should render an input field with the correct placeholder', () => {
+			setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
 			expect(screen.getByPlaceholderText('Group Name*')).toBeVisible();
 		});
 
-		it('renders empty default value and disabled save button', () => {
-			setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue('');
-			expect(screen.getByRole('button', { name: /Create group/i })).toBeDisabled();
+		it('should render an input field with a default value', () => {
+			setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
+			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue(
+				'New Calendar Group'
+			);
 		});
 
-		it('renders helper text', () => {
-			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+		it('should render an helper text', () => {
+			setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
 			expect(screen.getByText('This group will appear in your personal account.')).toBeVisible();
 		});
 
-		it('shows error for invalid name', async () => {
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			await user.type(screen.getByPlaceholderText('Group Name*'), '/invalid');
-			expect(
-				screen.getByText('This group name is invalid. Please avoid using special characters')
-			).toBeVisible();
+		it('should render an error message when the group name is invalid', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
+			const input = screen.getByPlaceholderText('Group Name*');
+			await user.clear(input);
+
+			expect(screen.getByText('Type a group name to save changes')).toBeVisible();
 		});
 
-		it('removes error for valid name', async () => {
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			await user.type(screen.getByPlaceholderText('Group Name*'), faker.word.noun());
+		it('should not render an error message when the group name is valid', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, faker.word.noun());
+
 			expect(screen.queryByText('Type a group name to save changes')).not.toBeInTheDocument();
 		});
 
-		it('colors texts red when invalid', async () => {
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			await user.type(screen.getByPlaceholderText('Group Name*'), '/invalid');
-			expect(screen.getByText('Group Name*')).toHaveStyle(ERROR_COLOR);
-			const msg = screen.getByText(
-				'This group name is invalid. Please avoid using special characters'
-			);
-			expect(msg).toHaveStyle(ERROR_COLOR);
-		});
+		it('should render the texts with a red foreground color when the group name is invalid', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
 
 		it('colors texts red when emptied after typing', async () => {
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
@@ -113,45 +116,61 @@ describe('CreateGroupModal', () => {
 	});
 
 	describe('calendars', () => {
-		it('renders section title', () => {
-			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+		it('should render the section title', () => {
+			setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
 			expect(screen.getByText('Calendars in this group')).toBeVisible();
 		});
 
 		describe('calendars list', () => {
-			it('renders newly added calendars', async () => {
-				const folder = generateFolder({ name: 'Awesome', color: faker.number.int({ max: 9 }) });
-				populateFoldersStore({ view: 'appointment', customFolders: [folder] });
-				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				await selectCalendarFromSelector(user, folder.name);
-				expect(screen.getByText(folder.name)).toBeVisible();
+			it('should render the list of all the newly added calendars', async () => {
+				const targetCalendar = generateFolder({
+					name: 'Awesome',
+					color: faker.number.int({ max: 9 })
+				});
+				populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
+
+				const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+				await selectCalendarFromSelector(user, targetCalendar.name);
+
+				expect(screen.getByText(targetCalendar.name)).toBeVisible();
 			});
 
 			it('updates list when new calendars added', async () => {
 				const folders = times(2, (i) =>
 					generateFolder({ name: `Awesome${i}`, color: faker.number.int({ max: 9 }) })
 				);
-				populateFoldersStore({ view: 'appointment', customFolders: folders });
-				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				await selectCalendarFromSelector(user, folders[0].name);
-				await selectCalendarFromSelector(user, folders[1].name);
-				folders.forEach((f) => expect(screen.getByText(f.name)).toBeVisible());
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+
+				const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+				await selectCalendarFromSelector(user, targetCalendars[0].name);
+				await selectCalendarFromSelector(user, targetCalendars[1].name);
+
+				targetCalendars.forEach((calendar) => {
+					expect(screen.getByText(calendar.name)).toBeVisible();
+				});
 			});
 
-			it('updates list when a calendar is removed', async () => {
-				const folders = times(2, (i) => generateFolder({ name: `Awesome${i}` }));
-				populateFoldersStore({ view: 'appointment', customFolders: folders });
-				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				await selectCalendarFromSelector(user, folders[0].name);
-				await selectCalendarFromSelector(user, folders[1].name);
+			it('should render an updated list of calendars when a calendar is removed', async () => {
+				const targetCalendars = times(2, (index) =>
+					generateFolder({
+						name: `Awesome${index}`
+					})
+				);
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 
-				const items = screen.getAllByTestId('group-calendars-list-item');
-				const remove = (): (() => Promise<void>) => {
-					let fn = (): Promise<void> => Promise.resolve();
-					items.forEach((item) => {
-						if (within(item).queryByText(folders[1].name)) {
-							fn = (): Promise<void> =>
-								user.click(within(item).getByRole('button', { name: /remove/i }));
+				const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+				await selectCalendarFromSelector(user, targetCalendars[0].name);
+				await selectCalendarFromSelector(user, targetCalendars[1].name);
+
+				const listItems = screen.getAllByTestId('group-calendars-list-item');
+
+				const clickRemoveButton = (): (() => Promise<void>) => {
+					let result = (): Promise<void> => Promise.resolve();
+					listItems.forEach((listItem) => {
+						if (within(listItem).queryByText(targetCalendars[1].name)) {
+							result = (): Promise<void> =>
+								user.click(within(listItem).getByRole('button', { name: /remove/i }));
 						}
 					});
 					return fn;
@@ -166,36 +185,44 @@ describe('CreateGroupModal', () => {
 				const folders = times(3, (i) =>
 					generateFolder({ name: `Calendar${i}`, color: faker.number.int({ max: 9 }) })
 				);
-				populateFoldersStore({ view: 'appointment', customFolders: folders });
-				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				await selectCalendarFromSelector(user, folders[0].name);
-				await selectCalendarFromSelector(user, folders[1].name);
-				await selectCalendarFromSelector(user, folders[2].name);
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 
-				const items = screen.getAllByTestId('group-calendars-list-item');
-				expect(within(items[0]).getByText(folders[2].name)).toBeVisible();
-				expect(within(items[1]).getByText(folders[1].name)).toBeVisible();
-				expect(within(items[2]).getByText(folders[0].name)).toBeVisible();
+				const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
+				await selectCalendarFromSelector(user, targetCalendars[0].name);
+				await selectCalendarFromSelector(user, targetCalendars[1].name);
+				await selectCalendarFromSelector(user, targetCalendars[2].name);
+
+				const listItems = screen.getAllByTestId('group-calendars-list-item');
+				expect(listItems).toHaveLength(3);
+
+				expect(within(listItems[0]).getByText(targetCalendars[2].name)).toBeVisible();
+				expect(within(listItems[1]).getByText(targetCalendars[1].name)).toBeVisible();
+				expect(within(listItems[2]).getByText(targetCalendars[0].name)).toBeVisible();
 			});
 		});
 	});
 
 	describe('confirm button', () => {
-		it('renders label', () => {
-			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+		it('should render the button with the correct label', () => {
+			setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeVisible();
 		});
 
-		it('is disabled when group name empty', async () => {
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+		it('should be disabled when the group name is empty', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
 			const input = screen.getByPlaceholderText('Group Name*');
 			await user.clear(input);
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeDisabled();
 		});
 
-		it('is enabled when group name is filled', async () => {
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			await user.type(screen.getByPlaceholderText('Group Name*'), 'Awesome Group');
+		it('should be enabled when the group name is not empty', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+
+			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, 'Awesome Group');
+
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeEnabled();
 		});
 
@@ -207,8 +234,8 @@ describe('CreateGroupModal', () => {
 				CreateCalendarGroupResponse
 			>('CreateCalendarGroup', apiResponse);
 
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			const spy = jest.spyOn(createGroupApi, 'createCalendarGroupRequest');
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+			const createGroupApiSpy = vi.spyOn(createGroupApi, 'createCalendarGroupRequest');
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.clear(input);
 			await user.type(input, groupName);
@@ -227,11 +254,15 @@ describe('CreateGroupModal', () => {
 				CreateCalendarGroupResponse
 			>('CreateCalendarGroup', apiResponse);
 
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: 'Group Name*' }), groupName);
-			await user.click(screen.getByRole('button', { name: /Create group/i }));
-			await interceptor;
-			expect(await screen.findByText(/New group created/i)).toBeVisible();
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
+			await user.type(input, groupName);
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.click(confirmButton);
+			await apiCallInterceptor;
+			const successfulSnackbar = await screen.findByText(/New group created/i);
+
+			expect(successfulSnackbar).toBeVisible();
 		});
 
 		it('calls onClose on success', async () => {
@@ -241,6 +272,7 @@ describe('CreateGroupModal', () => {
 				'CreateCalendarGroup',
 				apiResponse
 			);
+			const onClose = vi.fn();
 
 			const onClose = jest.fn();
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
@@ -258,11 +290,15 @@ describe('CreateGroupModal', () => {
 				ErrorSoapBodyResponse
 			>('CreateCalendarGroup', apiResponse);
 
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			await user.type(screen.getByPlaceholderText('Group Name*'), groupName);
-			await user.click(screen.getByRole('button', { name: /Create group/i }));
-			await interceptor;
-			expect(await screen.findByText(/Something went wrong, please try again/i)).toBeVisible();
+			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
+			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, groupName);
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.click(confirmButton);
+			await apiCallInterceptor;
+			const successfulSnackbar = await screen.findByText(/Something went wrong, please try again/i);
+
+			expect(successfulSnackbar).toBeVisible();
 		});
 
 		it('does not call onClose on failure', async () => {
@@ -272,6 +308,7 @@ describe('CreateGroupModal', () => {
 				'CreateCalendarGroup',
 				apiResponse
 			);
+			const onClose = vi.fn();
 
 			const onClose = jest.fn();
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);

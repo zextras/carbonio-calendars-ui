@@ -25,7 +25,7 @@ describe('calendar toolbar', () => {
 					onView={(calendarView): void => {
 						onViewCalendarView = calendarView;
 					}}
-					onNavigate={jest.fn()}
+					onNavigate={vi.fn()}
 					view="month"
 				/>,
 				{ store }
@@ -39,11 +39,11 @@ describe('calendar toolbar', () => {
 	});
 
 	describe('Calendars split view button', () => {
-		useLocalStorage.mockReturnValue([false, jest.fn()]);
+		useLocalStorage.mockReturnValue([false, vi.fn()]);
 
 		test('should render the button to enable calendars split view', () => {
 			setupTest(
-				<CustomToolbar label="a label" onView={jest.fn()} onNavigate={jest.fn()} view="month" />
+				<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="month" />
 			);
 
 			expect(screen.getByRoleWithIcon('button', { icon: 'icon: WeekViewOutline' })).toBeVisible();
@@ -51,23 +51,21 @@ describe('calendar toolbar', () => {
 
 		test('should be disabled if calendarView is not set to day', () => {
 			setupTest(
-				<CustomToolbar label="a label" onView={jest.fn()} onNavigate={jest.fn()} view="month" />
+				<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="month" />
 			);
 
 			expect(screen.getByRoleWithIcon('button', { icon: 'icon: WeekViewOutline' })).toBeDisabled();
 		});
 
 		test('should be enabled if calendarView is set to day', () => {
-			setupTest(
-				<CustomToolbar label="a label" onView={jest.fn()} onNavigate={jest.fn()} view="day" />
-			);
+			setupTest(<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="day" />);
 
 			expect(screen.getByRoleWithIcon('button', { icon: 'icon: WeekViewOutline' })).toBeEnabled();
 		});
 
 		test('should display a specific tooltip if it is disabled', async () => {
 			const { user } = setupTest(
-				<CustomToolbar label="a label" onView={jest.fn()} onNavigate={jest.fn()} view="month" />
+				<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="month" />
 			);
 
 			await user.hover(screen.getByRoleWithIcon('button', { icon: 'icon: WeekViewOutline' }));
@@ -77,10 +75,10 @@ describe('calendar toolbar', () => {
 		});
 
 		test('should display a specific tooltip if it is enabled and the split is not active yet', async () => {
-			useLocalStorage.mockReturnValue([false, jest.fn()]);
+			useLocalStorage.mockReturnValue([false, vi.fn()]);
 
 			const { user } = setupTest(
-				<CustomToolbar label="a label" onView={jest.fn()} onNavigate={jest.fn()} view="day" />
+				<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="day" />
 			);
 
 			await user.hover(screen.getByRoleWithIcon('button', { icon: 'icon: WeekViewOutline' }));
@@ -90,10 +88,10 @@ describe('calendar toolbar', () => {
 		});
 
 		test('should display a specific tooltip if it is enabled and the split is already active', async () => {
-			useLocalStorage.mockReturnValue([true, jest.fn()]);
+			useLocalStorage.mockReturnValue([true, vi.fn()]);
 
 			const { user } = setupTest(
-				<CustomToolbar label="a label" onView={jest.fn()} onNavigate={jest.fn()} view="day" />
+				<CustomToolbar label="a label" onView={vi.fn()} onNavigate={vi.fn()} view="day" />
 			);
 
 			await user.hover(screen.getByRoleWithIcon('button', { icon: 'icon: WeekViewOutline' }));

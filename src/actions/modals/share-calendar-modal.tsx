@@ -9,9 +9,11 @@ import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } fr
 import {
 	Checkbox,
 	Container,
+	Divider,
 	Icon,
 	Input,
 	Padding,
+	ModalHeader,
 	Row,
 	Select,
 	SingleSelectionOnChange,
@@ -24,7 +26,6 @@ import {
 	ContactInputItem,
 	Grant,
 	ModalFooter,
-	ModalHeader,
 	useContactInput
 } from '@zextras/carbonio-ui-commons';
 import { filter, find, map, some } from 'lodash';
@@ -98,6 +99,12 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [isSharedWithPublic, setIsSharedWithPublic] = useState(!!defaultSharedWithPublic);
 
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
+	const internalShareLabel = t('share.label.internal_sharing', 'Internal sharing');
+	const publicShareLabel = t('share.label.public_sharing', 'Public sharing');
+	const recipientsAddressDescriptionLabel = t(
+		'share.description.recipients_address',
+		'Enter internal addresses only. External recipients won’t be able to access the calendar.'
+	);
 
 	const accounts = useUserAccounts();
 
@@ -368,10 +375,16 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			padding="0.5rem 0.5rem 1.5rem"
 			style={{ overflowY: 'auto' }}
 		>
-			<ModalHeader onClose={closeFn} title={title} />
+			<ModalHeader onClose={closeFn} title={title} showCloseIcon />
+			<Divider />
+			<Container crossAlignment="flex-start" padding={{ top: 'large' }}>
+				<Text size="medium" weight="bold" color="gray0">
+					{publicShareLabel}
+				</Text>
+			</Container>
 			{isPublicShareEnabled && (
 				<Container
-					padding={{ top: 'small', bottom: 'small' }}
+					padding={{ vertical: 'large' }}
 					mainAlignment="center"
 					crossAlignment="flex-start"
 					height="fit"
@@ -381,12 +394,21 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 						value={isSharedWithPublic}
 						defaultChecked={isSharedWithPublic}
 						onClick={(): void => setIsSharedWithPublic((prevValue) => !prevValue)}
-						label={t('share.options.share_calendar_with.public', 'Public')}
+						label={t(
+							'share.options.share_calendar_with.public',
+							'Share with public (view only, no password required)'
+						)}
 					/>
 				</Container>
 			)}
+			<Divider />
+			<Container crossAlignment="flex-start" padding={{ top: 'large' }}>
+				<Text size="medium" weight="bold" color="gray0">
+					{internalShareLabel}
+				</Text>
+			</Container>
 			<Container
-				padding={{ top: 'small', bottom: 'small' }}
+				padding={{ top: 'large', bottom: 'small' }}
 				mainAlignment="center"
 				crossAlignment="flex-start"
 				height="fit"
@@ -406,6 +428,10 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					}
 					hasError={contactInputHasError}
 				/>
+				<Padding top="extrasmall" />
+				<Text size="extrasmall" color="secondary">
+					{recipientsAddressDescriptionLabel}
+				</Text>
 			</Container>
 			<SharePrivateCheckbox
 				allowToSeePrvtAppt={allowToSeePrvtAppt}

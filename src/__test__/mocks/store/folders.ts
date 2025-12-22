@@ -41,7 +41,7 @@ export const populateFoldersStore = ({
 		linksIdMap,
 		folders,
 		searches: {},
-		updateFolder: jest.fn()
+		updateFolder: vi.fn()
 	};
 	useFolderStore.setState(initialStoreState, true);
 };

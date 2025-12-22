@@ -18,10 +18,10 @@ import { MainEditModal, MainEditModalProps } from '../main-edit-modal';
 
 const MainEditModalTestWrapper = (props: MainEditModalProps): React.JSX.Element => {
 	const context = {
-		setModal: jest.fn(),
-		onClose: jest.fn(),
+		setModal: vi.fn(),
+		onClose: vi.fn(),
 		roleOptions: [],
-		setActiveGrant: jest.fn()
+		setActiveGrant: vi.fn()
 	} satisfies EditModalContextType;
 
 	return (

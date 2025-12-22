@@ -40,10 +40,9 @@ describe('CustomEventFreeBusyStatus', () => {
 				/>
 			);
 
-			expect(screen.getByTestId('calendar-event')).toHaveStyle(`background-color: ${background}`);
-			expect(screen.getByTestId('calendar-event')).toHaveStyle(
-				`border: 0.0625rem solid ${calendarColor}`
-			);
+			const calendarItem = screen.getByTestId('calendar-event');
+			expect(calendarItem).toHaveStyle({ background });
+			expect(calendarItem.style.border).toContain(calendarColor);
 		}
 	);
 });

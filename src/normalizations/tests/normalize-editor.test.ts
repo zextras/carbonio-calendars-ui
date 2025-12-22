@@ -15,7 +15,7 @@ describe('normalizeEditor', () => {
 	test('If event and invite are not available, it will return empty editor', () => {
 		const folders = mockedData.calendars.getCalendarsMap();
 		const emptyEditor = createEmptyEditor('1', folders);
-		const result = normalizeEditor({ emptyEditor, context: { folders, dispatch: jest.fn() } });
+		const result = normalizeEditor({ emptyEditor, context: { folders, dispatch: vi.fn() } });
 		expect(result).toStrictEqual(emptyEditor);
 	});
 	test('if event and invite are available, it will return a compiled editor', () => {
@@ -31,7 +31,7 @@ describe('normalizeEditor', () => {
 			invite,
 			event,
 			emptyEditor,
-			context: { folders, dispatch: jest.fn() }
+			context: { folders, dispatch: vi.fn() }
 		});
 
 		const expectedResult = {
@@ -124,7 +124,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn() }
+				context: { folders, dispatch: vi.fn() }
 			});
 
 			expect(result.calendar?.id).toBe(FOLDERS.CALENDAR);
@@ -145,7 +145,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn() }
+				context: { folders, dispatch: vi.fn() }
 			});
 
 			expect(result.calendar?.id).toBe(FOLDERS.CALENDAR);
@@ -166,7 +166,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn() }
+				context: { folders, dispatch: vi.fn() }
 			});
 
 			expect(result.calendar?.id).toBe(FOLDERS.CALENDAR);
@@ -186,7 +186,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn() }
+				context: { folders, dispatch: vi.fn() }
 			});
 
 			expect(result.isInstance).toBe(true);
@@ -204,7 +204,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn() }
+				context: { folders, dispatch: vi.fn() }
 			});
 
 			expect(result.isInstance).toBe(false);
@@ -222,7 +222,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn(), isInstance: true }
+				context: { folders, dispatch: vi.fn(), isInstance: true }
 			});
 
 			expect(result.isInstance).toBe(true);
@@ -240,7 +240,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn(), isInstance: false }
+				context: { folders, dispatch: vi.fn(), isInstance: false }
 			});
 
 			expect(result.isInstance).toBe(false);
@@ -260,7 +260,7 @@ describe('normalizeEditor', () => {
 				invite,
 				event,
 				emptyEditor,
-				context: { folders, dispatch: jest.fn() }
+				context: { folders, dispatch: vi.fn() }
 			});
 
 			expect(result.compNum).toBe(0);

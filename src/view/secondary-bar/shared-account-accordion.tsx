@@ -48,5 +48,5 @@ export const SharedAccountAccordion = ({
 		[calendarsItems, isOpen, onSharedAccountClose, onSharedAccountOpen, root?.name, rootId]
 	);
 
-	return <Accordion items={items} />;
+	return <Accordion items={items} disableTransition />;
 };

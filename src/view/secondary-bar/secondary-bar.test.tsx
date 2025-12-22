@@ -16,7 +16,7 @@ import { reducers } from '../../store/redux';
 
 describe('SecondaryBar', () => {
 	beforeAll(() => {
-		useLocalStorage.mockReturnValue([[], jest.fn()]);
+		useLocalStorage.mockReturnValue([[], vi.fn()]);
 	});
 
 	it('should render the expanded component and not the collapsed one', () => {

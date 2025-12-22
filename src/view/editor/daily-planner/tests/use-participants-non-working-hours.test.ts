@@ -17,14 +17,14 @@ import {
 } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
-jest.mock('@zextras/carbonio-design-system', () => ({
-	...jest.requireActual('@zextras/carbonio-design-system'),
-	useSnackbar: jest.fn().mockReturnValue(jest.fn())
+vi.mock('@zextras/carbonio-design-system', async () => ({
+	...(await vi.importActual('@zextras/carbonio-design-system')),
+	useSnackbar: vi.fn().mockReturnValue(vi.fn())
 }));
 
-jest.mock('react-i18next', () => ({
-	...jest.requireActual('react-i18next'),
-	useTranslation: jest.fn().mockReturnValue([mockTranslation])
+vi.mock('react-i18next', async () => ({
+	...(await vi.importActual('react-i18next')),
+	useTranslation: vi.fn().mockReturnValue([mockTranslation])
 }));
 
 describe('useParticipantsNonWorkingHours', () => {
@@ -99,7 +99,7 @@ describe('useParticipantsNonWorkingHours', () => {
 	});
 
 	it('should not call GetNonWorkingHours API if no participants', async () => {
-		const getWorkingHoursSpy = jest.spyOn(
+		const getWorkingHoursSpy = vi.spyOn(
 			getNonWorkingHoursResponseHandler,
 			'getNonWorkingHoursRequest'
 		);

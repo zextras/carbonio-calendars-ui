@@ -6,24 +6,24 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useSnackbar } from '@zextras/carbonio-design-system';
+import { Mock } from 'vitest';
 
 import { useForwardAppointmentSnackbar } from 'view/modals/forward-appointment/use-forward-appointment-snackbar';
 
-jest.mock('@zextras/carbonio-design-system', () => ({
-	useSnackbar: jest.fn()
+vi.mock('@zextras/carbonio-design-system', () => ({
+	useSnackbar: vi.fn()
 }));
 
-jest.mock('@zextras/carbonio-shell-ui', () => ({
+vi.mock('@zextras/carbonio-shell-ui', () => ({
 	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 	t: (_key: string, defaultValue: string) => defaultValue
 }));
 
 describe('useForwardAppointmentSnackbar', () => {
-	const mockCreateSnackbar = jest.fn();
+	const mockCreateSnackbar = vi.fn();
 
 	beforeEach(() => {
-		jest.clearAllMocks();
-		(useSnackbar as jest.Mock).mockReturnValue(mockCreateSnackbar);
+		(useSnackbar as Mock).mockReturnValue(mockCreateSnackbar);
 	});
 
 	it('should return showErrorSnackbar and showSuccessSnackbar functions', () => {
@@ -141,12 +141,12 @@ describe('useForwardAppointmentSnackbar', () => {
 	});
 
 	it('should update callbacks when createSnackbar changes', () => {
-		const mockCreateSnackbar2 = jest.fn();
+		const mockCreateSnackbar2 = vi.fn();
 		const { result, rerender } = renderHook(() => useForwardAppointmentSnackbar());
 
 		const firstShowError = result.current.showErrorSnackbar;
 
-		(useSnackbar as jest.Mock).mockReturnValue(mockCreateSnackbar2);
+		(useSnackbar as Mock).mockReturnValue(mockCreateSnackbar2);
 		rerender();
 
 		const secondShowError = result.current.showErrorSnackbar;

@@ -34,7 +34,7 @@ describe('show more popover', () => {
 			<ShowMorePopover
 				open
 				events={events}
-				onClose={jest.fn}
+				onClose={vi.fn()}
 				date={date}
 				anchorRef={React.createRef()}
 			/>,
@@ -47,7 +47,7 @@ describe('show more popover', () => {
 	});
 
 	test('clicking the close button will call the onClose function', async () => {
-		const onClose = jest.fn();
+		const onClose = vi.fn();
 		const { user } = setupTest(
 			<ShowMorePopover
 				open
@@ -70,7 +70,7 @@ describe('show more popover', () => {
 			<ShowMorePopover
 				open
 				events={events}
-				onClose={jest.fn}
+				onClose={vi.fn()}
 				date={date}
 				anchorRef={React.createRef()}
 			/>,
@@ -82,7 +82,7 @@ describe('show more popover', () => {
 		await user.hover(screen.getByTestId('icon: Close'));
 
 		act(() => {
-			jest.advanceTimersByTime(3000);
+			vi.advanceTimersByTime(3000);
 		});
 
 		const closeTooltip = await screen.findByText(/Close/i);
@@ -93,7 +93,7 @@ describe('show more popover', () => {
 			<ShowMorePopover
 				open
 				events={events}
-				onClose={jest.fn}
+				onClose={vi.fn()}
 				date={date}
 				anchorRef={React.createRef()}
 			/>,

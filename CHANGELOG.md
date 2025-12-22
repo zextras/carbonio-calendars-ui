@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.18.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.2...v1.18.3) (2025-12-16)
+
+
+### Bug Fixes
+
+* improve description for public link generation ([9443fe2](https://github.com/zextras/carbonio-calendars-ui/commit/9443fe252ad1ea79af688d7e7c693b3afb94f90e))
+* improve description for public link generation ([b5305cb](https://github.com/zextras/carbonio-calendars-ui/commit/b5305cb80c2418ee4fd60a2e348b21fea1ce9fb2))
+
+### [1.18.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.1...v1.18.2) (2025-12-09)
+
+
+### Bug Fixes
+
+* display the translated name for 'Calendar' and 'Trash' system calendars ([d745b8d](https://github.com/zextras/carbonio-calendars-ui/commit/d745b8d081c3e67c4fb99257cc0b5cb73b809733))
+
+### [1.18.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.0...v1.18.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* [CO-2956] Allow selecting different Calendar for scheduling received appointment [#669](https://github.com/zextras/carbonio-calendars-ui/issues/669)  ([a268d37](https://github.com/zextras/carbonio-calendars-ui/commit/a268d37123e27317b9217d9acbc30570165efacb))
+* update calendar selection handling in invite reply component ([b6fb256](https://github.com/zextras/carbonio-calendars-ui/commit/b6fb25680b54cb4704e0eda7415d573234065fb6))
+
 ## [1.18.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.17.1...v1.18.0) (2025-11-18)
 
 

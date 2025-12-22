@@ -16,9 +16,9 @@ import { setupTest } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
-const mockToggleModal = jest.fn();
-const mockOnClose = jest.fn();
-const mockAction = jest.fn();
+const mockToggleModal = vi.fn();
+const mockOnClose = vi.fn();
+const mockAction = vi.fn();
 
 const mockEvent = mockedData.getEvent({ title: 'Test Event' });
 const defaultCalendarFolder = generateFolder({
