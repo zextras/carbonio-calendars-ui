@@ -24,8 +24,6 @@ import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
-const ERROR_COLOR = 'color: rgb(215, 73, 66)';
-
 const generateApiSuccessResponse = (
 	groupName: string = faker.word.noun()
 ): CreateCalendarGroupResponse => ({
@@ -40,7 +38,7 @@ const generateApiSuccessResponse = (
 describe('CreateGroupModal', () => {
 	it('should render the modal with a specific title', () => {
 		setupTest(<CreateGroupModal onClose={vi.fn()} />);
-    
+
 		expect(screen.getByText('Create new Calendar Group')).toBeVisible();
 	});
 
@@ -57,9 +55,9 @@ describe('CreateGroupModal', () => {
 			const onClose = vi.fn();
 
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
-			await user.click(
-				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal })
-			);
+			const button = screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal });
+			await user.click(button);
+
 			expect(onClose).toHaveBeenCalledTimes(1);
 		});
 	});
@@ -71,12 +69,10 @@ describe('CreateGroupModal', () => {
 			expect(screen.getByPlaceholderText('Group Name*')).toBeVisible();
 		});
 
-		it('should render an input field with a default value', () => {
+		it('should render an input field with a default empty value', () => {
 			setupTest(<CreateGroupModal onClose={vi.fn()} />);
 
-			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue(
-				'New Calendar Group'
-			);
+			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue('');
 		});
 
 		it('should render an helper text', () => {
@@ -89,6 +85,7 @@ describe('CreateGroupModal', () => {
 			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
 
 			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, '/invalid-name');
 			await user.clear(input);
 
 			expect(screen.getByText('Type a group name to save changes')).toBeVisible();
@@ -105,13 +102,14 @@ describe('CreateGroupModal', () => {
 		it('should render the texts with a red foreground color when the group name is invalid', async () => {
 			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
 
-		it('colors texts red when emptied after typing', async () => {
-			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
 			const input = screen.getByPlaceholderText('Group Name*');
-			await user.type(input, 'valid');
+			await user.type(input, '/invalid-name');
 			await user.clear(input);
-			expect(screen.getByText('Group Name*')).toHaveStyle(ERROR_COLOR);
-			expect(screen.getByText('Type a group name to save changes')).toHaveStyle(ERROR_COLOR);
+
+			expect(screen.getByText('Group Name*')).toHaveStyle('color:rgb(215, 73, 66)');
+			expect(screen.getByText('Type a group name to save changes')).toHaveStyle(
+				'color: rgb(215, 73, 66)'
+			);
 		});
 	});
 
@@ -136,9 +134,12 @@ describe('CreateGroupModal', () => {
 				expect(screen.getByText(targetCalendar.name)).toBeVisible();
 			});
 
-			it('updates list when new calendars added', async () => {
-				const folders = times(2, (i) =>
-					generateFolder({ name: `Awesome${i}`, color: faker.number.int({ max: 9 }) })
+			it('should render an updated list of calendars when a new calendar is added', async () => {
+				const targetCalendars = times(2, (index) =>
+					generateFolder({
+						name: `Awesome${index}`,
+						color: faker.number.int({ max: 9 })
+					})
 				);
 				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 
@@ -173,17 +174,22 @@ describe('CreateGroupModal', () => {
 								user.click(within(listItem).getByRole('button', { name: /remove/i }));
 						}
 					});
-					return fn;
+
+					return result;
 				};
 
-				await act(remove());
+				await act(clickRemoveButton());
+
 				expect(screen.getAllByTestId('group-calendars-list-item').length).toBe(1);
-				expect(screen.queryByText(folders[1].name)).not.toBeInTheDocument();
+				expect(screen.queryByText(targetCalendars[1].name)).not.toBeInTheDocument();
 			});
 
-			it('adds calendars at the beginning', async () => {
-				const folders = times(3, (i) =>
-					generateFolder({ name: `Calendar${i}`, color: faker.number.int({ max: 9 }) })
+			it('should add calendars at the beginning of the list', async () => {
+				const targetCalendars = times(3, (index) =>
+					generateFolder({
+						name: `Calendar${index}`,
+						color: faker.number.int({ max: 9 })
+					})
 				);
 				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 
@@ -214,6 +220,7 @@ describe('CreateGroupModal', () => {
 			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
 			const input = screen.getByPlaceholderText('Group Name*');
 			await user.clear(input);
+
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeDisabled();
 		});
 
@@ -226,10 +233,11 @@ describe('CreateGroupModal', () => {
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeEnabled();
 		});
 
-		it('calls API with proper params', async () => {
+		it('should call the API with the proper parameters when clicked', async () => {
 			const groupName = faker.word.noun();
 			const apiResponse = generateApiSuccessResponse(groupName);
-			const interceptor = createSoapAPIInterceptor<
+
+			const apiCallInterceptor = createSoapAPIInterceptor<
 				CreateCalendarGroupRequest,
 				CreateCalendarGroupResponse
 			>('CreateCalendarGroup', apiResponse);
@@ -239,17 +247,19 @@ describe('CreateGroupModal', () => {
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.clear(input);
 			await user.type(input, groupName);
-			await user.click(screen.getByRole('button', { name: /Create group/i }));
-			const params = await interceptor;
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.click(confirmButton);
 
-			expect(spy).toHaveBeenCalledTimes(1);
-			expect(params).toEqual(expect.objectContaining({ name: groupName }));
+			const apiParams = await apiCallInterceptor;
+			expect(createGroupApiSpy).toHaveBeenCalledTimes(1);
+			expect(apiParams).toEqual(expect.objectContaining({ name: groupName }));
 		});
 
-		it('shows success snackbar on success', async () => {
+		it('should render a success snackbar when the API call is successful', async () => {
 			const groupName = faker.word.noun();
 			const apiResponse = generateApiSuccessResponse(groupName);
-			const interceptor = createSoapAPIInterceptor<
+
+			const apiCallInterceptor = createSoapAPIInterceptor<
 				CreateCalendarGroupRequest,
 				CreateCalendarGroupResponse
 			>('CreateCalendarGroup', apiResponse);
@@ -265,27 +275,31 @@ describe('CreateGroupModal', () => {
 			expect(successfulSnackbar).toBeVisible();
 		});
 
-		it('calls onClose on success', async () => {
+		it('should call the onClose callback when the API call is successful', async () => {
 			const groupName = faker.word.noun();
 			const apiResponse = generateApiSuccessResponse(groupName);
+
 			createSoapAPIInterceptor<CreateCalendarGroupRequest, CreateCalendarGroupResponse>(
 				'CreateCalendarGroup',
 				apiResponse
 			);
 			const onClose = vi.fn();
 
-			const onClose = jest.fn();
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
-			await user.type(screen.getByPlaceholderText('Group Name*'), groupName);
-			await user.click(screen.getByRole('button', { name: /Create group/i }));
+			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, groupName);
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.click(confirmButton);
 			await screen.findByText(/New group created/i);
+
 			expect(onClose).toHaveBeenCalledTimes(1);
 		});
 
-		it('shows error snackbar on failure', async () => {
+		it('should render an error snackbar when the API call is unsuccessful', async () => {
 			const groupName = faker.word.noun();
 			const apiResponse = generateApiErrorResponse();
-			const interceptor = createSoapAPIInterceptor<
+
+			const apiCallInterceptor = createSoapAPIInterceptor<
 				CreateCalendarGroupRequest,
 				ErrorSoapBodyResponse
 			>('CreateCalendarGroup', apiResponse);
@@ -301,20 +315,23 @@ describe('CreateGroupModal', () => {
 			expect(successfulSnackbar).toBeVisible();
 		});
 
-		it('does not call onClose on failure', async () => {
+		it('should not call the onClose callback when the API call is unsuccessful', async () => {
 			const groupName = faker.word.noun();
 			const apiResponse = generateApiErrorResponse();
+
 			createSoapAPIInterceptor<CreateCalendarGroupRequest, ErrorSoapBodyResponse>(
 				'CreateCalendarGroup',
 				apiResponse
 			);
 			const onClose = vi.fn();
 
-			const onClose = jest.fn();
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
-			await user.type(screen.getByPlaceholderText('Group Name*'), groupName);
-			await user.click(screen.getByRole('button', { name: /Create group/i }));
+			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, groupName);
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.click(confirmButton);
 			await screen.findByText(/Something went wrong, please try again/i);
+
 			expect(onClose).not.toHaveBeenCalled();
 		});
 	});
