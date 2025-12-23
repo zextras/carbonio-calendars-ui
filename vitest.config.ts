@@ -54,7 +54,7 @@ export default defineConfig({
 			provider: 'v8',
 			reporter: ['cobertura', 'lcov'],
 			reportsDirectory: 'coverage',
-			include: ['src/**/*.{ts,tsx}'],
+			include: ['src/**/*.{js,jsx,ts,tsx}'],
 			exclude: ['**/__test__/**', '**/tests/**', '**/mocks/**', '**/*.test.{js,jsx,ts,tsx}']
 		},
 		environmentOptions: {
