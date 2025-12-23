@@ -6,7 +6,7 @@
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { SoapNotify } from '@zextras/carbonio-shell-ui';
-import { folderWorker } from '@zextras/carbonio-ui-commons';
+import { folderWorker, useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { useSyncDataHandler } from './use-sync-data-handler';
 import { reducers } from '../store/redux';
@@ -401,6 +401,149 @@ describe('sync data handler', () => {
 					}
 				});
 			});
+		});
+	});
+
+	describe('shared calendars', () => {
+		test('it will filter out owner-specific properties for link mountpoints', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			useFolderStore.setState({
+				folders: {
+					'100': {
+						id: '100',
+						isLink: true,
+						rid: '200'
+					} as any
+				}
+			});
+
+			const notify = {
+				modified: {
+					folder: [
+						{
+							id: '200',
+							name: 'New Name',
+							color: '5',
+							f: 'u',
+							otherProp: 'value'
+						}
+					]
+				},
+				seq: 0
+			} as unknown as SoapNotify;
+			const workerSpy = vi.spyOn(folderWorker, 'postMessage');
+
+			mockSoapSync([notify]);
+
+			setupHook(useSyncDataHandler, { store });
+
+			expect(workerSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					op: 'notify',
+					notify: expect.objectContaining({
+						modified: {
+							folder: [
+								{
+									id: '200',
+									otherProp: 'value'
+								}
+							]
+						}
+					})
+				})
+			);
+		});
+
+		test('it will filter out owner-specific properties for shared account folders', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			useFolderStore.setState({
+				folders: {
+					'uuid:300': {
+						id: 'uuid:300',
+						isLink: true,
+						rid: '300'
+					} as any
+				}
+			});
+
+			const notify = {
+				modified: {
+					folder: [
+						{
+							id: 'uuid:300',
+							name: 'New Name',
+							color: '5',
+							f: 'u',
+							otherProp: 'value'
+						}
+					]
+				},
+				seq: 0
+			} as unknown as SoapNotify;
+			const workerSpy = vi.spyOn(folderWorker, 'postMessage');
+
+			mockSoapSync([notify]);
+
+			setupHook(useSyncDataHandler, { store });
+
+			expect(workerSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					op: 'notify',
+					notify: expect.objectContaining({
+						modified: {
+							folder: [
+								{
+									id: 'uuid:300',
+									otherProp: 'value'
+								}
+							]
+						}
+					})
+				})
+			);
+		});
+
+		test('it will completely remove folder from notify if all properties are filtered', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			useFolderStore.setState({
+				folders: {
+					'100': {
+						id: '100',
+						isLink: true,
+						rid: '200'
+					} as any
+				}
+			});
+
+			const notify = {
+				modified: {
+					folder: [
+						{
+							id: '200',
+							name: 'New Name',
+							color: '5',
+							f: 'u'
+						}
+					]
+				},
+				seq: 0
+			} as unknown as SoapNotify;
+			const workerSpy = vi.spyOn(folderWorker, 'postMessage');
+
+			mockSoapSync([notify]);
+
+			setupHook(useSyncDataHandler, { store });
+
+			expect(workerSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					op: 'notify',
+					notify: expect.not.objectContaining({
+						modified: expect.objectContaining({
+							folder: expect.anything()
+						})
+					})
+				})
+			);
 		});
 	});
 });
