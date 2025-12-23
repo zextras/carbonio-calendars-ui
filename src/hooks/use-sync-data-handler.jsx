@@ -73,9 +73,9 @@ function getFilteredNotify(notify, folders) {
 		//  if this notification is for the remote folder that our link points to, filter out owner-specific properties
 		if (isRemoteFolder(folder, folders)) {
 			// Remove properties that should only affect the owner's view
-			const allowedProperties = omit(folder, ['color', 'name', 'f']);
-			// If there are no allowed properties left, filter out this folder entirely
-			return isEmpty(allowedProperties) ? null : allowedProperties;
+			const remainingProperties = omit(folder, ['color', 'name', 'f']);
+			// If there are no remaining properties left, filter out this folder entirely
+			return isEmpty(remainingProperties) ? null : remainingProperties;
 		}
 
 		// Keep other folder modifications as-is
