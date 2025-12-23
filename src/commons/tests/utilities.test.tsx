@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { replaceLinkToAnchor } from '../utilities';
+import { isRemoteFolder, replaceLinkToAnchor } from '../utilities';
 
 describe('replaceLinkToAnchor', () => {
 	it('should return an empty string when content is empty', () => {
@@ -46,5 +46,39 @@ describe('replaceLinkToAnchor', () => {
 		const input = 'Visit "http://example.com" for more info.';
 		const output = 'Visit "http://example.com" for more info.';
 		expect(replaceLinkToAnchor(input)).toBe(output);
+	});
+});
+
+describe('isRemoteFolder', () => {
+	const mockFolders = {
+		'1': { isLink: true, rid: '100' },
+		'2': { isLink: false, rid: '200' }, // Not a link
+		'3': { isLink: true }, // No rid
+		'4': { isLink: true, rid: '300' }
+	};
+
+	it('should return true if folder id matches a remote folder rid', () => {
+		const folder = { id: '100' };
+		expect(isRemoteFolder(folder, mockFolders)).toBe(true);
+	});
+
+	it('should return true if folder id part after colon matches a remote folder rid', () => {
+		const folder = { id: 'account:300' };
+		expect(isRemoteFolder(folder, mockFolders)).toBe(true);
+	});
+
+	it('should return false if folder id does not match any remote folder rid', () => {
+		const folder = { id: '999' };
+		expect(isRemoteFolder(folder, mockFolders)).toBe(false);
+	});
+
+	it('should return false if folder id part after colon does not match any remote folder rid', () => {
+		const folder = { id: 'account:999' };
+		expect(isRemoteFolder(folder, mockFolders)).toBe(false);
+	});
+
+	it('should return false if folders list is empty', () => {
+		const folder = { id: '100' };
+		expect(isRemoteFolder(folder, {})).toBe(false);
 	});
 });
