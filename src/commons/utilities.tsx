@@ -14,7 +14,7 @@ import {
 	getUpdateFolder,
 	hasId
 } from '@zextras/carbonio-ui-commons';
-import { find, forEach, isNil, map, reduce, some } from 'lodash';
+import { find, filter, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
 
 import { FOLDER_OPERATIONS } from '../constants/api';
@@ -36,6 +36,17 @@ export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
 	const parentFolders =
 		map(parentFoldersNames, (f) => find(folders, (ff) => ff.name === f) ?? '') ?? [];
 	return some(parentFolders, ['isLink', true]) ?? false;
+};
+
+export const isRemoteFolder = (
+	folder: { id: string },
+	folders: Record<string, { isLink?: boolean; rid?: string }>
+): boolean => {
+	const linkFoldersWithRid = filter(folders, (f) => !!(f.isLink && f.rid));
+	const remoteIds = map(linkFoldersWithRid, (f) => String(f.rid));
+	const folderIdParts = folder.id.split(':');
+	const folderIdToCheck = folderIdParts.length > 1 ? folderIdParts[1] : folder.id;
+	return remoteIds.includes(folderIdToCheck) || remoteIds.includes(folder.id);
 };
 
 export const isMainRootChild = (item: { id: string }): boolean => {

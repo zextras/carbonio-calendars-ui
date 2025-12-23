@@ -6,15 +6,16 @@
 import { useEffect, useRef } from 'react';
 
 import {
-	useFolderStore,
-	useTagStore,
 	folderWorker,
-	tagsWorker
+	tagsWorker,
+	useFolderStore,
+	useTagStore
 } from '@zextras/carbonio-ui-commons';
 import { useSync } from '@zextras/carbonio-ui-soap-lib';
-import { isEmpty, reduce, forEach, sortBy, map, filter, isNil } from 'lodash';
+import { filter, forEach, isEmpty, isNil, map, omit, reduce, sortBy } from 'lodash';
 
 import { useCheckedCalendarsQuery } from './use-checked-calendars-query';
+import { isRemoteFolder } from '../commons/utilities';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { useAppDispatch } from '../store/redux/hooks';
 import {
@@ -63,6 +64,38 @@ function handleCalendarGroupNotify(notify) {
 	}
 }
 
+function getFilteredNotify(notify, folders) {
+	if (!notify?.modified?.folder) return notify;
+
+	const filteredNotify = { ...notify };
+
+	const filteredFolders = map(notify.modified.folder, (folder) => {
+		//  if this notification is for the remote folder that our link points to, filter out owner-specific properties
+		if (isRemoteFolder(folder, folders)) {
+			// Remove properties that should only affect the owner's view
+			const allowedProperties = omit(folder, ['color', 'name', 'f']);
+			// If there are no allowed properties left, filter out this folder entirely
+			return isEmpty(allowedProperties) ? null : allowedProperties;
+		}
+
+		// Keep other folder modifications as-is
+		return folder;
+	});
+
+	// Remove null entries (folders with only filtered properties)
+	filteredNotify.modified = {
+		...notify.modified,
+		folder: filter(filteredFolders, (folder) => folder !== null)
+	};
+
+	// If no folders remain after filtering, remove the modified.folder property
+	if (isEmpty(filteredNotify.modified.folder)) {
+		delete filteredNotify.modified.folder;
+	}
+
+	return filteredNotify;
+}
+
 function handleFoldersNotify(notifyList, notify) {
 	const isNotifyRelatedToFolders =
 		!isEmpty(notifyList) &&
@@ -77,9 +110,15 @@ function handleFoldersNotify(notifyList, notify) {
 	if (isNotifyRelatedToFolders) {
 		handleCalendarGroupNotify(notify);
 		const state = useFolderStore.getState();
+
+		// Filter out specific folder property modifications for link mountpoints (shared calendars folders)
+		// When a shared calendar owner modifies their calendar's color, name, or flags (checked status),
+		// we shouldn't apply those changes to the grantee's link mountpoint
+		const filteredFoldersNotify = getFilteredNotify(notify, state.folders);
+
 		folderWorker.postMessage({
 			op: 'notify',
-			notify,
+			notify: filteredFoldersNotify,
 			state: state.folders
 		});
 	}
