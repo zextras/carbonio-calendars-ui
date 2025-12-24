@@ -79,15 +79,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		[account.name, invite?.organizer?.a]
 	);
 
-	// const to = useMemo(
-	// 	() =>
-	// 		filter(
-	// 			mailMsg.participants as [{ address: string; fullName: string; name: string; type: string }],
-	// 			{ type: 'f' }
-	// 		),
-	// 	[mailMsg?.participants]
-	// );
-
 	const to = useMemo(
 		() =>
 			filter(
