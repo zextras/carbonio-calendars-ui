@@ -79,6 +79,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		[account.name, invite?.organizer?.a]
 	);
 
+	// When replying/declining, participants marked as 'f' (from) in the original
+	// message must be treated as 't' (to) recipients in the outgoing response.
 	const to = useMemo(
 		() =>
 			filter(
