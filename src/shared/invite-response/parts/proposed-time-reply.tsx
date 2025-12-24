@@ -108,11 +108,11 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 		});
 	}, [calendarFolders, createSnackbar, dispatch, end, id, moveToTrash, msg?.invite, start, t]);
 
-	const decline = useCallback(() => {
+	const declineProposedTime = useCallback(() => {
 		if (available)
 			openComposer(null, {
 				text: ['text', `${fragment}:`],
-				subject: `${t('label.proposal_declined', 'Proposal declined')}${title}`,
+				subject: `${t('label.proposal_declined', 'Proposal declined')} > ${title}`,
 				to
 			});
 	}, [available, openComposer, fragment, t, title, to]);
@@ -142,7 +142,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 						label={t('event.action.decline', 'Decline')}
 						icon="Close"
 						color="error"
-						onClick={decline}
+						onClick={declineProposedTime}
 					/>
 				</Padding>
 			</Container>
