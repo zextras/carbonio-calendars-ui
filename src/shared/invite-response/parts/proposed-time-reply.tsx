@@ -112,7 +112,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 		if (available)
 			openComposer(null, {
 				text: ['text', `${fragment}:`],
-				subject: `${t('label.proposal_declined', 'Proposal declined')} > ${title}`,
+				subject: `${t('label.proposal_declined', 'Proposal declined')}: ${title}`,
 				to
 			});
 	}, [available, openComposer, fragment, t, title, to]);
