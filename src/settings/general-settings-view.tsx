@@ -250,18 +250,6 @@ export default function GeneralSettings({
 							)}
 						/>
 						<Checkbox
-							value={settingsObj.zimbraPrefMailFlashTitle === 'TRUE'}
-							onClick={(): void =>
-								updateSettings({
-									target: {
-										name: 'zimbraPrefMailFlashTitle',
-										value: settingsObj.zimbraPrefMailFlashTitle === 'TRUE' ? 'FALSE' : 'TRUE'
-									}
-								})
-							}
-							label={t('settings.label.flash_browser_title', 'Flash the browser title')}
-						/>
-						<Checkbox
 							label={t('settings.label.show_popup_notification', 'Show a popup notification')}
 							value={settingsObj.zimbraPrefCalendarToasterEnabled === 'TRUE'}
 							onClick={(): void =>
