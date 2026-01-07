@@ -20,3 +20,29 @@ Object.defineProperty(window, 'matchMedia', {
 		dispatchEvent: vi.fn()
 	}))
 });
+
+// Mock DOMMatrix for pdfjs-dist
+if (typeof globalThis.DOMMatrix === 'undefined') {
+	globalThis.DOMMatrix = class DOMMatrix {
+		a: number;
+
+		b: number;
+
+		c: number;
+
+		d: number;
+
+		e: number;
+
+		f: number;
+
+		constructor() {
+			this.a = 1;
+			this.b = 0;
+			this.c = 0;
+			this.d = 1;
+			this.e = 0;
+			this.f = 0;
+		}
+	} as any;
+}

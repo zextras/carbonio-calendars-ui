@@ -44,11 +44,18 @@ const CustomEventTitle = ({
 }: {
 	title: CustomEventProps['title'];
 	overflow?: 'ellipsis' | 'visible' | 'break-word';
-}): ReactElement => (
-	<Text size={'small'} color="currentColor" style={{ overflow }} weight="bold">
-		{title}
-	</Text>
-);
+}): ReactElement | null =>
+	title ? (
+		<Text
+			data-testId={'event-title'}
+			size={'small'}
+			color="currentColor"
+			style={{ overflow }}
+			weight="bold"
+		>
+			{title}
+		</Text>
+	) : null;
 
 const CustomDate = ({
 	textOverflow,
@@ -194,12 +201,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			background={event.resource.calendar.color.background}
 			freeBusyActual={event.resource.freeBusyActual}
 		>
-			<Tooltip
-				label={title}
-				placement="top"
-				disabled={event.resource.class === 'PRI'}
-				triggerRef={anchorRef}
-			>
+			<Tooltip label={title} placement="top" disabled={!title} triggerRef={anchorRef}>
 				<Container
 					height="100%"
 					style={{
@@ -251,14 +253,12 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										iconName={'AlertCircleOutline'}
 									/>
 								)}
-								{event.resource.class === 'PRI' && (
-									<CustomEventIcon
-										tooltipLabel={t('label.private', 'Private')}
-										isIconVisible={event.resource.class === 'PRI'}
-										iconColor={'currentColor'}
-										iconName={'Lock'}
-									/>
-								)}
+								<CustomEventIcon
+									tooltipLabel={t('label.private', 'Private')}
+									isIconVisible={event.resource.class === 'PRI'}
+									iconColor={'currentColor'}
+									iconName={'Lock'}
+								/>
 								<CustomEventReplyIcons
 									iAmAttendee={iAmAttendee}
 									participationStatus={event.resource.participationStatus}
@@ -298,7 +298,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 									<TagIconComponent event={event} />
 								</Row>
 							</Container>
-							{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
+							{eventDiff >= 30 && !event.allDay && (
 								<>
 									{eventDiff >= 45 && <Padding top="extrasmall" />}
 									<Row wrap="nowrap">
