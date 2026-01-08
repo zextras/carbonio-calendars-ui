@@ -157,6 +157,14 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 		}
 	}, [createSnackbar, group, onClose, t]);
 
+	const confirmTooltip =
+		isConfirmDisabled && isDirty
+			? t(
+					'folder.modal.create_calendar_group.disabled_tooltip',
+					'Please fill in all required field correctly.'
+				)
+			: undefined;
+
 	return (
 		<Container
 			style={{ overflowY: 'hidden' }}
@@ -205,14 +213,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.editgroup.footer', 'Save changes')}
 				confirmDisabled={isConfirmDisabled}
-				confirmTooltip={
-					isConfirmDisabled && isDirty
-						? t(
-								'folder.modal.create_calendar_group.disabled_tooltip',
-								'Please fill in all required field correctly.'
-							)
-						: undefined
-				}
+				confirmTooltip={confirmTooltip}
 			/>
 		</Container>
 	);
