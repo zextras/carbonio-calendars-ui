@@ -31,19 +31,12 @@ type CreateGroupModalProps = {
 export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
-	const [groupName, setGroupName] = useState(
-		t('folder.modal.creategroup.default_group_name', 'New Calendar Group')
-	);
+	const [groupName, setGroupName] = useState('');
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
-
+	const [isDirty, setIsDirty] = useState<boolean>(false);
 	const selectedCalendarsIds = useMemo(
 		() => map(selectedCalendars, (item) => item.id),
 		[selectedCalendars]
-	);
-
-	const isDirty = useMemo(
-		() => groupName !== '' || selectedCalendars.length > 0,
-		[groupName, selectedCalendars]
 	);
 
 	const isGroupNameValid = useMemo(
@@ -61,13 +54,24 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 		[t]
 	);
 
-	const groupNameDescription = useMemo(
-		() =>
-			isGroupNameValid
-				? undefined
-				: t('label.invalid_group_name', 'Type a group name to save changes'),
-		[isGroupNameValid, t]
-	);
+	const groupNameDescription = useMemo(() => {
+		if (isDirty) {
+			if (!groupName.length) {
+				return t('label.empty_group_name', 'Type a group name to save changes');
+			}
+
+			if (!isGroupNameValid) {
+				return t(
+					'label.invalid_group_name',
+					'This group name is invalid. Please avoid using special characters'
+				);
+			}
+		}
+
+		return t('label.newgroup.note', 'This group will appear in your personal account.');
+	}, [isDirty, isGroupNameValid, groupName, t]);
+
+	const hasError = isDirty && !isGroupNameValid;
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Folder) => {
 		setSelectedCalendars((prev) => [selected, ...prev]);
@@ -139,22 +143,19 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				<Input
 					label={groupNameInputLabel}
 					description={groupNameDescription}
-					hasError={!isGroupNameValid}
-					backgroundColor="gray5"
+					hasError={hasError}
+					background="gray5"
 					value={groupName}
 					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+						if (!isDirty) setIsDirty(true);
 						setGroupName(e.target.value);
 					}}
 				/>
-				<Padding top="small" />
-				<Text size="extrasmall" color="gray1">
-					{t('label.newgroup.note', 'This group will appear in your personal account.')}
-				</Text>
 				<Padding vertical="small" />
 				<Divider />
 				<Padding vertical="small" />
 				<Container crossAlignment="flex-start">
-					<Text weight="bold" size="large">
+					<Text weight="bold" size="small">
 						{t('label.newgroup.calendars', 'Calendars in this group')}
 					</Text>
 				</Container>
@@ -172,6 +173,14 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.creategroup.footer', 'Create Group')}
 				confirmDisabled={isConfirmDisabled}
+				confirmTooltip={
+					isConfirmDisabled
+						? t(
+								'folder.modal.create_calendar_group.disabled_tooltip',
+								'Please fill in all required field correctly.'
+							)
+						: undefined
+				}
 			/>
 		</Container>
 	);
