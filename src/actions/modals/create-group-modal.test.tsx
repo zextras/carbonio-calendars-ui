@@ -69,12 +69,10 @@ describe('CreateGroupModal', () => {
 			expect(screen.getByPlaceholderText('Group Name*')).toBeVisible();
 		});
 
-		it('should render an input field with a default value', () => {
+		it('should render an input field with a default empty value', () => {
 			setupTest(<CreateGroupModal onClose={vi.fn()} />);
 
-			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue(
-				'New Calendar Group'
-			);
+			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue('');
 		});
 
 		it('should render an helper text', () => {
@@ -87,6 +85,7 @@ describe('CreateGroupModal', () => {
 			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
 
 			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, '/invalid-name');
 			await user.clear(input);
 
 			expect(screen.getByText('Type a group name to save changes')).toBeVisible();
@@ -104,9 +103,10 @@ describe('CreateGroupModal', () => {
 			const { user } = setupTest(<CreateGroupModal onClose={vi.fn()} />);
 
 			const input = screen.getByPlaceholderText('Group Name*');
+			await user.type(input, '/invalid-name');
 			await user.clear(input);
 
-			expect(screen.getByText('Group Name*')).toHaveStyle('color: rgb(215, 73, 66)');
+			expect(screen.getByText('Group Name*')).toHaveStyle('color:rgb(215, 73, 66)');
 			expect(screen.getByText('Type a group name to save changes')).toHaveStyle(
 				'color: rgb(215, 73, 66)'
 			);

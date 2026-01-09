@@ -44,7 +44,7 @@ export const GroupCalendarsList = ({
 					/>
 				))
 			) : (
-				<Text color="gray1" overflow="break-word">
+				<Text color="gray1" overflow="break-word" size="extrasmall">
 					{placeholderText}
 				</Text>
 			)}

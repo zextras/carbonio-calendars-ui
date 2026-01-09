@@ -79,13 +79,22 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 		[t]
 	);
 
-	const groupNameDescription = useMemo(
-		() =>
-			isGroupNameValid
-				? undefined
-				: t('label.invalid_group_name', 'Type a group name to save changes'),
-		[isGroupNameValid, t]
-	);
+	const groupNameDescription = useMemo(() => {
+		if (isDirty) {
+			if (!groupName.length) {
+				return t('label.empty_group_name', 'Type a group name to save changes');
+			}
+
+			if (!isGroupNameValid) {
+				return t(
+					'label.invalid_group_name',
+					'This group name is invalid. Please avoid using special characters'
+				);
+			}
+		}
+
+		return t('label.newgroup.note', 'This group will appear in your personal account.');
+	}, [isDirty, isGroupNameValid, groupName, t]);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Folder) => {
 		setSelectedCalendars((prev) => [selected, ...prev]);
@@ -148,6 +157,14 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 		}
 	}, [createSnackbar, group, onClose, t]);
 
+	const confirmTooltip =
+		isConfirmDisabled && isDirty
+			? t(
+					'folder.modal.create_calendar_group.disabled_tooltip',
+					'Please fill in all required field correctly.'
+				)
+			: undefined;
+
 	return (
 		<Container
 			style={{ overflowY: 'hidden' }}
@@ -166,7 +183,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				<Padding vertical="medium" />
 				<Input
 					label={groupNameInputLabel}
-					backgroundColor="gray5"
+					background="gray5"
 					value={groupName}
 					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 						setGroupName(e.target.value);
@@ -178,7 +195,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				<Divider />
 				<Padding vertical="small" />
 				<Container crossAlignment="flex-start">
-					<Text weight="bold" size="large">
+					<Text weight="bold" size="small">
 						{t('label.editgroup.calendars', 'Calendars in this group')}
 					</Text>
 				</Container>
@@ -196,6 +213,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.editgroup.footer', 'Save changes')}
 				confirmDisabled={isConfirmDisabled}
+				confirmTooltip={confirmTooltip}
 			/>
 		</Container>
 	);
