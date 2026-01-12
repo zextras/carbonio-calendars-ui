@@ -1411,10 +1411,68 @@ describe('invite response component', () => {
 						test.todo(
 							'"text" field with the values "text" for normal text and the fragment for the html text'
 						);
-						test.todo(
-							'"subject" field with "Proposal declined" + event title without space in between'
-						);
-						test.todo('"to" field with the organizer data');
+						test('"subject" field with "Proposal declined: " + event title', async () => {
+							const openComposerSpy = vi.fn();
+							vi.spyOn(mockshell, 'useIntegratedFunction').mockReturnValue([openComposerSpy, true]);
+							setupFoldersStore();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							createSoapAPIInterceptor('GetAppointment', {});
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await user.click(decline);
+
+							expect(openComposerSpy).toHaveBeenCalled();
+							const composerArgs = openComposerSpy.mock.calls[0][1];
+							expect(composerArgs.subject).toBe('Proposal declined: single event subject');
+						});
+						test('"to" field contains participants with type changed from "f" to "t"', async () => {
+							const openComposerSpy = vi.fn();
+							vi.spyOn(mockshell, 'useIntegratedFunction').mockReturnValue([openComposerSpy, true]);
+							setupFoldersStore();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							createSoapAPIInterceptor('GetAppointment', {});
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await user.click(decline);
+
+							expect(openComposerSpy).toHaveBeenCalled();
+							const composerArgs = openComposerSpy.mock.calls[0][1];
+							expect(composerArgs.to).toBeDefined();
+							expect(composerArgs.to).toEqual(
+								expect.arrayContaining([
+									expect.objectContaining({
+										type: 't',
+										address: 'sender@mail.com'
+									})
+								])
+							);
+						});
 					});
 				});
 			});
