@@ -23,6 +23,7 @@ import { TitleRow } from './title-row';
 import { VirtualRoomRow } from './virtual-room-row';
 import { ROOM_DIVIDER } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
+import { useNeverSentWarningLabel } from '../../hooks/use-never-sent-warning-label';
 import { useSummaryView } from '../../store/zustand/hooks';
 import { EventType } from '../../types/event';
 
@@ -58,11 +59,11 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 			),
 		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
 	);
+	const neverSentWarningLabel = useNeverSentWarningLabel(invite?.attendees);
 
 	if (!event) {
 		return null;
 	}
-
 	return (
 		<Container
 			padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }}
@@ -70,7 +71,10 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 			style={{ zIndex: 3 }}
 		>
 			<TitleRow event={event} />
-			<NeverSentWarningRow neverSent={event?.resource?.inviteNeverSent} />
+			<NeverSentWarningRow
+				neverSent={event?.resource?.inviteNeverSent}
+				label={neverSentWarningLabel}
+			/>
 			<CalendarInfoRow />
 			{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
 			{locationData && <LocationRow locationData={locationData} showIcon />}

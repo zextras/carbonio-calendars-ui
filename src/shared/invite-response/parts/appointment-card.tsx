@@ -14,6 +14,7 @@ import { TagIconComponent } from '../../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
+import { useNeverSentWarningLabel } from '../../../hooks/use-never-sent-warning-label';
 import { EventType } from '../../../types/event';
 
 const useEventTimeString = (start: Moment | Date, end: Moment | Date, allDay: boolean): string => {
@@ -50,7 +51,7 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, pushHistory]);
 
 	const eventTimeString = useEventTimeString(event.start, event.end, event.allDay);
-
+	const neverSentWarningLabel = useNeverSentWarningLabel();
 	return (
 		<Tooltip
 			placement={'top'}
@@ -94,13 +95,7 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 								</Tooltip>
 							)}
 							{event?.resource?.inviteNeverSent && (
-								<Tooltip
-									label={t(
-										'label.invitation_not_sent',
-										"You haven't sent the invitation to the attendees yet"
-									)}
-									placement="top"
-								>
+								<Tooltip label={neverSentWarningLabel} placement="top">
 									<Padding left="extrasmall">
 										<Icon
 											icon="AlertCircleOutline"
