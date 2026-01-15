@@ -46,7 +46,7 @@ const normalizeEditorFromMailMessage = (
 	class: messageData.class,
 	timezone: messageData?.s[0]?.tz ?? moment.tz.guess(true),
 	recur: messageData.recur,
-	richText: messageData.descHtml[0]?._content ?? '',
+	richText: messageData.descHtml?.[0]?._content ?? '',
 	plainText: messageData.desc[0]?._content ?? '',
 	meetingRoom: getMeetingRooms(messageData.at),
 	equipment: getEquipments(messageData.at),
