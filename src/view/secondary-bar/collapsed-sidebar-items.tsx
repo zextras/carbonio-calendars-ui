@@ -5,7 +5,7 @@
  */
 import React, { FC, useCallback, useMemo } from 'react';
 
-import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-design-system';
+import { Button, Container, Padding, Row, Tooltip } from '@zextras/carbonio-design-system';
 import { Folder } from '@zextras/carbonio-ui-commons';
 
 import { getFolderIcon, recursiveToggleCheck } from '../../commons/utilities';
@@ -34,12 +34,13 @@ export const CollapsedSidebarItem: FC<{ item: Folder }> = ({ item }) => {
 			<Row mainAlignment="flex-start" takeAvailableSpace>
 				<Tooltip label={name} placement="right">
 					<Padding all="extrasmall">
-						<IconButton
-							customSize={{ iconSize: 'large', paddingSize: 'small' }}
+						<Button
 							icon={icon}
-							iconColor={iconColor}
+							color={iconColor}
 							size="large"
 							onClick={onIconClick}
+							style={{ padding: 'small' }}
+							type={'ghost'}
 						/>
 					</Padding>
 				</Tooltip>
