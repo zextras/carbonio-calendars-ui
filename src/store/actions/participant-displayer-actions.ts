@@ -6,9 +6,8 @@
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
-import { mailToContact } from '../../shared/invite-response/invite-response';
+import { mailToContact } from 'shared/invite-response/parts/participants-list';
 
-// todo: this is not using redux! convert to regular async function
 export const copyEmailToClipboard = (email: string, createSnackbar: CreateSnackbarFn): void => {
 	navigator.clipboard.writeText(email).then(() => {
 		createSnackbar({
