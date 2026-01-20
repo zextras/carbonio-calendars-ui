@@ -8,11 +8,12 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import {
 	Avatar,
 	Container,
-	IconButton,
 	Row,
 	Text,
 	Chip,
-	useSnackbar
+	useSnackbar,
+	Button,
+	Padding
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
@@ -120,10 +121,13 @@ const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement |
 				>
 					<Row mainAlignment="flex-start" takeAvailableSpace>
 						<Text size="small">{label}</Text>
-						<IconButton
+						<Padding right="small" />
+						<Button
 							icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
 							onClick={toggleExpanded}
 							size="small"
+							type={'ghost'}
+							color={'gray0'}
 						/>
 					</Row>
 					{isExpanded && displayedParticipants}
