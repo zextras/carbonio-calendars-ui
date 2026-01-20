@@ -6,7 +6,7 @@
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { Padding, Row, Input, IconButton } from '@zextras/carbonio-design-system';
+import { Padding, Row, Input, Button } from '@zextras/carbonio-design-system';
 
 type CustomComponentProps = {
 	value: Date;
@@ -69,13 +69,13 @@ const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
 				</Row>
 				<Row>
 					<Padding horizontal="small">
-						<IconButton
+						<Button
 							data-testid={testId}
 							icon={icon}
 							size="large"
 							onClick={onClick}
-							backgroundColor="transparent"
-							iconColor="text"
+							type={'ghost'}
+							color={'gray0'}
 						/>
 					</Padding>
 				</Row>
