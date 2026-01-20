@@ -59,7 +59,6 @@ describe('InviteReplyPart - Calendar Selection', () => {
 	describe('Calendar selector rendering', () => {
 		test('renders calendar selector component', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
 
 			const calendarSelector = await screen.findByTestId(CALENDAR_SELECTOR_TEST_ID);
@@ -68,7 +67,6 @@ describe('InviteReplyPart - Calendar Selection', () => {
 
 		test('displays "Scheduled in" label for calendar selector', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
 
 			const scheduledInLabel = await screen.findByText('Scheduled in');
@@ -96,7 +94,6 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
 				parent: defaultCalendar.id
 			});
-			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
 
 			await waitFor(() => {
@@ -123,7 +120,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			await user.click(screen.getAllByText(/secondary calendar/i)[0]);
 
 			await waitFor(() => {
-				expect(screen.getByText('Secondary Calendar')).toBeVisible();
+				expect(screen.getByText(SECONDARY_CALENDAR_NAME)).toBeVisible();
 			});
 		});
 
@@ -152,15 +149,15 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			});
 
 			await user.click(screen.getByText(/^Calendar$/i));
-			await user.click((await screen.findAllByText(/Secondary Calendar/i))[0]);
+			await user.click((await screen.findAllByText(new RegExp(SECONDARY_CALENDAR_NAME, 'i')))[0]);
 			await waitFor(() => {
-				expect(screen.getByText('Secondary Calendar')).toBeVisible();
+				expect(screen.getByText(SECONDARY_CALENDAR_NAME)).toBeVisible();
 			});
 
 			await user.click(screen.getAllByText(/Secondary Calendar/i)[0]);
 			await user.click((await screen.findAllByText(/Shared Calendar/i))[0]);
 			await waitFor(() => {
-				expect(screen.getByText('Shared Calendar')).toBeVisible();
+				expect(screen.getByText(SHARED_CALENDAR_NAME)).toBeVisible();
 			});
 
 			await user.click(screen.getAllByText(/Shared Calendar/i)[0]);
@@ -204,20 +201,20 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			await user.click(screen.getByText(/^Calendar$/i));
 			await user.click((await screen.findAllByText(/Secondary Calendar/i))[0]);
 			await waitFor(() => {
-				expect(screen.getByText('Secondary Calendar')).toBeVisible();
+				expect(screen.getByText(SECONDARY_CALENDAR_NAME)).toBeVisible();
 			});
 
 			const notifyCheckbox = screen.getByTestId('checkbox');
 			await user.click(notifyCheckbox);
 
-			expect(screen.getByText('Secondary Calendar')).toBeVisible();
+			expect(screen.getByText(SECONDARY_CALENDAR_NAME)).toBeVisible();
 			await waitFor(() => {
 				expect(screen.getByTestId('icon: Square')).toBeVisible();
 			});
 
 			await user.click(notifyCheckbox);
 
-			expect(screen.getByText('Secondary Calendar')).toBeVisible();
+			expect(screen.getByText(SECONDARY_CALENDAR_NAME)).toBeVisible();
 			await waitFor(() => {
 				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
 			});

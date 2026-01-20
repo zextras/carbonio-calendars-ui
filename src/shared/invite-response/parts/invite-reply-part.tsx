@@ -24,6 +24,7 @@ import { generateEditor } from 'commons/editor-generator';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDAR_BOARD_ID } from 'constants/index';
 import { getEquipments, getMeetingRooms, getVirtualRoom } from 'normalizations/normalize-editor';
+import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 import { useAppDispatch } from 'store/redux/hooks';
 import { Editor } from 'types/editor';
 import type { InviteReplyPartArguments, InviteResponseArguments } from 'types/integrations';
@@ -122,7 +123,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	}, [calendarFolders, dispatch, inviteId, message.invite]);
 
 	const onAction = useCallback(
-		(action: string): (() => void) =>
+		(action: InviteReplyVerb): (() => void) =>
 			(): void => {
 				sendResponse({
 					action,
@@ -193,7 +194,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						label={t('event.action.accept', 'Accept')}
 						icon="CheckmarkOutline"
 						color="success"
-						onClick={onAction('ACCEPT')}
+						onClick={onAction(InviteReplyVerb.ACCEPT)}
 						disabled={participationStatus === PARTICIPATION_STATUS.ACCEPTED}
 					/>
 				</Padding>
@@ -203,7 +204,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						label={t('label.tentative', 'Tentative')}
 						icon="QuestionMarkOutline"
 						color="warning"
-						onClick={onAction('TENTATIVE')}
+						onClick={onAction(InviteReplyVerb.TENTATIVE)}
 						disabled={participationStatus === PARTICIPATION_STATUS.TENTATIVE}
 					/>
 				</Padding>
@@ -213,7 +214,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						label={t('event.action.decline', 'Decline')}
 						icon="CloseOutline"
 						color="error"
-						onClick={onAction('DECLINE')}
+						onClick={onAction(InviteReplyVerb.DECLINE)}
 						disabled={participationStatus === PARTICIPATION_STATUS.DECLINED}
 					/>
 				</Padding>

@@ -24,7 +24,11 @@ export const TEST_SELECTORS = {
 		shared: 'icon: Shared',
 		linked: 'icon: Linked',
 		leftArrow: 'icon: ChevronLeft',
-		rightArrow: 'icon: ChevronRight'
+		rightArrow: 'icon: ChevronRight',
+		closeOutline: 'icon: CloseOutline',
+		checkmark: 'icon: CheckmarkOutline',
+		questionMark: 'icon: QuestionMarkOutline',
+		clockOutline: 'icon: ClockOutline'
 	}
 };
 

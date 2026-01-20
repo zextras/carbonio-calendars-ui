@@ -13,6 +13,7 @@ import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { AppDispatch } from '../store/redux';
 import { EventType } from '../types/event';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
+import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
@@ -32,7 +33,7 @@ export const sendResponse = (event: EventType, context: { dispatch: AppDispatch 
 		sendInviteResponse({
 			inviteId: event.resource.inviteId,
 			updateOrganizer: true,
-			action: 'DECLINE'
+			action: InviteReplyVerb.DECLINE
 		})
 	);
 

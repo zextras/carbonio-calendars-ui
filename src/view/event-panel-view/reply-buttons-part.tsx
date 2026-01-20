@@ -9,16 +9,12 @@ import { Button, Container, Padding } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
-import {
-	acceptAsTentative,
-	acceptInvitation,
-	declineInvitation,
-	proposeNewTimeFn
-} from '../../actions/appointment-actions-fn';
+import { acceptAsAction, proposeNewTimeFn } from '../../actions/appointment-actions-fn';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
+import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
 type ReplyButtonProps = {
 	event: EventType;
@@ -56,7 +52,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 				label={t('event.action.accept', 'Accept')}
 				icon="CheckmarkOutline"
 				color="success"
-				onClick={acceptInvitation({ event, invite, context })}
+				onClick={acceptAsAction({ actionType: InviteReplyVerb.ACCEPT, event, invite, context })}
 				disabled={event.resource.participationStatus === PARTICIPATION_STATUS.ACCEPTED}
 			/>
 			<Padding horizontal="small" />
@@ -65,7 +61,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 				label={t('label.tentative', 'Tentative')}
 				icon="QuestionMarkOutline"
 				color="warning"
-				onClick={acceptAsTentative({ event, invite, context })}
+				onClick={acceptAsAction({ actionType: InviteReplyVerb.TENTATIVE, event, invite, context })}
 				disabled={event.resource.participationStatus === PARTICIPATION_STATUS.TENTATIVE}
 			/>
 			<Padding horizontal="small" />
@@ -74,7 +70,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 				label={t('event.action.decline', 'Decline')}
 				icon="CloseOutline"
 				color="error"
-				onClick={declineInvitation({ event, invite, context })}
+				onClick={acceptAsAction({ actionType: InviteReplyVerb.DECLINE, event, invite, context })}
 				disabled={event.resource.participationStatus === PARTICIPATION_STATUS.DECLINED}
 			/>
 			<Padding horizontal="small" />
