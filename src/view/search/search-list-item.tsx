@@ -71,22 +71,19 @@ const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
 		[matchTags]
 	);
 
-	const onClick = useCallback(
-		(ev: React.MouseEvent) => {
-			const open = openAppointment({
-				event: item,
-				context: { panelView: PANEL_VIEW.SEARCH, replaceHistory } as ActionsContext
+	const onClick = useCallback(() => {
+		const open = openAppointment({
+			event: item,
+			context: { panelView: PANEL_VIEW.SEARCH, replaceHistory } as ActionsContext
+		});
+		if (!invite) {
+			dispatch(getInvite({ inviteId: item.resource.inviteId })).then(() => {
+				open();
 			});
-			if (!invite) {
-				dispatch(getInvite({ inviteId: item.resource.inviteId })).then(() => {
-					open(ev);
-				});
-			} else {
-				open(ev);
-			}
-		},
-		[dispatch, invite, item, replaceHistory]
-	);
+		} else {
+			open();
+		}
+	}, [dispatch, invite, item, replaceHistory]);
 
 	return (
 		<Container

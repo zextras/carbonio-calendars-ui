@@ -134,38 +134,6 @@ export const moveEventItem = ({
 	onClick: moveAppointment({ event, context })
 });
 
-export const moveApptToTrashItem = ({
-	invite,
-	event,
-	context
-}: {
-	invite?: Invite;
-	event: EventType;
-	context: ActionsContext;
-}): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.TRASH,
-	icon: 'Trash2Outline',
-	label: t('label.delete', 'Delete'),
-	disabled: !event?.haveWriteAccess,
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: moveToTrash({ event, invite, context })
-});
-
-export const deletePermanentlyItem = ({
-	event,
-	context
-}: {
-	event: EventType;
-	context: ActionsContext;
-}): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.DELETE_PERMANENTLY,
-	icon: 'DeletePermanentlyOutline',
-	label: t('label.delete_permanently', 'Delete permanently'),
-	disabled: false,
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: deletePermanently({ event, context })
-});
-
 export const editEventItem = ({
 	invite,
 	event,

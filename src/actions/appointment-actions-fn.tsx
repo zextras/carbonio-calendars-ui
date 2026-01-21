@@ -107,7 +107,7 @@ export const createCopy =
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e?: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const copy = (invite: Invite): void => {
 			const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
@@ -168,7 +168,7 @@ export const editAppointment =
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e?: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const edit = (invite: Invite): void => {
 			const editor = generateEditor({
@@ -269,7 +269,7 @@ export const moveToTrash =
 		event: EventType;
 		invite?: Invite;
 		context: ActionsContext;
-	}): ((e: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const trashEvent = (invite: Invite): void => {
 			context?.onClose?.();
@@ -308,13 +308,7 @@ export const moveToTrash =
 	};
 
 export const openAppointment =
-	({
-		event,
-		context
-	}: {
-		event: EventType;
-		context: ActionsContext;
-	}): ((e: ActionsClick) => void) =>
+	({ event, context }: { event: EventType; context: ActionsContext }): (() => void) =>
 	(): void => {
 		context?.onClose?.();
 		if (context?.panelView === PANEL_VIEW.APP) {
@@ -342,7 +336,7 @@ export const acceptAsAction =
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const exceptId =
 			event.resource.isRecurrent && (context.isInstance || event.resource.isException)
@@ -371,7 +365,7 @@ export const proposeNewTimeFn =
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e?: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const proposeTime = (invite: Invite): void => {
 			const editor = generateEditor({
@@ -432,7 +426,7 @@ export const proposeNewTimeFn =
 	};
 
 export const exportAppointmentICSFn =
-	({ event }: { event: EventType }): ((e?: ActionsClick) => void) =>
+	({ event }: { event: EventType }): (() => void) =>
 	(): void => {
 		const downloadICS = (name: string, uri: string): void => {
 			const link = document.createElement('a');

@@ -6,7 +6,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
 
-import { createCopy, emailAttendees } from './appointment-actions-fn';
+import { createCopy, editAppointment, emailAttendees, moveToTrash } from './appointment-actions-fn';
 import { PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE, ParticipantRoleType, PARTICIPATION_STATUS } from '../constants/api';
 import { reducers } from '../store/redux';
@@ -241,6 +241,71 @@ describe('actions', () => {
 		});
 	});
 
+	describe('Edit', () => {
+		test('on action will open an editor', async () => {
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			};
+
+			const action = editAppointment({ event, invite, context });
+			action();
+			expect(boardSpy).toHaveBeenCalled();
+		});
+
+		test('empty invite is fetched before opening editor', async () => {
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			};
+
+			const action = editAppointment({ event, context });
+			action();
+			await waitFor(() => {
+				expect(boardSpy).toHaveBeenCalled();
+			});
+		});
+	});
+
 	describe('emailAttendees', () => {
 		const ORGANIZER: EventType['resource']['organizer'] = {
 			email: 'organizer@zextras.com',
@@ -406,6 +471,128 @@ describe('actions', () => {
 					]),
 					subject: event.title
 				});
+			});
+		});
+	});
+
+	describe('moveToTrash', () => {
+		test('on action will create a modal', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const createModalMock = vi.fn();
+			const closeModalMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				createModal: createModalMock,
+				closeModal: closeModalMock,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveToTrash({ event, invite, context });
+			action();
+			expect(createModalMock).toHaveBeenCalledWith(
+				expect.objectContaining({
+					id: 'move-to-trash'
+				}),
+				true
+			);
+		});
+
+		test('calls onClose when action is triggered', async () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const onCloseMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: onCloseMock,
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveToTrash({ event, invite, context });
+			action();
+			expect(onCloseMock).toHaveBeenCalled();
+		});
+
+		test('null invite is fetched remotely before creating modal', async () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const createModalMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				createModal: createModalMock,
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveToTrash({ event, context });
+			action();
+			await waitFor(() => {
+				expect(createModalMock).toHaveBeenCalledWith(
+					expect.objectContaining({
+						id: 'move-to-trash'
+					}),
+					true
+				);
 			});
 		});
 	});
