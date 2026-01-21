@@ -103,7 +103,7 @@ export const AppointmentCardContainer = ({
 		<Container
 			data-testid="AppointmentCardContainer"
 			width={'fill'}
-			padding={{ top: 'medium', right: 'small' }}
+			padding={{ right: 'small', bottom: 'medium' }}
 			maxHeight={'10rem'}
 			style={{ overflowY: 'auto' }}
 			mainAlignment="flex-start"
