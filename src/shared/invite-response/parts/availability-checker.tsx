@@ -5,7 +5,7 @@
  */
 import React, { ReactNode, useCallback, useState } from 'react';
 
-import { Icon, IconButton, Row, Shimmer, Text, Tooltip } from '@zextras/carbonio-design-system';
+import { Button, Icon, Row, Shimmer, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { AppointmentCardContainer } from './appointment-card-container';
@@ -77,10 +77,12 @@ export const AvailabilityChecker = ({
 				</Row>
 
 				<Row mainAlignment="flex-start" padding={{ horizontal: 'extrasmall' }}>
-					<IconButton
-						customSize={{ iconSize: 'large', paddingSize: 0 }}
+					<Button
+						size="medium"
 						icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
 						onClick={onClick}
+						type={'ghost'}
+						color={'gray0'}
 					/>
 				</Row>
 				{open && <AppointmentCardContainer start={start} end={end} rootId={rootId} uid={uid} />}
