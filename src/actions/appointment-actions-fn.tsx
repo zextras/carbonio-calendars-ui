@@ -24,6 +24,7 @@ import { getInstanceExceptionId } from '../utils/event';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
+import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
 type ActionsContextIgnored =
 	| 'createAndApplyTag'
@@ -106,11 +107,11 @@ export const createCopy =
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e?: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const copy = (invite: Invite): void => {
 			const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
-			context?.onClose && context?.onClose();
+			context?.onClose?.();
 			const identities = getIdentityItems();
 			const organizer = find(identities, ['identityName', 'DEFAULT']);
 			const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
@@ -167,7 +168,7 @@ export const editAppointment =
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e?: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const edit = (invite: Invite): void => {
 			const editor = generateEditor({
@@ -212,7 +213,7 @@ export const moveAppointment =
 	(ev?: ActionsClick): void => {
 		if (ev) ev.preventDefault();
 
-		context?.onClose && context?.onClose();
+		context?.onClose?.();
 		const modalId = 'move-appointment';
 		context.createModal(
 			{
@@ -241,7 +242,7 @@ export const deletePermanently =
 	}): ((e: ActionsClick) => void) =>
 	(ev?: ActionsClick): void => {
 		if (ev) ev.preventDefault();
-		context?.onClose && context?.onClose();
+		context?.onClose?.();
 		const modalId = 'delete-permanently';
 		context.createModal(
 			{
@@ -268,10 +269,10 @@ export const moveToTrash =
 		event: EventType;
 		invite?: Invite;
 		context: ActionsContext;
-	}): ((e: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const trashEvent = (invite: Invite): void => {
-			context?.onClose && context?.onClose();
+			context?.onClose?.();
 			const modalId = 'move-to-trash';
 			context.createModal(
 				{
@@ -307,15 +308,9 @@ export const moveToTrash =
 	};
 
 export const openAppointment =
-	({
-		event,
-		context
-	}: {
-		event: EventType;
-		context: ActionsContext;
-	}): ((e: ActionsClick) => void) =>
+	({ event, context }: { event: EventType; context: ActionsContext }): (() => void) =>
 	(): void => {
-		context?.onClose && context?.onClose();
+		context?.onClose?.();
 		if (context?.panelView === PANEL_VIEW.APP) {
 			const path = event.resource.ridZ
 				? `/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
@@ -329,49 +324,22 @@ export const openAppointment =
 			context.replaceHistory(path);
 		}
 	};
-export const acceptInvitation =
+
+export const acceptAsAction =
 	({
+		actionType,
 		event,
 		invite,
 		context
 	}: {
+		actionType: InviteReplyVerb;
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const exceptId =
-			context.isInstance || event.resource.isException
-				? getInstanceExceptionId({
-						start: event.start,
-						allDay: event.allDay,
-						tz: invite?.tz
-					})
-				: undefined;
-
-		context.dispatch(
-			sendInviteResponse({
-				inviteId: event.resource.inviteId,
-				exceptId,
-				updateOrganizer: true,
-				action: 'ACCEPT'
-			})
-		);
-	};
-
-export const declineInvitation =
-	({
-		event,
-		invite,
-		context
-	}: {
-		event: EventType;
-		invite?: Invite;
-		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e: ActionsClick) => void) =>
-	(): void => {
-		const exceptId =
-			context.isInstance || event.resource.isException
+			event.resource.isRecurrent && (context.isInstance || event.resource.isException)
 				? getInstanceExceptionId({
 						start: event.start,
 						allDay: event.allDay,
@@ -383,36 +351,7 @@ export const declineInvitation =
 				inviteId: event.resource.inviteId,
 				exceptId,
 				updateOrganizer: true,
-				action: 'DECLINE'
-			})
-		);
-	};
-
-export const acceptAsTentative =
-	({
-		event,
-		invite,
-		context
-	}: {
-		event: EventType;
-		invite?: Invite;
-		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e: ActionsClick) => void) =>
-	(): void => {
-		const exceptId =
-			context.isInstance || event.resource.isException
-				? getInstanceExceptionId({
-						start: event.start,
-						allDay: event.allDay,
-						tz: invite?.tz
-					})
-				: undefined;
-		context.dispatch(
-			sendInviteResponse({
-				inviteId: event.resource.inviteId,
-				exceptId,
-				updateOrganizer: true,
-				action: 'TENTATIVE'
+				action: actionType
 			})
 		);
 	};
@@ -426,7 +365,7 @@ export const proposeNewTimeFn =
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}): ((e?: ActionsClick) => void) =>
+	}): (() => void) =>
 	(): void => {
 		const proposeTime = (invite: Invite): void => {
 			const editor = generateEditor({
@@ -487,7 +426,7 @@ export const proposeNewTimeFn =
 	};
 
 export const exportAppointmentICSFn =
-	({ event }: { event: EventType }): ((e?: ActionsClick) => void) =>
+	({ event }: { event: EventType }): (() => void) =>
 	(): void => {
 		const downloadICS = (name: string, uri: string): void => {
 			const link = document.createElement('a');

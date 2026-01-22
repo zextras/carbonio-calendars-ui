@@ -11,6 +11,7 @@ import { screen, within } from '@testing-library/react';
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 import { setupTest } from '@test-setup';
+import { TEST_SELECTORS } from 'constants/test-utils';
 
 vi.mock('@zextras/carbonio-shell-ui', () => ({
 	t: (key: string, fallback?: string): string => fallback ?? key
@@ -70,7 +71,7 @@ describe('AdvancedFilterModal', () => {
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[0]);
 
 		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
@@ -97,7 +98,7 @@ describe('AdvancedFilterModal', () => {
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[1]);
 
 		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
@@ -238,7 +239,7 @@ describe('AdvancedFilterModal', () => {
 
 		const { user, getByRole } = setupTest(<AdvancedFilterModal {...properties} />);
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[0]);
 		const fromDateToSelect = screen.getByRole('option', {
 			name: /Choose Saturday, April 12th, 2025/i
@@ -284,7 +285,7 @@ describe('AdvancedFilterModal', () => {
 
 		const { user, getByRole } = setupTest(<AdvancedFilterModal {...properties} />);
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[2]);
 		const toDateToSelect = screen.getByRole('option', { name: /Choose Sunday, April 20th, 2025/i });
 		expect(toDateToSelect).toBeInTheDocument();
@@ -370,7 +371,7 @@ describe('AdvancedFilterModal', () => {
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(1);
 
 			const regularChip = keywordChips[0];
@@ -407,7 +408,7 @@ describe('AdvancedFilterModal', () => {
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(1);
 
 			const validChip = keywordChips[0];
@@ -455,7 +456,7 @@ describe('AdvancedFilterModal', () => {
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(2);
 
 			const chip1 = keywordChips[0];
@@ -518,7 +519,7 @@ describe('AdvancedFilterModal', () => {
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(0);
 		});
 	});
