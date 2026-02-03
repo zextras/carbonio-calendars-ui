@@ -47,7 +47,7 @@ const CustomEventTitle = ({
 }): ReactElement | null =>
 	title ? (
 		<Text
-			data-testId={'event-title'}
+			data-testid={'event-title'}
 			size={'small'}
 			color="currentColor"
 			style={{ overflow }}
