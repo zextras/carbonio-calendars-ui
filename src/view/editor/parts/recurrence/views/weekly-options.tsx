@@ -5,7 +5,15 @@
  */
 import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Radio,
+	RadioGroup,
+	Row,
+	Text,
+	Padding,
+	Button
+} from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
@@ -203,68 +211,79 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	}, [frequency, setNewStartValue, startValue]);
 
 	return frequency === RECURRENCE_FREQUENCY.WEEKLY ? (
-		<RadioGroup value={radioValue} onChange={onChange}>
-			<Radio
-				size="small"
-				iconColor="primary"
-				label={
-					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-						<Padding horizontal="small">
-							<WeekdaySelect
-								setSelection={setSelectValue}
-								onChange={onByDayChange}
-								selection={selectValue}
-								disabled={radioValue !== RADIO_VALUES.QUICK_OPTIONS}
-							/>
-						</Padding>
-					</Row>
-				}
-				value={RADIO_VALUES.QUICK_OPTIONS}
-				name={RADIO_VALUES.QUICK_OPTIONS}
+		// <RadioGroup value={radioValue} onChange={onChange}>
+		// 	<Radio
+		// 		size="small"
+		// 		iconColor="primary"
+		// 		label={
+		// 			<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+		// 				<Text overflow="break-word">{t('label.every', 'Every')}</Text>
+		// 				<Padding horizontal="small">
+		// 					<WeekdaySelect
+		// 						setSelection={setSelectValue}
+		// 						onChange={onByDayChange}
+		// 						selection={selectValue}
+		// 						disabled={radioValue !== RADIO_VALUES.QUICK_OPTIONS}
+		// 					/>
+		// 				</Padding>
+		// 			</Row>
+		// 		}
+		// 		value={RADIO_VALUES.QUICK_OPTIONS}
+		// 		name={RADIO_VALUES.QUICK_OPTIONS}
+		// 	/>
+		// 	<Radio
+		// 		size="small"
+		// 		iconColor="primary"
+		// 		label={
+		// 			<Container
+		// 				orientation="vertical"
+		// 				width="fit"
+		// 				mainAlignment="flex-start"
+		// 				crossAlignment="flex-start"
+		// 			>
+		// 				<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+		// 					<Text overflow="break-word">{t('label.every', 'Every')}</Text>
+		// 					<Padding horizontal="small">
+		// 						<IntervalInput
+		// 							label={t('label.weeks_on', 'Week(s) on')}
+		// 							onChange={onInputChange}
+		// 							setValue={setInputValue}
+		// 							value={inputValue}
+		// 							disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
+		// 						/>
+		// 					</Padding>
+		// 				</Row>
+		// 			</Container>
+		// 		}
+		// 		value={RADIO_VALUES.CUSTOM_OPTIONS}
+		// 	/>
+		// 	<Row
+		// 		width="fit"
+		// 		orientation="horizontal"
+		// 		mainAlignment="flex-start"
+		// 		crossAlignment="flex-start"
+		// 		wrap="nowrap"
+		// 	>
+		// 		<WeekdayCheckboxes
+		// 			isHidden={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
+		// 			value={checkboxesValue}
+		// 			setValue={setCheckboxesValue}
+		// 			onClick={onCheckboxClick}
+		// 			disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
+		// 		/>
+		// 	</Row>
+		// </RadioGroup>
+
+		<>
+			<Text>On</Text>
+			<WeekdayCheckboxes
+				isHidden={false}
+				value={checkboxesValue}
+				setValue={setCheckboxesValue}
+				onClick={onCheckboxClick}
+				disabled={false}
 			/>
-			<Radio
-				size="small"
-				iconColor="primary"
-				label={
-					<Container
-						orientation="vertical"
-						width="fit"
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
-					>
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-							<Padding horizontal="small">
-								<IntervalInput
-									label={t('label.weeks_on', 'Week(s) on')}
-									onChange={onInputChange}
-									setValue={setInputValue}
-									value={inputValue}
-									disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
-								/>
-							</Padding>
-						</Row>
-					</Container>
-				}
-				value={RADIO_VALUES.CUSTOM_OPTIONS}
-			/>
-			<Row
-				width="fit"
-				orientation="horizontal"
-				mainAlignment="flex-start"
-				crossAlignment="flex-start"
-				wrap="nowrap"
-			>
-				<WeekdayCheckboxes
-					isHidden={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
-					value={checkboxesValue}
-					setValue={setCheckboxesValue}
-					onClick={onCheckboxClick}
-					disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
-				/>
-			</Row>
-		</RadioGroup>
+		</>
 	) : null;
 };
 

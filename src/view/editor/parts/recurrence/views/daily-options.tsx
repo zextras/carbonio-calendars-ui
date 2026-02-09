@@ -130,19 +130,6 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 		[inputValue, setStartValue]
 	);
 
-	const onInputChange = useCallback(
-		(ev: number) => {
-			if (radioValue === RADIO_VALUES.EVERY_X_DAY) {
-				setStartValue({
-					interval: {
-						ival: ev
-					}
-				});
-			}
-		},
-		[setStartValue, radioValue]
-	);
-
 	useEffect(() => {
 		if (startValue && frequency === RECURRENCE_FREQUENCY.DAILY) {
 			setNewStartValue(startValue);
@@ -177,16 +164,6 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 				label={
 					<Padding top="small">
 						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-							<Padding horizontal="small">
-								<IntervalInput
-									disabled={radioValue !== RADIO_VALUES.EVERY_X_DAY}
-									value={inputValue}
-									onChange={onInputChange}
-									label={t('label.days', 'Days')}
-									setValue={setInputValue}
-								/>
-							</Padding>
 							<Text overflow="break-word">{t('label.days', 'Days')}</Text>
 						</Row>
 					</Padding>

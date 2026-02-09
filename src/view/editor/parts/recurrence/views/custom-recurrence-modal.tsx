@@ -100,7 +100,7 @@ export const CustomRecurrenceModal = ({
 					{t('label.repeat', 'Repeat')}
 				</Text>
 				<Padding top="small" />
-				<FrequencySelect />
+				<FrequencySelect editorId={editorId} />
 				<Padding vertical="small">
 					<DailyOptions editorId={editorId} />
 					<WeeklyOptions editorId={editorId} />

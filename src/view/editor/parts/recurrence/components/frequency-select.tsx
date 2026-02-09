@@ -3,50 +3,89 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
+import { Padding, Select, SingleSelectionOnChange, Text } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { IntervalInput } from './interval-input';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { useAppSelector } from 'store/redux/hooks';
+import { selectEditorRecurrenceInterval } from 'store/selectors/editor';
 
-const FrequencySelect = (): ReactElement => {
-	const context = useContext(RecurrenceContext);
+const FrequencySelect = ({ editorId }: { editorId: string }): ReactElement => {
+	const { frequency, setFrequency, setNewStartValue } = useContext(RecurrenceContext);
 	const [t] = useTranslation();
 
 	const { repetitionItems } = useRecurrenceItems();
 
 	const initialValue = useMemo(
-		() => find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0],
-		[repetitionItems, context]
+		() => find(repetitionItems, { value: frequency }) ?? repetitionItems[0],
+		[repetitionItems, frequency]
 	);
 
 	useEffect(() => {
 		if (initialValue) {
-			const value = find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0];
-			context?.setFrequency(value?.value);
+			const value = find(repetitionItems, { value: frequency }) ?? repetitionItems[0];
+			setFrequency(value?.value);
 		}
-	}, [context, initialValue, repetitionItems]);
+	}, [frequency, initialValue, repetitionItems, setFrequency]);
 
 	const onChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
-			if (ev) {
-				context?.setFrequency?.(ev);
-			}
+			ev && setFrequency?.(ev);
 		},
-		[context]
+		[setFrequency]
+	);
+
+	const defaultState = {
+		freq: RECURRENCE_FREQUENCY.DAILY,
+		interval: {
+			ival: 1
+		},
+		radioValue: RADIO_VALUES.EVERYDAY
+	};
+
+	const interval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+
+	const [inputValue, setInputValue] = useState<string>(
+		`${interval?.ival ?? defaultState?.interval?.ival}`
+	);
+
+	const onInputChange = useCallback(
+		(ev: number) => {
+			setNewStartValue?.({
+				interval: {
+					ival: ev
+				}
+			});
+		},
+		[setNewStartValue]
 	);
 
 	return (
-		<Select
-			label={t('label.repeat', 'Repeat')}
-			onChange={onChange}
-			items={repetitionItems}
-			selection={initialValue}
-			disablePortal
-		/>
+		<>
+			<Text overflow="break-word">{t('label.every', 'Every')}</Text>
+			<Padding horizontal="small">
+				<IntervalInput
+					disabled={false}
+					value={inputValue}
+					onChange={onInputChange}
+					label={t('label.days', 'Days')}
+					setValue={setInputValue}
+				/>
+			</Padding>
+			<Select
+				label={t('label.repeat', 'Repeat')}
+				onChange={onChange}
+				items={repetitionItems}
+				selection={initialValue}
+				disablePortal
+			/>
+		</>
 	);
 };
 
