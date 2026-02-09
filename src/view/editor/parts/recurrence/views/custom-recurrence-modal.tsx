@@ -117,7 +117,12 @@ export const CustomRecurrenceModal = ({
 				</Padding>
 			</ModalBody>
 			<Divider />
-			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
+			<ModalFooter
+				onConfirm={onConfirm}
+				confirmLabel={t('repeat.customize', 'Customize')}
+				onSecondaryAction={onClose}
+				secondaryActionLabel={t('label.cancel', 'Cancel')}
+			/>
 		</RecurrenceContext.Provider>
 	);
 };
