@@ -120,5 +120,3 @@ export const CustomRecurrenceModal = ({
 		</RecurrenceContext.Provider>
 	);
 };
-
-export default CustomRecurrenceModal;
