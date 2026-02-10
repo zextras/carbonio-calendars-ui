@@ -47,6 +47,25 @@ describe('custom recurrence modal', () => {
 		});
 	});
 
+	test('should call passed onClose function when the cancel button is clicked', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+
+		const onCloseMock = vi.fn();
+
+		const { user } = setupTest(
+			<CustomRecurrenceModal editorId={editor.id} onClose={onCloseMock} />,
+			{
+				store
+			}
+		);
+
+		const cancelButton = screen.getByRole('button', { name: 'label.cancel' });
+		await user.click(cancelButton);
+
+		expect(onCloseMock).toHaveBeenCalledTimes(1);
+	});
+
 	test('“daily” selection, “every day” option, “no end date” is selected by default', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
