@@ -7,25 +7,29 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within } from '@testing-library/react';
-import { find, values } from 'lodash';
 import { UserEvent } from '@testing-library/user-event';
+import { find, values } from 'lodash';
 
 import { CustomRecurrenceModal } from './custom-recurrence-modal';
+import { setupTest } from '@test-setup';
 import { generateEditor } from 'commons/editor-generator';
 import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
 import { reducers } from 'store/redux';
-import { setupTest } from '@test-setup';
 
-const createStoreWithEditor = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createStoreWithEditor = (): {
+	store: any;
+	editor: ReturnType<typeof generateEditor>;
+} => {
 	const store = configureStore({ reducer: combineReducers(reducers) });
 	const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 	return { store, editor };
 };
 
-const getCustomizeButton = () =>
+const getCustomizeButton = (): HTMLElement =>
 	screen.getByRole('button', { name: 'editor.repeat.set-custom-repeat' });
 
-const getCancelButton = () => screen.getByRole('button', { name: 'label.cancel' });
+const getCancelButton = (): HTMLElement => screen.getByRole('button', { name: 'label.cancel' });
 
 const selectFrequency = async (
 	user: UserEvent,
@@ -41,6 +45,7 @@ const selectFrequency = async (
 	// Find the current displayed frequency text (Daily, Weekly, Monthly, or Yearly)
 	const currentFrequency = screen.getByText(/^(Daily|Weekly|Monthly|Yearly)$/);
 	// Click on its parent container to open the dropdown
+	// eslint-disable-next-line testing-library/no-node-access
 	const dropdownContainer = currentFrequency.closest('[tabindex="0"]');
 	if (dropdownContainer) {
 		await user.click(dropdownContainer as HTMLElement);
@@ -51,13 +56,13 @@ const selectFrequency = async (
 	await user.click(frequencyOption);
 };
 
-const clickCustomizeButton = async (user: UserEvent) => {
+const clickCustomizeButton = async (user: UserEvent): Promise<void> => {
 	await user.click(getCustomizeButton());
 };
 
-const getUpdatedEditor = (store: ReturnType<typeof createStoreWithEditor>['store']) => {
-	return values(store.getState().editor.editors)[0];
-};
+const getUpdatedEditor = (
+	store: ReturnType<typeof createStoreWithEditor>['store']
+): ReturnType<typeof generateEditor> => values(store.getState().editor.editors)[0];
 
 describe('CustomRecurrenceModal', () => {
 	describe('UI Elements', () => {
