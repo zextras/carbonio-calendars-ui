@@ -16,6 +16,37 @@ import { reducers } from 'store/redux';
 import { setupTest } from '@test-setup';
 
 describe('custom recurrence modal', () => {
+	describe('UI elements', () => {
+		it('should render the modal with the correct title', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+
+			setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			const title = screen.getByText('label.custom_repeat');
+			expect(title).toBeInTheDocument();
+		});
+
+		it('should show cancel and customize buttons', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+
+			setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			const cancelButton = screen.getByRole('button', { name: 'label.cancel' });
+			const customizeButton = screen.getByRole('button', {
+				name: 'editor.repeat.set-custom-repeat'
+			});
+
+			expect(cancelButton).toBeInTheDocument();
+			expect(customizeButton).toBeInTheDocument();
+		});
+	});
+
 	test('“daily” selection, “every day” option, “no end date” is selected by default', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
