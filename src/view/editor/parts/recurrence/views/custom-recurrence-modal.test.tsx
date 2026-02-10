@@ -10,9 +10,9 @@ import { screen, within } from '@testing-library/react';
 import { find, values } from 'lodash';
 
 import { CustomRecurrenceModal } from './custom-recurrence-modal';
-import { generateEditor } from '../../../../../commons/editor-generator';
-import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
-import { reducers } from '../../../../../store/redux';
+import { generateEditor } from 'commons/editor-generator';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { reducers } from 'store/redux';
 import { setupTest } from '@test-setup';
 
 describe('custom recurrence modal', () => {
