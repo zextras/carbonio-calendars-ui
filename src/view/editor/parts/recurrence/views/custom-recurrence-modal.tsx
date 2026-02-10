@@ -116,6 +116,7 @@ export const CustomRecurrenceModal = ({
 				secondaryAction={onClose}
 				secondaryLabel={t('label.cancel', 'Cancel')}
 				secondaryBtnType={'outlined'}
+				secondaryColor={'#414141'}
 			/>
 		</RecurrenceContext.Provider>
 	);
