@@ -27,9 +27,28 @@ const getCustomizeButton = () =>
 
 const getCancelButton = () => screen.getByRole('button', { name: 'label.cancel' });
 
-const selectFrequency = async (user: UserEvent, frequency: string) => {
-	await user.click(screen.getByText(/daily/i));
-	await user.click(screen.getByText(new RegExp(frequency, 'i')));
+const selectFrequency = async (
+	user: UserEvent,
+	frequency: 'daily' | 'weekly' | 'monthly' | 'yearly'
+): Promise<void> => {
+	const frequencyDisplayMap: Record<string, string> = {
+		daily: 'Daily',
+		weekly: 'Weekly',
+		monthly: 'Monthly',
+		yearly: 'Yearly'
+	};
+
+	// Find the current displayed frequency text (Daily, Weekly, Monthly, or Yearly)
+	const currentFrequency = screen.getByText(/^(Daily|Weekly|Monthly|Yearly)$/);
+	// Click on its parent container to open the dropdown
+	const dropdownContainer = currentFrequency.closest('[tabindex="0"]');
+	if (dropdownContainer) {
+		await user.click(dropdownContainer as HTMLElement);
+	}
+
+	// Then find and click the frequency option from the dropdown menu
+	const frequencyOption = await screen.findByText(frequencyDisplayMap[frequency]);
+	await user.click(frequencyOption);
 };
 
 const clickCustomizeButton = async (user: UserEvent) => {
@@ -94,7 +113,7 @@ describe('CustomRecurrenceModal', () => {
 			const allRadios = screen.getAllByRole('radio');
 			const everyDayRadio = find(allRadios, ['value', RADIO_VALUES.EVERYDAY]);
 			const noEndDateRadio = find(allRadios, ['value', RADIO_VALUES.NO_END_DATE]);
-			const dailySelect = screen.getByText(/daily/i);
+			const dailySelect = screen.getByText('Daily');
 
 			expect(everyDayRadio).toBeChecked();
 			expect(noEndDateRadio).toBeChecked();
@@ -112,10 +131,10 @@ describe('CustomRecurrenceModal', () => {
 
 			const allRadios = screen.getAllByRole('radio');
 			const everyDayRadio = find(allRadios, ['value', RADIO_VALUES.QUICK_OPTIONS]);
-			const daySelectOption = screen.getByText(/label.day/i);
+			const daySelectOption = screen.getByText('Day');
 
-			await user.click(screen.getByText(/label.day/i));
-			await user.click(screen.getByText(/weekend day/i));
+			await user.click(screen.getByText('Day'));
+			await user.click(screen.getByText('Weekend day'));
 
 			expect(everyDayRadio).toBeChecked();
 			expect(daySelectOption).toBeVisible();
@@ -133,7 +152,7 @@ describe('CustomRecurrenceModal', () => {
 			const allRadios = screen.getAllByRole('radio');
 			const dayRadio = find(allRadios, ['value', RADIO_VALUES.DAY_OF_MONTH]);
 			const dayInputOption = within(screen.getByTestId('montly_day_input')).getByRole('textbox');
-			const everyMonthsInputOption = screen.getByRole('textbox', { name: /months/i });
+			const everyMonthsInputOption = screen.getByRole('textbox', { name: 'label.months' });
 
 			expect(dayRadio).toBeChecked();
 			expect(dayInputOption).toHaveValue('1');
@@ -155,7 +174,7 @@ describe('CustomRecurrenceModal', () => {
 				'textbox'
 			);
 			const monthsInputOption = within(screen.getByTestId('every_yearly_month_input')).getByText(
-				/january/i
+				'January'
 			);
 
 			expect(everyYearOnRadio).toBeChecked();
