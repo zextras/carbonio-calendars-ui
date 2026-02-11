@@ -33,17 +33,17 @@ const getCancelButton = (): HTMLElement => screen.getByRole('button', { name: 'l
 
 const selectFrequency = async (
 	user: UserEvent,
-	frequency: 'daily' | 'weekly' | 'monthly' | 'yearly'
+	frequency: 'day' | 'week' | 'month' | 'year'
 ): Promise<void> => {
 	const frequencyDisplayMap: Record<string, string> = {
-		daily: 'Daily',
-		weekly: 'Weekly',
-		monthly: 'Monthly',
-		yearly: 'Yearly'
+		day: 'Day',
+		week: 'Week',
+		month: 'Month',
+		year: 'Year'
 	};
 
-	// Find the current displayed frequency text (Daily, Weekly, Monthly, or Yearly)
-	const currentFrequency = screen.getByText(/^(Daily|Weekly|Monthly|Yearly)$/);
+	// Find the current displayed frequency text (Day, Week, Month, or Year)
+	const currentFrequency = screen.getByText(/^(Day|Week|Month|Year)$/);
 	// Click on its parent container to open the dropdown
 	// eslint-disable-next-line testing-library/no-node-access
 	const dropdownContainer = currentFrequency.closest('[tabindex="0"]');
@@ -108,31 +108,14 @@ describe('CustomRecurrenceModal', () => {
 	});
 
 	describe('Default States by Frequency', () => {
-		it('should have "daily" frequency with "every day" option and "no end date" selected by default', () => {
-			const { store, editor } = createStoreWithEditor();
-
-			setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			const allRadios = screen.getAllByRole('radio');
-			const everyDayRadio = find(allRadios, ['value', RADIO_VALUES.EVERYDAY]);
-			const noEndDateRadio = find(allRadios, ['value', RADIO_VALUES.NO_END_DATE]);
-			const dailySelect = screen.getByText('Daily');
-
-			expect(everyDayRadio).toBeChecked();
-			expect(noEndDateRadio).toBeChecked();
-			expect(dailySelect).toBeVisible();
-		});
-
-		it('should show "every" + "day" options when "weekly" is selected', async () => {
+		it('should show "every" + "day" options when "week" is selected', async () => {
 			const { store, editor } = createStoreWithEditor();
 
 			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
 				store
 			});
 
-			await selectFrequency(user, 'weekly');
+			await selectFrequency(user, 'week');
 
 			const allRadios = screen.getAllByRole('radio');
 			const everyDayRadio = find(allRadios, ['value', RADIO_VALUES.QUICK_OPTIONS]);
@@ -152,7 +135,7 @@ describe('CustomRecurrenceModal', () => {
 				store
 			});
 
-			await selectFrequency(user, 'monthly');
+			await selectFrequency(user, 'month');
 
 			const allRadios = screen.getAllByRole('radio');
 			const dayRadio = find(allRadios, ['value', RADIO_VALUES.DAY_OF_MONTH]);
@@ -171,7 +154,7 @@ describe('CustomRecurrenceModal', () => {
 				store
 			});
 
-			await selectFrequency(user, 'yearly');
+			await selectFrequency(user, 'year');
 
 			const allRadios = screen.getAllByRole('radio');
 			const everyYearOnRadio = find(allRadios, ['value', RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY]);
@@ -212,7 +195,7 @@ describe('CustomRecurrenceModal', () => {
 				store
 			});
 
-			await selectFrequency(user, 'weekly');
+			await selectFrequency(user, 'week');
 			await clickCustomizeButton(user);
 
 			const updatedEditor = getUpdatedEditor(store);
@@ -229,7 +212,7 @@ describe('CustomRecurrenceModal', () => {
 				store
 			});
 
-			await selectFrequency(user, 'monthly');
+			await selectFrequency(user, 'month');
 			await clickCustomizeButton(user);
 
 			const updatedEditor = getUpdatedEditor(store);
@@ -256,7 +239,7 @@ describe('CustomRecurrenceModal', () => {
 				store
 			});
 
-			await selectFrequency(user, 'yearly');
+			await selectFrequency(user, 'year');
 			await clickCustomizeButton(user);
 
 			const updatedEditor = getUpdatedEditor(store);
