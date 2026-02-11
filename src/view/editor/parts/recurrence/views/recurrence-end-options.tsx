@@ -140,7 +140,13 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				size="small"
 				iconColor="primary"
 				label={
-					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Row
+						style={{ cursor: 'pointer' }}
+						width="fill"
+						orientation="horizontal"
+						mainAlignment="flex-start"
+						wrap="nowrap"
+					>
 						<Row
 							width="fill"
 							orientation="horizontal"
@@ -159,7 +165,13 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				size="small"
 				iconColor="primary"
 				label={
-					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Row
+						style={{ cursor: 'pointer' }}
+						width="fill"
+						orientation="horizontal"
+						mainAlignment="flex-start"
+						wrap="nowrap"
+					>
 						<Row
 							width="fit"
 							orientation="horizontal"
@@ -189,7 +201,13 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				size="small"
 				iconColor="primary"
 				label={
-					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Row
+						style={{ cursor: 'pointer' }}
+						width="fill"
+						orientation="horizontal"
+						mainAlignment="flex-start"
+						wrap="nowrap"
+					>
 						<Row
 							width="fit"
 							orientation="horizontal"
