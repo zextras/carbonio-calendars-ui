@@ -16,7 +16,7 @@ const FrequencySelect = (): ReactElement => {
 	const context = useContext(RecurrenceContext);
 	const [t] = useTranslation();
 
-	const { repetitionItems } = useRecurrenceItems();
+	const { repetitionItemsV2: repetitionItems } = useRecurrenceItems();
 
 	const initialValue = useMemo(
 		() => find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0],
