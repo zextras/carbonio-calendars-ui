@@ -41,7 +41,7 @@ const radioInitialState = (count: number | undefined, until: string | undefined)
 	return RADIO_VALUES.NO_END_DATE;
 };
 
-const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
+export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
 	const { newEndValue, setNewEndValue } = useContext(RecurrenceContext);
 	const start = useAppSelector(selectEditorStart(editorId));
 	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
@@ -159,7 +159,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 							<Input
 								backgroundColor="gray5"
 								width="fit"
-								label={t('label.occurrences', 'Occurence(s)')}
+								label={t('label.end_after_events', 'Event(s)')}
 								value={inputValue}
 								disabled={radioValue !== RADIO_VALUES.END_AFTER_COUNT}
 								onChange={onInputValueChange}
@@ -187,7 +187,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 							<Container crossAlignment="flex-start" style={{ maxWidth: '31.25rem' }}>
 								<DateTimePicker
-									label={endAfterString}
+									label={t('label.end_after_date', 'Date')}
 									showTimeSelect={false}
 									defaultValue={initialPickerValue}
 									onChange={onDateChange}
@@ -203,5 +203,3 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 		</RadioGroup>
 	);
 };
-
-export default RecurrenceEndOptions;
