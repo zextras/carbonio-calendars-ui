@@ -102,7 +102,7 @@ export const CustomRecurrenceModal = ({
 						{t('label.end', 'End')}
 					</Text>
 				</Padding>
-				<Padding vertical="small">
+				<Padding vertical="small" width={'fill'}>
 					<RecurrenceEndOptions editorId={editorId} />
 				</Padding>
 			</ModalBody>
