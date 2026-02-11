@@ -9,6 +9,7 @@ import {
 	Container,
 	DateTimePicker,
 	Input,
+	Padding,
 	Radio,
 	RadioGroup,
 	Row,
@@ -138,9 +139,22 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 			<Radio
 				size="small"
 				iconColor="primary"
-				label={t('label.no_end_date', 'No end date')}
+				label={
+					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+						<Row
+							width="fit"
+							orientation="horizontal"
+							mainAlignment="flex-start"
+							wrap="nowrap"
+							padding={{ right: 'small' }}
+						>
+							<Text>{t('label.no_end_date', 'No end date')}</Text>
+						</Row>
+					</Row>
+				}
 				value={RADIO_VALUES.NO_END_DATE}
 			/>
+			<Padding bottom={'medium'}></Padding>
 			<Radio
 				size="small"
 				iconColor="primary"
@@ -170,6 +184,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				}
 				value={RADIO_VALUES.END_AFTER_COUNT}
 			/>
+			<Padding bottom={'medium'}></Padding>
 			<Radio
 				size="small"
 				iconColor="primary"
