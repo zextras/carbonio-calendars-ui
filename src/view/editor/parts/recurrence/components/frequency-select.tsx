@@ -7,15 +7,12 @@ import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from
 
 import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
-import { useTranslation } from 'react-i18next';
 
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { useRecurrenceItems } from 'commons/use-recurrence-items';
 
 const FrequencySelect = (): ReactElement => {
 	const context = useContext(RecurrenceContext);
-	const [t] = useTranslation();
-
 	const { repetitionItemsV2: repetitionItems } = useRecurrenceItems();
 
 	const initialValue = useMemo(
