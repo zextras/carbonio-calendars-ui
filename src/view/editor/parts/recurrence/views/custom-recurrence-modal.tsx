@@ -10,7 +10,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { ModalFooter } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
 
-import DailyOptions from './daily-options';
+import { DailyOptions } from './daily-options';
 import MonthlyOptions from './monthly-options';
 import RecurrenceEndOptions from './recurrence-end-options';
 import WeeklyOptions from './weekly-options';
@@ -24,7 +24,7 @@ import {
 } from 'store/selectors/editor';
 import { editEditorRecurrence } from 'store/slices/editor-slice';
 import { RecurrenceEndValue, RecurrenceStartValue } from 'types/editor';
-import { FrequencySelect } from 'view/editor/parts/recurrence/components/frequency-select';
+import { RepeatEveryRow } from 'view/editor/parts/recurrence/components/repeat-every-row';
 
 const setEndInitialValue = (
 	count: number | undefined,
@@ -90,13 +90,9 @@ export const CustomRecurrenceModal = ({
 			/>
 			<Divider />
 			<ModalBody>
-				<Text weight="bold" size="large">
-					{t('label.repeat', 'Repeat')}
-				</Text>
-				<Padding top="small" />
-				<FrequencySelect />
+				<RepeatEveryRow />
 				<Padding vertical="small">
-					<DailyOptions editorId={editorId} />
+					<DailyOptions />
 					<WeeklyOptions editorId={editorId} />
 					<MonthlyOptions />
 					<YearlyOptions />
