@@ -20,7 +20,7 @@ export const RepeatEveryRow = (): ReactElement => {
 		(value: number) => {
 			if (recurrenceContext?.setNewStartValue) {
 				recurrenceContext.setNewStartValue((prevValue) => ({
-					...(prevValue ?? {}),
+					...prevValue,
 					interval: {
 						ival: value
 					}
