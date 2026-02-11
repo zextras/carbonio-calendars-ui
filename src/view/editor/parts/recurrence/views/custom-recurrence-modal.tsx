@@ -10,7 +10,6 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { ModalFooter } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
 
-import { DailyOptions } from './daily-options';
 import MonthlyOptions from './monthly-options';
 import { RecurrenceEndOptions } from './recurrence-end-options';
 import WeeklyOptions from './weekly-options';
@@ -92,7 +91,6 @@ export const CustomRecurrenceModal = ({
 			<ModalBody>
 				<RepeatEveryRow />
 				<Padding vertical="small">
-					<DailyOptions />
 					<WeeklyOptions editorId={editorId} />
 					<MonthlyOptions />
 					<YearlyOptions />
