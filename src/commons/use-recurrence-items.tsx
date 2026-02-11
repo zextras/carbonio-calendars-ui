@@ -14,7 +14,6 @@ type UseRecurrenceItems = {
 	ordinalNumbers: Array<{ label: string; value: string }>;
 	weekDays: Array<{ label: string; value: string }>;
 	weekOptions: Array<{ label: string; value: string }>;
-	repetitionItems: Array<{ label: string; value: string }>;
 	repetitionItemsV2: Array<{ label: string; value: string }>;
 };
 export const useRecurrenceItems = (): UseRecurrenceItems => {
@@ -72,16 +71,6 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 		[t, weekDays]
 	);
 
-	const repetitionItems = useMemo(
-		() => [
-			{ label: t('repeat.daily', 'Daily'), value: RECURRENCE_FREQUENCY.DAILY },
-			{ label: t('repeat.weekly', 'Weekly'), value: RECURRENCE_FREQUENCY.WEEKLY },
-			{ label: t('repeat.monthly', 'Monthly'), value: RECURRENCE_FREQUENCY.MONTHLY },
-			{ label: t('repeat.yearly', 'Yearly'), value: RECURRENCE_FREQUENCY.YEARLY }
-		],
-		[t]
-	);
-
 	const repetitionItemsV2 = useMemo(
 		() => [
 			{ label: t('repeat.day', 'Day'), value: RECURRENCE_FREQUENCY.DAILY },
@@ -97,7 +86,6 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 		ordinalNumbers,
 		weekDays,
 		weekOptions,
-		repetitionItems,
 		repetitionItemsV2
 	};
 };
