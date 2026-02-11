@@ -142,7 +142,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				label={
 					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 						<Row
-							width="fit"
+							width="fill"
 							orientation="horizontal"
 							mainAlignment="flex-start"
 							wrap="nowrap"
@@ -169,10 +169,10 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 						>
 							<Text>{endAfterString}</Text>
 						</Row>
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+						<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 							<Input
 								backgroundColor="gray5"
-								width="fit"
+								width="fill"
 								label={t('label.end_after_events', 'Event(s)')}
 								value={inputValue}
 								disabled={radioValue !== RADIO_VALUES.END_AFTER_COUNT}
@@ -199,9 +199,10 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 						>
 							<Text>{endAfterString}</Text>
 						</Row>
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Container crossAlignment="flex-start" style={{ maxWidth: '31.25rem' }}>
+						<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+							<Container crossAlignment="flex-start" width={'fill'}>
 								<DateTimePicker
+									width={'fill'}
 									label={t('label.end_after_date', 'Date')}
 									showTimeSelect={false}
 									defaultValue={initialPickerValue}
