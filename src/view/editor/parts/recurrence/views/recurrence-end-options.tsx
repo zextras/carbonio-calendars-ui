@@ -183,7 +183,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 						</Row>
 						<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 							<Input
-								backgroundColor="gray5"
+								background={'gray5'}
 								width="fill"
 								label={t('label.end_after_events', 'Event(s)')}
 								value={inputValue}
