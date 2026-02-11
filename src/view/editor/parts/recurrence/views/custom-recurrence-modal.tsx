@@ -15,7 +15,6 @@ import MonthlyOptions from './monthly-options';
 import RecurrenceEndOptions from './recurrence-end-options';
 import WeeklyOptions from './weekly-options';
 import YearlyOptions from './yearly-options';
-import FrequencySelect from '../components/frequency-select';
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
@@ -25,6 +24,7 @@ import {
 } from 'store/selectors/editor';
 import { editEditorRecurrence } from 'store/slices/editor-slice';
 import { RecurrenceEndValue, RecurrenceStartValue } from 'types/editor';
+import { FrequencySelect } from 'view/editor/parts/recurrence/components/frequency-select';
 
 const setEndInitialValue = (
 	count: number | undefined,

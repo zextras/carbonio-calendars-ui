@@ -11,7 +11,7 @@ import { find } from 'lodash';
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { useRecurrenceItems } from 'commons/use-recurrence-items';
 
-const FrequencySelect = (): ReactElement => {
+export const FrequencySelect = (): ReactElement => {
 	const context = useContext(RecurrenceContext);
 	const { repetitionItemsV2: repetitionItems } = useRecurrenceItems();
 
@@ -40,5 +40,3 @@ const FrequencySelect = (): ReactElement => {
 		<Select onChange={onChange} items={repetitionItems} selection={initialValue} disablePortal />
 	);
 };
-
-export default FrequencySelect;
