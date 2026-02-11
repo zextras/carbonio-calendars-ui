@@ -7,189 +7,273 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within } from '@testing-library/react';
+import { UserEvent } from '@testing-library/user-event';
 import { find, values } from 'lodash';
 
 import { CustomRecurrenceModal } from './custom-recurrence-modal';
-import { generateEditor } from '../../../../../commons/editor-generator';
-import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
-import { reducers } from '../../../../../store/redux';
 import { setupTest } from '@test-setup';
+import { generateEditor } from 'commons/editor-generator';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { reducers } from 'store/redux';
 
-describe('custom recurrence modal', () => {
-	test('“daily” selection, “every day” option, “no end date” is selected by default', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createStoreWithEditor = (): {
+	store: any;
+	editor: ReturnType<typeof generateEditor>;
+} => {
+	const store = configureStore({ reducer: combineReducers(reducers) });
+	const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+	return { store, editor };
+};
 
-		setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
+const getCustomizeButton = (): HTMLElement =>
+	screen.getByRole('button', { name: 'editor.repeat.set-custom-repeat' });
+
+const getCancelButton = (): HTMLElement => screen.getByRole('button', { name: 'label.cancel' });
+
+const selectFrequency = async (
+	user: UserEvent,
+	frequency: 'daily' | 'weekly' | 'monthly' | 'yearly'
+): Promise<void> => {
+	const frequencyDisplayMap: Record<string, string> = {
+		daily: 'Daily',
+		weekly: 'Weekly',
+		monthly: 'Monthly',
+		yearly: 'Yearly'
+	};
+
+	// Find the current displayed frequency text (Daily, Weekly, Monthly, or Yearly)
+	const currentFrequency = screen.getByText(/^(Daily|Weekly|Monthly|Yearly)$/);
+	// Click on its parent container to open the dropdown
+	// eslint-disable-next-line testing-library/no-node-access
+	const dropdownContainer = currentFrequency.closest('[tabindex="0"]');
+	if (dropdownContainer) {
+		await user.click(dropdownContainer as HTMLElement);
+	}
+
+	// Then find and click the frequency option from the dropdown menu
+	const frequencyOption = await screen.findByText(frequencyDisplayMap[frequency]);
+	await user.click(frequencyOption);
+};
+
+const clickCustomizeButton = async (user: UserEvent): Promise<void> => {
+	await user.click(getCustomizeButton());
+};
+
+const getUpdatedEditor = (
+	store: ReturnType<typeof createStoreWithEditor>['store']
+): ReturnType<typeof generateEditor> => values(store.getState().editor.editors)[0];
+
+describe('CustomRecurrenceModal', () => {
+	describe('UI Elements', () => {
+		it('should render the modal with the correct title', () => {
+			const { store, editor } = createStoreWithEditor();
+
+			setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			const title = screen.getByText('label.custom_repeat');
+			expect(title).toBeInTheDocument();
 		});
 
-		const allRatios = screen.getAllByRole('radio');
-		const everyDayRadio = find(allRatios, ['value', RADIO_VALUES.EVERYDAY]);
-		const noEndDateRadio = find(allRatios, ['value', RADIO_VALUES.NO_END_DATE]);
-		const dailySelect = screen.getByText(/daily/i);
+		it('should display cancel and customize buttons', () => {
+			const { store, editor } = createStoreWithEditor();
 
-		expect(everyDayRadio).toBeChecked();
-		expect(noEndDateRadio).toBeChecked();
-		expect(dailySelect).toBeVisible();
-	});
-	test('selecting “weekly” from select will change the default starting point to “every” + “day” selection', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+			setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
 
-		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
-		});
-
-		await user.click(screen.getByText(/daily/i));
-		await user.click(screen.getByText(/weekly/i));
-
-		const allRatios = screen.getAllByRole('radio');
-		const everyDayRadio = find(allRatios, ['value', RADIO_VALUES.QUICK_OPTIONS]);
-		const daySelectOption = screen.getByText(/label.day/i);
-
-		await user.click(screen.getByText(/label.day/i));
-		await user.click(screen.getByText(/weekend day/i));
-
-		expect(everyDayRadio).toBeChecked();
-		expect(daySelectOption).toBeVisible();
-	});
-	test('selecting “monthly” from select will change the default starting point to “day”(text) + “day”(input) + “every”(text) + “months”(input)', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-
-		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
-		});
-
-		await user.click(screen.getByText(/daily/i));
-		await user.click(screen.getByText(/monthly/i));
-
-		const allRatios = screen.getAllByRole('radio');
-		const dayRadio = find(allRatios, ['value', RADIO_VALUES.DAY_OF_MONTH]);
-		const dayInputOption = within(screen.getByTestId('montly_day_input')).getByRole('textbox');
-		const everyMonthsInputOption = screen.getByRole('textbox', { name: /months/i });
-
-		expect(dayRadio).toBeChecked();
-		expect(dayInputOption).toHaveValue('1');
-		expect(everyMonthsInputOption).toHaveValue('1');
-	});
-	test('selecting “yearly” from select will change the default starting point to “every day on”(text) + “day”(input) + “of”(text) + “month”(select)', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-
-		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
-		});
-
-		await user.click(screen.getByText(/daily/i));
-		await user.click(screen.getByText(/yearly/i));
-
-		const allRatios = screen.getAllByRole('radio');
-		const everyYearOnRadio = find(allRatios, ['value', RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY]);
-		const dayInputOption = within(screen.getByTestId('every_yearly_day_input')).getByRole(
-			'textbox'
-		);
-		const monthsInputOption = within(screen.getByTestId('every_yearly_month_input')).getByText(
-			/january/i
-		);
-
-		expect(everyYearOnRadio).toBeChecked();
-		expect(dayInputOption).toHaveValue('1');
-		expect(monthsInputOption).toBeInTheDocument();
-	});
-});
-
-describe('On modal confirmation, the editor should have the selected values', () => {
-	test('daily option default customization', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-
-		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
-		});
-
-		await user.click(screen.getByText(/customize/i));
-
-		const updatedEditor = values(store.getState().editor.editors)[0];
-
-		expect(updatedEditor.recur).toStrictEqual({
-			add: { rule: { freq: RECURRENCE_FREQUENCY.DAILY } }
+			expect(getCancelButton()).toBeInTheDocument();
+			expect(getCustomizeButton()).toBeInTheDocument();
 		});
 	});
-	test('weekly option default customization', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
-		});
+	describe('User Interactions', () => {
+		it('should call onClose when cancel button is clicked', async () => {
+			const { store, editor } = createStoreWithEditor();
+			const onCloseMock = vi.fn();
 
-		await user.click(screen.getByText(/daily/i));
-		await user.click(screen.getByText(/weekly/i));
-		await user.click(screen.getByText(/customize/i));
+			const { user } = setupTest(
+				<CustomRecurrenceModal editorId={editor.id} onClose={onCloseMock} />,
+				{
+					store
+				}
+			);
 
-		const updatedEditor = values(store.getState().editor.editors)[0];
+			await user.click(getCancelButton());
 
-		expect(updatedEditor.recur).toStrictEqual({
-			add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
+			expect(onCloseMock).toHaveBeenCalledTimes(1);
 		});
 	});
-	test('monthly option default customization', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
+	describe('Default States by Frequency', () => {
+		it('should have "daily" frequency with "every day" option and "no end date" selected by default', () => {
+			const { store, editor } = createStoreWithEditor();
+
+			setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			const allRadios = screen.getAllByRole('radio');
+			const everyDayRadio = find(allRadios, ['value', RADIO_VALUES.EVERYDAY]);
+			const noEndDateRadio = find(allRadios, ['value', RADIO_VALUES.NO_END_DATE]);
+			const dailySelect = screen.getByText('Daily');
+
+			expect(everyDayRadio).toBeChecked();
+			expect(noEndDateRadio).toBeChecked();
+			expect(dailySelect).toBeVisible();
 		});
 
-		await user.click(screen.getByText(/daily/i));
-		await user.click(screen.getByText(/monthly/i));
-		await user.click(screen.getByText(/customize/i));
+		it('should show "every" + "day" options when "weekly" is selected', async () => {
+			const { store, editor } = createStoreWithEditor();
 
-		const updatedEditor = values(store.getState().editor.editors)[0];
+			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
 
-		expect(updatedEditor.recur).toStrictEqual({
-			add: {
-				rule: {
-					bymonthday: {
-						modaylist: 1
-					},
-					freq: 'MON',
-					interval: {
-						ival: 1
+			await selectFrequency(user, 'weekly');
+
+			const allRadios = screen.getAllByRole('radio');
+			const everyDayRadio = find(allRadios, ['value', RADIO_VALUES.QUICK_OPTIONS]);
+			const daySelectOption = screen.getByText('Day');
+
+			await user.click(screen.getByText('Day'));
+			await user.click(screen.getByText('Weekend day'));
+
+			expect(everyDayRadio).toBeChecked();
+			expect(daySelectOption).toBeVisible();
+		});
+
+		it('should show "day" + "months" options when "monthly" is selected', async () => {
+			const { store, editor } = createStoreWithEditor();
+
+			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			await selectFrequency(user, 'monthly');
+
+			const allRadios = screen.getAllByRole('radio');
+			const dayRadio = find(allRadios, ['value', RADIO_VALUES.DAY_OF_MONTH]);
+			const dayInputOption = within(screen.getByTestId('montly_day_input')).getByRole('textbox');
+			const everyMonthsInputOption = screen.getByRole('textbox', { name: 'label.months' });
+
+			expect(dayRadio).toBeChecked();
+			expect(dayInputOption).toHaveValue('1');
+			expect(everyMonthsInputOption).toHaveValue('1');
+		});
+
+		it('should show "day" + "month" options when "yearly" is selected', async () => {
+			const { store, editor } = createStoreWithEditor();
+
+			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			await selectFrequency(user, 'yearly');
+
+			const allRadios = screen.getAllByRole('radio');
+			const everyYearOnRadio = find(allRadios, ['value', RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY]);
+			const dayInputOption = within(screen.getByTestId('every_yearly_day_input')).getByRole(
+				'textbox'
+			);
+			const monthsInputOption = within(screen.getByTestId('every_yearly_month_input')).getByText(
+				'January'
+			);
+
+			expect(everyYearOnRadio).toBeChecked();
+			expect(dayInputOption).toHaveValue('1');
+			expect(monthsInputOption).toBeInTheDocument();
+		});
+	});
+
+	describe('Confirmation and State Persistence', () => {
+		it('should save daily frequency when customized and confirmed', async () => {
+			const { store, editor } = createStoreWithEditor();
+
+			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			await clickCustomizeButton(user);
+
+			const updatedEditor = getUpdatedEditor(store);
+
+			expect(updatedEditor.recur).toStrictEqual({
+				add: { rule: { freq: RECURRENCE_FREQUENCY.DAILY } }
+			});
+		});
+
+		it('should save weekly frequency when customized and confirmed', async () => {
+			const { store, editor } = createStoreWithEditor();
+
+			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			await selectFrequency(user, 'weekly');
+			await clickCustomizeButton(user);
+
+			const updatedEditor = getUpdatedEditor(store);
+
+			expect(updatedEditor.recur).toStrictEqual({
+				add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
+			});
+		});
+
+		it('should save monthly frequency with day and interval when customized and confirmed', async () => {
+			const { store, editor } = createStoreWithEditor();
+
+			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
+
+			await selectFrequency(user, 'monthly');
+			await clickCustomizeButton(user);
+
+			const updatedEditor = getUpdatedEditor(store);
+
+			expect(updatedEditor.recur).toStrictEqual({
+				add: {
+					rule: {
+						bymonthday: {
+							modaylist: 1
+						},
+						freq: 'MON',
+						interval: {
+							ival: 1
+						}
 					}
 				}
-			}
-		});
-	});
-
-	test('yearly option default customization', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-
-		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-			store
+			});
 		});
 
-		await user.click(screen.getByText(/daily/i));
-		await user.click(screen.getByText(/yearly/i));
-		await user.click(screen.getByText(/customize/i));
+		it('should save yearly frequency with month and day when customized and confirmed', async () => {
+			const { store, editor } = createStoreWithEditor();
 
-		const updatedEditor = values(store.getState().editor.editors)[0];
+			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
+				store
+			});
 
-		expect(updatedEditor.recur).toStrictEqual({
-			add: {
-				rule: {
-					bymonth: {
-						molist: '1'
-					},
-					bymonthday: {
-						modaylist: 1
-					},
-					freq: 'YEA'
+			await selectFrequency(user, 'yearly');
+			await clickCustomizeButton(user);
+
+			const updatedEditor = getUpdatedEditor(store);
+
+			expect(updatedEditor.recur).toStrictEqual({
+				add: {
+					rule: {
+						bymonth: {
+							molist: '1'
+						},
+						bymonthday: {
+							modaylist: 1
+						},
+						freq: 'YEA'
+					}
 				}
-			}
+			});
 		});
 	});
 });

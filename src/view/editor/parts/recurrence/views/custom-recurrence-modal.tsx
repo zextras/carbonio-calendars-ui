@@ -5,15 +5,9 @@
  */
 import React, { ReactElement, useCallback, useState } from 'react';
 
-import {
-	Divider,
-	ModalBody,
-	ModalHeader,
-	ModalFooter,
-	Padding,
-	Text
-} from '@zextras/carbonio-design-system';
+import { Divider, ModalBody, ModalHeader, Padding, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { ModalFooter } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
 
 import DailyOptions from './daily-options';
@@ -21,16 +15,16 @@ import MonthlyOptions from './monthly-options';
 import RecurrenceEndOptions from './recurrence-end-options';
 import WeeklyOptions from './weekly-options';
 import YearlyOptions from './yearly-options';
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
+import FrequencySelect from '../components/frequency-select';
+import { RecurrenceContext } from 'commons/recurrence-context';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
 	selectEditorRecurrenceUntilDate
-} from '../../../../../store/selectors/editor';
-import { editEditorRecurrence } from '../../../../../store/slices/editor-slice';
-import { RecurrenceEndValue, RecurrenceStartValue } from '../../../../../types/editor';
-import FrequencySelect from '../components/frequency-select';
+} from 'store/selectors/editor';
+import { editEditorRecurrence } from 'store/slices/editor-slice';
+import { RecurrenceEndValue, RecurrenceStartValue } from 'types/editor';
 
 const setEndInitialValue = (
 	count: number | undefined,
@@ -116,10 +110,14 @@ export const CustomRecurrenceModal = ({
 					<RecurrenceEndOptions editorId={editorId} />
 				</Padding>
 			</ModalBody>
-			<Divider />
-			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
+			<ModalFooter
+				onConfirm={onConfirm}
+				label={t('editor.repeat.set-custom-repeat', 'set custom repeat')}
+				secondaryAction={onClose}
+				secondaryLabel={t('label.cancel', 'Cancel')}
+				secondaryBtnType={'outlined'}
+				secondaryColor={'#414141'}
+			/>
 		</RecurrenceContext.Provider>
 	);
 };
-
-export default CustomRecurrenceModal;
