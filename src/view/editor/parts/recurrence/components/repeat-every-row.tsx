@@ -48,7 +48,7 @@ export const RepeatEveryRow = (): ReactElement => {
 				orientation={VERTICAL_ORIENTATION}
 				crossAlignment={FLEX_START_ALIGNMENT}
 				width={'fit'}
-				padding={{ right: 'small' }}
+				padding={{ right: 'large' }}
 			>
 				<IntervalInput
 					label=""
