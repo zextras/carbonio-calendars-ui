@@ -20,15 +20,15 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import momentLocalizer from 'react-widgets-moment';
 
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { RADIO_VALUES } from '../../../../../constants/recurrence';
-import { useAppSelector } from '../../../../../store/redux/hooks';
+import { RecurrenceContext } from 'commons/recurrence-context';
+import { RADIO_VALUES } from 'constants/recurrence';
+import { useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceUntilDate,
 	selectEditorStart
-} from '../../../../../store/selectors/editor';
-import { Count } from '../../../../../types/editor';
+} from 'store/selectors/editor';
+import { Count } from 'types/editor';
 
 momentLocalizer();
 
