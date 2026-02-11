@@ -41,7 +41,7 @@ export const RepeatEveryRow = (): ReactElement => {
 			gap="small"
 		>
 			<Container orientation={VERTICAL_ORIENTATION} crossAlignment={FLEX_START_ALIGNMENT}>
-				<Text size="large">{t('label.repeat_every', 'Repeat every')}</Text>
+				<Text>{t('label.repeat_every', 'Repeat every')}</Text>
 			</Container>
 
 			<Container
