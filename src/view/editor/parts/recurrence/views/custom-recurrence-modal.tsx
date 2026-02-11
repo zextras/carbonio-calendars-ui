@@ -12,7 +12,7 @@ import { isNil, omitBy } from 'lodash';
 
 import { DailyOptions } from './daily-options';
 import MonthlyOptions from './monthly-options';
-import RecurrenceEndOptions from './recurrence-end-options';
+import { RecurrenceEndOptions } from './recurrence-end-options';
 import WeeklyOptions from './weekly-options';
 import YearlyOptions from './yearly-options';
 import { RecurrenceContext } from 'commons/recurrence-context';
