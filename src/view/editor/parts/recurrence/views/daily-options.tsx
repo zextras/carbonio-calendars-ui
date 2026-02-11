@@ -21,12 +21,10 @@ export const DailyOptions = (): ReactElement | null => {
 			setIsChecked(checked);
 
 			if (checked) {
-				// Set working days (Mon-Fri) when checked
 				setNewStartValue({
 					byday: { wkday: map(['MO', 'TU', 'WE', 'TH', 'FR'], (day) => ({ day })) }
 				});
 			} else {
-				// Clear working days restriction when unchecked (all days)
 				setNewStartValue({});
 			}
 		},
