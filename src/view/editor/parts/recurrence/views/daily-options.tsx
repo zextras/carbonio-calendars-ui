@@ -17,10 +17,10 @@ export const DailyOptions = (): ReactElement | null => {
 	const [isChecked, setIsChecked] = useState(false);
 
 	const handleCheckboxChange = useCallback(
-		(checked: boolean) => {
-			setIsChecked(checked);
+		(value: boolean) => {
+			setIsChecked(value);
 
-			if (checked) {
+			if (value) {
 				setNewStartValue({
 					byday: { wkday: map(['MO', 'TU', 'WE', 'TH', 'FR'], (day) => ({ day })) }
 				});
@@ -34,7 +34,7 @@ export const DailyOptions = (): ReactElement | null => {
 	return frequency === RECURRENCE_FREQUENCY.DAILY ? (
 		<Checkbox
 			value={isChecked}
-			onChange={handleCheckboxChange}
+			onClick={(): void => handleCheckboxChange(!isChecked)}
 			label={t('label.only_on_working_days', 'Only on working days')}
 		/>
 	) : null;
