@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useContext, useState } from 'react';
 
-import { Checkbox } from '@zextras/carbonio-design-system';
+import { Checkbox, Padding } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
@@ -32,10 +32,14 @@ export const DailyOptions = (): ReactElement | null => {
 	);
 
 	return frequency === RECURRENCE_FREQUENCY.DAILY ? (
-		<Checkbox
-			value={isChecked}
-			onClick={(): void => handleCheckboxChange(!isChecked)}
-			label={t('label.only_on_working_days', 'Only on working days')}
-		/>
+		<>
+			<Padding top={'medium'}></Padding>
+			<Checkbox
+				value={isChecked}
+				onClick={(): void => handleCheckboxChange(!isChecked)}
+				label={t('label.only_on_working_days', 'Only on working days')}
+			/>
+			<Padding top={'extralarge'}></Padding>
+		</>
 	) : null;
 };
