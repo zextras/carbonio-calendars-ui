@@ -124,6 +124,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 		() => radioValue !== RADIO_VALUES.END_AFTER_UNTIL,
 		[radioValue]
 	);
+
 	const onDateChange = useCallback(
 		(d: Date | null) => {
 			if (!isDatePickerDisabled && d) {
@@ -134,104 +135,120 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 		},
 		[isDatePickerDisabled, setNewEndValue]
 	);
+
+	const renderNoEndDateLabel = useCallback(
+		() => (
+			<Row
+				style={{ cursor: 'pointer' }}
+				width="fill"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				wrap="nowrap"
+			>
+				<Row
+					width="fill"
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					wrap="nowrap"
+					padding={{ right: 'small' }}
+				>
+					<Text>{t('label.no_end_date', 'No end date')}</Text>
+				</Row>
+			</Row>
+		),
+		[t]
+	);
+
+	const renderCountLabel = useCallback(
+		() => (
+			<Row
+				style={{ cursor: 'pointer' }}
+				width="fill"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				wrap="nowrap"
+			>
+				<Row
+					width="fit"
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					wrap="nowrap"
+					padding={{ right: 'small' }}
+				>
+					<Text>{endAfterString}</Text>
+				</Row>
+				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Input
+						background={'gray5'}
+						width="fill"
+						label={t('label.end_after_events', 'Event(s)')}
+						value={inputValue}
+						disabled={radioValue !== RADIO_VALUES.END_AFTER_COUNT}
+						onChange={onInputValueChange}
+						hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
+					/>
+				</Row>
+			</Row>
+		),
+		[endAfterString, inputValue, radioValue, onInputValueChange, num, t]
+	);
+
+	const renderDateLabel = useCallback(
+		() => (
+			<Row
+				style={{ cursor: 'pointer' }}
+				width="fill"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				wrap="nowrap"
+			>
+				<Row
+					width="fit"
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					wrap="nowrap"
+					padding={{ right: 'small' }}
+				>
+					<Text>{endAfterString}</Text>
+				</Row>
+				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Container crossAlignment="flex-start" width={'fill'}>
+						<DateTimePicker
+							width={'fill'}
+							label={t('label.end_after_date', 'Date')}
+							showTimeSelect={false}
+							defaultValue={initialPickerValue}
+							onChange={onDateChange}
+							disabled={isDatePickerDisabled}
+							dateFormat="dd/MM/yyyy"
+						/>
+					</Container>
+				</Row>
+			</Row>
+		),
+		[endAfterString, initialPickerValue, onDateChange, isDatePickerDisabled, t]
+	);
+
 	return (
 		<RadioGroup value={radioValue} onChange={onRadioValueChange}>
 			<Radio
 				size="small"
 				iconColor="primary"
-				label={
-					<Row
-						style={{ cursor: 'pointer' }}
-						width="fill"
-						orientation="horizontal"
-						mainAlignment="flex-start"
-						wrap="nowrap"
-					>
-						<Row
-							width="fill"
-							orientation="horizontal"
-							mainAlignment="flex-start"
-							wrap="nowrap"
-							padding={{ right: 'small' }}
-						>
-							<Text>{t('label.no_end_date', 'No end date')}</Text>
-						</Row>
-					</Row>
-				}
+				label={renderNoEndDateLabel()}
 				value={RADIO_VALUES.NO_END_DATE}
 			/>
 			<Padding bottom={'medium'}></Padding>
 			<Radio
 				size="small"
 				iconColor="primary"
-				label={
-					<Row
-						style={{ cursor: 'pointer' }}
-						width="fill"
-						orientation="horizontal"
-						mainAlignment="flex-start"
-						wrap="nowrap"
-					>
-						<Row
-							width="fit"
-							orientation="horizontal"
-							mainAlignment="flex-start"
-							wrap="nowrap"
-							padding={{ right: 'small' }}
-						>
-							<Text>{endAfterString}</Text>
-						</Row>
-						<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Input
-								background={'gray5'}
-								width="fill"
-								label={t('label.end_after_events', 'Event(s)')}
-								value={inputValue}
-								disabled={radioValue !== RADIO_VALUES.END_AFTER_COUNT}
-								onChange={onInputValueChange}
-								hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
-							/>
-						</Row>
-					</Row>
-				}
+				label={renderCountLabel()}
 				value={RADIO_VALUES.END_AFTER_COUNT}
 			/>
 			<Padding bottom={'medium'}></Padding>
 			<Radio
 				size="small"
 				iconColor="primary"
-				label={
-					<Row
-						style={{ cursor: 'pointer' }}
-						width="fill"
-						orientation="horizontal"
-						mainAlignment="flex-start"
-						wrap="nowrap"
-					>
-						<Row
-							width="fit"
-							orientation="horizontal"
-							mainAlignment="flex-start"
-							wrap="nowrap"
-							padding={{ right: 'small' }}
-						>
-							<Text>{endAfterString}</Text>
-						</Row>
-						<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Container crossAlignment="flex-start" width={'fill'}>
-								<DateTimePicker
-									width={'fill'}
-									label={t('label.end_after_date', 'Date')}
-									showTimeSelect={false}
-									defaultValue={initialPickerValue}
-									onChange={onDateChange}
-									disabled={isDatePickerDisabled}
-									dateFormat="dd/MM/yyyy"
-								/>
-							</Container>
-						</Row>
-					</Row>
-				}
+				label={renderDateLabel()}
 				value={RADIO_VALUES.END_AFTER_UNTIL}
 			/>
 		</RadioGroup>
