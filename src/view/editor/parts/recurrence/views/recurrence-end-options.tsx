@@ -119,7 +119,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 
 	const num = useMemo(() => (newEndValue as Count)?.count?.num, [newEndValue]);
 	const [t] = useTranslation();
-	const endAfterString = useMemo(() => t('label.end_after', 'End after'), [t]);
+
 	const isDatePickerDisabled = useMemo(
 		() => radioValue !== RADIO_VALUES.END_AFTER_UNTIL,
 		[radioValue]
@@ -175,7 +175,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 					wrap="nowrap"
 					padding={{ right: 'small' }}
 				>
-					<Text>{endAfterString}</Text>
+					<Text>{t('label.end_after', 'End after')}</Text>
 				</Row>
 				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 					<Input
@@ -190,7 +190,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				</Row>
 			</Row>
 		),
-		[endAfterString, inputValue, radioValue, onInputValueChange, num, t]
+		[inputValue, radioValue, onInputValueChange, num, t]
 	);
 
 	const renderDateLabel = useCallback(
@@ -209,7 +209,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 					wrap="nowrap"
 					padding={{ right: 'small' }}
 				>
-					<Text>{endAfterString}</Text>
+					<Text>{t('label.end_on', 'End on')}</Text>
 				</Row>
 				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 					<Container crossAlignment="flex-start" width={'fill'}>
@@ -226,7 +226,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				</Row>
 			</Row>
 		),
-		[endAfterString, initialPickerValue, onDateChange, isDatePickerDisabled, t]
+		[initialPickerValue, onDateChange, isDatePickerDisabled, t]
 	);
 
 	return (
