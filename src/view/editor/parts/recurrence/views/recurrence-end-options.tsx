@@ -136,7 +136,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 		[isDatePickerDisabled, setNewEndValue]
 	);
 
-	const renderNoEndDateLabel = useCallback(
+	const renderNoEndDateLabel = useMemo(
 		() => (
 			<Row
 				style={{ cursor: 'pointer' }}
@@ -159,7 +159,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 		[t]
 	);
 
-	const renderCountLabel = useCallback(
+	const renderCountLabel = useMemo(
 		() => (
 			<Row
 				style={{ cursor: 'pointer' }}
@@ -193,7 +193,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 		[inputValue, radioValue, onInputValueChange, num, t]
 	);
 
-	const renderDateLabel = useCallback(
+	const renderDateLabel = useMemo(
 		() => (
 			<Row
 				style={{ cursor: 'pointer' }}
@@ -234,21 +234,21 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 			<Radio
 				size="small"
 				iconColor="primary"
-				label={renderNoEndDateLabel()}
+				label={renderNoEndDateLabel}
 				value={RADIO_VALUES.NO_END_DATE}
 			/>
 			<Padding bottom={'medium'}></Padding>
 			<Radio
 				size="small"
 				iconColor="primary"
-				label={renderCountLabel()}
+				label={renderCountLabel}
 				value={RADIO_VALUES.END_AFTER_COUNT}
 			/>
 			<Padding bottom={'medium'}></Padding>
 			<Radio
 				size="small"
 				iconColor="primary"
-				label={renderDateLabel()}
+				label={renderDateLabel}
 				value={RADIO_VALUES.END_AFTER_UNTIL}
 			/>
 		</RadioGroup>
