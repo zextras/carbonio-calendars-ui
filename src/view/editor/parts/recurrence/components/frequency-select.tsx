@@ -73,5 +73,13 @@ export const FrequencySelect = (): ReactElement => {
 		[context]
 	);
 
-	return <Select onChange={onChange} items={displayItems} selection={initialValue} disablePortal />;
+	return (
+		<Select
+			onChange={onChange}
+			items={displayItems}
+			selection={initialValue}
+			disablePortal
+			data-testid={'frequency-selector'}
+		/>
+	);
 };
