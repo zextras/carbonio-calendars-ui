@@ -9,6 +9,7 @@ import {
 	Container,
 	DateTimePicker,
 	Input,
+	Padding,
 	Radio,
 	RadioGroup,
 	Row,
@@ -19,15 +20,15 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import momentLocalizer from 'react-widgets-moment';
 
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { RADIO_VALUES } from '../../../../../constants/recurrence';
-import { useAppSelector } from '../../../../../store/redux/hooks';
+import { RecurrenceContext } from 'commons/recurrence-context';
+import { RADIO_VALUES } from 'constants/recurrence';
+import { useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceUntilDate,
 	selectEditorStart
-} from '../../../../../store/selectors/editor';
-import { Count } from '../../../../../types/editor';
+} from 'store/selectors/editor';
+import { Count } from 'types/editor';
 
 momentLocalizer();
 
@@ -41,7 +42,7 @@ const radioInitialState = (count: number | undefined, until: string | undefined)
 	return RADIO_VALUES.NO_END_DATE;
 };
 
-const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
+export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
 	const { newEndValue, setNewEndValue } = useContext(RecurrenceContext);
 	const start = useAppSelector(selectEditorStart(editorId));
 	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
@@ -118,11 +119,12 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 
 	const num = useMemo(() => (newEndValue as Count)?.count?.num, [newEndValue]);
 	const [t] = useTranslation();
-	const endAfterString = useMemo(() => t('label.end_after', 'End after'), [t]);
+
 	const isDatePickerDisabled = useMemo(
 		() => radioValue !== RADIO_VALUES.END_AFTER_UNTIL,
 		[radioValue]
 	);
+
 	const onDateChange = useCallback(
 		(d: Date | null) => {
 			if (!isDatePickerDisabled && d) {
@@ -133,75 +135,125 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 		},
 		[isDatePickerDisabled, setNewEndValue]
 	);
+
+	const renderNoEndDateLabel = useMemo(
+		() => (
+			<Row
+				style={{ cursor: 'pointer' }}
+				width="fill"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				wrap="nowrap"
+			>
+				<Row
+					width="fill"
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					wrap="nowrap"
+					padding={{ right: 'small' }}
+				>
+					<Text>{t('label.no_end_date', 'No end date')}</Text>
+				</Row>
+			</Row>
+		),
+		[t]
+	);
+
+	const renderCountLabel = useMemo(
+		() => (
+			<Row
+				style={{ cursor: 'pointer' }}
+				width="fill"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				wrap="nowrap"
+			>
+				<Row
+					width="fit"
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					wrap="nowrap"
+					padding={{ right: 'small' }}
+				>
+					<Text>{t('label.end_after', 'End after')}</Text>
+				</Row>
+				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Input
+						background={'gray5'}
+						width="fill"
+						label={t('label.end_after_events', 'Event(s)')}
+						value={inputValue}
+						disabled={radioValue !== RADIO_VALUES.END_AFTER_COUNT}
+						onChange={onInputValueChange}
+						hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
+					/>
+				</Row>
+			</Row>
+		),
+		[inputValue, radioValue, onInputValueChange, num, t]
+	);
+
+	const renderDateLabel = useMemo(
+		() => (
+			<Row
+				style={{ cursor: 'pointer' }}
+				width="fill"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				wrap="nowrap"
+			>
+				<Row
+					width="fit"
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					wrap="nowrap"
+					padding={{ right: 'small' }}
+				>
+					<Text>{t('label.end_on', 'End on')}</Text>
+				</Row>
+				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Container crossAlignment="flex-start" width={'fill'}>
+						<DateTimePicker
+							width={'fill'}
+							label={t('label.end_after_date', 'Date')}
+							showTimeSelect={false}
+							defaultValue={initialPickerValue}
+							onChange={onDateChange}
+							disabled={isDatePickerDisabled}
+							dateFormat="dd/MM/yyyy"
+						/>
+					</Container>
+				</Row>
+			</Row>
+		),
+		[initialPickerValue, onDateChange, isDatePickerDisabled, t]
+	);
+
 	return (
 		<RadioGroup value={radioValue} onChange={onRadioValueChange}>
 			<Radio
+				key={'no-end-date'}
 				size="small"
 				iconColor="primary"
-				label={t('label.no_end_date', 'No end date')}
+				label={renderNoEndDateLabel}
 				value={RADIO_VALUES.NO_END_DATE}
 			/>
+			<Padding key={'padding-1'} bottom={'medium'}></Padding>
 			<Radio
+				key={'end-after-count'}
 				size="small"
 				iconColor="primary"
-				label={
-					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Row
-							width="fit"
-							orientation="horizontal"
-							mainAlignment="flex-start"
-							wrap="nowrap"
-							padding={{ right: 'small' }}
-						>
-							<Text>{endAfterString}</Text>
-						</Row>
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Input
-								backgroundColor="gray5"
-								width="fit"
-								label={t('label.occurrences', 'Occurence(s)')}
-								value={inputValue}
-								disabled={radioValue !== RADIO_VALUES.END_AFTER_COUNT}
-								onChange={onInputValueChange}
-								hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
-							/>
-						</Row>
-					</Row>
-				}
+				label={renderCountLabel}
 				value={RADIO_VALUES.END_AFTER_COUNT}
 			/>
+			<Padding key={'padding-2'} bottom={'medium'}></Padding>
 			<Radio
+				key={'end-after-until'}
 				size="small"
 				iconColor="primary"
-				label={
-					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Row
-							width="fit"
-							orientation="horizontal"
-							mainAlignment="flex-start"
-							wrap="nowrap"
-							padding={{ right: 'small' }}
-						>
-							<Text>{endAfterString}</Text>
-						</Row>
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Container crossAlignment="flex-start" style={{ maxWidth: '31.25rem' }}>
-								<DateTimePicker
-									label={endAfterString}
-									showTimeSelect={false}
-									defaultValue={initialPickerValue}
-									onChange={onDateChange}
-									disabled={isDatePickerDisabled}
-									dateFormat="dd/MM/yyyy"
-								/>
-							</Container>
-						</Row>
-					</Row>
-				}
+				label={renderDateLabel}
 				value={RADIO_VALUES.END_AFTER_UNTIL}
 			/>
 		</RadioGroup>
 	);
 };
-
-export default RecurrenceEndOptions;

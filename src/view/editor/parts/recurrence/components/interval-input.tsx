@@ -53,9 +53,10 @@ export const IntervalInput = ({
 
 	return (
 		<Input
+			data-testid="interval-input-container"
 			label={label}
 			onChange={onIntervalChange}
-			backgroundColor="gray5"
+			background={'gray5'}
 			disabled={disabled}
 			value={value}
 			hasError={hasError}

@@ -9,26 +9,60 @@ import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
+import { RecurrenceContext } from 'commons/recurrence-context';
+import { useRecurrenceItems } from 'commons/use-recurrence-items';
+import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 
-const FrequencySelect = (): ReactElement => {
+export const FrequencySelect = (): ReactElement => {
 	const context = useContext(RecurrenceContext);
+	const { repetitionItemsV2: repetitionItems } = useRecurrenceItems();
 	const [t] = useTranslation();
 
-	const { repetitionItems } = useRecurrenceItems();
+	// Get the interval value from context
+	const interval = context?.newStartValue?.interval?.ival ?? 1;
+	const isPlural = interval > 1;
+
+	// Create items with pluralized labels when needed
+	const displayItems = useMemo(() => {
+		if (!isPlural) {
+			return repetitionItems;
+		}
+
+		// Plural forms when interval > 1
+		return repetitionItems.map((item) => {
+			let pluralLabel;
+			switch (item.value) {
+				case RECURRENCE_FREQUENCY.DAILY:
+					pluralLabel = t('repeat.days', 'Days');
+					break;
+				case RECURRENCE_FREQUENCY.WEEKLY:
+					pluralLabel = t('repeat.weeks', 'Weeks');
+					break;
+				case RECURRENCE_FREQUENCY.MONTHLY:
+					pluralLabel = t('repeat.months', 'Months');
+					break;
+				case RECURRENCE_FREQUENCY.YEARLY:
+					pluralLabel = t('repeat.years', 'Years');
+					break;
+				default:
+					pluralLabel = item.label;
+					break;
+			}
+			return { ...item, label: pluralLabel };
+		});
+	}, [repetitionItems, isPlural, t]);
 
 	const initialValue = useMemo(
-		() => find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0],
-		[repetitionItems, context]
+		() => find(displayItems, { value: context?.frequency }) ?? displayItems[0],
+		[displayItems, context]
 	);
 
 	useEffect(() => {
 		if (initialValue) {
-			const value = find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0];
+			const value = find(displayItems, { value: context?.frequency }) ?? displayItems[0];
 			context?.setFrequency(value?.value);
 		}
-	}, [context, initialValue, repetitionItems]);
+	}, [context, initialValue, displayItems]);
 
 	const onChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
@@ -41,13 +75,11 @@ const FrequencySelect = (): ReactElement => {
 
 	return (
 		<Select
-			label={t('label.repeat', 'Repeat')}
 			onChange={onChange}
-			items={repetitionItems}
+			items={displayItems}
 			selection={initialValue}
 			disablePortal
+			data-testid={'frequency-selector'}
 		/>
 	);
 };
-
-export default FrequencySelect;
