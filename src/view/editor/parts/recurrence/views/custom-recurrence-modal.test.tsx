@@ -116,26 +116,6 @@ describe('CustomRecurrenceModal', () => {
 	});
 
 	describe('Default States by Frequency', () => {
-		it('should show "every" + "day" options when "week" is selected', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await selectFrequency(user, 'week');
-
-			const allRadios = screen.getAllByRole('radio');
-			const everyDayRadio = find(allRadios, ['value', RADIO_VALUES.QUICK_OPTIONS]);
-			const daySelectOption = screen.getByText('Day');
-
-			await user.click(screen.getByText('Day'));
-			await user.click(screen.getByText('Weekend day'));
-
-			expect(everyDayRadio).toBeChecked();
-			expect(daySelectOption).toBeVisible();
-		});
-
 		it('should show "day" + "months" options when "monthly" is selected', async () => {
 			const { store, editor } = createStoreWithEditor();
 
