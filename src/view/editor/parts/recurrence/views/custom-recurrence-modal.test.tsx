@@ -196,7 +196,7 @@ describe('CustomRecurrenceModal', () => {
 				});
 			});
 
-			it.skip('should show plural "Weeks" for week frequency with interval 3', async () => {
+			it('should show plural "Weeks" for week frequency with interval 3', async () => {
 				const { store, editor } = createStoreWithEditor();
 
 				const { user } = setupTest(
