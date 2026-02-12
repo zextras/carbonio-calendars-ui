@@ -167,17 +167,17 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				orientation="horizontal"
 				mainAlignment="flex-start"
 				wrap="nowrap"
+				gap="0.5rem"
 			>
-				<Row
+				<Container
 					width="fit"
-					orientation="horizontal"
+					minWidth="5rem"
 					mainAlignment="flex-start"
-					wrap="nowrap"
-					padding={{ right: 'small' }}
+					crossAlignment={'flex-start'}
 				>
-					<Text>{t('label.end_after', 'End after')}</Text>
-				</Row>
-				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Text textAlign={'start'}>{t('label.end_after', 'End after')}</Text>
+				</Container>
+				<Container width="fill" mainAlignment="flex-start">
 					<Input
 						background={'gray5'}
 						width="fill"
@@ -187,7 +187,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 						onChange={onInputValueChange}
 						hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
 					/>
-				</Row>
+				</Container>
 			</Row>
 		),
 		[inputValue, radioValue, onInputValueChange, num, t]
@@ -201,29 +201,27 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				orientation="horizontal"
 				mainAlignment="flex-start"
 				wrap="nowrap"
+				gap="0.5rem"
 			>
-				<Row
+				<Container
 					width="fit"
-					orientation="horizontal"
+					minWidth="5rem"
 					mainAlignment="flex-start"
-					wrap="nowrap"
-					padding={{ right: 'small' }}
+					crossAlignment={'flex-start'}
 				>
 					<Text>{t('label.end_on', 'End on')}</Text>
-				</Row>
-				<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-					<Container crossAlignment="flex-start" width={'fill'}>
-						<DateTimePicker
-							width={'fill'}
-							label={t('label.end_after_date', 'Date')}
-							showTimeSelect={false}
-							defaultValue={initialPickerValue}
-							onChange={onDateChange}
-							disabled={isDatePickerDisabled}
-							dateFormat="dd/MM/yyyy"
-						/>
-					</Container>
-				</Row>
+				</Container>
+				<Container width="fill" mainAlignment="flex-start">
+					<DateTimePicker
+						width={'fill'}
+						label={t('label.end_after_date', 'Date')}
+						showTimeSelect={false}
+						defaultValue={initialPickerValue}
+						onChange={onDateChange}
+						disabled={isDatePickerDisabled}
+						dateFormat="dd/MM/yyyy"
+					/>
+				</Container>
 			</Row>
 		),
 		[initialPickerValue, onDateChange, isDatePickerDisabled, t]
