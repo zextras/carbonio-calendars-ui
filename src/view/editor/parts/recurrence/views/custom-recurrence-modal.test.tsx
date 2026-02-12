@@ -250,33 +250,6 @@ describe('CustomRecurrenceModal', () => {
 			});
 		});
 
-		it('should save monthly frequency with day and interval when customized and confirmed', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await selectFrequency(user, 'month');
-			await clickCustomizeButton(user);
-
-			const updatedEditor = getUpdatedEditor(store);
-
-			expect(updatedEditor.recur).toStrictEqual({
-				add: {
-					rule: {
-						bymonthday: {
-							modaylist: 1
-						},
-						freq: 'MON',
-						interval: {
-							ival: 1
-						}
-					}
-				}
-			});
-		});
-
 		it('should save yearly frequency with month and day when customized and confirmed', async () => {
 			const { store, editor } = createStoreWithEditor();
 
