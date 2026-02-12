@@ -3,41 +3,91 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { map } from 'lodash';
+import moment from 'moment';
 
-import { IntervalInput } from '../components/interval-input';
-import { MonthlyDayInput } from '../components/monthly-day-input';
-import { OrdinalNumberSelect } from '../components/ordinal-number-select';
-import WeekdaySelect from '../components/weekday-select';
 import { RecurrenceContext } from 'commons/recurrence-context';
-import { useRecurrenceItems } from 'commons/use-recurrence-items';
 import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { useAppSelector } from 'store/redux/hooks';
+import { selectEditorStart } from 'store/selectors/editor';
 import { RecurrenceStartValue } from 'types/editor';
 
-const MonthlyOptions = (): ReactElement | null => {
+const getOrdinalSuffix = (day: number): string => {
+	if (day > 3 && day < 21) return 'th';
+	switch (day % 10) {
+		case 1:
+			return 'st';
+		case 2:
+			return 'nd';
+		case 3:
+			return 'rd';
+		default:
+			return 'th';
+	}
+};
+
+const getOrdinalNumber = (num: number): string => {
+	const ordinals = ['First', 'Second', 'Third', 'Fourth', 'Fifth'];
+	if (num >= 1 && num <= 5) {
+		return ordinals[num - 1];
+	}
+	if (num === -1) {
+		return 'Last';
+	}
+	return `${num}${getOrdinalSuffix(num)}`;
+};
+
+export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
+	const start = useAppSelector(selectEditorStart(editorId));
+
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.DAY_OF_MONTH);
-	const [moDayList, setMoDayList] = useState('1');
-	const [intervalFirstInput, setIntervalFirstInput] = useState('1');
-	const [intervalSecondInput, setIntervalSecondInput] = useState('1');
+
+	// Calculate day of month from start date
+	const dayOfMonth = useMemo(() => {
+		if (!start) return 1;
+		return moment(start).date();
+	}, [start]);
+
+	// Calculate ordinal position and weekday from start date
+	const { ordinalPosition, weekdayName, weekdayCode } = useMemo(() => {
+		if (!start) {
+			return { ordinalPosition: 1, weekdayName: 'Monday', weekdayCode: 'MO' };
+		}
+		const date = moment(start);
+		const dayOfWeek = date.day(); // 0 = Sunday, 6 = Saturday
+		const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+		const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+		// Calculate which occurrence of this weekday in the month (1st, 2nd, 3rd, etc.)
+		const currentDayOfMonth = date.date();
+		const occurrence = Math.ceil(currentDayOfMonth / 7);
+
+		return {
+			ordinalPosition: occurrence,
+			weekdayName: dayNames[dayOfWeek],
+			weekdayCode: dayCodes[dayOfWeek]
+		};
+	}, [start]);
+
+	const dayOfMonthLabel = useMemo(
+		() => `${dayOfMonth}${getOrdinalSuffix(dayOfMonth)} of the Month`,
+		[dayOfMonth]
+	);
+
+	const customDayLabel = useMemo(
+		() => `Every ${getOrdinalNumber(ordinalPosition).toLowerCase()} ${weekdayName} of the Month`,
+		[ordinalPosition, weekdayName]
+	);
 
 	const [startValue, setStartValue] = useState<RecurrenceStartValue>({
 		bymonthday: {
-			modaylist: parseInt(moDayList, 10)
-		},
-		interval: {
-			ival: parseInt(intervalFirstInput, 10)
+			modaylist: dayOfMonth
 		}
 	});
-
-	const { weekOptions, ordinalNumbers } = useRecurrenceItems();
-
-	const [posListSelectValue, setPosListSelectValue] = useState(ordinalNumbers?.[0]);
-	const [byDaySelectValue, setByDaySelectValue] = useState(weekOptions?.[0]);
 
 	const onRadioChange = useCallback(
 		(ev?: string) => {
@@ -45,10 +95,7 @@ const MonthlyOptions = (): ReactElement | null => {
 				case RADIO_VALUES.DAY_OF_MONTH:
 					setStartValue({
 						bymonthday: {
-							modaylist: parseInt(moDayList, 10)
-						},
-						interval: {
-							ival: parseInt(intervalFirstInput, 10)
+							modaylist: dayOfMonth
 						}
 					});
 					setRadioValue(ev);
@@ -56,11 +103,8 @@ const MonthlyOptions = (): ReactElement | null => {
 				case RADIO_VALUES.MONTHLY_CUSTOMIZED:
 					setRadioValue(ev);
 					setStartValue({
-						bysetpos: { poslist: posListSelectValue?.value },
-						byday: { wkday: map(byDaySelectValue?.value?.split?.(','), (day) => ({ day })) },
-						interval: {
-							ival: parseInt(intervalSecondInput, 10)
-						}
+						bysetpos: { poslist: ordinalPosition.toString() },
+						byday: { wkday: [{ day: weekdayCode }] }
 					});
 					break;
 				default:
@@ -68,73 +112,7 @@ const MonthlyOptions = (): ReactElement | null => {
 					break;
 			}
 		},
-		[
-			byDaySelectValue?.value,
-			intervalFirstInput,
-			intervalSecondInput,
-			moDayList,
-			posListSelectValue?.value
-		]
-	);
-
-	const onMoDayListChange = useCallback(
-		(ev: number) => {
-			if (ev && radioValue === RADIO_VALUES.DAY_OF_MONTH) {
-				setStartValue((prevValue) => ({
-					...(prevValue ?? {}),
-					bymonthday: {
-						modaylist: ev
-					}
-				}));
-			}
-		},
-		[radioValue]
-	);
-
-	const onFirstIntervalChange = useCallback(
-		(ev: number) => {
-			if (radioValue === RADIO_VALUES.DAY_OF_MONTH) {
-				setStartValue((prevValue) => ({
-					...prevValue,
-					interval: {
-						ival: ev
-					}
-				}));
-			}
-		},
-		[setStartValue, radioValue]
-	);
-
-	const onSecondIntervalChange = useCallback(
-		(ev: number) => {
-			if (radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
-				setStartValue((prevValue) => ({
-					...prevValue,
-					interval: {
-						ival: ev
-					}
-				}));
-			}
-		},
-		[setStartValue, radioValue]
-	);
-
-	const onBySetPosChange = useCallback(
-		(ev: string) => {
-			if (ev && radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
-				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bysetpos: { poslist: ev } }));
-			}
-		},
-		[radioValue]
-	);
-
-	const onByDayChange = useCallback(
-		(ev: Array<{ day: string }>) => {
-			if (ev && radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
-				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
-			}
-		},
-		[radioValue]
+		[dayOfMonth, ordinalPosition, weekdayCode]
 	);
 
 	useEffect(() => {
@@ -144,95 +122,62 @@ const MonthlyOptions = (): ReactElement | null => {
 	}, [frequency, setNewStartValue, startValue]);
 
 	return frequency === RECURRENCE_FREQUENCY.MONTHLY ? (
-		<RadioGroup value={radioValue} onChange={onRadioChange}>
-			<Radio
-				size="small"
-				iconColor="primary"
-				label={
-					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Padding horizontal="small">
-							<Text>{t('label.day', 'Day')}</Text>
-						</Padding>
-						<MonthlyDayInput
-							value={moDayList}
-							setValue={setMoDayList}
-							onChange={onMoDayListChange}
-							disabled={radioValue !== RADIO_VALUES.DAY_OF_MONTH}
-							testId={'montly_day_input'}
-						/>
-						<Padding horizontal="small">
-							<Text>{t('label.every', 'every')}</Text>
-						</Padding>
-						<IntervalInput
-							value={intervalFirstInput}
-							setValue={setIntervalFirstInput}
-							label={t('label.months', 'Months')}
-							onChange={onFirstIntervalChange}
-							disabled={radioValue !== RADIO_VALUES.DAY_OF_MONTH}
-						/>
-					</Row>
-				}
-				value={RADIO_VALUES.DAY_OF_MONTH}
-			/>
-			<Radio
-				size="small"
-				iconColor="primary"
-				label={
-					<Container
-						orientation="vertical"
-						mainAlignment="center"
-						crossAlignment="flex-start"
-						width="100%"
-					>
-						<Container
-							orientation="horizontal"
-							mainAlignment="flex-start"
-							crossAlignment="center"
-							width="fill"
-						>
-							<Padding horizontal="small">
-								<Text>{t('label.the', 'The')}</Text>
-							</Padding>
-							<OrdinalNumberSelect
-								value={posListSelectValue}
-								setValue={setPosListSelectValue}
-								onChange={onBySetPosChange}
-								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
-							/>
-							<Padding horizontal="small" />
-							<WeekdaySelect
-								setSelection={setByDaySelectValue}
-								onChange={onByDayChange}
-								selection={byDaySelectValue}
-								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
-							/>
-						</Container>
-						<Container
-							orientation="horizontal"
-							mainAlignment="flex-start"
-							crossAlignment="center"
-							padding={{ vertical: 'small' }}
-							width="80%"
-						>
-							<Padding horizontal="small">
-								<Text>{t('label.of_every_month', 'of the month, every')}</Text>
-							</Padding>
-							<MonthlyDayInput
-								value={intervalSecondInput}
-								setValue={setIntervalSecondInput}
-								onChange={onSecondIntervalChange}
-								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
-							/>
-							<Padding horizontal="small">
-								<Text>{t('label.months', 'Months')}</Text>
-							</Padding>
-						</Container>
-					</Container>
-				}
-				value={RADIO_VALUES.MONTHLY_CUSTOMIZED}
-			/>
-		</RadioGroup>
+		<Container
+			orientation="vertical"
+			mainAlignment={'flex-start'}
+			crossAlignment={'flex-start'}
+			width={'fill'}
+			gap={'1rem'}
+		>
+			<Container
+				orientation="vertical"
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				width="fill"
+			>
+				<Padding vertical="medium">
+					<Text weight="bold" size="large">
+						{t('label.on', 'On')}
+					</Text>
+				</Padding>
+				<RadioGroup value={radioValue} onChange={onRadioChange}>
+					<Radio
+						size={'small'}
+						key={'day_of_month'}
+						iconColor="primary"
+						label={
+							<Row
+								style={{ cursor: 'pointer' }}
+								width="fill"
+								orientation="horizontal"
+								mainAlignment="flex-start"
+								wrap="nowrap"
+							>
+								<Text>{dayOfMonthLabel}</Text>
+							</Row>
+						}
+						value={RADIO_VALUES.DAY_OF_MONTH}
+					/>
+					<Padding key={'padding-1'} top="medium" />
+					<Radio
+						size={'small'}
+						key={'custom'}
+						iconColor="primary"
+						label={
+							<Row
+								style={{ cursor: 'pointer' }}
+								width="fill"
+								orientation="horizontal"
+								mainAlignment="flex-start"
+								wrap="nowrap"
+							>
+								<Text>{customDayLabel}</Text>
+							</Row>
+						}
+						value={RADIO_VALUES.MONTHLY_CUSTOMIZED}
+					/>
+				</RadioGroup>
+			</Container>
+		</Container>
 	) : null;
 };
-
-export default MonthlyOptions;
