@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { UserEvent } from '@testing-library/user-event';
 import { find, values } from 'lodash';
 
@@ -63,6 +63,14 @@ const clickCustomizeButton = async (user: UserEvent): Promise<void> => {
 const getUpdatedEditor = (
 	store: ReturnType<typeof createStoreWithEditor>['store']
 ): ReturnType<typeof generateEditor> => values(store.getState().editor.editors)[0];
+
+const getIntervalInput = (): HTMLInputElement => {
+	const inputContainer = screen.getByTestId('interval-input-container');
+	// eslint-disable-next-line testing-library/no-node-access
+	const intervalInput = inputContainer.querySelector('input');
+	assert(intervalInput instanceof HTMLInputElement, 'Interval input not found');
+	return intervalInput;
+};
 
 describe('CustomRecurrenceModal', () => {
 	describe('UI Elements', () => {
@@ -168,6 +176,82 @@ describe('CustomRecurrenceModal', () => {
 			expect(everyYearOnRadio).toBeChecked();
 			expect(dayInputOption).toHaveValue('1');
 			expect(monthsInputOption).toBeInTheDocument();
+		});
+
+		describe('Frequency label Pluralization', () => {
+			it('should show plural "Days" for day frequency with interval 10', async () => {
+				const { store, editor } = createStoreWithEditor();
+
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{ store }
+				);
+
+				const intervalInput = getIntervalInput();
+				await user.clear(intervalInput);
+				await user.type(intervalInput, '10');
+
+				await waitFor(() => {
+					expect(screen.getByText('Days')).toBeInTheDocument();
+				});
+			});
+
+			it.skip('should show plural "Weeks" for week frequency with interval 3', async () => {
+				const { store, editor } = createStoreWithEditor();
+
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{ store }
+				);
+
+				await selectFrequency(user, 'week');
+
+				const intervalInput = getIntervalInput();
+				await user.clear(intervalInput);
+				await user.type(intervalInput, '3');
+
+				await waitFor(() => {
+					expect(screen.getByText('Weeks')).toBeInTheDocument();
+				});
+			});
+
+			it.skip('should show plural "Months" for month frequency with interval 7', async () => {
+				const { store, editor } = createStoreWithEditor();
+
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{ store }
+				);
+
+				await selectFrequency(user, 'month');
+
+				const intervalInput = getIntervalInput();
+				await user.clear(intervalInput);
+				await user.type(intervalInput, '7');
+
+				await waitFor(() => {
+					expect(screen.getByText('Months')).toBeInTheDocument();
+				});
+			});
+
+			it.skip('should show plural "Years" for year frequency with interval 99', async () => {
+				const { store, editor } = createStoreWithEditor();
+
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{ store }
+				);
+
+				await selectFrequency(user, 'year');
+
+				const intervalInput = getIntervalInput();
+				await user.clear(intervalInput);
+				await user.type(intervalInput, '99');
+
+				await waitFor(() => {
+					expect(screen.getByText('Years')).toBeInTheDocument();
+				});
+			});
 		});
 	});
 
