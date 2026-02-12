@@ -12,7 +12,7 @@ import { isNil, omitBy } from 'lodash';
 
 import MonthlyOptions from './monthly-options';
 import { RecurrenceEndOptions } from './recurrence-end-options';
-import WeeklyOptions from './weekly-options';
+import { WeeklyOptions } from './weekly-options';
 import YearlyOptions from './yearly-options';
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
@@ -90,7 +90,7 @@ export const CustomRecurrenceModal = ({
 			<Divider />
 			<ModalBody>
 				<RepeatEveryRow />
-				<Padding vertical="small">
+				<Padding vertical="small" width={'fill'}>
 					<WeeklyOptions editorId={editorId} />
 					<MonthlyOptions />
 					<YearlyOptions />
