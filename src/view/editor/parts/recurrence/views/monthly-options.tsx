@@ -9,14 +9,14 @@ import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbo
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
-import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
-import { RecurrenceStartValue } from '../../../../../types/editor';
 import { IntervalInput } from '../components/interval-input';
 import { MonthlyDayInput } from '../components/monthly-day-input';
 import { OrdinalNumberSelect } from '../components/ordinal-number-select';
 import WeekdaySelect from '../components/weekday-select';
+import { RecurrenceContext } from 'commons/recurrence-context';
+import { useRecurrenceItems } from 'commons/use-recurrence-items';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { RecurrenceStartValue } from 'types/editor';
 
 const MonthlyOptions = (): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
