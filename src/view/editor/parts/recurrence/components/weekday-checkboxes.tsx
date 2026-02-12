@@ -34,7 +34,7 @@ export const WeekdayCheckboxes = ({
 				const newValue = [...value, { day: opt.value }];
 				setValue(newValue);
 				onClick(newValue);
-			} else {
+			} else if (value.length > 1) {
 				const newValue = reject(value, { day: opt.value });
 				setValue(newValue);
 				onClick(newValue);
