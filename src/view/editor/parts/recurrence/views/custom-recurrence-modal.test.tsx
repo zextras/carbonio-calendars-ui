@@ -195,7 +195,7 @@ describe('CustomRecurrenceModal', () => {
 				});
 			});
 
-			it.skip('should show plural "Months" for month frequency with interval 7', async () => {
+			it('should show plural "Months" for month frequency with interval 7', async () => {
 				const { store, editor } = createStoreWithEditor();
 
 				const { user } = setupTest(
