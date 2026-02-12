@@ -30,52 +30,56 @@ const defaultState = {
 	}
 };
 
-// Helper function to convert JavaScript day (0-6, Sunday=0) to recurrence format (MO, TU, etc.)
 const getDayCodeFromDate = (date: number): string => {
-	const dayOfWeek = moment(date).day(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+	const dayOfWeek = moment(date).day();
 	const dayMap = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 	return dayMap[dayOfWeek];
 };
 
 const checkboxesInitialValue = (
-	byday: Byday | undefined,
+	byDay: Byday | undefined,
 	eventStartDate: number | undefined
 ): { day: string }[] => {
-	// If we have existing byday value, use it
-	if (byday?.wkday && byday.wkday.length > 0) {
-		return byday.wkday;
+	if (byDay?.wkday?.length) {
+		return byDay.wkday;
 	}
-	// Otherwise, use the day of the week from the event's start date
-	if (eventStartDate) {
-		const dayCode = getDayCodeFromDate(eventStartDate);
-		return [{ day: dayCode }];
-	}
-	// Fallback to Monday
-	return defaultState.byday.wkday;
-};
 
-const startValueInitialState = (
-	freq: string | undefined,
-	interval: Interval | undefined,
-	byday: Byday | undefined
-): RecurrenceStartValue | undefined => {
-	if (freq === RECURRENCE_FREQUENCY.WEEKLY) {
-		return { interval, byday };
+	if (!eventStartDate) {
+		return defaultState.byday.wkday;
 	}
-	return undefined;
+
+	return [{ day: getDayCodeFromDate(eventStartDate) }];
 };
 
 export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
-	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
-	const interval = useAppSelector(selectEditorRecurrenceInterval(editorId));
-	const byDay = useAppSelector(selectEditorRecurrenceByDay(editorId));
-	const start = useAppSelector(selectEditorStart(editorId));
+	const editorRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const editorRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const editorRecurrenceByDay = useAppSelector(selectEditorRecurrenceByDay(editorId));
+	const editorStart = useAppSelector(selectEditorStart(editorId));
 
 	const [checkboxesValue, setCheckboxesValue] = useState(() =>
-		checkboxesInitialValue(byDay, start)
+		checkboxesInitialValue(editorRecurrenceByDay, editorStart)
 	);
-	const [startValue, setStartValue] = useState(() => startValueInitialState(freq, interval, byDay));
+
+	const startValueInitialState = (
+		freq: string | undefined,
+		interval: Interval | undefined,
+		byDay: Byday | undefined
+	): RecurrenceStartValue | undefined => {
+		if (freq === RECURRENCE_FREQUENCY.WEEKLY) {
+			return { interval, byday: byDay };
+		}
+		return undefined;
+	};
+
+	const [startValue, setStartValue] = useState(() =>
+		startValueInitialState(
+			editorRecurrenceFrequency,
+			editorRecurrenceInterval,
+			editorRecurrenceByDay
+		)
+	);
 
 	const onCheckboxClick = useCallback((ev: Array<{ day: string }>) => {
 		if (ev) {
