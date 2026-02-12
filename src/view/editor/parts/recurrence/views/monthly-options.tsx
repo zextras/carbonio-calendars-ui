@@ -83,8 +83,13 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 		const currentDayOfMonth = date.date();
 		const occurrence = Math.ceil(currentDayOfMonth / 7);
 
+		// Detect if this is the last occurrence of this weekday in the month.
+		// If adding 7 days changes the month, there is no next same weekday in this month.
+		const nextWeek = moment(date).add(7, 'days');
+		const isLastOccurrence = nextWeek.month() !== date.month();
+		const computedOrdinalPosition = isLastOccurrence ? -1 : occurrence;
 		return {
-			ordinalPosition: occurrence,
+			ordinalPosition: computedOrdinalPosition,
 			weekdayCode: dayCodes[dayOfWeek]
 		};
 	}, [start]);
