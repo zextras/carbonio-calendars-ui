@@ -232,20 +232,23 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 	return (
 		<RadioGroup value={radioValue} onChange={onRadioValueChange}>
 			<Radio
+				key={'no-end-date'}
 				size="small"
 				iconColor="primary"
 				label={renderNoEndDateLabel}
 				value={RADIO_VALUES.NO_END_DATE}
 			/>
-			<Padding bottom={'medium'}></Padding>
+			<Padding key={'padding-1'} bottom={'medium'}></Padding>
 			<Radio
+				key={'end-after-count'}
 				size="small"
 				iconColor="primary"
 				label={renderCountLabel}
 				value={RADIO_VALUES.END_AFTER_COUNT}
 			/>
-			<Padding bottom={'medium'}></Padding>
+			<Padding key={'padding-2'} bottom={'medium'}></Padding>
 			<Radio
+				key={'end-after-until'}
 				size="small"
 				iconColor="primary"
 				label={renderDateLabel}
