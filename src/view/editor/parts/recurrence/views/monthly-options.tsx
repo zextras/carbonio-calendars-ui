@@ -29,15 +29,33 @@ const getOrdinalSuffix = (day: number): string => {
 	}
 };
 
-const getOrdinalNumber = (num: number): string => {
-	const ordinals = ['First', 'Second', 'Third', 'Fourth', 'Fifth'];
-	if (num >= 1 && num <= 5) {
-		return ordinals[num - 1];
-	}
-	if (num === -1) {
-		return 'Last';
-	}
+const getOrdinalNumber = (
+	num: number,
+	tFn: (key: string, defaultValue: string) => string
+): string => {
+	if (num === 1) return tFn('ordinal.first', 'First');
+	if (num === 2) return tFn('ordinal.second', 'Second');
+	if (num === 3) return tFn('ordinal.third', 'Third');
+	if (num === 4) return tFn('ordinal.fourth', 'Fourth');
+	if (num === 5) return tFn('ordinal.fifth', 'Fifth');
+	if (num === -1) return tFn('ordinal.last', 'Last');
 	return `${num}${getOrdinalSuffix(num)}`;
+};
+
+const getWeekdayName = (
+	dayCode: string,
+	tFn: (key: string, defaultValue: string) => string
+): string => {
+	const weekdayMap: Record<string, string> = {
+		SU: tFn('label.week_day.sunday', 'Sunday'),
+		MO: tFn('label.week_day.monday', 'Monday'),
+		TU: tFn('label.week_day.tuesday', 'Tuesday'),
+		WE: tFn('label.week_day.wednesday', 'Wednesday'),
+		TH: tFn('label.week_day.thursday', 'Thursday'),
+		FR: tFn('label.week_day.friday', 'Friday'),
+		SA: tFn('label.week_day.saturday', 'Saturday')
+	};
+	return weekdayMap[dayCode] || dayCode;
 };
 
 export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
@@ -53,13 +71,12 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 	}, [start]);
 
 	// Calculate ordinal position and weekday from start date
-	const { ordinalPosition, weekdayName, weekdayCode } = useMemo(() => {
+	const { ordinalPosition, weekdayCode } = useMemo(() => {
 		if (!start) {
-			return { ordinalPosition: 1, weekdayName: 'Monday', weekdayCode: 'MO' };
+			return { ordinalPosition: 1, weekdayCode: 'MO' };
 		}
 		const date = moment(start);
 		const dayOfWeek = date.day(); // 0 = Sunday, 6 = Saturday
-		const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 		const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
 		// Calculate which occurrence of this weekday in the month (1st, 2nd, 3rd, etc.)
@@ -68,19 +85,25 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 
 		return {
 			ordinalPosition: occurrence,
-			weekdayName: dayNames[dayOfWeek],
 			weekdayCode: dayCodes[dayOfWeek]
 		};
 	}, [start]);
 
 	const dayOfMonthLabel = useMemo(
-		() => `${dayOfMonth}${getOrdinalSuffix(dayOfMonth)} of the Month`,
+		() =>
+			t('label.day_of_month_recurrence', '{{day}} of the Month', {
+				day: `${dayOfMonth}${getOrdinalSuffix(dayOfMonth)}`
+			}),
 		[dayOfMonth]
 	);
 
 	const customDayLabel = useMemo(
-		() => `Every ${getOrdinalNumber(ordinalPosition).toLowerCase()} ${weekdayName} of the Month`,
-		[ordinalPosition, weekdayName]
+		() =>
+			t('label.ordinal_weekday_of_month', 'Every {{ordinal}} {{weekday}} of the Month', {
+				ordinal: getOrdinalNumber(ordinalPosition, t).toLowerCase(),
+				weekday: getWeekdayName(weekdayCode, t)
+			}),
+		[ordinalPosition, weekdayCode]
 	);
 
 	const [startValue, setStartValue] = useState<RecurrenceStartValue>({
