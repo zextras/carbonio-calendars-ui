@@ -5,26 +5,24 @@
  */
 import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
+import { Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
 
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
-import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
-import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
-import { useAppSelector } from '../../../../../store/redux/hooks';
+import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
+import { RecurrenceContext } from 'commons/recurrence-context';
+import { useRecurrenceItems } from 'commons/use-recurrence-items';
+import { WEEK_SCHEDULE } from 'constants/calendar';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
 	selectEditorRecurrenceInterval
-} from '../../../../../store/selectors/editor';
-import { Byday, Interval, RecurrenceStartValue } from '../../../../../types/editor';
-import { workWeek, WorkWeekDay } from '../../../../../utils/work-week';
-import { IntervalInput } from '../components/interval-input';
-import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
-import WeekdaySelect from '../components/weekday-select';
+} from 'store/selectors/editor';
+import { Byday, Interval, RecurrenceStartValue } from 'types/editor';
+import { workWeek, WorkWeekDay } from 'utils/work-week';
 
 const defaultState = {
 	freq: RECURRENCE_FREQUENCY.WEEKLY,
@@ -109,7 +107,7 @@ const selectInitialValue = (
 			).length === 0
 	) ?? weeklyOptions[0];
 
-const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
+export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
 	const interval = useAppSelector(selectEditorRecurrenceInterval(editorId));
@@ -203,69 +201,32 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	}, [frequency, setNewStartValue, startValue]);
 
 	return frequency === RECURRENCE_FREQUENCY.WEEKLY ? (
-		<RadioGroup value={radioValue} onChange={onChange}>
-			<Radio
-				size="small"
-				iconColor="primary"
-				label={
-					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-						<Padding horizontal="small">
-							<WeekdaySelect
-								setSelection={setSelectValue}
-								onChange={onByDayChange}
-								selection={selectValue}
-								disabled={radioValue !== RADIO_VALUES.QUICK_OPTIONS}
-							/>
-						</Padding>
-					</Row>
-				}
-				value={RADIO_VALUES.QUICK_OPTIONS}
-				name={RADIO_VALUES.QUICK_OPTIONS}
-			/>
-			<Radio
-				size="small"
-				iconColor="primary"
-				label={
-					<Container
-						orientation="vertical"
-						width="fit"
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
-					>
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-							<Padding horizontal="small">
-								<IntervalInput
-									label={t('label.weeks_on', 'Week(s) on')}
-									onChange={onInputChange}
-									setValue={setInputValue}
-									value={inputValue}
-									disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
-								/>
-							</Padding>
-						</Row>
-					</Container>
-				}
-				value={RADIO_VALUES.CUSTOM_OPTIONS}
-			/>
+		<Container
+			orientation="vertical"
+			mainAlignment={'flex-start'}
+			crossAlignment={'flex-start'}
+			width={'fill'}
+		>
+			<Padding vertical="medium">
+				<Text weight="bold" size="large">
+					{t('label.on', 'On')}
+				</Text>
+			</Padding>
 			<Row
-				width="fit"
+				width="fill"
 				orientation="horizontal"
 				mainAlignment="flex-start"
 				crossAlignment="flex-start"
 				wrap="nowrap"
 			>
 				<WeekdayCheckboxes
-					isHidden={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
+					isHidden={false}
 					value={checkboxesValue}
 					setValue={setCheckboxesValue}
 					onClick={onCheckboxClick}
-					disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
+					disabled={false}
 				/>
 			</Row>
-		</RadioGroup>
+		</Container>
 	) : null;
 };
-
-export default WeeklyOptions;
