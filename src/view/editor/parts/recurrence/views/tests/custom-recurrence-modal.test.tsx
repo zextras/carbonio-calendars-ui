@@ -10,11 +10,11 @@ import { screen, waitFor } from '@testing-library/react';
 import { UserEvent } from '@testing-library/user-event';
 import { values } from 'lodash';
 
-import { CustomRecurrenceModal } from './custom-recurrence-modal';
 import { setupTest } from '@test-setup';
 import { generateEditor } from 'commons/editor-generator';
 import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 import { reducers } from 'store/redux';
+import { CustomRecurrenceModal } from 'view/editor/parts/recurrence/views/custom-recurrence-modal';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createStoreWithEditor = (): {

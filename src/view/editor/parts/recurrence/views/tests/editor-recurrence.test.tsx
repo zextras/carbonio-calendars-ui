@@ -8,11 +8,11 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within } from '@testing-library/react';
 
-import { EditorRecurrence } from './editor-recurrence';
-import { generateEditor } from '../../../../../commons/editor-generator';
-import { TEST_SELECTORS } from '../../../../../constants/test-utils';
-import { reducers } from '../../../../../store/redux';
 import { setupTest } from '@test-setup';
+import { generateEditor } from 'commons/editor-generator';
+import { TEST_SELECTORS } from 'constants/test-utils';
+import { reducers } from 'store/redux';
+import { EditorRecurrence } from 'view/editor/parts/recurrence/views/editor-recurrence';
 
 describe('editor recurrence field', () => {
 	test('is set to none as default', () => {

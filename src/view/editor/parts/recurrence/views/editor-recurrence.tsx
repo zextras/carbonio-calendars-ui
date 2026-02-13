@@ -17,18 +17,18 @@ import { find, toUpper } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
-import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
-import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
-import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
+import CustomRepeatSelectItem from '../components/custom-repeat';
+import RepeatItemComponent from '../components/repeat-item-component';
+import { ColorContainer, TextUpperCase } from 'commons/styled-components';
+import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorDisabled,
 	selectEditorRecurrence,
 	selectEditorStart
-} from '../../../../../store/selectors/editor';
-import { editEditorRecurrence } from '../../../../../store/slices/editor-slice';
-import { EditorProps } from '../../../../../types/editor';
-import CustomRepeatSelectItem from '../components/custom-repeat';
-import RepeatItemComponent from '../components/repeat-item-component';
+} from 'store/selectors/editor';
+import { editEditorRecurrence } from 'store/slices/editor-slice';
+import { EditorProps } from 'types/editor';
 
 const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
@@ -188,5 +188,3 @@ export const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null
 		/>
 	) : null;
 };
-
-export default EditorRecurrence;
