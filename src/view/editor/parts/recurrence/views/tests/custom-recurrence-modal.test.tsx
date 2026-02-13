@@ -188,34 +188,35 @@ describe('CustomRecurrenceModal', () => {
 				});
 			});
 
-			it('should save monthly frequency when customized and confirmed', async () => {
-				const { store, editor } = createStoreWithEditor();
+			describe('monthly frequency', () => {
+				it('should save monthly frequency with initial date when customized and confirmed', async () => {
+					const { store, editor } = createStoreWithEditor();
 
-				const { user } = setupTest(
-					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
-					{
-						store
-					}
-				);
-
-				await selectFrequency(user, 'month');
-				await clickCustomizeButton(user);
-
-				const updatedEditor = getUpdatedEditor(store);
-
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				const expectedDayOfMonth = new Date(editor.start).getDate();
-
-				expect(updatedEditor.recur).toStrictEqual({
-					add: {
-						rule: {
-							bymonthday: {
-								modaylist: expectedDayOfMonth
-							},
-							freq: RECURRENCE_FREQUENCY.MONTHLY
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{
+							store
 						}
-					}
+					);
+
+					await selectFrequency(user, 'month');
+					await clickCustomizeButton(user);
+
+					const updatedEditor = getUpdatedEditor(store);
+
+					assert(editor.start, 'Editor start date should be defined');
+					const expectedDayOfMonth = new Date(editor.start).getDate();
+
+					expect(updatedEditor.recur).toStrictEqual({
+						add: {
+							rule: {
+								bymonthday: {
+									modaylist: expectedDayOfMonth
+								},
+								freq: RECURRENCE_FREQUENCY.MONTHLY
+							}
+						}
+					});
 				});
 			});
 
