@@ -59,21 +59,10 @@ const getWeekdayName = (
 };
 
 export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
-	const { frequency, setNewStartValue, newStartValue } = useContext(RecurrenceContext);
+	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const start = useAppSelector(selectEditorStart(editorId));
 
-	// Determine initial radio value from context if it exists
-	const initialRadioValue = useMemo(() => {
-		if (newStartValue?.bysetpos && newStartValue?.byday) {
-			return RADIO_VALUES.MONTHLY_CUSTOMIZED;
-		}
-		if (newStartValue?.bymonthday) {
-			return RADIO_VALUES.DAY_OF_MONTH;
-		}
-		return RADIO_VALUES.DAY_OF_MONTH;
-	}, [newStartValue]);
-
-	const [radioValue, setRadioValue] = useState(initialRadioValue);
+	const [radioValue, setRadioValue] = useState(RADIO_VALUES.DAY_OF_MONTH);
 
 	// Calculate day of month from start date
 	const dayOfMonth = useMemo(() => {
@@ -122,40 +111,32 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 		[ordinalPosition, weekdayCode]
 	);
 
-	const [startValue, setStartValue] = useState<RecurrenceStartValue>(() => {
-		// Use context value if it exists (from previous modal session)
-		if (newStartValue?.bymonthday || newStartValue?.bysetpos) {
-			return newStartValue;
-		}
-		// Otherwise, initialize with day of month
-		return {
+	const [startValue, setStartValue] = useState<RecurrenceStartValue>(() =>
+		// Initialize with day of month
+		({
 			bymonthday: {
 				modaylist: dayOfMonth
 			}
-		};
-	});
+		})
+	);
 
 	const onRadioChange = useCallback(
 		(ev?: string) => {
-			switch (ev) {
-				case RADIO_VALUES.DAY_OF_MONTH:
-					setStartValue({
-						bymonthday: {
-							modaylist: dayOfMonth
-						}
-					});
-					setRadioValue(ev);
-					break;
-				case RADIO_VALUES.MONTHLY_CUSTOMIZED:
-					setRadioValue(ev);
-					setStartValue({
-						bysetpos: { poslist: ordinalPosition.toString() },
-						byday: { wkday: [{ day: weekdayCode }] }
-					});
-					break;
-				default:
-					setRadioValue(RADIO_VALUES.DAY_OF_MONTH);
-					break;
+			if (ev === RADIO_VALUES.DAY_OF_MONTH) {
+				setStartValue({
+					bymonthday: {
+						modaylist: dayOfMonth
+					}
+				});
+				setRadioValue(ev);
+			} else if (ev === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
+				setRadioValue(ev);
+				setStartValue({
+					bysetpos: { poslist: ordinalPosition.toString() },
+					byday: { wkday: [{ day: weekdayCode }] }
+				});
+			} else {
+				setRadioValue(RADIO_VALUES.DAY_OF_MONTH);
 			}
 		},
 		[dayOfMonth, ordinalPosition, weekdayCode]
