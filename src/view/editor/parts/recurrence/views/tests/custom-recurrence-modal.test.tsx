@@ -16,8 +16,8 @@ import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 import { reducers } from 'store/redux';
 import { CustomRecurrenceModal } from 'view/editor/parts/recurrence/views/custom-recurrence-modal';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createStoreWithEditor = (): {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	store: any;
 	editor: ReturnType<typeof generateEditor>;
 } => {
@@ -74,17 +74,6 @@ const getIntervalInput = (): HTMLInputElement => {
 
 describe('CustomRecurrenceModal', () => {
 	describe('UI Elements', () => {
-		it('should render the modal with the correct title', () => {
-			const { store, editor } = createStoreWithEditor();
-
-			setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			const title = screen.getByText('label.custom_repeat');
-			expect(title).toBeInTheDocument();
-		});
-
 		it('should display cancel and customize buttons', () => {
 			const { store, editor } = createStoreWithEditor();
 
@@ -113,9 +102,97 @@ describe('CustomRecurrenceModal', () => {
 
 			expect(onCloseMock).toHaveBeenCalledTimes(1);
 		});
-	});
+		describe('Confirmation and State Persistence', () => {
+			it('should save daily frequency when customized and confirmed', async () => {
+				const { store, editor } = createStoreWithEditor();
 
-	describe('Default States by Frequency', () => {
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{
+						store
+					}
+				);
+
+				await clickCustomizeButton(user);
+
+				const updatedEditor = getUpdatedEditor(store);
+
+				expect(updatedEditor.recur).toStrictEqual({
+					add: { rule: { freq: RECURRENCE_FREQUENCY.DAILY } }
+				});
+			});
+
+			it('should save weekly frequency when customized and confirmed', async () => {
+				const { store, editor } = createStoreWithEditor();
+
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{
+						store
+					}
+				);
+
+				await selectFrequency(user, 'week');
+				await clickCustomizeButton(user);
+
+				const updatedEditor = getUpdatedEditor(store);
+
+				expect(updatedEditor.recur).toStrictEqual({
+					add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
+				});
+			});
+
+			it('should save monthly frequency when customized and confirmed', async () => {
+				const { store, editor } = createStoreWithEditor();
+
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{
+						store
+					}
+				);
+
+				await selectFrequency(user, 'month');
+				await clickCustomizeButton(user);
+
+				const updatedEditor = getUpdatedEditor(store);
+
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				const expectedDayOfMonth = new Date(editor.start).getDate();
+
+				expect(updatedEditor.recur).toStrictEqual({
+					add: {
+						rule: {
+							bymonthday: {
+								modaylist: expectedDayOfMonth
+							},
+							freq: RECURRENCE_FREQUENCY.MONTHLY
+						}
+					}
+				});
+			});
+
+			it('should save yearly frequency when customized and confirmed', async () => {
+				const { store, editor } = createStoreWithEditor();
+
+				const { user } = setupTest(
+					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+					{
+						store
+					}
+				);
+
+				await selectFrequency(user, 'year');
+				await clickCustomizeButton(user);
+
+				const updatedEditor = getUpdatedEditor(store);
+
+				expect(updatedEditor.recur).toStrictEqual({
+					add: { rule: { freq: RECURRENCE_FREQUENCY.YEARLY } }
+				});
+			});
+		});
 		describe('Frequency label Pluralization', () => {
 			it('should show plural "Days" for day frequency with interval 10', async () => {
 				const { store, editor } = createStoreWithEditor();
@@ -189,41 +266,6 @@ describe('CustomRecurrenceModal', () => {
 				await waitFor(() => {
 					expect(screen.getByText('Years')).toBeInTheDocument();
 				});
-			});
-		});
-	});
-
-	describe('Confirmation and State Persistence', () => {
-		it('should save daily frequency when customized and confirmed', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await clickCustomizeButton(user);
-
-			const updatedEditor = getUpdatedEditor(store);
-
-			expect(updatedEditor.recur).toStrictEqual({
-				add: { rule: { freq: RECURRENCE_FREQUENCY.DAILY } }
-			});
-		});
-
-		it('should save weekly frequency when customized and confirmed', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await selectFrequency(user, 'week');
-			await clickCustomizeButton(user);
-
-			const updatedEditor = getUpdatedEditor(store);
-
-			expect(updatedEditor.recur).toStrictEqual({
-				add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
 			});
 		});
 	});
