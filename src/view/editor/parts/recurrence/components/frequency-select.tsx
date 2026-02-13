@@ -14,24 +14,21 @@ import { useRecurrenceItems } from 'commons/use-recurrence-items';
 import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 
 export const FrequencySelect = (): ReactElement => {
-	const recurrenceContext = useContext(RecurrenceContext);
-	const { repetitionItems } = useRecurrenceItems();
 	const [t] = useTranslation();
 
-	// Get the interval value from context
+	const recurrenceContext = useContext(RecurrenceContext);
 	const interval = recurrenceContext?.newStartValue?.interval?.ival ?? 1;
-	const isPlural = interval > 1;
+	const isIntervalPlural = interval > 1;
 
-	// Create items with pluralized labels when needed
+	const { repetitionItems } = useRecurrenceItems();
 	const displayItems = useMemo(() => {
-		if (!isPlural) {
+		if (!isIntervalPlural) {
 			return repetitionItems;
 		}
 
-		// Plural forms when interval > 1
-		return repetitionItems.map((item) => {
+		return repetitionItems.map((repetitionItem) => {
 			let pluralLabel;
-			switch (item.value) {
+			switch (repetitionItem.value) {
 				case RECURRENCE_FREQUENCY.DAILY:
 					pluralLabel = t('repeat.days', 'Days');
 					break;
@@ -45,26 +42,26 @@ export const FrequencySelect = (): ReactElement => {
 					pluralLabel = t('repeat.years', 'Years');
 					break;
 				default:
-					pluralLabel = item.label;
+					pluralLabel = repetitionItem.label;
 					break;
 			}
-			return { ...item, label: pluralLabel };
+			return { ...repetitionItem, label: pluralLabel };
 		});
-	}, [repetitionItems, isPlural, t]);
+	}, [repetitionItems, isIntervalPlural, t]);
 
-	const initialValue = useMemo(
+	const initialDisplayItem = useMemo(
 		() => find(displayItems, { value: recurrenceContext?.frequency }) ?? displayItems[0],
 		[displayItems, recurrenceContext]
 	);
 
 	useEffect(() => {
-		if (initialValue) {
+		if (initialDisplayItem) {
 			const value = find(displayItems, { value: recurrenceContext?.frequency }) ?? displayItems[0];
 			recurrenceContext?.setFrequency(value?.value);
 		}
-	}, [recurrenceContext, initialValue, displayItems]);
+	}, [recurrenceContext, initialDisplayItem, displayItems]);
 
-	const onChange = useCallback<SingleSelectionOnChange>(
+	const onFrequencyChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
 				recurrenceContext?.setFrequency?.(ev);
@@ -75,9 +72,9 @@ export const FrequencySelect = (): ReactElement => {
 
 	return (
 		<Select
-			onChange={onChange}
+			onChange={onFrequencyChange}
 			items={displayItems}
-			selection={initialValue}
+			selection={initialDisplayItem}
 			disablePortal
 			data-testid={'frequency-selector'}
 		/>
