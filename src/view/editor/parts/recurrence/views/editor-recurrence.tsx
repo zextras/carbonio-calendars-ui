@@ -18,7 +18,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import CustomRepeatSelectItem from '../components/custom-repeat';
-import RepeatItemComponent from '../components/repeat-item-component';
+import { RepeatItemComponent } from '../components/repeat-item-component';
 import { ColorContainer, TextUpperCase } from 'commons/styled-components';
 import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 import { useAppDispatch, useAppSelector } from 'store/redux/hooks';

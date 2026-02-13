@@ -7,12 +7,10 @@ import React, { ReactElement } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
 
-import { TextUpperCase } from '../../../../../commons/styled-components';
+import { TextUpperCase } from 'commons/styled-components';
 
-const RepeatItemComponent = ({ label }: { label: string }): ReactElement => (
+export const RepeatItemComponent = ({ label }: { label: string }): ReactElement => (
 	<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
 		<TextUpperCase>{label}</TextUpperCase>
 	</Container>
 );
-
-export default RepeatItemComponent;
