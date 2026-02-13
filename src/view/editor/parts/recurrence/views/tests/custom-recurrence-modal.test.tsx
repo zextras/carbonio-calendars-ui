@@ -218,6 +218,85 @@ describe('CustomRecurrenceModal', () => {
 						}
 					});
 				});
+
+				it('should save monthly frequency with ordinal weekday when customized radio is selected', async () => {
+					const { store, editor } = createStoreWithEditor();
+
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{
+							store
+						}
+					);
+
+					await selectFrequency(user, 'month');
+
+					// Calculate expected values based on the editor's start date
+					assert(editor.start, 'Editor start date should be defined');
+					const startDate = new Date(editor.start);
+					const dayOfMonth = startDate.getDate();
+					const dayOfWeek = startDate.getDay(); // 0 = Sunday, 6 = Saturday
+					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+					const expectedWeekdayCode = dayCodes[dayOfWeek];
+					const expectedOrdinalPosition = Math.ceil(dayOfMonth / 7);
+
+					const ordinalWeekdayRadio = screen.getByTestId('monthly-option-ordinal-weekday');
+					await user.click(ordinalWeekdayRadio);
+
+					await clickCustomizeButton(user);
+
+					const updatedEditor = getUpdatedEditor(store);
+
+					// Verify the recurrence includes bysetpos and byday
+					expect(updatedEditor.recur?.add?.rule?.freq).toBe(RECURRENCE_FREQUENCY.MONTHLY);
+					expect(updatedEditor.recur?.add?.rule?.bysetpos?.poslist).toBe(
+						expectedOrdinalPosition.toString()
+					);
+					expect(updatedEditor.recur?.add?.rule?.byday?.wkday).toEqual([
+						{ day: expectedWeekdayCode }
+					]);
+					// Verify bymonthday is not set (it should use bysetpos + byday instead)
+					expect(updatedEditor.recur?.add?.rule?.bymonthday).toBeUndefined();
+				});
+
+				it('should save monthly frequency with day of month when day of month radio is selected', async () => {
+					const { store, editor } = createStoreWithEditor();
+
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{
+							store
+						}
+					);
+
+					await selectFrequency(user, 'month');
+
+					// Calculate expected day of month from the editor's start date
+					assert(editor.start, 'Editor start date should be defined');
+					const expectedDayOfMonth = new Date(editor.start).getDate();
+
+					// to toggle
+					const ordinalWeekdayRadio = screen.getByTestId('monthly-option-ordinal-weekday');
+					await user.click(ordinalWeekdayRadio);
+
+					const dayOfMonthRadio = screen.getByTestId('monthly-option-day-of-month');
+					await user.click(dayOfMonthRadio);
+
+					await clickCustomizeButton(user);
+
+					const updatedEditor = getUpdatedEditor(store);
+
+					expect(updatedEditor.recur).toStrictEqual({
+						add: {
+							rule: {
+								bymonthday: {
+									modaylist: expectedDayOfMonth
+								},
+								freq: RECURRENCE_FREQUENCY.MONTHLY
+							}
+						}
+					});
+				});
 			});
 
 			it('should save yearly frequency when customized and confirmed', async () => {

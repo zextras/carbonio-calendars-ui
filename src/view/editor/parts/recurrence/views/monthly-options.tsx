@@ -170,8 +170,9 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 				</Padding>
 				<RadioGroup value={radioValue} onChange={onRadioChange}>
 					<Radio
-						size={'small'}
+						data-testid="monthly-option-day-of-month"
 						key={'day_of_month'}
+						size={'small'}
 						iconColor="primary"
 						label={
 							<Row
@@ -188,8 +189,9 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 					/>
 					<Padding key={'padding-1'} top="medium" />
 					<Radio
-						size={'small'}
+						data-testid="monthly-option-ordinal-weekday"
 						key={'custom'}
+						size={'small'}
 						iconColor="primary"
 						label={
 							<Row
