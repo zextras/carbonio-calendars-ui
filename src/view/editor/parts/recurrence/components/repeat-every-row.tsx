@@ -11,15 +11,21 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { FrequencySelect } from './frequency-select';
 import { IntervalInput } from './interval-input';
 import { RecurrenceContext } from 'commons/recurrence-context';
+import { useAppSelector } from 'store/redux/hooks';
+import { selectEditorRecurrenceInterval } from 'store/selectors/editor';
 
-export const RepeatEveryRow = (): ReactElement => {
+type RepeatEveryRowProps = {
+	editorId: string;
+};
+
+export const RepeatEveryRow = ({ editorId }: RepeatEveryRowProps): ReactElement => {
 	const recurrenceContext = useContext(RecurrenceContext);
 
-	// Initialize interval value from context if it exists
-	const [intervalValue, setIntervalValue] = useState(() => {
-		const contextInterval = recurrenceContext?.newStartValue?.interval?.ival;
-		return contextInterval ? contextInterval.toString() : '1';
-	});
+	const editorInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+
+	const [intervalValue, setIntervalValue] = useState(() =>
+		editorInterval?.ival ? editorInterval.ival.toString() : '1'
+	);
 
 	const handleIntervalChange = useCallback(
 		(value: number) => {

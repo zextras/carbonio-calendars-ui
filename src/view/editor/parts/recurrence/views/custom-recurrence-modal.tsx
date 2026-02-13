@@ -85,7 +85,7 @@ export const CustomRecurrenceModal = ({
 			/>
 			<Divider />
 			<ModalBody>
-				<RepeatEveryRow />
+				<RepeatEveryRow editorId={editorId} />
 				<Padding vertical="small" width={'fill'}>
 					<WeeklyOptions editorId={editorId} />
 					<MonthlyOptions editorId={editorId} />
