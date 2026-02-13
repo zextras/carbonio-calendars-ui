@@ -14,12 +14,12 @@ import { useRecurrenceItems } from 'commons/use-recurrence-items';
 import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 
 export const FrequencySelect = (): ReactElement => {
-	const context = useContext(RecurrenceContext);
-	const { repetitionItemsV2: repetitionItems } = useRecurrenceItems();
+	const recurrenceContext = useContext(RecurrenceContext);
+	const { repetitionItems } = useRecurrenceItems();
 	const [t] = useTranslation();
 
 	// Get the interval value from context
-	const interval = context?.newStartValue?.interval?.ival ?? 1;
+	const interval = recurrenceContext?.newStartValue?.interval?.ival ?? 1;
 	const isPlural = interval > 1;
 
 	// Create items with pluralized labels when needed
@@ -53,24 +53,24 @@ export const FrequencySelect = (): ReactElement => {
 	}, [repetitionItems, isPlural, t]);
 
 	const initialValue = useMemo(
-		() => find(displayItems, { value: context?.frequency }) ?? displayItems[0],
-		[displayItems, context]
+		() => find(displayItems, { value: recurrenceContext?.frequency }) ?? displayItems[0],
+		[displayItems, recurrenceContext]
 	);
 
 	useEffect(() => {
 		if (initialValue) {
-			const value = find(displayItems, { value: context?.frequency }) ?? displayItems[0];
-			context?.setFrequency(value?.value);
+			const value = find(displayItems, { value: recurrenceContext?.frequency }) ?? displayItems[0];
+			recurrenceContext?.setFrequency(value?.value);
 		}
-	}, [context, initialValue, displayItems]);
+	}, [recurrenceContext, initialValue, displayItems]);
 
 	const onChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
-				context?.setFrequency?.(ev);
+				recurrenceContext?.setFrequency?.(ev);
 			}
 		},
-		[context]
+		[recurrenceContext]
 	);
 
 	return (
