@@ -101,7 +101,7 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 			hasInitializedRef.current = true;
 			setStartValue((prevValue) => {
 				// Only initialize if startValue doesn't have byday yet
-				if (!prevValue || !prevValue.byday?.wkday || prevValue.byday.wkday.length === 0) {
+				if (!prevValue?.byday?.wkday?.length) {
 					return {
 						interval: editorRecurrenceInterval ?? { ival: 1 },
 						byday: { wkday: checkboxesValue }
