@@ -71,7 +71,7 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 		initialCheckboxValue: { day: string }[]
 	): RecurrenceStartValue | undefined => {
 		if (freq === RECURRENCE_FREQUENCY.WEEKLY) {
-			const wkday = byDay?.wkday && byDay.wkday.length > 0 ? byDay.wkday : initialCheckboxValue;
+			const wkday = byDay?.wkday?.length ? byDay.wkday : initialCheckboxValue;
 			return { interval, byday: { wkday } };
 		}
 		return undefined;
