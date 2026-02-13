@@ -44,7 +44,7 @@ export const WeekdayCheckboxes = ({
 	);
 
 	return isHidden ? null : (
-		<Row width="fill" mainAlignment="space-between" wrap="nowrap">
+		<Row width="fill" mainAlignment="space-between" wrap="nowrap" gap={'0.5rem'}>
 			{map(weekDays, (opt) => {
 				const isChecked = !!find(value, ({ day }) => day === opt.value);
 				return (
@@ -56,7 +56,7 @@ export const WeekdayCheckboxes = ({
 						disabled={disabled}
 						labelColor={isChecked ? 'white' : 'primary'}
 						size="medium"
-						width="fit"
+						width="fill"
 					/>
 				);
 			})}

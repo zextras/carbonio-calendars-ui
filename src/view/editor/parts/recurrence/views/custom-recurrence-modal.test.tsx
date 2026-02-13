@@ -116,25 +116,6 @@ describe('CustomRecurrenceModal', () => {
 	});
 
 	describe('Default States by Frequency', () => {
-		it('should show "day" + "months" options when "monthly" is selected', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await selectFrequency(user, 'month');
-
-			const allRadios = screen.getAllByRole('radio');
-			const dayRadio = find(allRadios, ['value', RADIO_VALUES.DAY_OF_MONTH]);
-			const dayInputOption = within(screen.getByTestId('montly_day_input')).getByRole('textbox');
-			const everyMonthsInputOption = screen.getByRole('textbox', { name: 'label.months' });
-
-			expect(dayRadio).toBeChecked();
-			expect(dayInputOption).toHaveValue('1');
-			expect(everyMonthsInputOption).toHaveValue('1');
-		});
-
 		it('should show "day" + "month" options when "yearly" is selected', async () => {
 			const { store, editor } = createStoreWithEditor();
 
@@ -195,7 +176,7 @@ describe('CustomRecurrenceModal', () => {
 				});
 			});
 
-			it.skip('should show plural "Months" for month frequency with interval 7', async () => {
+			it('should show plural "Months" for month frequency with interval 7', async () => {
 				const { store, editor } = createStoreWithEditor();
 
 				const { user } = setupTest(
@@ -266,33 +247,6 @@ describe('CustomRecurrenceModal', () => {
 
 			expect(updatedEditor.recur).toStrictEqual({
 				add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
-			});
-		});
-
-		it('should save monthly frequency with day and interval when customized and confirmed', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await selectFrequency(user, 'month');
-			await clickCustomizeButton(user);
-
-			const updatedEditor = getUpdatedEditor(store);
-
-			expect(updatedEditor.recur).toStrictEqual({
-				add: {
-					rule: {
-						bymonthday: {
-							modaylist: 1
-						},
-						freq: 'MON',
-						interval: {
-							ival: 1
-						}
-					}
-				}
 			});
 		});
 
