@@ -172,7 +172,7 @@ describe('CustomRecurrenceModal', () => {
 				});
 			});
 
-			it.skip('should show plural "Years" for year frequency with interval 99', async () => {
+			it('should show plural "Years" for year frequency with interval 99', async () => {
 				const { store, editor } = createStoreWithEditor();
 
 				const { user } = setupTest(
