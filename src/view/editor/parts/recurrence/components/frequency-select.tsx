@@ -26,11 +26,12 @@ export const FrequencySelect = ({ editorId }: FrequencySelectProps): ReactElemen
 	const [t] = useTranslation();
 
 	const recurrenceContext = useContext(RecurrenceContext);
-	const editorInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
-	const editorFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const editorEventRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const editorEventRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
 
 	// Read interval from context first (for live updates), fallback to editor state, default to 1
-	const interval = recurrenceContext?.newStartValue?.interval?.ival ?? editorInterval?.ival ?? 1;
+	const interval =
+		recurrenceContext?.newStartValue?.interval?.ival ?? editorEventRecurrenceInterval?.ival ?? 1;
 	const isIntervalPlural = interval > 1;
 
 	const { repetitionItems } = useRecurrenceItems();
@@ -64,7 +65,7 @@ export const FrequencySelect = ({ editorId }: FrequencySelectProps): ReactElemen
 
 	// Initialize from editor frequency only once
 	const [selectedItem, setSelectedItem] = React.useState(
-		() => find(displayItems, { value: editorFrequency }) ?? displayItems[0]
+		() => find(displayItems, { value: editorEventRecurrenceFrequency }) ?? displayItems[0]
 	);
 
 	// Update selected item when displayItems change (e.g., plural/singular)

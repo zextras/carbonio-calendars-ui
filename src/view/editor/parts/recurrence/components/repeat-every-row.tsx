@@ -21,10 +21,10 @@ type RepeatEveryRowProps = {
 export const RepeatEveryRow = ({ editorId }: RepeatEveryRowProps): ReactElement => {
 	const recurrenceContext = useContext(RecurrenceContext);
 
-	const editorInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const editorRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
 
 	const [intervalValue, setIntervalValue] = useState(() =>
-		editorInterval?.ival ? editorInterval.ival.toString() : '1'
+		editorRecurrenceInterval?.ival ? editorRecurrenceInterval.ival.toString() : '1'
 	);
 
 	const handleIntervalChange = useCallback(

@@ -53,16 +53,16 @@ const checkboxesInitialValue = (
 
 export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
-	const editorRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
-	const editorRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
-	const editorRecurrenceByDay = useAppSelector(selectEditorRecurrenceByDay(editorId));
-	const editorStart = useAppSelector(selectEditorStart(editorId));
+	const editorEventRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const editorEventRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const editorEventRecurrenceByDay = useAppSelector(selectEditorRecurrenceByDay(editorId));
+	const editorEventStartDate = useAppSelector(selectEditorStart(editorId));
 
 	const hasInitializedRef = useRef(false);
 
 	// Initialize from editor state or event start date
 	const [checkboxesValue, setCheckboxesValue] = useState(() =>
-		checkboxesInitialValue(editorRecurrenceByDay, editorStart)
+		checkboxesInitialValue(editorEventRecurrenceByDay, editorEventStartDate)
 	);
 
 	const startValueInitialState = (
@@ -80,10 +80,10 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 
 	const [startValue, setStartValue] = useState(() =>
 		startValueInitialState(
-			editorRecurrenceFrequency,
-			editorRecurrenceInterval,
-			editorRecurrenceByDay,
-			checkboxesInitialValue(editorRecurrenceByDay, editorStart)
+			editorEventRecurrenceFrequency,
+			editorEventRecurrenceInterval,
+			editorEventRecurrenceByDay,
+			checkboxesInitialValue(editorEventRecurrenceByDay, editorEventStartDate)
 		)
 	);
 
@@ -104,14 +104,14 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 				// Only initialize if startValue doesn't have byday yet
 				if (!prevValue?.byday?.wkday?.length) {
 					return {
-						interval: editorRecurrenceInterval ?? { ival: 1 },
+						interval: editorEventRecurrenceInterval ?? { ival: 1 },
 						byday: { wkday: checkboxesValue }
 					};
 				}
 				return prevValue;
 			});
 		}
-	}, [frequency, editorRecurrenceInterval, checkboxesValue]);
+	}, [frequency, editorEventRecurrenceInterval, checkboxesValue]);
 
 	useEffect(() => {
 		if (startValue && frequency === RECURRENCE_FREQUENCY.WEEKLY) {

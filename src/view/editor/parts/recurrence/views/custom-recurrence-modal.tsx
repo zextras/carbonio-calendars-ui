@@ -47,16 +47,19 @@ export const CustomRecurrenceModal = ({
 	editorId,
 	onClose
 }: CustomRecurrenceModalProps): ReactElement => {
-	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
-	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
-	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
+	const editorEventRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const editorEventRecurrenceCount = useAppSelector(selectEditorRecurrenceCount(editorId));
+	const editorEventRecurrenceUntilDate = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
+
+	const [frequency, setFrequency] = useState(editorEventRecurrenceFrequency);
+	const [newStartValue, setNewStartValue] = useState<RecurrenceStartValue>();
+	const [newEndValue, setNewEndValue] = useState(() =>
+		setEndInitialValue(editorEventRecurrenceCount, editorEventRecurrenceUntilDate)
+	);
+
 	const dispatch = useAppDispatch();
 
-	const [frequency, setFrequency] = useState(freq);
-	const [newStartValue, setNewStartValue] = useState<RecurrenceStartValue>();
-	const [newEndValue, setNewEndValue] = useState(() => setEndInitialValue(count, until));
-
-	const onConfirm = useCallback(() => {
+	const confirmCustomRepeat = useCallback(() => {
 		const recur = {
 			add: {
 				rule: omitBy({ ...(newStartValue ?? {}), ...(newEndValue ?? {}), freq: frequency }, isNil)
@@ -100,7 +103,7 @@ export const CustomRecurrenceModal = ({
 				</Padding>
 			</ModalBody>
 			<ModalFooter
-				onConfirm={onConfirm}
+				onConfirm={confirmCustomRepeat}
 				label={t('editor.repeat.set-custom-repeat', 'set custom repeat')}
 				secondaryAction={onClose}
 				secondaryLabel={t('label.cancel', 'Cancel')}

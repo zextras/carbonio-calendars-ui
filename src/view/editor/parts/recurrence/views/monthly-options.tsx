@@ -60,22 +60,22 @@ const getWeekdayName = (
 
 export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
-	const start = useAppSelector(selectEditorStart(editorId));
+	const editorEventStartDate = useAppSelector(selectEditorStart(editorId));
 
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.DAY_OF_MONTH);
 
 	// Calculate day of month from start date
 	const dayOfMonth = useMemo(() => {
-		if (!start) return 1;
-		return moment(start).date();
-	}, [start]);
+		if (!editorEventStartDate) return 1;
+		return moment(editorEventStartDate).date();
+	}, [editorEventStartDate]);
 
 	// Calculate ordinal position and weekday from start date
 	const { ordinalPosition, weekdayCode } = useMemo(() => {
-		if (!start) {
+		if (!editorEventStartDate) {
 			return { ordinalPosition: 1, weekdayCode: 'MO' };
 		}
-		const date = moment(start);
+		const date = moment(editorEventStartDate);
 		const dayOfWeek = date.day(); // 0 = Sunday, 6 = Saturday
 		const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
@@ -92,7 +92,7 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 			ordinalPosition: computedOrdinalPosition,
 			weekdayCode: dayCodes[dayOfWeek]
 		};
-	}, [start]);
+	}, [editorEventStartDate]);
 
 	const dayOfMonthLabel = useMemo(
 		() =>
@@ -111,14 +111,12 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 		[ordinalPosition, weekdayCode]
 	);
 
-	const [startValue, setStartValue] = useState<RecurrenceStartValue>(() =>
+	const [startValue, setStartValue] = useState<RecurrenceStartValue>(() => ({
 		// Initialize with day of month
-		({
-			bymonthday: {
-				modaylist: dayOfMonth
-			}
-		})
-	);
+		bymonthday: {
+			modaylist: dayOfMonth
+		}
+	}));
 
 	const onRadioChange = useCallback(
 		(ev?: string) => {
