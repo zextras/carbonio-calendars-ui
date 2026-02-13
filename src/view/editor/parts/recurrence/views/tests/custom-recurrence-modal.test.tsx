@@ -102,6 +102,7 @@ describe('CustomRecurrenceModal', () => {
 
 			expect(onCloseMock).toHaveBeenCalledTimes(1);
 		});
+
 		describe('Confirmation and State Persistence', () => {
 			it('should save daily frequency when customized and confirmed', async () => {
 				const { store, editor } = createStoreWithEditor();
@@ -122,23 +123,56 @@ describe('CustomRecurrenceModal', () => {
 				});
 			});
 
-			it('should save weekly frequency when customized and confirmed', async () => {
-				const { store, editor } = createStoreWithEditor();
+			describe('weekly frequency', () => {
+				it('should save weekly frequency when customized and confirmed', async () => {
+					const { store, editor } = createStoreWithEditor();
 
-				const { user } = setupTest(
-					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
-					{
-						store
-					}
-				);
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{
+							store
+						}
+					);
 
-				await selectFrequency(user, 'week');
-				await clickCustomizeButton(user);
+					await selectFrequency(user, 'week');
+					await clickCustomizeButton(user);
 
-				const updatedEditor = getUpdatedEditor(store);
+					const updatedEditor = getUpdatedEditor(store);
 
-				expect(updatedEditor.recur).toStrictEqual({
-					add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
+					expect(updatedEditor.recur).toStrictEqual({
+						add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
+					});
+				});
+
+				it('should save selected week days for weekly frequency when customized and confirmed', async () => {
+					const { store, editor } = createStoreWithEditor();
+
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{
+							store
+						}
+					);
+
+					await selectFrequency(user, 'week');
+
+					await user.click(screen.getByRole('button', { name: 'TUE' }));
+					await user.click(screen.getByRole('button', { name: 'THU' }));
+
+					await clickCustomizeButton(user);
+
+					const updatedEditor = getUpdatedEditor(store);
+
+					const actualDays = new Set(
+						updatedEditor.recur?.add?.rule?.byday?.wkday?.map((d: { day: string }) => d.day) ?? []
+					);
+
+					expect(updatedEditor.recur?.add?.rule?.freq).toBe(RECURRENCE_FREQUENCY.WEEKLY);
+
+					expect(actualDays.size).toBeGreaterThanOrEqual(2);
+
+					expect(actualDays.has('TU')).toBe(true);
+					expect(actualDays.has('TH')).toBe(true);
 				});
 			});
 
@@ -193,6 +227,7 @@ describe('CustomRecurrenceModal', () => {
 				});
 			});
 		});
+
 		describe('Frequency label Pluralization', () => {
 			it('should show plural "Days" for day frequency with interval 10', async () => {
 				const { store, editor } = createStoreWithEditor();
