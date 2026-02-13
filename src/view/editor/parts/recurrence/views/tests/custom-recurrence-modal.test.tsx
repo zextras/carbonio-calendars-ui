@@ -331,6 +331,89 @@ describe('CustomRecurrenceModal', () => {
 					expect(savedDays).toContain('FR');
 					expect(savedDays.length).toBe(2);
 				}, 10000);
+
+				it('should allow unchecking a day when multiple days are selected', async () => {
+					const { store, editor } = createStoreWithEditor();
+
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{ store }
+					);
+
+					await frequencySelector.select(user, 'week');
+					await weekDaySelector.waitForOptionsToLoad();
+
+					// Calculate which day is auto-selected based on the event's start date
+					const startDate = new Date(editor.start ?? Date.now());
+					const dayOfWeek = startDate.getDay();
+					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+					const dayCodesUi = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+					const autoSelectedDay = dayCodes[dayOfWeek];
+
+					const aDayOtherThanSelected = dayCodes.find((day) => day !== autoSelectedDay);
+					assert(
+						aDayOtherThanSelected,
+						'There should be at least one day other than the auto-selected day'
+					);
+
+					await weekDaySelector.selectDays(user, [
+						dayCodesUi[dayCodes.indexOf(aDayOtherThanSelected)]
+					]);
+
+					// Now we have 2 days selected: auto-selected day + aDayOtherThanSelected
+					// Uncheck  auto-selected day (should work since we have multiple days selected)
+					const autoSelectedDayButton = await screen.findByRole('button', {
+						name: dayCodesUi[dayCodes.indexOf(autoSelectedDay)]
+					});
+					await user.click(autoSelectedDayButton);
+
+					await modal.confirmCustomization(user);
+
+					const updatedEditor = getUpdatedEditor(store);
+					const savedDays =
+						updatedEditor.recur?.add?.rule?.byday?.wkday?.map((d: { day: string }) => d.day) ?? [];
+
+					// Should only have aDayOtherThanSelected
+					expect(savedDays).toContain(aDayOtherThanSelected);
+					expect(savedDays).not.toContain(autoSelectedDay);
+
+					expect(savedDays.length).toBe(1);
+				}, 10000);
+
+				it('should prevent unchecking the last remaining day', async () => {
+					const { store, editor } = createStoreWithEditor();
+
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{ store }
+					);
+
+					await frequencySelector.select(user, 'week');
+					await weekDaySelector.waitForOptionsToLoad();
+
+					// The initial state should have one day selected (the event's start day)
+					// Try to uncheck it - should not work (minimum one day required)
+					const startDate = new Date(editor.start ?? Date.now());
+					const dayOfWeek = startDate.getDay();
+					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+					const dayLabels = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+					const initialDay = dayCodes[dayOfWeek];
+					const initialDayLabel = dayLabels[dayOfWeek];
+
+					// Try to uncheck the only selected day
+					const dayButton = await screen.findByRole('button', { name: initialDayLabel });
+					await user.click(dayButton);
+
+					await modal.confirmCustomization(user);
+
+					const updatedEditor = getUpdatedEditor(store);
+					const savedDays =
+						updatedEditor.recur?.add?.rule?.byday?.wkday?.map((d: { day: string }) => d.day) ?? [];
+
+					// Should still have the initial day (cannot uncheck the last day)
+					expect(savedDays).toContain(initialDay);
+					expect(savedDays.length).toBe(1);
+				}, 10000);
 			});
 
 			describe('monthly frequency', () => {
