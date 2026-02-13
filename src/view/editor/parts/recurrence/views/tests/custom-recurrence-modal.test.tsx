@@ -283,6 +283,54 @@ describe('CustomRecurrenceModal', () => {
 
 					recurrenceAssertions.expectWeekly(getUpdatedEditor(store), ['TU', 'TH']);
 				}, 10000);
+
+				it('should initialize with saved weekly recurrence days when reopening modal', async () => {
+					const { store, editor } = createStoreWithEditor();
+
+					// First, save a weekly recurrence with Monday and Friday
+					store.dispatch({
+						type: 'editor/editEditorRecurrence',
+						payload: {
+							id: editor.id,
+							recur: [
+								{
+									add: [
+										{
+											rule: [
+												{
+													freq: RECURRENCE_FREQUENCY.WEEKLY,
+													interval: [{ ival: 1 }],
+													byday: [{ wkday: [{ day: 'MO' }, { day: 'FR' }] }]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					});
+
+					const { user } = setupTest(
+						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+						{ store }
+					);
+
+					// Modal should already show weekly frequency since it's saved in the editor
+					// Just wait for the weekly options to be visible
+					await weekDaySelector.waitForOptionsToLoad();
+
+					// Confirm without making any changes - should preserve the saved recurrence
+					await modal.confirmCustomization(user);
+
+					const updatedEditor = getUpdatedEditor(store);
+					const savedDays =
+						updatedEditor.recur?.add?.rule?.byday?.wkday?.map((d: { day: string }) => d.day) ?? [];
+
+					// Should preserve the previously saved days (MO and FR)
+					expect(savedDays).toContain('MO');
+					expect(savedDays).toContain('FR');
+					expect(savedDays.length).toBe(2);
+				}, 10000);
 			});
 
 			describe('monthly frequency', () => {
