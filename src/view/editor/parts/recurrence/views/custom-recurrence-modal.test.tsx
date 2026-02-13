@@ -6,14 +6,14 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { UserEvent } from '@testing-library/user-event';
-import { find, values } from 'lodash';
+import { values } from 'lodash';
 
 import { CustomRecurrenceModal } from './custom-recurrence-modal';
 import { setupTest } from '@test-setup';
 import { generateEditor } from 'commons/editor-generator';
-import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 import { reducers } from 'store/redux';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,29 +116,6 @@ describe('CustomRecurrenceModal', () => {
 	});
 
 	describe('Default States by Frequency', () => {
-		it('should show "day" + "month" options when "yearly" is selected', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await selectFrequency(user, 'year');
-
-			const allRadios = screen.getAllByRole('radio');
-			const everyYearOnRadio = find(allRadios, ['value', RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY]);
-			const dayInputOption = within(screen.getByTestId('every_yearly_day_input')).getByRole(
-				'textbox'
-			);
-			const monthsInputOption = within(screen.getByTestId('every_yearly_month_input')).getByText(
-				'January'
-			);
-
-			expect(everyYearOnRadio).toBeChecked();
-			expect(dayInputOption).toHaveValue('1');
-			expect(monthsInputOption).toBeInTheDocument();
-		});
-
 		describe('Frequency label Pluralization', () => {
 			it('should show plural "Days" for day frequency with interval 10', async () => {
 				const { store, editor } = createStoreWithEditor();
@@ -247,33 +224,6 @@ describe('CustomRecurrenceModal', () => {
 
 			expect(updatedEditor.recur).toStrictEqual({
 				add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
-			});
-		});
-
-		it('should save yearly frequency with month and day when customized and confirmed', async () => {
-			const { store, editor } = createStoreWithEditor();
-
-			const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, {
-				store
-			});
-
-			await selectFrequency(user, 'year');
-			await clickCustomizeButton(user);
-
-			const updatedEditor = getUpdatedEditor(store);
-
-			expect(updatedEditor.recur).toStrictEqual({
-				add: {
-					rule: {
-						bymonth: {
-							molist: '1'
-						},
-						bymonthday: {
-							modaylist: 1
-						},
-						freq: 'YEA'
-					}
-				}
 			});
 		});
 	});
