@@ -356,6 +356,48 @@ describe('CustomRecurrenceModal', () => {
 						expectedDayOfMonth
 					);
 				}, 10000);
+
+				it.each([
+					{ dayOfMonth: 1, expectedOrdinal: 1 },
+					{ dayOfMonth: 8, expectedOrdinal: 2 },
+					{ dayOfMonth: 15, expectedOrdinal: 3 },
+					{ dayOfMonth: 22, expectedOrdinal: 4 },
+					{ dayOfMonth: 29, expectedOrdinal: -1 } // Last occurrence of the weekday in the month
+				])(
+					'should save monthly frequency with ordinal position $expectedOrdinal for day $dayOfMonth',
+					async ({ dayOfMonth, expectedOrdinal }) => {
+						const { store, editor } = createStoreWithEditor();
+
+						// Set the editor's start date to the specific day of month for this test case
+						const testDate = new Date(2026, 0, dayOfMonth); // January dayOfMonth, 2026
+						const newStartTime = testDate.getTime();
+
+						// Update the editor in the store with the new start date (cannot modify editor object directly)
+						store.dispatch({
+							type: 'editor/editEditorDate',
+							payload: {
+								id: editor.id,
+								start: newStartTime,
+								end: editor.end
+							}
+						});
+
+						const { user } = setupTest(
+							<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
+							{ store }
+						);
+
+						await frequencySelector.select(user, 'month');
+						await monthlyOptions.selectOrdinalWeekday(user);
+						await modal.confirmCustomization(user);
+
+						const updatedEditor = getUpdatedEditor(store);
+						expect(updatedEditor.recur?.add?.rule?.bysetpos?.poslist).toBe(
+							expectedOrdinal.toString()
+						);
+					},
+					10000
+				);
 			});
 
 			it('should save yearly frequency when customized and confirmed', async () => {
