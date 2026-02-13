@@ -75,7 +75,7 @@ export const RepeatEveryRow = ({ editorId }: RepeatEveryRowProps): ReactElement 
 				crossAlignment={FLEX_START_ALIGNMENT}
 				width={'fill'}
 			>
-				<FrequencySelect />
+				<FrequencySelect editorId={editorId} />
 			</Container>
 		</Container>
 	);

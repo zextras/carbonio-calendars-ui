@@ -12,12 +12,25 @@ import { useTranslation } from 'react-i18next';
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { useRecurrenceItems } from 'commons/use-recurrence-items';
 import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
+import { useAppSelector } from 'store/redux/hooks';
+import {
+	selectEditorRecurrenceFrequency,
+	selectEditorRecurrenceInterval
+} from 'store/selectors/editor';
 
-export const FrequencySelect = (): ReactElement => {
+type FrequencySelectProps = {
+	editorId: string;
+};
+
+export const FrequencySelect = ({ editorId }: FrequencySelectProps): ReactElement => {
 	const [t] = useTranslation();
 
 	const recurrenceContext = useContext(RecurrenceContext);
-	const interval = recurrenceContext?.newStartValue?.interval?.ival ?? 1;
+	const editorInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const editorFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+
+	// Read interval from context first (for live updates), fallback to editor state, default to 1
+	const interval = recurrenceContext?.newStartValue?.interval?.ival ?? editorInterval?.ival ?? 1;
 	const isIntervalPlural = interval > 1;
 
 	const { repetitionItems } = useRecurrenceItems();
@@ -49,32 +62,45 @@ export const FrequencySelect = (): ReactElement => {
 		});
 	}, [repetitionItems, isIntervalPlural, t]);
 
-	const initialDisplayItem = useMemo(
-		() => find(displayItems, { value: recurrenceContext?.frequency }) ?? displayItems[0],
-		[displayItems, recurrenceContext]
+	// Initialize from editor frequency only once
+	const [selectedItem, setSelectedItem] = React.useState(
+		() => find(displayItems, { value: editorFrequency }) ?? displayItems[0]
 	);
 
+	// Update selected item when displayItems change (e.g., plural/singular)
 	useEffect(() => {
-		if (initialDisplayItem) {
-			const value = find(displayItems, { value: recurrenceContext?.frequency }) ?? displayItems[0];
-			recurrenceContext?.setFrequency(value?.value);
+		const newItem = find(displayItems, { value: selectedItem.value });
+		if (newItem) {
+			setSelectedItem(newItem);
 		}
-	}, [recurrenceContext, initialDisplayItem, displayItems]);
+	}, [displayItems, selectedItem.value]);
+
+	// Initialize context frequency from editor state only once
+	useEffect(() => {
+		if (selectedItem && recurrenceContext?.setFrequency) {
+			recurrenceContext.setFrequency(selectedItem.value);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const onFrequencyChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
+				const newItem = find(displayItems, { value: ev });
+				if (newItem) {
+					setSelectedItem(newItem);
+				}
 				recurrenceContext?.setFrequency?.(ev);
 			}
 		},
-		[recurrenceContext]
+		[recurrenceContext, displayItems]
 	);
 
 	return (
 		<Select
 			onChange={onFrequencyChange}
 			items={displayItems}
-			selection={initialDisplayItem}
+			selection={selectedItem}
 			disablePortal
 			data-testid={'frequency-selector'}
 		/>
