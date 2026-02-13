@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
@@ -58,6 +58,8 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 	const editorRecurrenceByDay = useAppSelector(selectEditorRecurrenceByDay(editorId));
 	const editorStart = useAppSelector(selectEditorStart(editorId));
 
+	const hasInitializedRef = useRef(false);
+
 	const [checkboxesValue, setCheckboxesValue] = useState(() =>
 		checkboxesInitialValue(editorRecurrenceByDay, editorStart)
 	);
@@ -65,10 +67,12 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 	const startValueInitialState = (
 		freq: string | undefined,
 		interval: Interval | undefined,
-		byDay: Byday | undefined
+		byDay: Byday | undefined,
+		initialCheckboxValue: { day: string }[]
 	): RecurrenceStartValue | undefined => {
 		if (freq === RECURRENCE_FREQUENCY.WEEKLY) {
-			return { interval, byday: byDay };
+			const wkday = byDay?.wkday && byDay.wkday.length > 0 ? byDay.wkday : initialCheckboxValue;
+			return { interval, byday: { wkday } };
 		}
 		return undefined;
 	};
@@ -77,7 +81,8 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 		startValueInitialState(
 			editorRecurrenceFrequency,
 			editorRecurrenceInterval,
-			editorRecurrenceByDay
+			editorRecurrenceByDay,
+			checkboxesInitialValue(editorRecurrenceByDay, editorStart)
 		)
 	);
 
@@ -89,6 +94,23 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 			}));
 		}
 	}, []);
+
+	// When frequency changes to WEEKLY, initialize startValue with the auto-selected day
+	useEffect(() => {
+		if (frequency === RECURRENCE_FREQUENCY.WEEKLY && !hasInitializedRef.current) {
+			hasInitializedRef.current = true;
+			setStartValue((prevValue) => {
+				// Only initialize if startValue doesn't have byday yet
+				if (!prevValue || !prevValue.byday?.wkday || prevValue.byday.wkday.length === 0) {
+					return {
+						interval: editorRecurrenceInterval ?? { ival: 1 },
+						byday: { wkday: checkboxesValue }
+					};
+				}
+				return prevValue;
+			});
+		}
+	}, [frequency, editorRecurrenceInterval, checkboxesValue]);
 
 	useEffect(() => {
 		if (startValue && frequency === RECURRENCE_FREQUENCY.WEEKLY) {

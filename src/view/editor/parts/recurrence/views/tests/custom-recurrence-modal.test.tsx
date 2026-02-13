@@ -124,7 +124,7 @@ describe('CustomRecurrenceModal', () => {
 			});
 
 			describe('weekly frequency', () => {
-				it('should save weekly frequency when customized and confirmed', async () => {
+				it('should save weekly frequency with initial day auto-selected when customized and confirmed', async () => {
 					const { store, editor } = createStoreWithEditor();
 
 					const { user } = setupTest(
@@ -139,9 +139,21 @@ describe('CustomRecurrenceModal', () => {
 
 					const updatedEditor = getUpdatedEditor(store);
 
-					expect(updatedEditor.recur).toStrictEqual({
-						add: { rule: { freq: RECURRENCE_FREQUENCY.WEEKLY } }
-					});
+					// Calculate the expected initial day from the editor's start date
+					const startDate = new Date(editor.start ?? Date.now());
+					const dayOfWeek = startDate.getDay(); // 0 = Sunday, 6 = Saturday
+					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+					const expectedInitialDay = dayCodes[dayOfWeek];
+
+					// The recurrence should include the frequency and the auto-selected initial day
+					expect(updatedEditor.recur?.add?.rule?.freq).toBe(RECURRENCE_FREQUENCY.WEEKLY);
+					expect(updatedEditor.recur?.add?.rule?.byday?.wkday).toBeDefined();
+					expect(updatedEditor.recur?.add?.rule?.byday?.wkday?.length).toBeGreaterThanOrEqual(1);
+
+					// Verify the initial day is in the selected days
+					const selectedDays =
+						updatedEditor.recur?.add?.rule?.byday?.wkday?.map((d: { day: string }) => d.day) ?? [];
+					expect(selectedDays).toContain(expectedInitialDay);
 				});
 
 				it('should save selected week days for weekly frequency when customized and confirmed', async () => {
