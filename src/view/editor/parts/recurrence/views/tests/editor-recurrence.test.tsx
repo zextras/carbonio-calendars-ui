@@ -14,47 +14,57 @@ import { TEST_SELECTORS } from 'constants/test-utils';
 import { reducers } from 'store/redux';
 import { EditorRecurrence } from 'view/editor/parts/recurrence/views/editor-recurrence';
 
-describe('editor recurrence field', () => {
-	test('is set to none as default', () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+describe('Editor Recurrence Field', () => {
+	describe('Default State', () => {
+		it('should display "None" as the default value', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		setupTest(<EditorRecurrence editorId={editor.id} />, {
-			store
+			setupTest(<EditorRecurrence editorId={editor.id} />, {
+				store
+			});
+
+			expect(editor.recur).toBeUndefined();
+			expect(screen.getByText('None')).toBeVisible();
 		});
-
-		expect(editor.recur).toBeUndefined();
-		expect(screen.getByText('None')).toBeVisible();
 	});
-	test('has 6 available options', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
-			store
+	describe('Recurrence Options Dropdown', () => {
+		it('should display all 6 available recurrence options when opened', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+
+			const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
+				store
+			});
+
+			await user.click(screen.getByText('None'));
+
+			const dropdownPopperEl = screen.getByTestId(TEST_SELECTORS.DROPDOWN);
+
+			expect(within(dropdownPopperEl).getByText('None')).toBeVisible();
+			expect(within(dropdownPopperEl).getByText('Every day')).toBeVisible();
+			expect(within(dropdownPopperEl).getByText('Every Week')).toBeVisible();
+			expect(within(dropdownPopperEl).getByText('Every Month')).toBeVisible();
+			expect(within(dropdownPopperEl).getByText('Every Year')).toBeVisible();
+			expect(within(dropdownPopperEl).getByRole('button', { name: 'Custom' })).toBeVisible();
 		});
-
-		await user.click(screen.getByText(/none/i));
-
-		const dropdownPopperEl = screen.getByTestId(TEST_SELECTORS.DROPDOWN);
-
-		expect(within(dropdownPopperEl).getByText(/none/i)).toBeVisible();
-		expect(within(dropdownPopperEl).getByText(/every day/i)).toBeVisible();
-		expect(within(dropdownPopperEl).getByText(/every week/i)).toBeVisible();
-		expect(within(dropdownPopperEl).getByText(/every month/i)).toBeVisible();
-		expect(within(dropdownPopperEl).getByText(/every year/i)).toBeVisible();
-		expect(within(dropdownPopperEl).getByRole('button', { name: /custom/i })).toBeVisible();
 	});
-	test('clicking on “custom“ will open a modal', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
-			store
+	describe('Custom Recurrence Modal', () => {
+		it('should open the custom recurrence modal when "Custom" option is clicked', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+
+			const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
+				store
+			});
+
+			await user.click(screen.getByText('None'));
+			await user.click(screen.getByRole('button', { name: 'Custom' }));
+
+			expect(screen.getByTestId('modal')).toBeInTheDocument();
+			expect(screen.getByText('label.custom_repeat')).toBeVisible();
 		});
-		await user.click(screen.getByText(/none/i));
-		await user.click(screen.getByRole('button', { name: /custom/i }));
-
-		expect(screen.getByTestId('modal')).toBeInTheDocument();
 	});
 });
