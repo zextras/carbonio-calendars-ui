@@ -52,7 +52,7 @@ const checkboxesInitialValue = (
 };
 
 export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
-	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
+	const { frequency, setNewStartValue, newStartValue } = useContext(RecurrenceContext);
 	const editorRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
 	const editorRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
 	const editorRecurrenceByDay = useAppSelector(selectEditorRecurrenceByDay(editorId));
@@ -60,16 +60,26 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 
 	const hasInitializedRef = useRef(false);
 
-	const [checkboxesValue, setCheckboxesValue] = useState(() =>
-		checkboxesInitialValue(editorRecurrenceByDay, editorStart)
-	);
+	const [checkboxesValue, setCheckboxesValue] = useState(() => {
+		// Use context value if it exists (from previous modal session), otherwise calculate from editor
+		if (newStartValue?.byday?.wkday) {
+			return newStartValue.byday.wkday;
+		}
+		return checkboxesInitialValue(editorRecurrenceByDay, editorStart);
+	});
 
 	const startValueInitialState = (
 		freq: string | undefined,
 		interval: Interval | undefined,
 		byDay: Byday | undefined,
-		initialCheckboxValue: { day: string }[]
+		initialCheckboxValue: { day: string }[],
+		contextValue: RecurrenceStartValue | undefined
 	): RecurrenceStartValue | undefined => {
+		// Use context value if it exists (from previous modal session)
+		if (contextValue?.byday || contextValue?.interval) {
+			return contextValue;
+		}
+
 		if (freq === RECURRENCE_FREQUENCY.WEEKLY) {
 			const wkday = byDay?.wkday?.length ? byDay.wkday : initialCheckboxValue;
 			return { interval, byday: { wkday } };
@@ -82,7 +92,8 @@ export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement 
 			editorRecurrenceFrequency,
 			editorRecurrenceInterval,
 			editorRecurrenceByDay,
-			checkboxesInitialValue(editorRecurrenceByDay, editorStart)
+			checkboxesInitialValue(editorRecurrenceByDay, editorStart),
+			newStartValue
 		)
 	);
 

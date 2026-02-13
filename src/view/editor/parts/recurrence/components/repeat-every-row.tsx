@@ -14,7 +14,12 @@ import { RecurrenceContext } from 'commons/recurrence-context';
 
 export const RepeatEveryRow = (): ReactElement => {
 	const recurrenceContext = useContext(RecurrenceContext);
-	const [intervalValue, setIntervalValue] = useState('1');
+
+	// Initialize interval value from context if it exists
+	const [intervalValue, setIntervalValue] = useState(() => {
+		const contextInterval = recurrenceContext?.newStartValue?.interval?.ival;
+		return contextInterval ? contextInterval.toString() : '1';
+	});
 
 	const handleIntervalChange = useCallback(
 		(value: number) => {

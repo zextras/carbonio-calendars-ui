@@ -48,14 +48,38 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
 	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
 
-	const [radioValue, setRadioValue] = useState(() => radioInitialState(count, until));
-	const [inputValue, setInputValue] = useState(count ?? '1');
+	// Determine initial radio value from context if it exists, otherwise from editor
+	const initialRadioValue = useMemo(() => {
+		if (newEndValue && 'count' in newEndValue) {
+			return RADIO_VALUES.END_AFTER_COUNT;
+		}
+		if (newEndValue && 'until' in newEndValue) {
+			return RADIO_VALUES.END_AFTER_UNTIL;
+		}
+		// If no context value, use editor values
+		return radioInitialState(count, until);
+	}, [newEndValue, count, until]);
 
-	const initialPickerValue = useMemo(
-		() =>
-			until ? new Date(moment(until).valueOf()) : (new Date(moment(start).valueOf()) ?? new Date()),
-		[start, until]
-	);
+	const [radioValue, setRadioValue] = useState(initialRadioValue);
+
+	// Initialize input value from context if it exists, otherwise from editor
+	const [inputValue, setInputValue] = useState(() => {
+		if (newEndValue && 'count' in newEndValue && newEndValue.count?.num) {
+			return newEndValue.count.num;
+		}
+		return count ?? '1';
+	});
+
+	const initialPickerValue = useMemo(() => {
+		// Use context value if it exists
+		if (newEndValue && 'until' in newEndValue && newEndValue.until?.d) {
+			return new Date(moment(newEndValue.until.d).valueOf());
+		}
+		// Otherwise use editor value or start date
+		return until
+			? new Date(moment(until).valueOf())
+			: (new Date(moment(start).valueOf()) ?? new Date());
+	}, [start, until, newEndValue]);
 
 	const [pickerValue, setPickerValue] = useState(initialPickerValue);
 
