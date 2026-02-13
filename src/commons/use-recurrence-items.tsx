@@ -73,10 +73,10 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 
 	const repetitionItems = useMemo(
 		() => [
-			{ label: t('repeat.day', 'Day'), value: RECURRENCE_FREQUENCY.DAILY },
-			{ label: t('repeat.week', 'Week'), value: RECURRENCE_FREQUENCY.WEEKLY },
-			{ label: t('repeat.month', 'Month'), value: RECURRENCE_FREQUENCY.MONTHLY },
-			{ label: t('repeat.year', 'Year'), value: RECURRENCE_FREQUENCY.YEARLY }
+			{ label: t('repeat.days_plural', 'Day(s)'), value: RECURRENCE_FREQUENCY.DAILY },
+			{ label: t('repeat.weeks_plural', 'Week(s)'), value: RECURRENCE_FREQUENCY.WEEKLY },
+			{ label: t('repeat.months_plural', 'Month(s)'), value: RECURRENCE_FREQUENCY.MONTHLY },
+			{ label: t('repeat.years_plural', 'Year(s)'), value: RECURRENCE_FREQUENCY.YEARLY }
 		],
 		[t]
 	);

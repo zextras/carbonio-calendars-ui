@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { UserEvent } from '@testing-library/user-event';
 import { values } from 'lodash';
 
@@ -45,13 +45,13 @@ const modal = {
 const frequencySelector = {
 	async select(user: UserEvent, frequency: 'day' | 'week' | 'month' | 'year'): Promise<void> {
 		const frequencyDisplayMap: Record<string, string> = {
-			day: 'Day',
-			week: 'Week',
-			month: 'Month',
-			year: 'Year'
+			day: 'Day(s)',
+			week: 'Week(s)',
+			month: 'Month(s)',
+			year: 'Year(s)'
 		};
 
-		const currentFrequency = screen.getByText(/^(Day|Week|Month|Year)$/);
+		const currentFrequency = screen.getByText(/^(Day\(s\)|Week\(s\)|Month\(s\)|Year\(s\))$/);
 		// eslint-disable-next-line testing-library/no-node-access
 		const dropdownContainer = currentFrequency.closest('[tabindex="0"]');
 		if (dropdownContainer) {
@@ -62,35 +62,6 @@ const frequencySelector = {
 		await user.click(frequencyOption);
 	}
 };
-
-const intervalInput = {
-	get(): HTMLInputElement {
-		const inputContainer = screen.getByTestId('interval-input-container');
-		// eslint-disable-next-line testing-library/no-node-access
-		const input = inputContainer.querySelector('input');
-		if (!(input instanceof HTMLInputElement)) {
-			throw new Error('Interval input not found');
-		}
-		return input;
-	},
-
-	async setValue(user: UserEvent, value: string | number): Promise<void> {
-		const input = this.get();
-		await user.clear(input);
-		await user.type(input, value.toString());
-	},
-
-	async clear(user: UserEvent): Promise<void> {
-		const input = this.get();
-		await user.clear(input);
-	},
-
-	async type(user: UserEvent, text: string): Promise<void> {
-		const input = this.get();
-		await user.type(input, text);
-	}
-};
-
 const weekDaySelector = {
 	async selectDays(user: UserEvent, days: string[]): Promise<void> {
 		// eslint-disable-next-line no-restricted-syntax
@@ -186,12 +157,6 @@ const recurrenceAssertions = {
 	expectYearly(editor: ReturnType<typeof generateEditor>): void {
 		expect(editor.recur).toStrictEqual({
 			add: { rule: { freq: RECURRENCE_FREQUENCY.YEARLY } }
-		});
-	},
-
-	expectFrequencyLabel(expectedText: string): Promise<void> {
-		return waitFor(() => {
-			expect(screen.getByText(expectedText)).toBeInTheDocument();
 		});
 	}
 };
@@ -543,59 +508,6 @@ describe('CustomRecurrenceModal', () => {
 				await modal.confirmCustomization(user);
 
 				recurrenceAssertions.expectYearly(getUpdatedEditor(store));
-			});
-		});
-
-		describe('Frequency label Pluralization', () => {
-			it('should show plural "Days" for day frequency with interval 10', async () => {
-				const { store, editor } = createStoreWithEditor();
-
-				const { user } = setupTest(
-					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
-					{ store }
-				);
-
-				await intervalInput.setValue(user, 10);
-				await recurrenceAssertions.expectFrequencyLabel('Days');
-			});
-
-			it('should show plural "Weeks" for week frequency with interval 3', async () => {
-				const { store, editor } = createStoreWithEditor();
-
-				const { user } = setupTest(
-					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
-					{ store }
-				);
-
-				await frequencySelector.select(user, 'week');
-				await intervalInput.setValue(user, 3);
-				await recurrenceAssertions.expectFrequencyLabel('Weeks');
-			});
-
-			it('should show plural "Months" for month frequency with interval 7', async () => {
-				const { store, editor } = createStoreWithEditor();
-
-				const { user } = setupTest(
-					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
-					{ store }
-				);
-
-				await frequencySelector.select(user, 'month');
-				await intervalInput.setValue(user, 7);
-				await recurrenceAssertions.expectFrequencyLabel('Months');
-			});
-
-			it('should show plural "Years" for year frequency with interval 99', async () => {
-				const { store, editor } = createStoreWithEditor();
-
-				const { user } = setupTest(
-					<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
-					{ store }
-				);
-
-				await frequencySelector.select(user, 'year');
-				await intervalInput.setValue(user, 99);
-				await recurrenceAssertions.expectFrequencyLabel('Years');
 			});
 		});
 	});
