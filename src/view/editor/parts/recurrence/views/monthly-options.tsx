@@ -15,17 +15,20 @@ import { useAppSelector } from 'store/redux/hooks';
 import { selectEditorStart } from 'store/selectors/editor';
 import { RecurrenceStartValue } from 'types/editor';
 
-const getOrdinalSuffix = (day: number): string => {
-	if (day > 3 && day < 21) return 'th';
+const getOrdinalSuffix = (
+	day: number,
+	tFn: (key: string, defaultValue: string) => string
+): string => {
+	if (day > 3 && day < 21) return tFn('ordinal.suffix.th', 'th');
 	switch (day % 10) {
 		case 1:
-			return 'st';
+			return tFn('ordinal.suffix.st', 'st');
 		case 2:
-			return 'nd';
+			return tFn('ordinal.suffix.nd', 'nd');
 		case 3:
-			return 'rd';
+			return tFn('ordinal.suffix.rd', 'rd');
 		default:
-			return 'th';
+			return tFn('ordinal.suffix.th', 'th');
 	}
 };
 
@@ -39,7 +42,7 @@ const getOrdinalNumber = (
 	if (num === 4) return tFn('ordinal.fourth', 'Fourth');
 	if (num === 5) return tFn('ordinal.fifth', 'Fifth');
 	if (num === -1) return tFn('ordinal.last', 'Last');
-	return `${num}${getOrdinalSuffix(num)}`;
+	return `${num}${getOrdinalSuffix(num, tFn)}`;
 };
 
 const getWeekdayName = (
@@ -97,7 +100,7 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 	const dayOfMonthLabel = useMemo(
 		() =>
 			t('label.day_of_month_recurrence', '{{day}} of the Month', {
-				day: `${dayOfMonth}${getOrdinalSuffix(dayOfMonth)}`
+				day: `${dayOfMonth}${getOrdinalSuffix(dayOfMonth, t)}`
 			}),
 		[dayOfMonth]
 	);
