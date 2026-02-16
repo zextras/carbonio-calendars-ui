@@ -5,10 +5,10 @@
  */
 import React, { ReactElement, useCallback } from 'react';
 
-import { Checkbox, Container } from '@zextras/carbonio-design-system';
+import { Button, Row } from '@zextras/carbonio-design-system';
 import { find, map, reject } from 'lodash';
 
-import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
+import { useRecurrenceItems } from 'commons/use-recurrence-items';
 
 type WeekdayCheckboxesProps = {
 	value: { day: string }[];
@@ -34,7 +34,7 @@ export const WeekdayCheckboxes = ({
 				const newValue = [...value, { day: opt.value }];
 				setValue(newValue);
 				onClick(newValue);
-			} else {
+			} else if (value.length > 1) {
 				const newValue = reject(value, { day: opt.value });
 				setValue(newValue);
 				onClick(newValue);
@@ -44,28 +44,22 @@ export const WeekdayCheckboxes = ({
 	);
 
 	return isHidden ? null : (
-		<>
+		<Row width="fill" mainAlignment="space-between" wrap="nowrap" gap={'0.5rem'}>
 			{map(weekDays, (opt) => {
 				const isChecked = !!find(value, ({ day }) => day === opt.value);
 				return (
-					<Container
+					<Button
 						key={`week_day_${opt.value}`}
-						orientation="horizontal"
-						width="fit"
-						mainAlignment="flex-start"
-						padding={{ horizontal: 'small' }}
-					>
-						<Checkbox
-							size="small"
-							key={opt.label}
-							onClick={(): void => onCheckboxClick(opt)}
-							label={opt.label.slice(0, 3)}
-							value={isChecked}
-							disabled={disabled}
-						/>
-					</Container>
+						type={isChecked ? 'default' : 'outlined'}
+						label={opt.label.slice(0, 3).toUpperCase()}
+						onClick={(): void => onCheckboxClick(opt)}
+						disabled={disabled}
+						labelColor={isChecked ? 'white' : 'primary'}
+						size="medium"
+						width="fill"
+					/>
 				);
 			})}
-		</>
+		</Row>
 	);
 };

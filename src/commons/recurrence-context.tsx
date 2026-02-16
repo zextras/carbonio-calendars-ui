@@ -5,7 +5,7 @@
  */
 import React, { createContext, Dispatch, SetStateAction } from 'react';
 
-import { RecurrenceStartValue } from '../types/editor';
+import { RecurrenceStartValue } from 'types/editor';
 
 export type RecurrenceContextType = {
 	newStartValue: any;
