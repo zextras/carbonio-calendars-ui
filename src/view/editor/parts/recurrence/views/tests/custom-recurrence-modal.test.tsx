@@ -15,6 +15,7 @@ import { generateEditor } from 'commons/editor-generator';
 import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 import { reducers } from 'store/redux';
 import { CustomRecurrenceModal } from 'view/editor/parts/recurrence/views/custom-recurrence-modal';
+import { calculateOrdinalPosition } from 'view/editor/parts/recurrence/views/monthly-options-utils';
 
 // Test constants
 const MONTHLY_OPTION_DAY_OF_MONTH = 'monthly-option-day-of-month';
@@ -415,11 +416,8 @@ describe('CustomRecurrenceModal', () => {
 
 					assert(editor.start, 'Editor start date should be defined');
 					const startDate = new Date(editor.start);
-					const dayOfMonth = startDate.getDate();
-					const dayOfWeek = startDate.getDay();
-					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-					const expectedWeekdayCode = dayCodes[dayOfWeek];
-					const expectedOrdinalPosition = Math.ceil(dayOfMonth / 7);
+					const { ordinalPosition: expectedOrdinalPosition, weekdayCode: expectedWeekdayCode } =
+						calculateOrdinalPosition(startDate);
 
 					await monthlyOptions.selectOrdinalWeekday(user);
 					await modal.confirmCustomization(user);

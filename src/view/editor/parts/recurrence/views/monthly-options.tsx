@@ -9,6 +9,7 @@ import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbo
 import { t } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 
+import { calculateOrdinalPosition } from './monthly-options-utils';
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { RADIO_VALUES, RECURRENCE_FREQUENCY } from 'constants/recurrence';
 import { useAppSelector } from 'store/redux/hooks';
@@ -78,23 +79,7 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 		if (!editorEventStartDate) {
 			return { ordinalPosition: 1, weekdayCode: 'MO' };
 		}
-		const date = moment(editorEventStartDate);
-		const dayOfWeek = date.day(); // 0 = Sunday, 6 = Saturday
-		const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-
-		// Calculate which occurrence of this weekday in the month (1st, 2nd, 3rd, etc.)
-		const currentDayOfMonth = date.date();
-		const occurrence = Math.ceil(currentDayOfMonth / 7);
-
-		// Detect if this is the last occurrence of this weekday in the month.
-		// If adding 7 days changes the month, there is no next same weekday in this month.
-		const nextWeek = moment(date).add(7, 'days');
-		const isLastOccurrence = nextWeek.month() !== date.month();
-		const computedOrdinalPosition = isLastOccurrence ? -1 : occurrence;
-		return {
-			ordinalPosition: computedOrdinalPosition,
-			weekdayCode: dayCodes[dayOfWeek]
-		};
+		return calculateOrdinalPosition(editorEventStartDate);
 	}, [editorEventStartDate]);
 
 	const dayOfMonthLabel = useMemo(
