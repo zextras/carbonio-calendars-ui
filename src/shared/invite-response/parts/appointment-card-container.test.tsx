@@ -45,7 +45,7 @@ describe('appointment card container component', () => {
 	test('will call a search request', async () => {
 		const start = new Date().getTime();
 		const end = new Date().setUTCHours(15, 30, 0, 0);
-		const searchRequestHandler = jest.spyOn(getSearchRequestHandler, 'searchRequest');
+		const searchRequestHandler = vi.spyOn(getSearchRequestHandler, 'searchRequest');
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
@@ -61,7 +61,7 @@ describe('appointment card container component', () => {
 	test('will show a shimmer list while waiting for data', async () => {
 		const start = new Date().getTime();
 		const end = new Date().setUTCHours(15, 30, 0, 0);
-		const searchRequestHandler = jest.spyOn(getSearchRequestHandler, 'searchRequest');
+		const searchRequestHandler = vi.spyOn(getSearchRequestHandler, 'searchRequest');
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
@@ -79,7 +79,7 @@ describe('appointment card container component', () => {
 	test('if data is retrieved it will show an appointment card container', async () => {
 		const start = new Date().getTime();
 		const end = new Date().setUTCHours(15, 30, 0, 0);
-		const searchRequestHandler = jest.spyOn(getSearchRequestHandler, 'searchRequest');
+		const searchRequestHandler = vi.spyOn(getSearchRequestHandler, 'searchRequest');
 
 		handleSearchRequest();
 
@@ -90,7 +90,7 @@ describe('appointment card container component', () => {
 		});
 
 		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
+			await vi.advanceTimersToNextTimerAsync();
 		});
 
 		expect(searchRequestHandler).toHaveBeenCalledTimes(1);

@@ -45,7 +45,7 @@ describe('ForwardAppointmentModal', () => {
 	});
 
 	it('calls onClose when the close icon is clicked', async () => {
-		const onClose = jest.fn();
+		const onClose = vi.fn();
 		const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={onClose} />);
 		const closeIcon = await screen.findByTestId('icon: CloseOutline');
 		await user.click(closeIcon);
@@ -53,7 +53,7 @@ describe('ForwardAppointmentModal', () => {
 	});
 
 	it('should enable confirm button only if attendees input not empty', async () => {
-		const onClose = jest.fn();
+		const onClose = vi.fn();
 		const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={onClose} />);
 		const input = await screen.findByTestId('forward-appointment-input');
 		await inputAttendee(user, input, faker.internet.email());
@@ -85,7 +85,7 @@ describe('ForwardAppointmentModal', () => {
 		});
 
 		it('closes the modal', async () => {
-			const mockOnClose = jest.fn();
+			const mockOnClose = vi.fn();
 			const interceptor = createSoapAPIInterceptor<ForwardAppointmentRequest>('ForwardAppointment');
 			const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={mockOnClose} />);
 

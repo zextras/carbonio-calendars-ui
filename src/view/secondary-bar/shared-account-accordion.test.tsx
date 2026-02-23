@@ -12,8 +12,8 @@ import { getRootsArray } from '@zextras/carbonio-ui-commons';
 
 import { SharedAccountAccordion } from './shared-account-accordion';
 import { reducers } from '../../store/redux';
+import { useLocalStorage } from '@test-mocks/@zextras/carbonio-shell-ui';
 import { screen, setupTest } from '@test-setup';
-import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { getMocksContext } from '@test-utils/utils/mocks-context';
 
@@ -25,7 +25,7 @@ function setupSharedAccountTest(): {
 } {
 	populateFoldersStore();
 	const mocksContext = getMocksContext();
-	useLocalStorage.mockReturnValue([[], jest.fn()]);
+	useLocalStorage.mockReturnValue([[], vi.fn()]);
 
 	const { sendOnBehalf } = mocksContext.identities;
 	const {
@@ -72,20 +72,21 @@ describe('SharedAccountAccordion', () => {
 	it('should update the open status in local storage when accordion is toggled', async () => {
 		const { sharedAccount } = setupSharedAccountTest();
 
-		const funMock = jest.fn();
+		const funMock = vi.fn();
 		useLocalStorage.mockReturnValue([[], funMock]);
 
 		const { user } = setupTest(<SharedAccountAccordion rootId={sharedAccount.id} />, { store });
 
 		const accordionButton = screen.getAllByRole('button');
 		await user.click(accordionButton[0]);
-		expect(screen.getByText('Calendar')).toBeVisible();
+		const calendarElement = screen.getByText('Calendar');
+		expect(calendarElement).toBeVisible();
 
 		expect(funMock).toHaveBeenLastCalledWith([sharedAccount.id]);
 
 		await user.click(accordionButton[0]);
 		await waitFor(() => {
-			expect(screen.getByText('Calendar')).not.toBeVisible();
+			expect(calendarElement).not.toBeVisible();
 		});
 
 		expect(funMock).toHaveBeenLastCalledWith([]);

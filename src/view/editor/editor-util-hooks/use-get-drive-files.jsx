@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
-import { filter, map } from 'lodash';
+import { filter, map, union } from 'lodash';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
@@ -65,12 +65,21 @@ export const useGetFilesFromDrive = ({ editorId }) => {
 						size: file.value.node.size,
 						aid: file.value.res.attachmentId
 					}));
-					const attachmentFilesArr = [...(attachmentFiles ?? []), ...attachments];
+
+					const newAttachmentFiles = [...(attachmentFiles ?? []), ...attachments];
+
+					const newAids = union(
+						parts?.aid ?? [],
+						map(success, (i) => i.value.res.attachmentId)
+					);
 					dispatch(
 						editEditorAttachments({
 							id: editorId,
-							attach: { aid: map(success, (i) => i.value.res.attachmentId), mp: parts },
-							attachmentFIles: attachmentFilesArr
+							attach: {
+								aid: newAids,
+								mp: parts?.mp ?? parts
+							},
+							attachmentFiles: newAttachmentFiles
 						})
 					);
 				});

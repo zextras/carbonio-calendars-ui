@@ -10,10 +10,8 @@ import { FOLDERS, hasId } from '@zextras/carbonio-ui-commons';
 import { find } from 'lodash';
 
 import {
-	acceptAsTentative,
-	acceptInvitation,
+	acceptAsAction,
 	createCopy,
-	declineInvitation,
 	deletePermanently,
 	editAppointment,
 	emailAttendees,
@@ -31,6 +29,7 @@ import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
 import { ForwardAppointmentModal } from '../view/modals/forward-appointment/forward-appointment-modal';
+import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
 export const openEventItem = ({
 	event,
@@ -64,7 +63,7 @@ export const acceptInvitationItem = ({
 	label: t('event.action.accept', 'Accept'),
 	disabled: event?.resource?.participationStatus === PARTICIPATION_STATUS.ACCEPTED,
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: acceptInvitation({ event, context, invite })
+	onClick: acceptAsAction({ actionType: InviteReplyVerb.ACCEPT, event, invite, context })
 });
 
 export const declineInvitationItem = ({
@@ -81,7 +80,7 @@ export const declineInvitationItem = ({
 	label: t('event.action.decline', 'Decline'),
 	disabled: event?.resource?.participationStatus === PARTICIPATION_STATUS.DECLINED,
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: declineInvitation({ event, context, invite })
+	onClick: acceptAsAction({ actionType: InviteReplyVerb.DECLINE, event, invite, context })
 });
 
 export const acceptAsTentativeItem = ({
@@ -98,7 +97,7 @@ export const acceptAsTentativeItem = ({
 	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === PARTICIPATION_STATUS.TENTATIVE,
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: acceptAsTentative({ event, context, invite })
+	onClick: acceptAsAction({ actionType: InviteReplyVerb.TENTATIVE, event, invite, context })
 });
 
 export const proposeNewTimeItem = ({
@@ -133,38 +132,6 @@ export const moveEventItem = ({
 	disabled: !event?.haveWriteAccess,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	onClick: moveAppointment({ event, context })
-});
-
-export const moveApptToTrashItem = ({
-	invite,
-	event,
-	context
-}: {
-	invite?: Invite;
-	event: EventType;
-	context: ActionsContext;
-}): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.TRASH,
-	icon: 'Trash2Outline',
-	label: t('label.delete', 'Delete'),
-	disabled: !event?.haveWriteAccess,
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: moveToTrash({ event, invite, context })
-});
-
-export const deletePermanentlyItem = ({
-	event,
-	context
-}: {
-	event: EventType;
-	context: ActionsContext;
-}): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.DELETE_PERMANENTLY,
-	icon: 'DeletePermanentlyOutline',
-	label: t('label.delete_permanently', 'Delete permanently'),
-	disabled: false,
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: deletePermanently({ event, context })
 });
 
 export const editEventItem = ({

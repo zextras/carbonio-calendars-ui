@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
-import produce from 'immer';
 
 import { AppointmentsSlice } from '../../types/store/store';
 import { deleteAppointmentPermanent } from '../actions/delete-appointment-permanent';
@@ -48,9 +47,9 @@ export const appointmentsSlice = createSlice({
 	name: 'appointments',
 	initialState,
 	reducers: {
-		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
-		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer),
-		handleDeletedAppointments: produce(handleDeletedAppointmentsReducer)
+		handleModifiedAppointments: handleModifiedAppointmentsReducer,
+		handleCreatedAppointments: handleCreatedAppointmentsReducer,
+		handleDeletedAppointments: handleDeletedAppointmentsReducer
 	},
 	extraReducers: (builder) => {
 		builder.addCase(moveAppointmentToTrash.pending, moveAppointmentToTrashPending);

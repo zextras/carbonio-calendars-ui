@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-import { RECURRENCE_FREQUENCY } from '../constants/recurrence';
+import { RECURRENCE_FREQUENCY } from 'constants/recurrence';
 
 type UseRecurrenceItems = {
 	months: Array<{ label: string; value: string }>;
@@ -73,10 +73,10 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 
 	const repetitionItems = useMemo(
 		() => [
-			{ label: t('repeat.daily', 'Daily'), value: RECURRENCE_FREQUENCY.DAILY },
-			{ label: t('repeat.weekly', 'Weekly'), value: RECURRENCE_FREQUENCY.WEEKLY },
-			{ label: t('repeat.monthly', 'Monthly'), value: RECURRENCE_FREQUENCY.MONTHLY },
-			{ label: t('repeat.yearly', 'Yearly'), value: RECURRENCE_FREQUENCY.YEARLY }
+			{ label: t('repeat.days_plural', 'Day(s)'), value: RECURRENCE_FREQUENCY.DAILY },
+			{ label: t('repeat.weeks_plural', 'Week(s)'), value: RECURRENCE_FREQUENCY.WEEKLY },
+			{ label: t('repeat.months_plural', 'Month(s)'), value: RECURRENCE_FREQUENCY.MONTHLY },
+			{ label: t('repeat.years_plural', 'Year(s)'), value: RECURRENCE_FREQUENCY.YEARLY }
 		],
 		[t]
 	);

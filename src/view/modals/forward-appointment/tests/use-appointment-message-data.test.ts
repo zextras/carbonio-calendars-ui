@@ -67,7 +67,7 @@ describe('useAppointmentMessageData', () => {
 	});
 
 	it('should handle error response gracefully', async () => {
-		const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(jest.fn());
+		const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
 
 		const interceptor = createSoapAPIInterceptor('GetMsg', {
 			error: 'Some error'

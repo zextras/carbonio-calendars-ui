@@ -9,6 +9,7 @@ import React from 'react';
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { combineReducers } from 'redux';
+import { Mock } from 'vitest';
 
 import { generateEditor } from '../../../../commons/editor-generator';
 import { onSave } from '../../../../commons/editor-save-send-fns';
@@ -16,17 +17,13 @@ import { reducers } from '../../../../store/redux';
 import { EditorSaveButton } from '../editor-save-button';
 import { setupTest } from '@test-setup';
 
-jest.mock('../../../../commons/editor-save-send-fns', () => ({
-	onSave: jest.fn()
+vi.mock('../../../../commons/editor-save-send-fns', () => ({
+	onSave: vi.fn()
 }));
 
 const DEFAULT_ATTENDEE = { email: 'user@test.com' };
 
 describe('EditorSaveButton', () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
-
 	it('should disable save button when event has no title', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -62,7 +59,7 @@ describe('EditorSaveButton', () => {
 	});
 
 	it('should call onSave when clicking save', async () => {
-		(onSave as jest.Mock).mockResolvedValue({ response: true });
+		(onSave as Mock).mockResolvedValue({ response: true });
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 

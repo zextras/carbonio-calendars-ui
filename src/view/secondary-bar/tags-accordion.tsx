@@ -11,5 +11,5 @@ import { useSecondaryBarTreeTags } from './use-secondary-bar-tree-tags';
 
 export const TagsAccordion = (): React.JSX.Element => {
 	const items = useSecondaryBarTreeTags();
-	return <Accordion items={items} />;
+	return <Accordion items={items} disableTransition />;
 };

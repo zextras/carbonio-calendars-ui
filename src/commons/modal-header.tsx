@@ -10,8 +10,8 @@ import {
 	Divider,
 	Text,
 	Row,
-	IconButton,
-	ButtonProps
+	ButtonProps,
+	Button
 } from '@zextras/carbonio-design-system';
 
 interface ModalHeaderProps {
@@ -32,7 +32,13 @@ export const ModalHeader = ({ title, onClose }: ModalHeaderProps): React.JSX.Ele
 				{title}
 			</Text>
 			{onClose && (
-				<IconButton size="medium" style={{ margin: 0 }} onClick={onClose} icon="CloseOutline" />
+				<Button
+					size={'medium'}
+					onClick={onClose}
+					icon="CloseOutline"
+					type={'ghost'}
+					color={'gray0'}
+				/>
 			)}
 		</Row>
 		<Container padding={{ top: 'small', bottom: 'small' }}>

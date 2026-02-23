@@ -6,6 +6,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import {
+	InviteReplyVerb,
 	SendInviteReplyRejectedType,
 	sendInviteReplyRequest,
 	SendInviteReplyReturnType
@@ -14,8 +15,8 @@ import { InstanceExceptionId } from '../../utils/event';
 
 export type SendInviteArguments = {
 	inviteId: string;
-	action: string;
-	exceptId?: InstanceExceptionId | undefined;
+	action: InviteReplyVerb;
+	exceptId?: InstanceExceptionId;
 	updateOrganizer: boolean;
 	fromMail?: boolean;
 };

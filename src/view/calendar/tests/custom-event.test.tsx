@@ -51,6 +51,78 @@ describe('custom-event', () => {
 		});
 		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
 	});
+	test('if the event is private it will have a private icon', async () => {
+		const event = mockedData.getEvent({ resource: { class: 'PRI', name: '' }, title: '' });
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+		setupTest(<MemoCustomEvent event={event} title={''} />, {
+			store
+		});
+		expect(screen.getByTestId('icon: Lock')).toBeVisible();
+	});
+	test('if the event is not private it will not have a private icon', async () => {
+		const event = mockedData.getEvent({ resource: { class: 'PUB', name: '' }, title: '' });
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+		setupTest(<MemoCustomEvent event={event} title={''} />, {
+			store
+		});
+		expect(screen.queryByTestId('icon: Lock')).not.toBeInTheDocument();
+	});
+	test('if the event has a title it will be shown', async () => {
+		const event = mockedData.getEvent({ resource: { name: 'test' }, title: 'test' });
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+		setupTest(<MemoCustomEvent event={event} title={'test'} />, {
+			store
+		});
+		expect(screen.getByText('test')).toBeVisible();
+	});
+	test('if the event does not a title it will not be shown', async () => {
+		const event = mockedData.getEvent({ resource: { name: '' }, title: '' });
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+		setupTest(<MemoCustomEvent event={event} title={''} />, {
+			store
+		});
+		expect(screen.queryByTestId('event-title')).not.toBeInTheDocument();
+	});
 	test('single click over the event will save the anchor element to the store', async () => {
 		const event = mockedData.getEvent();
 		const invite = mockedData.getInvite({ event });
@@ -70,7 +142,7 @@ describe('custom-event', () => {
 
 		await user.click(screen.getByTestId('calendar-event-inner-container'));
 		act(() => {
-			jest.advanceTimersByTime(250);
+			vi.advanceTimersByTime(250);
 		});
 		expect(useAppStatusStore.getState().summaryViewRef.current).toBeInTheDocument();
 	});

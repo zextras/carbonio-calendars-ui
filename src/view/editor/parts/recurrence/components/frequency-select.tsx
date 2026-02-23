@@ -7,47 +7,53 @@ import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from
 
 import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
-import { useTranslation } from 'react-i18next';
 
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
+import { RecurrenceContext } from 'commons/recurrence-context';
+import { useRecurrenceItems } from 'commons/use-recurrence-items';
+import { useAppSelector } from 'store/redux/hooks';
+import { selectEditorRecurrenceFrequency } from 'store/selectors/editor';
 
-const FrequencySelect = (): ReactElement => {
-	const context = useContext(RecurrenceContext);
-	const [t] = useTranslation();
+type FrequencySelectProps = {
+	editorId: string;
+};
+
+export const FrequencySelect = ({ editorId }: FrequencySelectProps): ReactElement => {
+	const recurrenceContext = useContext(RecurrenceContext);
+	const editorEventRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
 
 	const { repetitionItems } = useRecurrenceItems();
 
-	const initialValue = useMemo(
-		() => find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0],
-		[repetitionItems, context]
-	);
+	const selectedItem = useMemo(() => {
+		const value = recurrenceContext?.frequency ?? editorEventRecurrenceFrequency;
+		return find(repetitionItems, { value }) ?? repetitionItems[0];
+	}, [repetitionItems, recurrenceContext?.frequency, editorEventRecurrenceFrequency]);
 
+	// Initialize context frequency on mount if not already set
 	useEffect(() => {
-		if (initialValue) {
-			const value = find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0];
-			context?.setFrequency(value?.value);
+		if (!recurrenceContext?.frequency && recurrenceContext?.setFrequency) {
+			const initialFrequency = editorEventRecurrenceFrequency ?? repetitionItems[0]?.value;
+			if (initialFrequency) {
+				recurrenceContext.setFrequency(initialFrequency);
+			}
 		}
-	}, [context, initialValue, repetitionItems]);
+	}, [repetitionItems, editorEventRecurrenceFrequency, recurrenceContext]);
 
-	const onChange = useCallback<SingleSelectionOnChange>(
+	const onFrequencyChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
-				context?.setFrequency?.(ev);
+				recurrenceContext?.setFrequency?.(ev);
 			}
 		},
-		[context]
+		[recurrenceContext]
 	);
 
 	return (
 		<Select
-			label={t('label.repeat', 'Repeat')}
-			onChange={onChange}
+			onChange={onFrequencyChange}
 			items={repetitionItems}
-			selection={initialValue}
+			selection={selectedItem}
 			disablePortal
+			data-testid={'frequency-selector'}
 		/>
 	);
 };
-
-export default FrequencySelect;

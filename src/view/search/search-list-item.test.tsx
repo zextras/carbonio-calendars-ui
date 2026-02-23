@@ -7,14 +7,21 @@
 import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { combineReducers } from 'redux';
 
 import SearchListItem from './search-list-item';
+import * as appointmentActions from '../../actions/appointment-actions-fn';
 import { PARTICIPATION_STATUS } from '../../constants/api';
+import { getInvite } from '../../store/actions/get-invite';
 import appointmentsSliceReducer from '../../store/slices/appointments-slice';
+import invitesSliceReducer from '../../store/slices/invites-slice';
 import { setupTest } from '@test-setup';
+import mockedData from 'test/generators';
 import { EventType } from 'types/event';
+
+vi.mock('../../actions/appointment-actions-fn');
+vi.mock('../../store/actions/get-invite');
 
 const baseItem: EventType = {
 	title: 'Test Event',
@@ -75,12 +82,13 @@ const baseItem: EventType = {
 describe('SearchListItem', () => {
 	const mockStore = configureStore({
 		reducer: combineReducers({
-			appointments: appointmentsSliceReducer
+			appointments: appointmentsSliceReducer,
+			invites: invitesSliceReducer
 		})
 	});
 
 	it('renders organizer Avatar', () => {
-		jest.spyOn(console, 'error').mockImplementation();
+		vi.spyOn(console, 'error');
 		setupTest(<SearchListItem item={baseItem} />, { store: mockStore });
 		const avatar = screen.getByTestId('avatarAppointment');
 		expect(avatar).toBeVisible();
@@ -154,5 +162,116 @@ describe('SearchListItem', () => {
 	it('renders recurrent icon', () => {
 		setupTest(<SearchListItem item={baseItem} />, { store: mockStore });
 		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
+	});
+
+	it('should call openAppointment immediately when invite exists in store', async () => {
+		const event = mockedData.getEvent();
+		const invite = mockedData.getInvite({ event });
+		const openFn = vi.fn();
+
+		vi.mocked(appointmentActions.openAppointment).mockReturnValue(openFn);
+
+		const store = configureStore({
+			reducer: combineReducers({
+				appointments: appointmentsSliceReducer,
+				invites: invitesSliceReducer
+			}),
+			preloadedState: {
+				invites: {
+					status: 'idle',
+					invites: {
+						[invite.id]: invite
+					}
+				}
+			}
+		});
+
+		const { user } = setupTest(<SearchListItem item={event} />, { store });
+
+		const avatar = screen.getByTestId('avatarAppointment');
+		await user.click(avatar);
+
+		expect(appointmentActions.openAppointment).toHaveBeenCalledWith({
+			event,
+			context: expect.objectContaining({
+				panelView: 'search',
+				replaceHistory: expect.any(Function)
+			})
+		});
+		expect(openFn).toHaveBeenCalled();
+		expect(getInvite).not.toHaveBeenCalled();
+	});
+
+	it('should fetch invite before calling openAppointment when invite is not in store', async () => {
+		const event = mockedData.getEvent();
+		const invite = mockedData.getInvite({ event });
+		const openFn = vi.fn();
+
+		vi.mocked(appointmentActions.openAppointment).mockReturnValue(openFn);
+
+		// Mock getInvite to return a proper thunk action
+		vi.mocked(getInvite).mockImplementation(
+			() => ((dispatch: any) => Promise.resolve(invite)) as any
+		);
+
+		const store = configureStore({
+			reducer: combineReducers({
+				appointments: appointmentsSliceReducer,
+				invites: invitesSliceReducer
+			}),
+			preloadedState: {
+				invites: {
+					status: 'idle',
+					invites: {}
+				}
+			}
+		});
+
+		const { user } = setupTest(<SearchListItem item={event} />, { store });
+
+		const avatar = screen.getByTestId('avatarAppointment');
+		await user.click(avatar);
+
+		expect(getInvite).toHaveBeenCalledWith({ inviteId: event.resource.inviteId });
+
+		await waitFor(() => {
+			expect(openFn).toHaveBeenCalled();
+		});
+	});
+
+	it('should pass correct context with panelView search', async () => {
+		const event = mockedData.getEvent();
+		const invite = mockedData.getInvite({ event });
+		const openFn = vi.fn();
+
+		vi.mocked(appointmentActions.openAppointment).mockReturnValue(openFn);
+
+		const store = configureStore({
+			reducer: combineReducers({
+				appointments: appointmentsSliceReducer,
+				invites: invitesSliceReducer
+			}),
+			preloadedState: {
+				invites: {
+					status: 'idle',
+					invites: {
+						[invite.id]: invite
+					}
+				}
+			}
+		});
+
+		const { user } = setupTest(<SearchListItem item={event} />, { store });
+
+		const avatar = screen.getByTestId('avatarAppointment');
+		await user.click(avatar);
+
+		expect(appointmentActions.openAppointment).toHaveBeenCalledWith({
+			event,
+			context: {
+				panelView: 'search',
+				replaceHistory: expect.any(Function)
+			}
+		});
 	});
 });

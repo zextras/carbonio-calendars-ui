@@ -8,8 +8,8 @@ import React, { ReactElement, useCallback } from 'react';
 import { Button, Container, useModal } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import { StoreProvider } from '../../../../../store/redux';
 import { CustomRecurrenceModal } from '../views/custom-recurrence-modal';
+import { StoreProvider } from 'store/redux';
 
 const CustomRepeatSelectItem = ({ editorId }: { editorId: string }): ReactElement => {
 	const [t] = useTranslation();

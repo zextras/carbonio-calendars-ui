@@ -57,7 +57,7 @@ describe('EditorDailyPlannerController', () => {
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
 		await user.click(buttonShowOrganizer);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 		const buttonHideOrganizer = screen.getByRole('button', { name: /hide organizer tool/ });
@@ -114,7 +114,7 @@ describe('EditorDailyPlannerController', () => {
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
 		await user.click(buttonShowOrganizer);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
@@ -138,7 +138,7 @@ describe('EditorDailyPlannerController', () => {
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
 		await user.click(buttonShowOrganizer);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
@@ -171,7 +171,7 @@ describe('EditorDailyPlannerController', () => {
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
 		await user.click(buttonShowOrganizer);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 
 		await workingHoursInterceptor;
 		await waitFor(async () => {
@@ -197,7 +197,7 @@ describe('EditorDailyPlannerController', () => {
 		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
 		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
 		await user.click(buttonShowOrganizer);
-		jest.advanceTimersByTime(250);
+		vi.advanceTimersByTime(250);
 
 		const freeBusyRequest = await freeBusyInterceptor;
 

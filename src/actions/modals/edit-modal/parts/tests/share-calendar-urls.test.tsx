@@ -38,12 +38,12 @@ const BUTTONS = [
 	}
 ];
 
-jest.mock('@zextras/carbonio-ui-commons', () => {
-	const actual = jest.requireActual('@zextras/carbonio-ui-commons');
+vi.mock('@zextras/carbonio-ui-commons', async () => {
+	const actual = await vi.importActual('@zextras/carbonio-ui-commons');
 	return {
 		__esModule: true,
 		...actual,
-		copyToClipboard: jest.fn().mockImplementation(() => Promise.resolve())
+		copyToClipboard: vi.fn().mockImplementation(() => Promise.resolve())
 	};
 });
 
@@ -118,7 +118,7 @@ describe('ShareCalendarUrl', () => {
 
 			await user.click(screen.getByRole('button', { name: label }));
 
-			expect(jest.mocked(copyToClipboard)).toHaveBeenCalledWith(expectedUrl);
+			expect(vi.mocked(copyToClipboard)).toHaveBeenCalledWith(expectedUrl);
 		});
 
 		it('should show a success snackbar when clicked', async () => {

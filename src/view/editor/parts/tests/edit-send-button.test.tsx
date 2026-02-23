@@ -9,6 +9,7 @@ import React from 'react';
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { combineReducers } from 'redux';
+import { Mock } from 'vitest';
 
 import { generateEditor } from '../../../../commons/editor-generator';
 import { onSend } from '../../../../commons/editor-save-send-fns';
@@ -16,17 +17,13 @@ import { reducers } from '../../../../store/redux';
 import { EditorSendButton } from '../editor-send-button';
 import { setupTest } from '@test-setup';
 
-jest.mock('../../../../commons/editor-save-send-fns', () => ({
-	onSend: jest.fn()
+vi.mock('../../../../commons/editor-save-send-fns', () => ({
+	onSend: vi.fn()
 }));
 
 const DEFAULT_ATTENDEE = { email: 'user@test.com' };
 
 describe('EditorSendButton', () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
-
 	it('should disable send button when event has no title', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -62,7 +59,7 @@ describe('EditorSendButton', () => {
 	});
 
 	it('should call onSend when clicking send', async () => {
-		(onSend as jest.Mock).mockResolvedValue({ response: true });
+		(onSend as Mock).mockResolvedValue({ response: true });
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 

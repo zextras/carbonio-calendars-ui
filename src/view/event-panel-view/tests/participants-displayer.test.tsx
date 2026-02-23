@@ -13,8 +13,8 @@ import { PARTICIPATION_STATUS } from '../../../constants/api';
 import * as ParticipantDisplayerAction from '../../../store/actions/participant-displayer-actions';
 import { reducers } from '../../../store/redux';
 import { DisplayedParticipant } from '../participants-displayer';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
 shell.getUserSettings.mockImplementation(() => ({
@@ -31,7 +31,7 @@ shell.getUserSettings.mockImplementation(() => ({
 describe('participants displayer', () => {
 	test('copy email to clipboard', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const clipboardCopySpy = jest.spyOn(ParticipantDisplayerAction, 'copyEmailToClipboard');
+		const clipboardCopySpy = vi.spyOn(ParticipantDisplayerAction, 'copyEmailToClipboard');
 		const { user } = setupTest(
 			<DisplayedParticipant
 				participant={{
@@ -55,7 +55,7 @@ describe('participants displayer', () => {
 
 	test('send E-mail', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const sendEmailSpy = jest.spyOn(ParticipantDisplayerAction, 'sendMsg');
+		const sendEmailSpy = vi.spyOn(ParticipantDisplayerAction, 'sendMsg');
 		const { user } = setupTest(
 			<DisplayedParticipant
 				participant={{

@@ -6,16 +6,10 @@
 
 import { noop } from 'lodash';
 
-/**
- * Mocks the Worker class
- */
-
-type MessageHandler = (msg: string) => void;
-
 class Worker {
 	url: string;
 
-	onmessage: MessageHandler;
+	onmessage: (msg: string) => void;
 
 	constructor(stringUrl: string) {
 		this.url = stringUrl;

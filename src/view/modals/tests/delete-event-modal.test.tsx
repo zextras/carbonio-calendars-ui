@@ -7,16 +7,16 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
 
+import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import * as soapLib from '../../../../__mocks__/@zextras/carbonio-ui-soap-lib';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { DeleteEventModal } from '../delete-event-modal';
 import { setupTest } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 describe('delete event modal', () => {
@@ -147,42 +147,14 @@ describe('delete event modal', () => {
 
 	const emptyStore = mockedData.store.mockReduxStore({ invites, appointments });
 
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
-	describe('series', () => {
-		describe('The event is created on a shared account', () => {
-			test.todo('by a different user');
-			test.todo('by the current user');
-		});
-		describe('he is the organizer', () => {
-			describe('there is a participant', () => {
-				describe('deleting a draft', () => {
-					test.todo('wont open the modal to send cancellation');
-					test.todo('cancel request will not include other participants');
-				});
-				test.todo('organizer can send a custom cancellation message');
-				test.todo('organizer can send a standard cancellation message');
-			});
-			test.todo('if there is not a participant you can only delete the event');
-		});
-		describe('he is not the organizer', () => {
-			test.todo('he can notify the organizer');
-			test.todo('he can avoid to notify the organizer');
-		});
-	});
 	describe('instance', () => {
-		describe('The event is created on a shared account', () => {
-			test.todo('by a different user');
-			test.todo('by the current user');
-		});
 		describe('he is the organizer', () => {
 			test('modal doesnt have a notify organizer section', () => {
 				const store = configureStore({
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
+				const onClose = vi.fn();
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 				setupTest(
@@ -204,7 +176,7 @@ describe('delete event modal', () => {
 							reducer: combineReducers(reducers),
 							preloadedState: emptyStore
 						});
-						const onClose = jest.fn();
+						const onClose = vi.fn();
 						populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 						setupTest(
@@ -236,12 +208,12 @@ describe('delete event modal', () => {
 					test('cancel request will not include other participants', async () => {
 						// it is useful to make sure the cancellation message is not sent to draft participants
 
-						const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+						const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 						const store = configureStore({
 							reducer: combineReducers(reducers),
 							preloadedState: emptyStore
 						});
-						const onClose = jest.fn();
+						const onClose = vi.fn();
 						populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 						const { user } = setupTest(
@@ -261,9 +233,7 @@ describe('delete event modal', () => {
 							})
 						);
 
-						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
-						});
+						await vi.advanceTimersToNextTimerAsync();
 
 						expect(spy).toHaveBeenCalledWith(
 							'CancelAppointment',
@@ -273,7 +243,6 @@ describe('delete event modal', () => {
 								})
 							})
 						);
-						jest.clearAllMocks();
 					});
 				});
 				test('modal ui sections', () => {
@@ -281,7 +250,7 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -317,9 +286,9 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
-					const composer = jest.fn();
-					const composerSpy = jest
+					const onClose = vi.fn();
+					const composer = vi.fn();
+					const composerSpy = vi
 						.spyOn(shell, 'useIntegratedFunction')
 						.mockReturnValue([composer, true]);
 
@@ -350,9 +319,9 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
-					const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+					const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 					const { user } = setupTest(
@@ -400,7 +369,7 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -428,7 +397,7 @@ describe('delete event modal', () => {
 						reducer: combineReducers(reducers),
 						preloadedState: emptyStore
 					});
-					const onClose = jest.fn();
+					const onClose = vi.fn();
 
 					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -462,7 +431,7 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
+				const onClose = vi.fn();
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -493,8 +462,8 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
-				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+				const onClose = vi.fn();
+				const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -539,8 +508,8 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
-				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+				const onClose = vi.fn();
+				const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -561,11 +530,8 @@ describe('delete event modal', () => {
 					})
 				);
 
-				jest.clearAllMocks();
+				await vi.advanceTimersByTimeAsync(5000);
 
-				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
-				});
 				expect(spy).toHaveBeenCalledWith(
 					'SendInviteReply',
 					expect.objectContaining({
@@ -578,8 +544,8 @@ describe('delete event modal', () => {
 					reducer: combineReducers(reducers),
 					preloadedState: emptyStore
 				});
-				const onClose = jest.fn();
-				const spy = jest.spyOn(soapLib, 'legacySoapFetch');
+				const onClose = vi.fn();
+				const spy = vi.spyOn(soapLib, 'legacySoapFetch');
 
 				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
@@ -598,10 +564,7 @@ describe('delete event modal', () => {
 					})
 				);
 
-				jest.clearAllMocks();
-				await act(async () => {
-					await jest.advanceTimersToNextTimerAsync();
-				});
+				await vi.advanceTimersToNextTimerAsync();
 
 				expect(spy).not.toHaveBeenCalledWith(
 					'SendInviteReply',

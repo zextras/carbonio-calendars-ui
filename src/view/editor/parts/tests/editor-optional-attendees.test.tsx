@@ -10,6 +10,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
 import { DefaultContactInput, useContactInput } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
+import { Mock } from 'vitest';
 
 import {
 	contactInputBuilder,
@@ -21,35 +22,52 @@ import {
 import { generateEditor } from '../../../../commons/editor-generator';
 import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { reducers } from '../../../../store/redux';
+import { EditorAttendees } from '../editor-attendees';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
 import { setupTest } from '@test-setup';
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
-	useContactInput: jest.fn()
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
+	useContactInput: vi.fn()
 }));
 describe('Editor Optional Attendees', () => {
 	describe('ChipInput', () => {
 		beforeEach(() => {
-			(useContactInput as jest.Mock).mockReturnValue(DefaultContactInput);
+			(useContactInput as Mock).mockReturnValue(DefaultContactInput);
 		});
-		it('should display optional attendees using email in store', async () => {
+		it('should display optional attendee label when available', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
+
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					optionalAttendees: [
-						{ email: 'email1@test.com', label: 'Optional Test 1' },
-						{ email: 'email2@test.com', label: 'Optional Test 2' }
-					]
+					attendees: [{ email: 'attendee@test.com', label: 'attendee' }],
+					optionalAttendees: [{ email: 'attendee-optional@test.com', label: 'attendee-optional' }]
 				}
 			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+			expect(
+				within(screen.getByTestId('optional-attendees-chip-input')).getByText('attendee-optional')
+			).toBeVisible();
+		});
+		it('should display optional attendee email when label is not available', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 
-			setupTest(<EditorOptionalAttendees orderedAccountIds={[]} editorId={editor.id} />, { store });
-
-			expect(screen.getByText('email1@test.com')).toBeVisible();
-			expect(screen.getByText('email2@test.com')).toBeVisible();
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					attendees: [{ email: 'attendee@test.com', label: 'attendee' }],
+					optionalAttendees: [{ email: 'attendee-optional@test.com' }]
+				}
+			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+			expect(
+				within(screen.getByTestId('optional-attendees-chip-input')).getByText(
+					'attendee-optional@test.com'
+				)
+			).toBeVisible();
 		});
 
 		it('should not clear existing optional attendees after adding a new one', async () => {
@@ -81,7 +99,7 @@ describe('Editor Optional Attendees', () => {
 		it('should display edit action when new value in ContactInput has an error', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const newValueWithError = { ...MOCK_VALUE, error: true };
-			(useContactInput as jest.Mock).mockReturnValue(
+			(useContactInput as Mock).mockReturnValue(
 				contactInputBuilder({ valuesToAdd: [newValueWithError] })
 			);
 			const editor = generateEditor({
@@ -116,7 +134,7 @@ describe('Editor Optional Attendees', () => {
 
 			const newValueFromAutocomplete = { ...MOCK_VALUE, label: 'test label' };
 
-			(useContactInput as jest.Mock).mockReturnValue(
+			(useContactInput as Mock).mockReturnValue(
 				contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] })
 			);
 

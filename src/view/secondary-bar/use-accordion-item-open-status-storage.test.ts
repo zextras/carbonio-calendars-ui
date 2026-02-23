@@ -5,12 +5,12 @@
  */
 
 import { useAccordionItemOpenStatusStorage } from './use-accordion-item-open-status-storage';
-import { useLocalStorage } from '../../__test__/mocks/carbonio-shell-ui/carbonio-shell-ui';
 import { setupHook } from '../../__test__/test-setup';
+import { useLocalStorage } from '@test-mocks/@zextras/carbonio-shell-ui';
 
 describe('useAccordionItemOpenStatusStorage', () => {
 	it('should return an object with 2 functions to get and set the open status', () => {
-		useLocalStorage.mockReturnValue([[], jest.fn()]);
+		useLocalStorage.mockReturnValue([[], vi.fn()]);
 
 		const {
 			result: { current: result }
@@ -24,7 +24,7 @@ describe('useAccordionItemOpenStatusStorage', () => {
 
 	it('should return the open status from localStorage if it contains the given calendar id', () => {
 		// Mock the useLocalStorage hook to simulate localStorage containing the id '1'
-		useLocalStorage.mockReturnValue([['1'], jest.fn()]);
+		useLocalStorage.mockReturnValue([['1'], vi.fn()]);
 
 		const {
 			result: {
@@ -36,7 +36,7 @@ describe('useAccordionItemOpenStatusStorage', () => {
 	});
 
 	it('should update the open status in localStorage when setOpenStatus is called', () => {
-		const setLocalStorageMock = jest.fn();
+		const setLocalStorageMock = vi.fn();
 		useLocalStorage.mockReturnValue([['2'], setLocalStorageMock]);
 
 		const {
@@ -53,7 +53,7 @@ describe('useAccordionItemOpenStatusStorage', () => {
 	});
 
 	it('should remove the id from localStorage when setOpenStatus is called with false', () => {
-		const setLocalStorageMock = jest.fn();
+		const setLocalStorageMock = vi.fn();
 		useLocalStorage.mockReturnValue([['1', '2'], setLocalStorageMock]);
 
 		const {

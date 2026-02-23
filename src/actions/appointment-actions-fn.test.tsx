@@ -6,16 +6,28 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
 
-import { createCopy, emailAttendees } from './appointment-actions-fn';
-import { PREFS_DEFAULTS } from '../constants';
+import {
+	acceptAsAction,
+	createCopy,
+	deletePermanently,
+	editAppointment,
+	emailAttendees,
+	exportAppointmentICSFn,
+	moveAppointment,
+	moveToTrash,
+	openAppointment,
+	proposeNewTimeFn
+} from './appointment-actions-fn';
+import { PANEL_VIEW, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE, ParticipantRoleType, PARTICIPATION_STATUS } from '../constants/api';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
+import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
 shell.getUserSettings.mockImplementation(() => ({
 	...defaultSettings,
@@ -29,12 +41,20 @@ shell.getUserSettings.mockImplementation(() => ({
 }));
 
 const editorId = 'new-1';
-jest.spyOn(editorUtils, 'getNewId').mockReturnValue(editorId);
+beforeEach(() => {
+	vi.spyOn(editorUtils, 'getNewId').mockReturnValue(editorId);
+});
+
+const keyboardEvent = new KeyboardEvent('keydown', {
+	key: 'Enter',
+	code: 'Enter',
+	bubbles: true
+});
 
 describe('actions', () => {
 	describe('Copy', () => {
 		test('on action will open an editor', async () => {
-			const boardSpy = jest.spyOn(shell, 'addBoard');
+			const boardSpy = vi.spyOn(shell, 'addBoard');
 			const folder = {
 				absFolderPath: '/Test',
 				id: '5',
@@ -44,7 +64,7 @@ describe('actions', () => {
 			};
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -55,8 +75,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -73,7 +93,7 @@ describe('actions', () => {
 			};
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -84,8 +104,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -104,7 +124,7 @@ describe('actions', () => {
 			};
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -127,8 +147,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -152,7 +172,7 @@ describe('actions', () => {
 			];
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: foldersArray });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -177,8 +197,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -202,7 +222,7 @@ describe('actions', () => {
 			];
 
 			const folders = mockedData.calendars.getCalendarsMap({ folders: foldersArray });
-			const onClose = jest.fn();
+			const onClose = vi.fn();
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -227,8 +247,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -236,6 +256,71 @@ describe('actions', () => {
 			const storeState = store.getState();
 			const editor = storeState.editor.editors[editorId];
 			expect(editor?.calendar?.id).toBe(foldersArray[0].id);
+		});
+	});
+
+	describe('Edit', () => {
+		test('on action will open an editor', async () => {
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			};
+
+			const action = editAppointment({ event, invite, context });
+			action();
+			expect(boardSpy).toHaveBeenCalled();
+		});
+
+		test('empty invite is fetched before opening editor', async () => {
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			};
+
+			const action = editAppointment({ event, context });
+			action();
+			await waitFor(() => {
+				expect(boardSpy).toHaveBeenCalled();
+			});
 		});
 	});
 
@@ -258,7 +343,7 @@ describe('actions', () => {
 		}
 
 		test('email sent to all attendees and organizer', async () => {
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -280,9 +365,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, invite, context });
 			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
@@ -299,7 +384,7 @@ describe('actions', () => {
 
 		test('exclude yourself from recipients', async () => {
 			const mySelf = shell.mockedAccount;
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -319,9 +404,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, invite, context });
 			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
@@ -333,7 +418,7 @@ describe('actions', () => {
 		});
 
 		test('cc optional attendees', async () => {
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -355,9 +440,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, invite, context });
 			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
@@ -373,7 +458,7 @@ describe('actions', () => {
 		});
 
 		test('null invite is fetched remotely', async () => {
-			const getActionSpy = jest.spyOn(shell, 'getAction');
+			const getActionSpy = vi.spyOn(shell, 'getAction');
 
 			const store = configureStore({
 				reducer: combineReducers(reducers)
@@ -389,9 +474,9 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
-				t: jest.fn(),
-				replaceHistory: jest.fn(),
-				onClose: jest.fn()
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
 			};
 			emailAttendees({ event, context });
 			await waitFor(() => {
@@ -405,6 +490,659 @@ describe('actions', () => {
 					subject: event.title
 				});
 			});
+		});
+	});
+
+	describe('moveToTrash', () => {
+		test('on action will create a modal', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const createModalMock = vi.fn();
+			const closeModalMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				createModal: createModalMock,
+				closeModal: closeModalMock,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveToTrash({ event, invite, context });
+			action();
+			expect(createModalMock).toHaveBeenCalledWith(
+				expect.objectContaining({
+					id: 'move-to-trash'
+				}),
+				true
+			);
+		});
+
+		test('calls onClose when action is triggered', async () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const onCloseMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: onCloseMock,
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveToTrash({ event, invite, context });
+			action();
+			expect(onCloseMock).toHaveBeenCalled();
+		});
+
+		test('null invite is fetched remotely before creating modal', async () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const createModalMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				createModal: createModalMock,
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveToTrash({ event, context });
+			action();
+			await waitFor(() => {
+				expect(createModalMock).toHaveBeenCalledWith(
+					expect.objectContaining({
+						id: 'move-to-trash'
+					}),
+					true
+				);
+			});
+		});
+	});
+
+	describe('moveAppointment', () => {
+		test('on action will create a modal', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const createModalMock = vi.fn();
+			const closeModalMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				createModal: createModalMock,
+				closeModal: closeModalMock,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveAppointment({ event, context });
+			action(keyboardEvent);
+			expect(createModalMock).toHaveBeenCalledWith(
+				expect.objectContaining({
+					id: 'move-appointment'
+				}),
+				true
+			);
+		});
+
+		test('calls onClose when action is triggered', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const onCloseMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: onCloseMock,
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = moveAppointment({ event, context });
+			action(keyboardEvent);
+			expect(onCloseMock).toHaveBeenCalled();
+		});
+	});
+
+	describe('deletePermanently', () => {
+		test('on action will create a modal', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const createModalMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				createModal: createModalMock,
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = deletePermanently({ event, context });
+			action(keyboardEvent);
+			expect(createModalMock).toHaveBeenCalledWith(
+				expect.objectContaining({
+					id: 'delete-permanently'
+				}),
+				true
+			);
+		});
+	});
+
+	describe('openAppointment', () => {
+		test('navigates correctly in APP panel view without ridZ', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent({
+				resource: {
+					ridZ: undefined
+				}
+			});
+			const replaceHistoryMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: replaceHistoryMock,
+				onClose: vi.fn(),
+				panelView: PANEL_VIEW.APP,
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = openAppointment({ event, context });
+			action();
+			expect(replaceHistoryMock).toHaveBeenCalledWith(
+				`/calendars/${event.resource.calendar.id}/expand/${event.resource.id}`
+			);
+		});
+
+		test('navigates correctly in APP panel view with ridZ', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent({
+				resource: {
+					ridZ: '20240101T100000'
+				}
+			});
+			const replaceHistoryMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: replaceHistoryMock,
+				onClose: vi.fn(),
+				panelView: PANEL_VIEW.APP,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: [],
+				createModal: vi.fn(),
+				closeModal: vi.fn()
+			};
+
+			const action = openAppointment({ event, context });
+			action();
+			expect(replaceHistoryMock).toHaveBeenCalledWith(
+				`/calendars/${event.resource.calendar.id}/expand/${event.resource.id}/${event.resource.ridZ}`
+			);
+		});
+
+		test('navigates correctly in SEARCH panel view without ridZ', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent({
+				resource: {
+					ridZ: undefined
+				}
+			});
+			const replaceHistoryMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: replaceHistoryMock,
+				onClose: vi.fn(),
+				closeModal: vi.fn(),
+				createModal: vi.fn(),
+				panelView: PANEL_VIEW.SEARCH,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = openAppointment({ event, context });
+			action();
+			expect(replaceHistoryMock).toHaveBeenCalledWith(`../calendars/expand/${event.resource.id}`);
+		});
+
+		test('navigates correctly in SEARCH panel view with ridZ', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent({
+				resource: {
+					ridZ: '20240101T100000'
+				}
+			});
+			const replaceHistoryMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: replaceHistoryMock,
+				onClose: vi.fn(),
+				closeModal: vi.fn(),
+				createModal: vi.fn(),
+				panelView: PANEL_VIEW.SEARCH,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = openAppointment({ event, context });
+			action();
+			expect(replaceHistoryMock).toHaveBeenCalledWith(
+				`../expand/${event.resource.id}/${event.resource.ridZ}`
+			);
+		});
+
+		test('calls onClose when action is triggered', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const onCloseMock = vi.fn();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				closeModal: vi.fn(),
+				createModal: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: onCloseMock,
+				panelView: PANEL_VIEW.APP,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = openAppointment({ event, context });
+			action();
+			expect(onCloseMock).toHaveBeenCalled();
+		});
+	});
+
+	describe('acceptAsAction', () => {
+		test('dispatches sendInviteResponse with correct parameters for ACCEPT', async () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const dispatchSpy = vi.spyOn(store, 'dispatch');
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				panelView: PANEL_VIEW.APP,
+				createSnackbar: vi.fn(),
+				createAndApplyTag: vi.fn(),
+				tags: []
+			};
+
+			const action = acceptAsAction({
+				actionType: 'ACCEPT' as unknown as InviteReplyVerb,
+				event,
+				invite,
+				context
+			});
+			action();
+			await waitFor(() => {
+				expect(dispatchSpy).toHaveBeenCalled();
+			});
+		});
+
+		test('dispatches sendInviteResponse with exceptId for recurrent instance', () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const dispatchSpy = vi.spyOn(store, 'dispatch');
+			const event = mockedData.getEvent({
+				resource: {
+					isRecurrent: true
+				}
+			});
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn(),
+				isInstance: true
+			};
+
+			const action = acceptAsAction({
+				actionType: 'TENTATIVE' as unknown as InviteReplyVerb,
+				event,
+				invite,
+				context
+			});
+			action();
+			expect(dispatchSpy).toHaveBeenCalled();
+		});
+
+		test('dispatches sendInviteResponse for DECLINE action', async () => {
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const dispatchSpy = vi.spyOn(store, 'dispatch');
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			};
+
+			const action = acceptAsAction({
+				actionType: 'DECLINE' as unknown as InviteReplyVerb,
+				event,
+				invite,
+				context
+			});
+			action();
+			await waitFor(() => {
+				expect(dispatchSpy).toHaveBeenCalled();
+			});
+		});
+	});
+
+	describe('proposeNewTimeFn', () => {
+		test('on action will open an editor with propose new time context', () => {
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			};
+
+			const action = proposeNewTimeFn({ event, invite, context });
+			action();
+			expect(boardSpy).toHaveBeenCalled();
+		});
+
+		test('null invite is fetched before opening editor', async () => {
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const folder = {
+				absFolderPath: '/Calendar',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+
+			const event = mockedData.getEvent();
+			const context = {
+				folders,
+				dispatch: store.dispatch,
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			};
+
+			const action = proposeNewTimeFn({ event, context });
+			action();
+			await waitFor(() => {
+				expect(boardSpy).toHaveBeenCalled();
+			});
+		});
+	});
+
+	describe('exportAppointmentICSFn', () => {
+		test('creates download link with correct attributes', () => {
+			const event = mockedData.getEvent({
+				title: 'Test Meeting'
+			});
+
+			const createElementSpy = vi.spyOn(document, 'createElement');
+			const appendChildSpy = vi.spyOn(document.body, 'appendChild');
+			const removeChildSpy = vi.spyOn(document.body, 'removeChild');
+
+			const action = exportAppointmentICSFn({ event });
+			action();
+
+			expect(createElementSpy).toHaveBeenCalledWith('a');
+			expect(appendChildSpy).toHaveBeenCalled();
+			expect(removeChildSpy).toHaveBeenCalled();
 		});
 	});
 });

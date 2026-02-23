@@ -3,13 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-jest.mock('@zextras/carbonio-shell-ui', () => ({
-	t: (key: string, fallback?: string): string => fallback ?? key
-}));
-jest.mock('../../constants/advance-filter-modal', () => ({
-	DEFAULT_DATE_START: 1744329600000, // 1744329600000 = April 11, 2025, 00:00:00 UTC
-	DEFAULT_DATE_END: 1745539200000 // 1745539200000 = April 25, 2025, 00:00:00 UTC
-}));
 
 import React from 'react';
 
@@ -18,22 +11,28 @@ import { screen, within } from '@testing-library/react';
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 import { setupTest } from '@test-setup';
+import { TEST_SELECTORS } from 'constants/test-utils';
+
+vi.mock('@zextras/carbonio-shell-ui', () => ({
+	t: (key: string, fallback?: string): string => fallback ?? key
+}));
+
+vi.mock('../../constants/advance-filter-modal', () => ({
+	DEFAULT_DATE_START: 1744329600000, // 1744329600000 = April 11, 2025, 00:00:00 UTC
+	DEFAULT_DATE_END: 1745539200000 // 1745539200000 = April 25, 2025, 00:00:00 UTC
+}));
 
 const MOCKED_NOW = new Date('2025-04-18T00:00:00Z');
 
 beforeAll(() => {
-	jest.useFakeTimers().setSystemTime(MOCKED_NOW);
-});
-
-afterAll(() => {
-	jest.useRealTimers();
+	vi.useFakeTimers().setSystemTime(MOCKED_NOW);
 });
 
 describe('AdvancedFilterModal', () => {
 	it('reset filters button should be enabled if query is not empty', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [
 				{
 					id: '1',
@@ -41,11 +40,11 @@ describe('AdvancedFilterModal', () => {
 					value: 'test'
 				}
 			],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 		setupTest(<AdvancedFilterModal {...properties} />);
 
@@ -59,20 +58,20 @@ describe('AdvancedFilterModal', () => {
 	it('reset filters button should be enabled if dateStart is different from default', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
 
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[0]);
 
 		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
@@ -86,20 +85,20 @@ describe('AdvancedFilterModal', () => {
 	it('reset filters button should be enabled if dateEnd is different from default', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
 
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[1]);
 
 		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
@@ -113,13 +112,13 @@ describe('AdvancedFilterModal', () => {
 	it('reset filters button should be disabled when there are no query filters and dates are set to default values', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		setupTest(<AdvancedFilterModal {...properties} />);
@@ -136,7 +135,7 @@ describe('AdvancedFilterModal', () => {
 
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [
 				{
 					id: '1',
@@ -144,11 +143,11 @@ describe('AdvancedFilterModal', () => {
 					value: 'test'
 				}
 			],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: FIXED_TIMESTAMP,
 			dateEnd: FIXED_TIMESTAMP,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
@@ -187,16 +186,16 @@ describe('AdvancedFilterModal', () => {
 	});
 
 	it('should set queryToBe when Search button is pressed', async () => {
-		jest.spyOn(console, 'error').mockImplementation();
+		vi.spyOn(console, 'error');
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
@@ -216,11 +215,11 @@ describe('AdvancedFilterModal', () => {
 	});
 
 	it('should update fromDate and call onConfirm when date is selected and search button is clicked', async () => {
-		jest.spyOn(console, 'error').mockImplementation();
-		const updateQuery = jest.fn();
-		const setDateStart = jest.fn();
-		const setDateEnd = jest.fn();
-		const onClose = jest.fn();
+		vi.spyOn(console, 'error');
+		const updateQuery = vi.fn();
+		const setDateStart = vi.fn();
+		const setDateEnd = vi.fn();
+		const onClose = vi.fn();
 
 		const properties: AdvancedFilterModalProps = {
 			open: true,
@@ -240,7 +239,7 @@ describe('AdvancedFilterModal', () => {
 
 		const { user, getByRole } = setupTest(<AdvancedFilterModal {...properties} />);
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[0]);
 		const fromDateToSelect = screen.getByRole('option', {
 			name: /Choose Saturday, April 12th, 2025/i
@@ -262,11 +261,11 @@ describe('AdvancedFilterModal', () => {
 	});
 
 	it('should update endDate and call onConfirm when date is selected and search button is clicked', async () => {
-		jest.spyOn(console, 'error').mockImplementation();
-		const updateQuery = jest.fn();
-		const setDateStart = jest.fn();
-		const setDateEnd = jest.fn();
-		const onClose = jest.fn();
+		vi.spyOn(console, 'error');
+		const updateQuery = vi.fn();
+		const setDateStart = vi.fn();
+		const setDateEnd = vi.fn();
+		const onClose = vi.fn();
 
 		const properties: AdvancedFilterModalProps = {
 			open: true,
@@ -286,7 +285,7 @@ describe('AdvancedFilterModal', () => {
 
 		const { user, getByRole } = setupTest(<AdvancedFilterModal {...properties} />);
 
-		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		const calendarButtons = screen.getAllByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar);
 		await user.click(calendarButtons[2]);
 		const toDateToSelect = screen.getByRole('option', { name: /Choose Sunday, April 20th, 2025/i });
 		expect(toDateToSelect).toBeInTheDocument();
@@ -313,7 +312,7 @@ describe('AdvancedFilterModal', () => {
 	it('should not add duplicate keywords to the query', async () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
-			onClose: jest.fn(),
+			onClose: vi.fn(),
 			query: [
 				{
 					id: '1',
@@ -321,11 +320,11 @@ describe('AdvancedFilterModal', () => {
 					value: 'test'
 				}
 			],
-			updateQuery: jest.fn(),
+			updateQuery: vi.fn(),
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
+			setDateStart: vi.fn(),
+			setDateEnd: vi.fn()
 		};
 
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
@@ -341,7 +340,7 @@ describe('AdvancedFilterModal', () => {
 		it('should exclude AdvancedSearchChip with queryChipsToAdvancedFiltersValue from keywords', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -361,18 +360,18 @@ describe('AdvancedFilterModal', () => {
 						queryChipsToAdvancedFiltersValue: { shared: true }
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(1);
 
 			const regularChip = keywordChips[0];
@@ -384,7 +383,7 @@ describe('AdvancedFilterModal', () => {
 		it('should exclude chips with isQueryFilter from keywords', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -398,18 +397,18 @@ describe('AdvancedFilterModal', () => {
 						isQueryFilter: true
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(1);
 
 			const validChip = keywordChips[0];
@@ -421,7 +420,7 @@ describe('AdvancedFilterModal', () => {
 		it('should handle mixed query with regular keywords, AdvancedSearchChip, and isQueryFilter', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -446,18 +445,18 @@ describe('AdvancedFilterModal', () => {
 						isQueryFilter: true
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(2);
 
 			const chip1 = keywordChips[0];
@@ -474,13 +473,13 @@ describe('AdvancedFilterModal', () => {
 		it('should handle empty query correctly', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
@@ -494,7 +493,7 @@ describe('AdvancedFilterModal', () => {
 		it('should handle query with only AdvancedSearchChip and isQueryFilter (no regular keywords)', async () => {
 			const properties: AdvancedFilterModalProps = {
 				open: true,
-				onClose: jest.fn(),
+				onClose: vi.fn(),
 				query: [
 					{
 						id: '1',
@@ -509,18 +508,18 @@ describe('AdvancedFilterModal', () => {
 						isQueryFilter: true
 					}
 				],
-				updateQuery: jest.fn(),
+				updateQuery: vi.fn(),
 				dateStart: DEFAULT_DATE_START,
 				dateEnd: DEFAULT_DATE_END,
-				setDateStart: jest.fn(),
-				setDateEnd: jest.fn()
+				setDateStart: vi.fn(),
+				setDateEnd: vi.fn()
 			};
 
 			setupTest(<AdvancedFilterModal {...properties} />);
 
 			const keywordChips = screen
 				.queryAllByTestId('chip')
-				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+				.filter((chip) => !within(chip).queryByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar));
 			expect(keywordChips).toHaveLength(0);
 		});
 	});

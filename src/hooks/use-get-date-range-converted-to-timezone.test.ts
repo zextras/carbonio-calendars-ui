@@ -5,8 +5,8 @@
  */
 
 import { useGetDateRangeConvertedToTimezone } from './use-get-date-range-converted-to-timezone';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupHook } from '@test-setup';
-import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import defaultSettings from '@test-utils/settings/default-settings';
 
 /*
@@ -45,7 +45,7 @@ const setDate = ({
 
 describe('useGetDateRangeConvertedToTimezone', () => {
 	beforeEach(() => {
-		jest.setSystemTime(new Date('2022-01-01'));
+		vi.setSystemTime(new Date('2022-01-01'));
 	});
 	const differentTimezone = 'Asia/Bangkok';
 	describe('The output string', () => {
@@ -128,7 +128,7 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 					zimbraPrefLocale: undefined
 				}
 			});
-			const browserLanguageGetter = jest.spyOn(window.navigator, 'language', 'get');
+			const browserLanguageGetter = vi.spyOn(window.navigator, 'language', 'get');
 			browserLanguageGetter.mockReturnValueOnce('de');
 
 			const eventStart = setDate({ days: 2 });

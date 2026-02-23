@@ -8,21 +8,21 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { SoapNotify } from '@zextras/carbonio-shell-ui';
 import { folderWorker } from '@zextras/carbonio-ui-commons';
 
+import { useSyncDataHandler } from './use-sync-data-handler';
 import { reducers } from '../store/redux';
 import { useCalendarGroupStore } from '../store/zustand/calendar-group-store';
 import mockedData from '../test/generators';
-import { useSyncDataHandler } from './use-sync-data-handler';
 import { setupHook } from '@test-setup';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { mockSoapSync } from '@test-utils/utils/soap';
 
-jest.mock('@zextras/carbonio-ui-commons', () => ({
-	...jest.requireActual('@zextras/carbonio-ui-commons'),
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
 	folderWorker: {
-		postMessage: jest.fn()
+		postMessage: vi.fn()
 	},
 	tagsWorker: {
-		postMessage: jest.fn()
+		postMessage: vi.fn()
 	}
 }));
 
@@ -33,7 +33,7 @@ describe('sync data handler', () => {
 
 			populateFoldersStore();
 			const notify = { deleted: ['15'], seq: 0 };
-			const workerSpy = jest.spyOn(folderWorker, 'postMessage');
+			const workerSpy = vi.spyOn(folderWorker, 'postMessage');
 
 			mockSoapSync([notify]);
 
@@ -162,8 +162,14 @@ describe('sync data handler', () => {
 				});
 			});
 			test('it wont add folders to the groups', () => {
-				const store = configureStore({ reducer: combineReducers(reducers) });
-				useCalendarGroupStore.setState((state) => state);
+				// Reset calendar group state to ensure test isolation.
+				// This prevents state leakage between tests and avoids future regressions if test setup changes.
+				const emptyStore = mockedData.store.mockReduxStore();
+				const store = configureStore({
+					reducer: combineReducers(reducers),
+					preloadedState: emptyStore
+				});
+				useCalendarGroupStore.setState({ groups: {} });
 				populateFoldersStore();
 				const notify = {
 					created: {
@@ -181,7 +187,11 @@ describe('sync data handler', () => {
 		});
 		describe('deleted', () => {
 			test('it will remove the group from the store', () => {
-				const store = configureStore({ reducer: combineReducers(reducers) });
+				const emptyStore = mockedData.store.mockReduxStore();
+				const store = configureStore({
+					reducer: combineReducers(reducers),
+					preloadedState: emptyStore
+				});
 				useCalendarGroupStore.setState({
 					groups: {
 						134: {

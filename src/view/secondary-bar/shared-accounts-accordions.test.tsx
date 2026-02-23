@@ -17,7 +17,7 @@ import { reducers } from 'store/redux';
 
 describe('SharedAccountsAccordions', () => {
 	it('should render the sendas of delegated accounts emails', () => {
-		useLocalStorage.mockReturnValue([[], jest.fn()]);
+		useLocalStorage.mockReturnValue([[], vi.fn()]);
 		populateFoldersStore();
 		const mockedContext = getMocksContext();
 		const store = configureStore({
@@ -32,7 +32,7 @@ describe('SharedAccountsAccordions', () => {
 	});
 
 	it('should render the sendOnBehalf of delegated accounts emails', () => {
-		useLocalStorage.mockReturnValue([[], jest.fn()]);
+		useLocalStorage.mockReturnValue([[], vi.fn()]);
 		populateFoldersStore();
 		const mockedContext = getMocksContext();
 		const store = configureStore({

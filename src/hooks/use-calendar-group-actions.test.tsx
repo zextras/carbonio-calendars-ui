@@ -21,7 +21,7 @@ describe('useCalendarGroupActions', () => {
 			});
 
 			act(() => deleteGroup());
-			act(() => jest.advanceTimersByTime(MODAL_ANIMATION_DURATION));
+			act(() => vi.advanceTimersByTime(MODAL_ANIMATION_DURATION));
 
 			expect(screen.getByText('Delete group permanently?')).toBeVisible();
 		});
