@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.19.0...v1.19.1) (2026-02-24)
+
+## [1.19.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.3...v1.19.0) (2026-02-23)
+
+
+### Features
+
+* **CO-2287:** Improve UX of Editor's Custom Recurrence dialog ([#706](https://github.com/zextras/carbonio-calendars-ui/issues/706)) ([177297d](https://github.com/zextras/carbonio-calendars-ui/commit/177297db66f68cd1fa39c0f7c917900ee97b8d5a)), closes [#698](https://github.com/zextras/carbonio-calendars-ui/issues/698) [#701](https://github.com/zextras/carbonio-calendars-ui/issues/701) [#704](https://github.com/zextras/carbonio-calendars-ui/issues/704) [#705](https://github.com/zextras/carbonio-calendars-ui/issues/705)
+* **CO-3157:** add cancel button to ModalFooter in custom recurrence modal ([#695](https://github.com/zextras/carbonio-calendars-ui/issues/695)) ([1faeaaf](https://github.com/zextras/carbonio-calendars-ui/commit/1faeaafd2c075fde411900a3b03488bea2375d62))
+
+
+### Bug Fixes
+
+* [CO-1752] show attendee label when available ([#656](https://github.com/zextras/carbonio-calendars-ui/issues/656)) ([35f858d](https://github.com/zextras/carbonio-calendars-ui/commit/35f858d70ad92c24080e12c3bec648bb69a54849))
+* [CO-3024] Impossible to Decline New proposed time for an invite ([#683](https://github.com/zextras/carbonio-calendars-ui/issues/683)) ([d744646](https://github.com/zextras/carbonio-calendars-ui/commit/d744646f76dcf308d501c61b00aaa5d6b885dfdb))
+* change missing version ([#685](https://github.com/zextras/carbonio-calendars-ui/issues/685)) ([2a1adac](https://github.com/zextras/carbonio-calendars-ui/commit/2a1adacdcb57ad3f5fede9e78e55f1747b84d113))
+* **ci:** add sonarqube-scanner dev-dependency to package.json ([#684](https://github.com/zextras/carbonio-calendars-ui/issues/684)) ([0c21ac8](https://github.com/zextras/carbonio-calendars-ui/commit/0c21ac809bba9f40352160fcd9566dee206e8dbf))
+* default calendar group name as empty ([fed1ed7](https://github.com/zextras/carbonio-calendars-ui/commit/fed1ed71c9231db9fdc1adf68c9c3aa165c7c61a))
+* **deps:** upgrade node to v22 ([#676](https://github.com/zextras/carbonio-calendars-ui/issues/676)) ([4cc58d6](https://github.com/zextras/carbonio-calendars-ui/commit/4cc58d6345eb1758a320cd34dd1b30721fee859d))
+* design alignments ([6f962e3](https://github.com/zextras/carbonio-calendars-ui/commit/6f962e35eaae846532f742bf28ebddfd59515761))
+* disable transition on sidebar accordion ([#671](https://github.com/zextras/carbonio-calendars-ui/issues/671)) ([1dde923](https://github.com/zextras/carbonio-calendars-ui/commit/1dde9235b552d912deb2faf91e4d331f58a1afc7))
+* fix error on click propose new time ([#689](https://github.com/zextras/carbonio-calendars-ui/issues/689)) ([daa3de1](https://github.com/zextras/carbonio-calendars-ui/commit/daa3de17f1b88877075ec23f0fbec7c59bde2e7c))
+* show private appointments titles ([#680](https://github.com/zextras/carbonio-calendars-ui/issues/680)) ([f36c3a6](https://github.com/zextras/carbonio-calendars-ui/commit/f36c3a675556548ddbf011776aec554c93d3a320))
+* tests ([b35144a](https://github.com/zextras/carbonio-calendars-ui/commit/b35144a15848fa65ea731f76c6f8965dfe6576d5))
+* update @zextras/carbonio-ui-text-composer to version 1.0.1-devel.2 ([#682](https://github.com/zextras/carbonio-calendars-ui/issues/682)) ([b047000](https://github.com/zextras/carbonio-calendars-ui/commit/b047000a71d65ae30148e10db84684127d47823d))
+* update string for invites never sent ([#675](https://github.com/zextras/carbonio-calendars-ui/issues/675)) ([d8ea545](https://github.com/zextras/carbonio-calendars-ui/commit/d8ea54557a7f8b28f0b6617587d7a508997998ae))
+* updated description based on error ([2fc6b97](https://github.com/zextras/carbonio-calendars-ui/commit/2fc6b975a04918fd6c1758bab9da38236432c8e9))
+* use-get-drive-files not overriding anymore previous atachments ([0e16595](https://github.com/zextras/carbonio-calendars-ui/commit/0e1659553cadf87d0888fd609e4b044b4716b39d))
+* user able to accept and modify anappointment accepted from mails ([#691](https://github.com/zextras/carbonio-calendars-ui/issues/691)) ([54f4c5d](https://github.com/zextras/carbonio-calendars-ui/commit/54f4c5d98f762f8cb497dff0e0e11d271660b882))
+
 ### [1.18.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.18.2...v1.18.3) (2025-12-16)
 
 
