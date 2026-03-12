@@ -5,21 +5,32 @@
  */
 import React, { useMemo, useState } from 'react';
 
-import { Container, Input, Padding, Select, Text } from '@zextras/carbonio-design-system';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
+import {
+	Container,
+	Input,
+	Padding,
+	Select,
+	Text,
+	useSnackbar
+} from '@zextras/carbonio-design-system';
+import { FOLDERS, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
+import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { createFolderRequest } from 'soap/create-folder-request';
 
 export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
 	const [t] = useTranslation();
 	const folders = useFoldersMap();
+	const createSnackbar = useSnackbar();
 	const [icsUrl, setIcsUrl] = useState('');
 	const [calendarName, setCalendarName] = useState('');
 	const [selectedColor, setSelectedColor] = useState('0');
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const appointmentFolderNames = useMemo(
 		() =>
@@ -30,8 +41,9 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 	);
 
 	const isDuplicateCalendarName = useMemo(
-		() => includes(appointmentFolderNames, calendarName.trim().toLowerCase()),
-		[appointmentFolderNames, calendarName]
+		() =>
+			!isSubmitting ? includes(appointmentFolderNames, calendarName.trim().toLowerCase()) : false,
+		[appointmentFolderNames, calendarName, isSubmitting]
 	);
 
 	const urlError = useMemo(() => {
@@ -78,7 +90,49 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 		[t]
 	);
 
-	const onConfirm = (): void => onClose();
+	const selectedRgb = useMemo(
+		() =>
+			CALENDARS_STANDARD_COLORS[Number(selectedColor)]?.color ?? CALENDARS_STANDARD_COLORS[0].color,
+		[selectedColor]
+	);
+
+	const onConfirm = (): void => {
+		if (isSubmitting) {
+			return;
+		}
+
+		setIsSubmitting(true);
+		createFolderRequest({
+			l: FOLDERS.USER_ROOT,
+			name: calendarName.trim(),
+			url: icsUrl.trim(),
+			rgb: selectedRgb,
+			f: '#',
+			view: 'appointment'
+		})
+			.then(() => {
+				createSnackbar({
+					key: 'ics-url-calendar-created',
+					replace: true,
+					severity: 'success',
+					hideButton: true,
+					label: t('message.snackbar.new_calendar_created', 'New calendar created'),
+					autoHideTimeout: 3000
+				});
+				onClose();
+			})
+			.catch(() => {
+				setIsSubmitting(false);
+				createSnackbar({
+					key: 'ics-url-calendar-create-error',
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
+			});
+	};
 
 	return (
 		<Container
@@ -102,6 +156,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 				hasError={!!urlError}
 				description={urlError}
 				value={icsUrl}
+				disabled={isSubmitting}
 				onChange={(event): void => setIcsUrl(event.target.value)}
 			/>
 			{!urlError && (
@@ -129,6 +184,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 						: undefined
 				}
 				value={calendarName}
+				disabled={isSubmitting}
 				onChange={(event): void => setCalendarName(event.target.value)}
 			/>
 			<Padding top="medium" />
@@ -137,6 +193,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 				items={colorItems}
 				defaultSelection={colorItems[0]}
 				LabelFactory={CalendarColorLabelFactory}
+				disabled={isSubmitting}
 				onChange={(value): void => {
 					if (value) {
 						setSelectedColor(value);
@@ -154,6 +211,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 					!icsUrl.trim() ||
 					!calendarName.trim() ||
 					selectedColor === '' ||
+					isSubmitting ||
 					!!urlError ||
 					isDuplicateCalendarName
 				}
