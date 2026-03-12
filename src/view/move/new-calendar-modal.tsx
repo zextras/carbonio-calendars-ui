@@ -5,7 +5,6 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import styled from '@emotion/styled';
 import {
 	Container,
 	Input,
@@ -13,97 +12,20 @@ import {
 	Select,
 	Text,
 	Checkbox,
-	Row,
-	Icon,
-	SelectItem,
-	SelectProps,
-	useSnackbar,
-	AnyColor
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, useFoldersMapByRoot, useRoot, hasId } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import {
+	buildCalendarColorItems,
+	CalendarColorLabelFactory
+} from '../../commons/calendar-color-picker';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { EventType } from '../../types/event';
-
-const Square = styled.div<{ $color?: AnyColor }>`
-	width: 1.125rem;
-	height: 1.125rem;
-	position: relative;
-	top: -0.1875rem;
-	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-	background: ${({ $color }): string | undefined => $color};
-	border-radius: 0.25rem;
-`;
-
-const ColorContainer = styled(Container)`
-	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-`;
-const TextUpperCase = styled(Text)`
-	text-transform: capitalize;
-`;
-
-const LabelFactory: SelectProps['LabelFactory'] = ({
-	selected,
-	label,
-	open,
-	focus
-}): ReactElement => (
-	<ColorContainer
-		orientation="horizontal"
-		width="fill"
-		crossAlignment="center"
-		mainAlignment="space-between"
-		borderRadius="half"
-		background={'gray5'}
-		padding={{
-			all: 'small'
-		}}
-	>
-		<Row width="100%" takeAvailableSpace mainAlignment="space-between">
-			<Row
-				orientation="vertical"
-				crossAlignment="flex-start"
-				mainAlignment="flex-start"
-				padding={{ left: 'small' }}
-			>
-				<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
-					{label}
-				</Text>
-				<TextUpperCase>{selected?.[0].label}</TextUpperCase>
-			</Row>
-			<Padding right="small">
-				<Square $color={CALENDARS_STANDARD_COLORS[Number(selected[0].value)].color} />
-			</Padding>
-		</Row>
-		<Icon
-			size="large"
-			icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
-			color={open || focus ? 'primary' : 'secondary'}
-			style={{ alignSelf: 'center' }}
-		/>
-	</ColorContainer>
-);
-const getStatusItems = (): SelectItem[] =>
-	CALENDARS_STANDARD_COLORS.map((el, index) => ({
-		background: el.background,
-		label: el.label ?? '',
-		value: index.toString(),
-		customComponent: (
-			<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
-				<Padding left="small">
-					<TextUpperCase>{el.label}</TextUpperCase>
-				</Padding>
-				<Padding right="small">
-					<Square $color={el.color} />
-				</Padding>
-			</Container>
-		)
-	}));
 
 type ActionArgs = {
 	inviteId: string;
@@ -131,7 +53,7 @@ export const NewModal = ({
 	const [inputValue, setInputValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const colors = useMemo(() => getStatusItems(), []);
+	const colors = useMemo(() => buildCalendarColorItems(), []);
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
@@ -243,7 +165,7 @@ export const NewModal = ({
 				}}
 				items={colors}
 				defaultSelection={colors[0]}
-				LabelFactory={LabelFactory}
+				LabelFactory={CalendarColorLabelFactory}
 			/>
 			<Padding vertical="medium" />
 			<Checkbox
