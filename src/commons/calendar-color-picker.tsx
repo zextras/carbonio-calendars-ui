@@ -5,6 +5,7 @@
  */
 import React from 'react';
 
+import styled from '@emotion/styled';
 import {
 	Icon,
 	Padding,
@@ -17,6 +18,10 @@ import {
 
 import { ColorContainer, Square, TextUpperCase } from './styled-components';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+
+const ColorSquare = styled(Square)`
+	margin-top: 0.5rem;
+`;
 
 export const CalendarColorLabelFactory: SelectProps['LabelFactory'] = ({
 	selected,
@@ -51,7 +56,7 @@ export const CalendarColorLabelFactory: SelectProps['LabelFactory'] = ({
 					<TextUpperCase>{selected?.[0]?.label}</TextUpperCase>
 				</Row>
 				<Padding right="small">
-					<Square $color={selectedColor} />
+					<ColorSquare $color={selectedColor} />
 				</Padding>
 			</Row>
 			<Icon
@@ -79,7 +84,7 @@ export const buildCalendarColorItems = (
 						<TextUpperCase>{label}</TextUpperCase>
 					</Padding>
 					<Padding right="small">
-						<Square $color={color.color} />
+						<ColorSquare $color={color.color} />
 					</Padding>
 				</Container>
 			)
