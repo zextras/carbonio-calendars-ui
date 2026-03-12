@@ -8,12 +8,9 @@ import React, { useMemo, useState } from 'react';
 import { Container, Input, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import {
-	buildCalendarColorItems,
-	CalendarColorLabelFactory
-} from '../../commons/calendar-color-picker';
 import ModalFooter from '../../commons/modal-footer';
-import { ModalHeader } from '../../commons/modal-header';
+import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
+import { ModalHeader } from 'commons/modal-header';
 
 export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
 	const [t] = useTranslation();

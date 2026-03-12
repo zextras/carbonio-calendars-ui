@@ -18,14 +18,11 @@ import { FOLDERS, useFoldersMapByRoot, useRoot, hasId } from '@zextras/carbonio-
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import {
-	buildCalendarColorItems,
-	CalendarColorLabelFactory
-} from '../../commons/calendar-color-picker';
 import ModalFooter from '../../commons/modal-footer';
-import { ModalHeader } from '../../commons/modal-header';
-import { createCalendar } from '../../store/actions/create-calendar';
-import { EventType } from '../../types/event';
+import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
+import { ModalHeader } from 'commons/modal-header';
+import { createCalendar } from 'store/actions/create-calendar';
+import { EventType } from 'types/event';
 
 type ActionArgs = {
 	inviteId: string;
