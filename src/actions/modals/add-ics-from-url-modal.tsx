@@ -77,6 +77,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			<ModalFooter
 				onConfirm={onConfirm}
 				secondaryAction={onClose}
+				secondaryBtnType={'outlined'}
 				label={t('label.add', 'Add')}
 				secondaryLabel={t('label.cancel', 'Cancel')}
 				disabled={!icsUrl.trim() || !calendarName.trim() || selectedColor === ''}
