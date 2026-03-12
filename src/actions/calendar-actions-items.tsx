@@ -252,6 +252,21 @@ export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarAc
 		isLinkChild(item)
 });
 
+const isIcsImportActionDisabled = (item: Folder): boolean =>
+	hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+	isTrashOrNestedInIt(item) ||
+	(item as LinkFolder).isLink ||
+	isLinkChild(item);
+
+export const addIcsFromUrlItem = (item: Folder): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.ADD_ICS_URL,
+	icon: 'Link2',
+	label: t('action.add_ics_from_url', 'Add ICS from URL'),
+	tooltipLabel: noPermissionLabel,
+	onClick: (): void => undefined,
+	disabled: isIcsImportActionDisabled(item)
+});
+
 export const importCalendarICSItem = (
 	item: Folder,
 	ref?: React.RefObject<HTMLInputElement>
@@ -265,9 +280,5 @@ export const importCalendarICSItem = (
 			ref.current.click();
 		}
 	},
-	disabled:
-		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
-		isTrashOrNestedInIt(item) ||
-		(item as LinkFolder).isLink ||
-		isLinkChild(item)
+	disabled: isIcsImportActionDisabled(item)
 });
