@@ -17,6 +17,7 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
+	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
 import mockedData from '../test/generators';
@@ -244,6 +245,22 @@ describe('calendar-actions-fn', () => {
 		findSharesFn();
 		await waitFor(() => {
 			expect(createModal).toHaveBeenCalledTimes(0);
+		});
+	});
+
+	test('sync external calendar fn shows success snackbar', async () => {
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR };
+		const syncExternalCalendarFn = syncExternalCalendar({ createSnackbar, item });
+
+		await act(async () => syncExternalCalendarFn());
+		await waitFor(() => {
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'success',
+					label: 'message.snackbar.external_calendar_synced'
+				})
+			);
 		});
 	});
 });
