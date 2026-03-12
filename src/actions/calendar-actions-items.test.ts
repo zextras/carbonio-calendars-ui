@@ -130,8 +130,10 @@ describe('calendar actions items', () => {
 	describe('addIcsFromUrlItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = mockedData.calendars.getCalendar();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
 
-			const addFromUrl = addIcsFromUrlItem(item);
+			const addFromUrl = addIcsFromUrlItem({ createModal, closeModal, item });
 			expect(addFromUrl).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.ADD_ICS_URL,
@@ -163,7 +165,13 @@ describe('calendar actions items', () => {
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:153`, isLink: true }
 		])(genericTestTitleForEachCases, (item) => {
 			setupFoldersStore();
-			const addFromUrl = addIcsFromUrlItem(item as Folder);
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+			const addFromUrl = addIcsFromUrlItem({
+				createModal,
+				closeModal,
+				item: item as Folder
+			});
 			expect(addFromUrl).toStrictEqual(
 				expect.objectContaining({
 					disabled: true

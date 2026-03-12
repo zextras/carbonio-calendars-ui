@@ -11,20 +11,21 @@ import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbon
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
+import { AddIcsFromUrlModal } from './modals/add-ics-from-url-modal';
+import { CreateGroupModal } from './modals/create-group-modal';
+import { DeleteModal } from './modals/delete-modal';
+import { EditModal } from './modals/edit-modal/edit-modal';
+import { EmptyModal } from './modals/empty-modal';
+import { ShareCalendarModal } from './modals/share-calendar-modal';
+import { SharesInfoModal } from './modals/shares-info-modal';
+import { SharesModal } from './modals/shares-modal';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { getFolderRequest } from '../soap/get-folder-request';
 import { getShareInfoRequest } from '../soap/get-share-info-request';
-import { CreateGroupModal } from './modals/create-group-modal';
-import { DeleteModal } from './modals/delete-modal';
-import { EmptyModal } from './modals/empty-modal';
 import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
 import { NewModal } from '../view/move/new-calendar-modal';
-import { EditModal } from './modals/edit-modal/edit-modal';
-import { ShareCalendarModal } from './modals/share-calendar-modal';
-import { SharesInfoModal } from './modals/shares-info-modal';
-import { SharesModal } from './modals/shares-modal';
 
 export const newCalendar =
 	({
@@ -149,6 +150,36 @@ export const emptyTrash =
 				children: (
 					<StoreProvider>
 						<EmptyModal onClose={(): void => closeModal(modalId)} />
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
+			},
+			true
+		);
+	};
+
+export const addIcsFromUrl =
+	({
+		createModal,
+		closeModal
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		const modalId = 'add-ics-from-url';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<AddIcsFromUrlModal onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				),
 				onClose: () => {

@@ -40,7 +40,7 @@ export const useCalendarActions = (
 
 	const actions = [
 		newCalendarItem({ createModal, closeModal, item }),
-		addIcsFromUrlItem(item),
+		addIcsFromUrlItem({ createModal, closeModal, item }),
 		moveToRootItem({ createSnackbar, item }),
 		emptyTrashItem({ createModal, closeModal, item }),
 		editCalendarItem({ createModal, closeModal, item }),

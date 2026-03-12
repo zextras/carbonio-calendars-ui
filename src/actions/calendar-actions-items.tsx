@@ -18,6 +18,7 @@ import {
 import { isNil } from 'lodash';
 
 import {
+	addIcsFromUrl,
 	deleteCalendar,
 	editCalendar,
 	emptyTrash,
@@ -258,12 +259,20 @@ const isIcsImportActionDisabled = (item: Folder): boolean =>
 	(item as LinkFolder).isLink ||
 	isLinkChild(item);
 
-export const addIcsFromUrlItem = (item: Folder): CalendarActionsItems => ({
+export const addIcsFromUrlItem = ({
+	createModal,
+	closeModal,
+	item
+}: {
+	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
+	item: Folder;
+}): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.ADD_ICS_URL,
 	icon: 'Link2',
 	label: t('action.add_ics_from_url', 'Add ICS from URL'),
 	tooltipLabel: noPermissionLabel,
-	onClick: (): void => undefined,
+	onClick: addIcsFromUrl({ createModal, closeModal }),
 	disabled: isIcsImportActionDisabled(item)
 });
 
