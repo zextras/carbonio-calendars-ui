@@ -43,7 +43,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			<Padding top="small" />
 			<Input
 				label={t('add_ics_from_url.ics_url', 'Calendar ICS URL*')}
-				backgroundColor="gray5"
+				background={'gray5'}
 				value={icsUrl}
 				onChange={(event): void => setIcsUrl(event.target.value)}
 			/>
@@ -57,7 +57,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			<Padding top="medium" />
 			<Input
 				label={t('add_ics_from_url.calendar_name', 'Calendar name*')}
-				backgroundColor="gray5"
+				background={'gray5'}
 				value={calendarName}
 				onChange={(event): void => setCalendarName(event.target.value)}
 			/>
