@@ -15,7 +15,8 @@ export const FOLDER_OPERATIONS = {
 	UNCHECK: '!check',
 	TRASH: 'trash',
 	EMPTY: 'empty',
-	FREE_BUSY: 'fb'
+	FREE_BUSY: 'fb',
+	SYNC: 'sync'
 } as const;
 
 export const PARTICIPANT_ROLE = {
