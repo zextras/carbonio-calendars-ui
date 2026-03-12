@@ -289,6 +289,41 @@ export const removeFromList =
 		});
 	};
 
+export const syncExternalCalendar =
+	({
+		item,
+		createSnackbar
+	}: {
+		item: { id: string };
+		createSnackbar: CreateSnackbarFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.SYNC }).then((res: { Fault?: string }) => {
+			if (!res.Fault) {
+				createSnackbar({
+					key: `external-calendar-sync`,
+					replace: true,
+					severity: 'success',
+					hideButton: true,
+					label: t('message.snackbar.external_calendar_synced', 'Calendar synced successfully'),
+					autoHideTimeout: 3000
+				});
+			} else {
+				createSnackbar({
+					key: `external-calendar-sync-error`,
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
+			}
+		});
+	};
+
 export const sharesInfo =
 	({
 		item,
