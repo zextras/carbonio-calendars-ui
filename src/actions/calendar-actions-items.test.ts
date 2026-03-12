@@ -8,6 +8,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-ui-commons';
 
 import {
+	addIcsFromUrlItem,
 	deleteCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
@@ -120,6 +121,50 @@ describe('calendar actions items', () => {
 
 			const newItem = newCalendarItem({ createModal, closeModal, item });
 			expect(newItem).toStrictEqual(
+				expect.objectContaining({
+					disabled: true
+				})
+			);
+		});
+	});
+	describe('addIcsFromUrlItem', () => {
+		test(genericTestItemTitleForIconItem, () => {
+			const item = mockedData.calendars.getCalendar();
+
+			const addFromUrl = addIcsFromUrlItem(item);
+			expect(addFromUrl).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.ADD_ICS_URL,
+					icon: 'Link2',
+					label: t('action.add_ics_from_url', 'Add ICS from URL'),
+					tooltipLabel: noPermissionLabel,
+					onClick: expect.any(Function),
+					disabled: false
+				})
+			);
+		});
+
+		test.each([
+			{
+				...mockedData.calendars.getCalendar(),
+				id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}`
+			},
+			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.TRASH },
+			{ ...mockedData.calendars.getCalendar(), id: '153', absFolderPath: TRASH_SUB_FOLDER_PATH },
+			{ ...mockedData.calendars.getCalendar(), id: '153', isLink: true },
+			childFolder,
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.TRASH}` },
+			{
+				...mockedData.calendars.getCalendar(),
+				id: `${randomUUID}:153`,
+				absFolderPath: TRASH_SUB_FOLDER_PATH
+			},
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:153`, isLink: true }
+		])(genericTestTitleForEachCases, (item) => {
+			setupFoldersStore();
+			const addFromUrl = addIcsFromUrlItem(item as Folder);
+			expect(addFromUrl).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
 				})
