@@ -7,14 +7,20 @@ import React from 'react';
 
 import { AddIcsFromUrlModal } from './add-ics-from-url-modal';
 import { setupTest, screen } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { populateFoldersStore } from '@test-utils/store/folders';
+
+const ICS_URL_LABEL = 'Calendar ICS URL*';
+const CALENDAR_NAME_LABEL = 'Calendar name*';
+const VALID_ICS_URL = 'https://host/path.ics';
 
 describe('AddIcsFromUrlModal', () => {
 	test('renders modal content', () => {
 		setupTest(<AddIcsFromUrlModal onClose={vi.fn()} />);
 
 		expect(screen.getByText('Add ICS from URL')).toBeVisible();
-		expect(screen.getByRole('textbox', { name: 'Calendar ICS URL*' })).toBeVisible();
-		expect(screen.getByRole('textbox', { name: 'Calendar name*' })).toBeVisible();
+		expect(screen.getByRole('textbox', { name: ICS_URL_LABEL })).toBeVisible();
+		expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeVisible();
 		expect(screen.getByText('Select color')).toBeVisible();
 		expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
 		expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
@@ -23,10 +29,52 @@ describe('AddIcsFromUrlModal', () => {
 	test('enables add button after required fields are filled', async () => {
 		const { user } = setupTest(<AddIcsFromUrlModal onClose={vi.fn()} />);
 
-		await user.type(screen.getByRole('textbox', { name: 'Calendar ICS URL*' }), 'a');
-		await user.type(screen.getByRole('textbox', { name: 'Calendar name*' }), 'b');
+		await user.type(screen.getByRole('textbox', { name: ICS_URL_LABEL }), VALID_ICS_URL);
+		await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'b');
 
 		expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
+	});
+
+	test('shows protocol error when url does not start with http or https', async () => {
+		const { user } = setupTest(<AddIcsFromUrlModal onClose={vi.fn()} />);
+
+		await user.type(
+			screen.getByRole('textbox', { name: ICS_URL_LABEL }),
+			'calendar.google.com/calendar/ical/fe3ae.ics'
+		);
+
+		expect(
+			screen.getByText("The URL should begin with 'http://' or 'https://'")
+		).toBeVisible();
+		expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+	});
+
+	test('shows invalid ics link error when url is not a valid ics link', async () => {
+		const { user } = setupTest(<AddIcsFromUrlModal onClose={vi.fn()} />);
+
+		await user.type(screen.getByRole('textbox', { name: ICS_URL_LABEL }), 'ciao');
+
+		expect(
+			screen.getByText('Invalid URL. Make sure it links directly to an .ics calendar file')
+		).toBeVisible();
+		expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+	});
+
+	test('shows duplicate calendar name error when name already exists', async () => {
+		populateFoldersStore({
+			view: 'appointment',
+			customFolders: [generateFolder({ name: 'External calendar', view: 'appointment' })]
+		});
+		const { user } = setupTest(<AddIcsFromUrlModal onClose={vi.fn()} />);
+
+		await user.type(screen.getByRole('textbox', { name: ICS_URL_LABEL }), VALID_ICS_URL);
+		await user.type(
+			screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
+			'External calendar'
+		);
+
+		expect(screen.getByText('A calendar with the same name already exists')).toBeVisible();
+		expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 	});
 
 	test('calls onClose on cancel click', async () => {
