@@ -28,6 +28,7 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
+	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
 import { isLinkChild, isMainRootChild } from 'commons/utilities';
@@ -132,6 +133,23 @@ export const editCalendarItem = ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
 	label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
+	tooltipLabel: noPermissionLabel,
+	onClick: editCalendar({ createModal, closeModal, item }),
+	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+});
+
+export const editExternalCalendarItem = ({
+	createModal,
+	closeModal,
+	item
+}: {
+	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
+	item: { id: string; absFolderPath?: string };
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.EDIT,
+	icon: 'Edit2Outline',
+	label: t('action.edit_calendar', 'Edit calendar'),
 	tooltipLabel: noPermissionLabel,
 	onClick: editCalendar({ createModal, closeModal, item }),
 	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
@@ -274,6 +292,21 @@ export const addIcsFromUrlItem = ({
 	tooltipLabel: noPermissionLabel,
 	onClick: addIcsFromUrl({ createModal, closeModal }),
 	disabled: isIcsImportActionDisabled(item)
+});
+
+export const syncExternalCalendarItem = ({
+	item,
+	createSnackbar
+}: {
+	item: Folder;
+	createSnackbar: CreateSnackbarFn;
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.SYNC,
+	icon: 'SyncOutline',
+	label: t('label.sync', 'Sync'),
+	tooltipLabel: noPermissionLabel,
+	onClick: syncExternalCalendar({ item, createSnackbar }),
+	disabled: !item.url || isTrashOrNestedInIt(item)
 });
 
 export const importCalendarICSItem = (
