@@ -10,6 +10,7 @@ import { filter } from 'lodash';
 import {
 	addIcsFromUrlItem,
 	deleteCalendarItem,
+	editExternalCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
 	exportAppointmentICSItem,
@@ -18,6 +19,7 @@ import {
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
+	syncExternalCalendarItem,
 	sharesInfoItem
 } from 'actions/calendar-actions-items';
 import { ActionsClick } from 'types/actions';
@@ -37,6 +39,18 @@ export const useCalendarActions = (
 	const createSnackbar = useSnackbar();
 
 	if (!item) return [];
+	const isExternalCalendar = !!item.url;
+
+	if (isExternalCalendar) {
+		return filter(
+			[
+				syncExternalCalendarItem({ item, createSnackbar }),
+				editExternalCalendarItem({ createModal, closeModal, item }),
+				deleteCalendarItem({ createModal, closeModal, item })
+			],
+			['disabled', false]
+		);
+	}
 
 	const actions = [
 		newCalendarItem({ createModal, closeModal, item }),
