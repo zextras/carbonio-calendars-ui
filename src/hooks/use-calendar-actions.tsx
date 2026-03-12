@@ -19,8 +19,8 @@ import {
 	newCalendarItem,
 	removeFromListItem,
 	sharesInfoItem
-} from '../actions/calendar-actions-items';
-import { ActionsClick } from '../types/actions';
+} from 'actions/calendar-actions-items';
+import { ActionsClick } from 'types/actions';
 
 type CalendarActionsProps = {
 	id: string;
