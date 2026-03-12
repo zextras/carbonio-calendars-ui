@@ -7,9 +7,12 @@ import React, { useMemo, useState } from 'react';
 
 import {
 	Container,
+	Icon,
 	Input,
 	Padding,
+	Row,
 	Select,
+	SelectProps,
 	SelectItem,
 	Text
 } from '@zextras/carbonio-design-system';
@@ -17,21 +20,72 @@ import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from 'commons/modal-header';
+import { ColorContainer, Square, TextUpperCase } from 'commons/styled-components';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+
+const LabelFactory: SelectProps['LabelFactory'] = ({ selected, label, open, focus }) => (
+	<ColorContainer
+		orientation="horizontal"
+		width="fill"
+		crossAlignment="center"
+		mainAlignment="space-between"
+		borderRadius="half"
+		background={'gray5'}
+		padding={{ all: 'small' }}
+	>
+		<Row width="100%" takeAvailableSpace mainAlignment="space-between">
+			<Row
+				orientation="vertical"
+				crossAlignment="flex-start"
+				mainAlignment="flex-start"
+				padding={{ left: 'small' }}
+			>
+				<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
+					{label}
+				</Text>
+				<TextUpperCase>{selected?.[0]?.label}</TextUpperCase>
+			</Row>
+			<Padding right="small">
+				<Square $color={CALENDARS_STANDARD_COLORS[Number(selected?.[0]?.value ?? 0)].color} />
+			</Padding>
+		</Row>
+		<Icon
+			size="large"
+			icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
+			color={open || focus ? 'primary' : 'secondary'}
+			style={{ alignSelf: 'center' }}
+		/>
+	</ColorContainer>
+);
 
 export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
 	const [t] = useTranslation();
 	const [icsUrl, setIcsUrl] = useState('');
 	const [calendarName, setCalendarName] = useState('');
+	const [selectedColor, setSelectedColor] = useState('0');
 
 	const colorItems = useMemo<Array<SelectItem>>(
 		() =>
 			CALENDARS_STANDARD_COLORS.map((color, index) => ({
-				label: color.label ?? '',
+				label: t(`colors.${color.label}`),
 				value: index.toString(),
-				background: color.background
+				customComponent: (
+					<Container
+						width="100%"
+						mainAlignment="space-between"
+						orientation="horizontal"
+						height="fit"
+					>
+						<Padding left="small">
+							<TextUpperCase>{t(`colors.${color.label}`)}</TextUpperCase>
+						</Padding>
+						<Padding right="small">
+							<Square $color={color.color} />
+						</Padding>
+					</Container>
+				)
 			})),
-		[]
+		[t]
 	);
 
 	const onConfirm = (): void => onClose();
@@ -77,7 +131,12 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 				label={t('label.select_color', 'Select color')}
 				items={colorItems}
 				defaultSelection={colorItems[0]}
-				onChange={(): void => undefined}
+				LabelFactory={LabelFactory}
+				onChange={(value): void => {
+					if (value) {
+						setSelectedColor(value);
+					}
+				}}
 			/>
 			<Padding top="medium" />
 			<ModalFooter
@@ -85,7 +144,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 				secondaryAction={onClose}
 				label={t('label.add', 'Add')}
 				secondaryLabel={t('label.cancel', 'Cancel')}
-				disabled={!icsUrl.trim() || !calendarName.trim()}
+				disabled={!icsUrl.trim() || !calendarName.trim() || selectedColor === ''}
 			/>
 		</Container>
 	);
