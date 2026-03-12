@@ -29,8 +29,8 @@ import {
 	shareCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
-import { isLinkChild, isMainRootChild } from '../commons/utilities';
-import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
+import { isLinkChild, isMainRootChild } from 'commons/utilities';
+import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 
 export type CalendarActionsItems = {
 	id: CalendarActionsId;
