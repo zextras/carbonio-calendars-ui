@@ -696,4 +696,35 @@ describe('use calendar actions', () => {
 			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
 		]);
 	});
+
+	test('external calendar detected by folder flag has only sync, edit and delete actions', () => {
+		const externalCalendarByFlagItem = {
+			name: 'External calendar by flag',
+			id: '998',
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			f: 'y#',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 1,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(externalCalendarByFlagItem as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [externalCalendarByFlagItem]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.SYNC }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
+		]);
+	});
 });

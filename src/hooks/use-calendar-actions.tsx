@@ -22,6 +22,7 @@ import {
 	syncExternalCalendarItem,
 	sharesInfoItem
 } from 'actions/calendar-actions-items';
+import { isExternalSyncFolder } from 'commons/utilities';
 import { ActionsClick } from 'types/actions';
 
 type CalendarActionsProps = {
@@ -39,7 +40,7 @@ export const useCalendarActions = (
 	const createSnackbar = useSnackbar();
 
 	if (!item) return [];
-	const isExternalCalendar = !!item.url;
+	const isExternalCalendar = isExternalSyncFolder(item);
 
 	if (isExternalCalendar) {
 		return filter(

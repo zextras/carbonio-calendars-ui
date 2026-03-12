@@ -31,7 +31,7 @@ import {
 	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
-import { isLinkChild, isMainRootChild } from 'commons/utilities';
+import { isExternalSyncFolder, isLinkChild, isMainRootChild } from 'commons/utilities';
 import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 
 export type CalendarActionsItems = {
@@ -306,7 +306,7 @@ export const syncExternalCalendarItem = ({
 	label: t('label.sync', 'Sync'),
 	tooltipLabel: noPermissionLabel,
 	onClick: syncExternalCalendar({ item, createSnackbar }),
-	disabled: !item.url || isTrashOrNestedInIt(item)
+	disabled: !isExternalSyncFolder(item) || isTrashOrNestedInIt(item)
 });
 
 export const importCalendarICSItem = (
