@@ -665,4 +665,35 @@ describe('use calendar actions', () => {
 			]);
 		});
 	});
+
+	test('external calendar has only sync, edit and delete actions', () => {
+		const externalCalendarItem = {
+			name: 'External calendar',
+			id: '999',
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			url: 'https://a/1.ics',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 1,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(externalCalendarItem as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [externalCalendarItem]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.SYNC }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
+		]);
+	});
 });
