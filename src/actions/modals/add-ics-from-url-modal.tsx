@@ -40,10 +40,23 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 		[folders]
 	);
 
+	const appointmentFolderUrls = useMemo(
+		() =>
+			map(folders, (folder) =>
+				folder.view === 'appointment' && folder.url ? folder.url.trim().toLowerCase() : null
+			),
+		[folders]
+	);
+
 	const isDuplicateCalendarName = useMemo(
 		() =>
 			!isSubmitting ? includes(appointmentFolderNames, calendarName.trim().toLowerCase()) : false,
 		[appointmentFolderNames, calendarName, isSubmitting]
+	);
+
+	const isDuplicateCalendarUrl = useMemo(
+		() => (!isSubmitting ? includes(appointmentFolderUrls, icsUrl.trim().toLowerCase()) : false),
+		[appointmentFolderUrls, icsUrl, isSubmitting]
 	);
 
 	const urlError = useMemo(() => {
@@ -153,13 +166,21 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			<Input
 				label={t('add_ics_from_url.ics_url', 'Calendar ICS URL*')}
 				background={'gray5'}
-				hasError={!!urlError}
-				description={urlError}
+				hasError={!!urlError || isDuplicateCalendarUrl}
+				description={
+					urlError ??
+					(isDuplicateCalendarUrl
+						? t(
+								'add_ics_from_url.error.duplicate_calendar_url',
+								'A calendar with the same URL has already been added'
+							)
+						: undefined)
+				}
 				value={icsUrl}
 				disabled={isSubmitting}
 				onChange={(event): void => setIcsUrl(event.target.value)}
 			/>
-			{!urlError && (
+			{!urlError && !isDuplicateCalendarUrl && (
 				<>
 					<Padding top="extrasmall" />
 					<Text size="small" color="secondary">
@@ -213,7 +234,8 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 					selectedColor === '' ||
 					isSubmitting ||
 					!!urlError ||
-					isDuplicateCalendarName
+					isDuplicateCalendarName ||
+					isDuplicateCalendarUrl
 				}
 			/>
 		</Container>
