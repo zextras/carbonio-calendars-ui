@@ -121,7 +121,8 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			url: icsUrl.trim(),
 			rgb: selectedRgb,
 			f: '#',
-			view: 'appointment'
+			view: 'appointment',
+			sync: 1
 		})
 			.then(() => {
 				createSnackbar({

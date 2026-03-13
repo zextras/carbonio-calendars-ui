@@ -110,7 +110,8 @@ describe('AddIcsFromUrlModal', () => {
 				url: VALID_ICS_URL,
 				rgb: '#000000',
 				f: '#',
-				view: 'appointment'
+				view: 'appointment',
+				sync: 1
 			});
 		});
 
