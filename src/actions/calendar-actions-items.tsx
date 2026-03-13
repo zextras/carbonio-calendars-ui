@@ -175,7 +175,7 @@ export const deleteCalendarItem = ({
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
 		hasId(item, FOLDERS.TRASH) ||
-		(item.perm ? !/w/.test(item.perm) : false)
+		(!isExternalSyncFolder(item) && (item.perm ? !/w/.test(item.perm) : false))
 });
 
 export const removeFromListItem = ({

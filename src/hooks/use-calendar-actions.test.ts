@@ -727,4 +727,36 @@ describe('use calendar actions', () => {
 			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
 		]);
 	});
+
+	test('external calendar with perm:r still shows delete action', () => {
+		const externalCalendarWithPerm = {
+			name: 'External calendar with perm',
+			id: '997',
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			f: '#y',
+			perm: 'r',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 1,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(externalCalendarWithPerm as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [externalCalendarWithPerm]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.SYNC }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
+		]);
+	});
 });
