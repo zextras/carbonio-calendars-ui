@@ -1,3 +1,5 @@
+// noinspection HttpUrlsUsage
+
 /*
  * SPDX-FileCopyrightText: 2026 Zextras <https://www.zextras.com>
  *
