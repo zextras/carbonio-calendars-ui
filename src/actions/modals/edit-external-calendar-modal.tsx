@@ -105,22 +105,22 @@ export const EditExternalCalendarModal = ({
 		if (actions.length > 0) {
 			folderAction(actions.length > 1 ? actions : actions[0])
 				.then((res: { Fault?: string }) => {
-					if (!res.Fault) {
-						createSnackbar({
-							key: 'edit-external-calendar-success',
-							replace: true,
-							severity: 'success',
-							hideButton: true,
-							label: t('label.changes_saved', 'Changes saved'),
-							autoHideTimeout: 3000
-						});
-					} else {
+					if (res.Fault) {
 						createSnackbar({
 							key: 'edit-external-calendar-error',
 							replace: true,
 							severity: 'error',
 							hideButton: true,
 							label: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
+					} else {
+						createSnackbar({
+							key: 'edit-external-calendar-success',
+							replace: true,
+							severity: 'success',
+							hideButton: true,
+							label: t('label.changes_saved', 'Changes saved'),
 							autoHideTimeout: 3000
 						});
 					}
