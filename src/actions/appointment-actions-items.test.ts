@@ -46,7 +46,42 @@ describe('edit event item', () => {
 		const editAction = editEventItem({ invite, event, context });
 		expect(editAction.disabled).toBe(false);
 	});
+
 	describe('is disabled when', () => {
+		test('the event has no organizer but the calendar is read-only (external ICS)', () => {
+			const folder = {
+				id: FOLDERS.CALENDAR,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment',
+				absFolderPath: '/'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const baseEvent = mockedData.getEvent({
+				haveWriteAccess: false,
+				resource: { calendar: folder }
+			});
+			// explicitly remove organizer (the generator always sets a default one)
+			const event = { ...baseEvent, resource: { ...baseEvent.resource, organizer: undefined } };
+
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				tags: [{ id: '1', name: 'one' }],
+				folders
+			};
+
+			const editAction = editEventItem({ invite, event, context });
+			expect(editAction.disabled).toBe(true);
+		});
 		test('the event is on trash', () => {
 			const folder = {
 				id: FOLDERS.TRASH,

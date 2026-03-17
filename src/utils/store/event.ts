@@ -20,4 +20,5 @@ export const isOrganizerOrHaveEqualRights = (
 			(!!event.resource.calendar.owner &&
 				(event.resource.calendar.owner !== event.resource.organizer?.email ||
 					!event?.haveWriteAccess))
-		: false);
+		: // if there is no organizer, user can only edit if they have write access
+			!event?.haveWriteAccess);
