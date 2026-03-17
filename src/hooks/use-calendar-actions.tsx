@@ -47,7 +47,8 @@ export const useCalendarActions = (
 			[
 				syncExternalCalendarItem({ item, createSnackbar }),
 				editExternalCalendarItem({ createModal, closeModal, item }),
-				deleteCalendarItem({ createModal, closeModal, item })
+				deleteCalendarItem({ createModal, closeModal, item }),
+				moveToRootItem({ createSnackbar, item })
 			],
 			['disabled', false]
 		);

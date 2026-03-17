@@ -759,4 +759,37 @@ describe('use calendar actions', () => {
 			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
 		]);
 	});
+
+	test('external calendar in trash shows restore action', () => {
+		const trashedExternalCalendarItem = {
+			name: 'External calendar in trash',
+			id: '996',
+			l: FOLDERS.TRASH,
+			parent: FOLDERS.TRASH,
+			f: '#y',
+			url: 'https://a/trashed.ics',
+			absFolderPath: '/Trash/External calendar in trash',
+			perm: 'r',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 2,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(trashedExternalCalendarItem as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [trashedExternalCalendarItem]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT })
+		]);
+	});
 });
