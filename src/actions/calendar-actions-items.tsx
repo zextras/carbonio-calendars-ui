@@ -128,7 +128,7 @@ export const editCalendarItem = ({
 }: {
 	createModal: CreateModalFn;
 	closeModal: CloseModalFn;
-	item: { id: string; absFolderPath?: string };
+	item: { id: string; absFolderPath?: string; f?: string; url?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
@@ -145,7 +145,7 @@ export const editExternalCalendarItem = ({
 }: {
 	createModal: CreateModalFn;
 	closeModal: CloseModalFn;
-	item: { id: string; absFolderPath?: string };
+	item: { id: string; absFolderPath?: string; f?: string; url?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',

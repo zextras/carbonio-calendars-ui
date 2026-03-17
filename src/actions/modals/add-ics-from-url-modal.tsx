@@ -229,6 +229,8 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 				secondaryBtnType={'outlined'}
 				label={t('label.add', 'Add')}
 				secondaryLabel={t('label.cancel', 'Cancel')}
+				primaryMinWidth={'6.5rem'}
+				secondaryMinWidth={'6.5rem'}
 				disabled={
 					!icsUrl.trim() ||
 					!calendarName.trim() ||
