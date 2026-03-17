@@ -64,7 +64,7 @@ export const EditExternalCalendarModal = ({
 
 	const isDuplicateCalendarName = useMemo(
 		() =>
-			!isSubmitting ? includes(appointmentFolderNames, calendarName.trim().toLowerCase()) : false,
+			isSubmitting ? false : includes(appointmentFolderNames, calendarName.trim().toLowerCase()),
 		[appointmentFolderNames, calendarName, isSubmitting]
 	);
 

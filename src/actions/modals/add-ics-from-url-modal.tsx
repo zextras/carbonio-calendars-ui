@@ -50,12 +50,12 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 
 	const isDuplicateCalendarName = useMemo(
 		() =>
-			!isSubmitting ? includes(appointmentFolderNames, calendarName.trim().toLowerCase()) : false,
+			isSubmitting ? false : includes(appointmentFolderNames, calendarName.trim().toLowerCase()),
 		[appointmentFolderNames, calendarName, isSubmitting]
 	);
 
 	const isDuplicateCalendarUrl = useMemo(
-		() => (!isSubmitting ? includes(appointmentFolderUrls, icsUrl.trim().toLowerCase()) : false),
+		() => (isSubmitting ? false : includes(appointmentFolderUrls, icsUrl.trim().toLowerCase())),
 		[appointmentFolderUrls, icsUrl, isSubmitting]
 	);
 
