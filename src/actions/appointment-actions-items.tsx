@@ -27,6 +27,7 @@ import { StoreProvider } from '../store/redux';
 import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { isExternalSyncFolder } from '../commons/utilities';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
 import { ForwardAppointmentModal } from '../view/modals/forward-appointment/forward-appointment-modal';
 import { InviteReplyVerb } from 'soap/send-invite-reply-request';
@@ -123,16 +124,23 @@ export const moveEventItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.MOVE,
-	icon: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'RestoreOutline' : 'MoveOutline',
-	label: hasId(event.resource.calendar, FOLDERS.TRASH)
-		? t('label.restore', 'Restore')
-		: t('label.move', 'Move'),
-	disabled: !event?.haveWriteAccess,
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: moveAppointment({ event, context })
-});
+}): AppointmentActionsItems | undefined => {
+	const folder = find(context.folders, ['id', event.resource.calendar.id]);
+	if (isExternalSyncFolder(folder ?? {})) {
+		return undefined;
+	}
+
+	return {
+		id: EVENT_ACTIONS.MOVE,
+		icon: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'RestoreOutline' : 'MoveOutline',
+		label: hasId(event.resource.calendar, FOLDERS.TRASH)
+			? t('label.restore', 'Restore')
+			: t('label.move', 'Move'),
+		disabled: !event?.haveWriteAccess,
+		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+		onClick: moveAppointment({ event, context })
+	};
+};
 
 export const editEventItem = ({
 	invite,
