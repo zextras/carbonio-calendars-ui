@@ -312,6 +312,14 @@ export const syncExternalCalendar =
 		if (e) {
 			e.stopPropagation();
 		}
+		createSnackbar({
+			key: `external-calendar-sync`,
+			replace: true,
+			severity: 'info',
+			hideButton: true,
+			label: t('message.snackbar.external_calendar_syncing', 'Calendar sync started'),
+			autoHideTimeout: 3000
+		});
 		folderAction({ id: item.id, op: FOLDER_OPERATIONS.SYNC }).then((res: { Fault?: string }) => {
 			if (res.Fault) {
 				createSnackbar({

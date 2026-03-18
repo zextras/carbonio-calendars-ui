@@ -254,6 +254,12 @@ describe('calendar-actions-fn', () => {
 		const syncExternalCalendarFn = syncExternalCalendar({ createSnackbar, item });
 
 		await act(async () => syncExternalCalendarFn());
+		expect(createSnackbar).toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'info',
+				label: 'message.snackbar.external_calendar_syncing'
+			})
+		);
 		await waitFor(() => {
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
