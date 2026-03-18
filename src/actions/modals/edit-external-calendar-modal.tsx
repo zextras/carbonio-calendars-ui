@@ -265,12 +265,7 @@ export const EditExternalCalendarModal = ({
 			<Padding top="medium" />
 			<ModalFooter
 				onConfirm={onConfirm}
-				secondaryAction={onClose}
-				secondaryBtnType={'outlined'}
-				label={t('label.ok', 'OK')}
-				secondaryLabel={t('label.cancel', 'Cancel')}
-				primaryMinWidth={'6.5rem'}
-				secondaryMinWidth={'6.5rem'}
+				label={t('label.save_changes', 'Save Changes')}
 				disabled={!calendarName.trim() || isSubmitting || isDuplicateCalendarName}
 			/>
 		</Container>
