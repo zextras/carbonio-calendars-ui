@@ -5,6 +5,7 @@
  */
 import React from 'react';
 
+import * as commons from '@zextras/carbonio-ui-commons';
 import { useFolder, useFoldersMap } from '@zextras/carbonio-ui-commons';
 
 import { EditExternalCalendarModal } from './edit-external-calendar-modal';
@@ -47,7 +48,17 @@ describe('EditExternalCalendarModal', () => {
 		setupTest(<EditExternalCalendarModal folderId={'123'} onClose={vi.fn()} />);
 
 		expect(screen.getByText('Edit calendar')).toBeVisible();
+		expect(screen.getByText(/URL: https:\/\/example.com\/ext.ics/i)).toBeVisible();
 		expect(screen.getByRole('textbox', { name: 'Calendar name*' })).toBeVisible();
 		expect(screen.getByText('Select color')).toBeVisible();
+	});
+
+	test('copies external URL when copy button is clicked', async () => {
+		const copySpy = vi.spyOn(commons, 'copyToClipboard').mockResolvedValue(undefined);
+		const { user } = setupTest(<EditExternalCalendarModal folderId={'123'} onClose={vi.fn()} />);
+
+		await user.click(screen.getByTestId('icon: Copy'));
+
+		expect(copySpy).toHaveBeenCalledWith('https://example.com/ext.ics');
 	});
 });

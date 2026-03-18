@@ -5,8 +5,17 @@
  */
 import React, { useMemo, useState, useCallback } from 'react';
 
-import { Container, Input, Padding, Select, useSnackbar } from '@zextras/carbonio-design-system';
-import { useFolder, useFoldersMap } from '@zextras/carbonio-ui-commons';
+import {
+	Button,
+	Container,
+	Input,
+	Padding,
+	Select,
+	Text,
+	Tooltip,
+	useSnackbar
+} from '@zextras/carbonio-design-system';
+import { copyToClipboard, useFolder, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { compact, includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -50,9 +59,10 @@ export const EditExternalCalendarModal = ({
 	const [calendarName, setCalendarName] = useState(folder?.name ?? '');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	// Initialise from rgb when color index is absent (typical for ICS-from-URL calendars).
+	// Initialize from rgb when color index is absent (typical for ICS-from-URL calendars).
 	const originalColorIndex = useMemo(() => resolveColorIndex(folder?.color, folder?.rgb), [folder]);
 	const [selectedColor, setSelectedColor] = useState(originalColorIndex);
+	const genericErrorLabel = t('label.error_try_again', 'Something went wrong, please try again');
 
 	const appointmentFolderNames = useMemo(
 		() =>
@@ -78,6 +88,37 @@ export const EditExternalCalendarModal = ({
 			CALENDARS_STANDARD_COLORS[Number(selectedColor)]?.color ?? CALENDARS_STANDARD_COLORS[0].color,
 		[selectedColor]
 	);
+
+	const onCopyUrl = useCallback((): void => {
+		if (!folder?.url) {
+			return;
+		}
+
+		copyToClipboard(folder.url)
+			.then(() => {
+				createSnackbar({
+					key: 'edit-external-calendar-url-copied',
+					replace: true,
+					severity: 'success',
+					hideButton: true,
+					label: t('snackbar.url_copied', {
+						title: t('label.url', 'URL'),
+						defaultValue: '{{title}} copied'
+					}),
+					autoHideTimeout: 3000
+				});
+			})
+			.catch(() => {
+				createSnackbar({
+					key: 'edit-external-calendar-url-copy-error',
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: genericErrorLabel,
+					autoHideTimeout: 3000
+				});
+			});
+	}, [folder?.url, createSnackbar, t, genericErrorLabel]);
 
 	const onConfirm = useCallback((): void => {
 		if (isSubmitting || !folder) {
@@ -111,7 +152,7 @@ export const EditExternalCalendarModal = ({
 							replace: true,
 							severity: 'error',
 							hideButton: true,
-							label: t('label.error_try_again', 'Something went wrong, please try again'),
+							label: genericErrorLabel,
 							autoHideTimeout: 3000
 						});
 					} else {
@@ -133,7 +174,7 @@ export const EditExternalCalendarModal = ({
 						replace: true,
 						severity: 'error',
 						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						label: genericErrorLabel,
 						autoHideTimeout: 3000
 					});
 				});
@@ -146,6 +187,7 @@ export const EditExternalCalendarModal = ({
 		calendarName,
 		selectedColor,
 		originalColorIndex,
+		genericErrorLabel,
 		folderId,
 		onClose,
 		createSnackbar,
@@ -166,6 +208,30 @@ export const EditExternalCalendarModal = ({
 			height="fit"
 		>
 			<ModalHeader onClose={onClose} title={t('action.edit_calendar', 'Edit calendar')} />
+			<Padding top={'small'} />
+			<Container orientation="horizontal" width="fill" mainAlignment="space-between">
+				<Tooltip label={folder.url ?? '-'} placement="right" maxWidth="100%">
+					<Text
+						style={{
+							whiteSpace: 'nowrap',
+							overflow: 'hidden',
+							textOverflow: 'ellipsis',
+							maxWidth: '85%'
+						}}
+					>
+						{t('label.url', 'URL')}: {folder.url ?? '-'}
+					</Text>
+				</Tooltip>
+				<Tooltip label={t('tooltip.copy_url', 'Copy URL')} placement="top">
+					<Button
+						type="ghost"
+						color="primary"
+						icon="Copy"
+						onClick={onCopyUrl}
+						disabled={!folder.url}
+					/>
+				</Tooltip>
+			</Container>
 			<Padding top="medium" />
 			<Input
 				label={t('add_ics_from_url.calendar_name', 'Calendar name*')}
