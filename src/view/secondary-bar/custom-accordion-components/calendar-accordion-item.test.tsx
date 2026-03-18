@@ -98,6 +98,25 @@ describe('CalendarAccordionItem', () => {
 	});
 
 	describe('Calendar status indicators', () => {
+		it('shows external status icon when calendar is external', () => {
+			const customFolder = {
+				...generateFolder({
+					view: 'appointment',
+					id: '9345',
+					name: 'ExternalCalendar',
+					checked: false
+				}),
+				f: 'y',
+				url: 'https://example.com/calendar.ics',
+				acl: undefined
+			};
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId('external-calendar-indicator')).toBeVisible();
+		});
+
 		it('shows shared status icon when calendar is shared', () => {
 			const grant: Grant = {
 				zid: '8296bac8-8749-42c0-be86-f3dfa02c6719',
