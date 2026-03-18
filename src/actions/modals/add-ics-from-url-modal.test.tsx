@@ -30,7 +30,6 @@ describe('AddIcsFromUrlModal', () => {
 		expect(screen.getByRole('textbox', { name: ICS_URL_LABEL })).toBeVisible();
 		expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeVisible();
 		expect(screen.getByText('Select color')).toBeVisible();
-		expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
 		expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 	});
 
@@ -78,14 +77,6 @@ describe('AddIcsFromUrlModal', () => {
 
 		expect(screen.getByText('A calendar with the same name already exists')).toBeVisible();
 		expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
-	});
-
-	test('calls onClose on cancel click', async () => {
-		const onClose = vi.fn();
-		const { user } = setupTest(<AddIcsFromUrlModal onClose={onClose} />);
-		await user.click(screen.getByRole('button', { name: 'Cancel' }));
-
-		expect(onClose).toHaveBeenCalledTimes(1);
 	});
 
 	test('submits CreateFolderRequest with URL payload on add', async () => {

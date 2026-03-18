@@ -160,7 +160,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			<Text size="small" color="secondary">
 				{t(
 					'add_ics_from_url.description',
-					'Paste the ICS URL of the calendar you would like to add.'
+					'Paste the .ics URL of the calendar you would like to add.'
 				)}
 			</Text>
 			<Padding top="small" />
@@ -225,12 +225,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			<Padding top="medium" />
 			<ModalFooter
 				onConfirm={onConfirm}
-				secondaryAction={onClose}
-				secondaryBtnType={'outlined'}
 				label={t('label.add', 'Add')}
-				secondaryLabel={t('label.cancel', 'Cancel')}
-				primaryMinWidth={'6.5rem'}
-				secondaryMinWidth={'6.5rem'}
 				disabled={
 					!icsUrl.trim() ||
 					!calendarName.trim() ||
