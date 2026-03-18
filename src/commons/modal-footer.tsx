@@ -9,12 +9,7 @@ import { Button, Container, Divider, Padding, Tooltip } from '@zextras/carbonio-
 import { t } from '@zextras/carbonio-shell-ui';
 import { ModalFooterProps } from '@zextras/carbonio-ui-commons';
 
-type ExtendedModalFooterProps = ModalFooterProps & {
-	primaryMinWidth?: string;
-	secondaryMinWidth?: string;
-};
-
-const ModalFooter: FC<ExtendedModalFooterProps> = ({
+const ModalFooter: FC<ModalFooterProps> = ({
 	mainAlignment = 'center',
 	crossAlignment = 'center',
 	onConfirm,
@@ -34,9 +29,7 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 	additionalAction,
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
-	additionalLabel = t('label.cancel', 'cancel'),
-	primaryMinWidth,
-	secondaryMinWidth
+	additionalLabel = t('label.cancel', 'cancel')
 }): ReactElement => {
 	const secondaryButtonTypeAndColor = useMemo(() => {
 		if (secondaryBtnType === 'ghost') {
@@ -106,9 +99,8 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 								label={secondaryLabel}
 								disabled={secondaryDisabled}
 								width="fit"
-								style={secondaryMinWidth ? { minWidth: secondaryMinWidth } : undefined}
 							/>
-							<Padding horizontal={'small'} />
+							<Padding horizontal="extrasmall" />
 						</>
 					)}
 					{tooltip ? (
@@ -118,7 +110,6 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 								onClick={onConfirm}
 								label={label}
 								disabled={disabled}
-								style={primaryMinWidth ? { minWidth: primaryMinWidth } : undefined}
 								{...primaryButtonTypeAndColor}
 							/>
 						</Tooltip>
@@ -128,7 +119,6 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 							onClick={onConfirm}
 							label={label}
 							disabled={disabled}
-							style={primaryMinWidth ? { minWidth: primaryMinWidth } : undefined}
 							{...primaryButtonTypeAndColor}
 						/>
 					)}
