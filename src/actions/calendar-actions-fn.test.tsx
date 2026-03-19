@@ -269,4 +269,49 @@ describe('calendar-actions-fn', () => {
 			);
 		});
 	});
+
+	test('sync external calendar fn shows error snackbar when backend returns Fault', async () => {
+		// disable console.warn raised by soapFetch
+		vi.spyOn(console, 'warn').mockImplementation(vi.fn());
+		getSetupServer().use(
+			http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
+				HttpResponse.json({
+					Body: {
+						Fault: {}
+					}
+				})
+			)
+		);
+
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR };
+		const syncExternalCalendarFn = syncExternalCalendar({ createSnackbar, item });
+
+		await act(async () => syncExternalCalendarFn());
+
+		expect(createSnackbar).toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'info',
+				label: 'message.snackbar.external_calendar_syncing'
+			})
+		);
+
+		await waitFor(() => {
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		});
+
+		expect(createSnackbar).not.toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'success',
+				label: 'message.snackbar.external_calendar_synced'
+			})
+		);
+
+		getSetupServer().resetHandlers();
+	});
 });
