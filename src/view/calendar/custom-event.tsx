@@ -197,7 +197,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const isExternalCalendar = isExternalSyncFolder(folder ?? {});
 
 	const iAmAttendee =
-		!isExternalCalendar && !event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer;
+		!isExternalCalendar &&
+		event.haveWriteAccess &&
+		event.resource.iAmAttendee &&
+		!event?.resource?.calendar?.owner &&
+		!event?.resource?.iAmOrganizer;
 	const neverSentWarningLabel = useNeverSentWarningLabel();
 
 	return (

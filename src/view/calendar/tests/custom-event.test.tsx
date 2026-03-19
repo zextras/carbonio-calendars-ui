@@ -193,4 +193,32 @@ describe('custom-event', () => {
 
 		expect(screen.queryByTestId('icon: StatusAccept')).not.toBeInTheDocument();
 	});
+
+	test('does not show attendee reply icon for readonly events when external flags are unavailable', async () => {
+		const event = mockedData.getEvent({
+			haveWriteAccess: false,
+			resource: {
+				iAmOrganizer: false,
+				iAmAttendee: true,
+				calendar: { id: 'readonly-calendar', perm: 'r' },
+				participationStatus: 'TE'
+			}
+		});
+
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		expect(screen.queryByTestId('icon: StatusMaybe')).not.toBeInTheDocument();
+	});
 });
