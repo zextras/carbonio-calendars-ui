@@ -14,15 +14,15 @@ import {
 import { includes, filter } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { openAppointment } from '../../actions/appointment-actions-fn';
-import { isExternalSyncFolder } from '../../commons/utilities';
-import { PANEL_VIEW } from '../../constants';
-import { PARTICIPATION_STATUS } from '../../constants/api';
-import { getInvite } from '../../store/actions/get-invite';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectInstanceInvite } from '../../store/selectors/invites';
+import { openAppointment } from 'actions/appointment-actions-fn';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { PANEL_VIEW } from 'constants/index';
 import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
+import { getInvite } from 'store/actions/get-invite';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
+import { selectInstanceInvite } from 'store/selectors/invites';
 import { ActionsContext } from 'types/actions';
 import { EventType } from 'types/event';
 
