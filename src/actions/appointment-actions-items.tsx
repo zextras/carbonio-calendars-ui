@@ -21,16 +21,16 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
-import { PARTICIPATION_STATUS } from '../constants/api';
-import { EVENT_ACTIONS } from '../constants/event-actions';
-import { StoreProvider } from '../store/redux';
-import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
-import { EventType } from '../types/event';
-import { Invite } from '../types/store/invite';
-import { isExternalSyncFolder } from '../commons/utilities';
-import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
-import { ForwardAppointmentModal } from '../view/modals/forward-appointment/forward-appointment-modal';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { PARTICIPATION_STATUS } from 'constants/api';
+import { EVENT_ACTIONS } from 'constants/event-actions';
 import { InviteReplyVerb } from 'soap/send-invite-reply-request';
+import { StoreProvider } from 'store/redux';
+import { ActionsContext, ActionsProps, AppointmentActionsItems } from 'types/actions';
+import { EventType } from 'types/event';
+import { Invite } from 'types/store/invite';
+import { isOrganizerOrHaveEqualRights } from 'utils/store/event';
+import { ForwardAppointmentModal } from 'view/modals/forward-appointment/forward-appointment-modal';
 
 export const openEventItem = ({
 	event,
