@@ -6,7 +6,11 @@
 import React, { useCallback, useMemo } from 'react';
 
 import { Container, Row, Avatar, Icon, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { useHistoryNavigation, useSortedTagsArray, useFoldersMap } from '@zextras/carbonio-ui-commons';
+import {
+	useHistoryNavigation,
+	useSortedTagsArray,
+	useFoldersMap
+} from '@zextras/carbonio-ui-commons';
 import { includes, filter } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
