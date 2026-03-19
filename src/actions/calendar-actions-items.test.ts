@@ -398,13 +398,19 @@ describe('calendar actions items', () => {
 		test.each([
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.TRASH },
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.CALENDAR },
-			{ ...mockedData.calendars.getCalendar(), id: '153', perm: 'r' },
+			{ ...mockedData.calendars.getCalendar(), id: '153', perm: 'r', f: '#', url: undefined },
 			{
 				...mockedData.calendars.getCalendar(),
 				id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}`
 			},
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.TRASH}` },
-			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:153`, perm: 'r' },
+			{
+				...mockedData.calendars.getCalendar(),
+				id: `${randomUUID}:153`,
+				perm: 'r',
+				f: '#',
+				url: undefined
+			},
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
