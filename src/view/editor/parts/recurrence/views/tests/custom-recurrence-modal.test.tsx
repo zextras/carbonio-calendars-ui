@@ -244,10 +244,23 @@ describe('CustomRecurrenceModal', () => {
 					);
 
 					await frequencySelector.select(user, 'week');
-					await weekDaySelector.selectTuesdayAndThursday(user);
+					await weekDaySelector.waitForOptionsToLoad();
+
+					const startDate = new Date(editor.start ?? Date.now());
+					const dayOfWeek = startDate.getDay();
+					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+					const dayCodesUi = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+					const autoSelectedDay = dayCodes[dayOfWeek];
+
+					// Pick two deterministic days that are never the auto-selected one,
+					// so this test is stable regardless of the day/date it runs.
+					const daysToSelect = dayCodes.filter((day) => day !== autoSelectedDay).slice(0, 2);
+					const daysToSelectUi = daysToSelect.map((day) => dayCodesUi[dayCodes.indexOf(day)]);
+
+					await weekDaySelector.selectDays(user, daysToSelectUi);
 					await modal.confirmCustomization(user);
 
-					recurrenceAssertions.expectWeekly(getUpdatedEditor(store), ['TU', 'TH']);
+					recurrenceAssertions.expectWeekly(getUpdatedEditor(store), daysToSelect);
 				}, 10000);
 
 				it('should initialize with saved weekly recurrence days when reopening modal', async () => {
