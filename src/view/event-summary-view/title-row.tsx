@@ -44,6 +44,13 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 		return event.title;
 	}, [event, t]);
 
+	const showNeedActionIcon =
+		event.haveWriteAccess &&
+		event.resource.iAmAttendee &&
+		!event.resource.calendar?.owner &&
+		!event?.resource?.iAmOrganizer &&
+		event.resource?.participationStatus === PARTICIPATION_STATUS.NEED_ACTION;
+
 	return (
 		<>
 			<Row width="fill" padding={{ bottom: 'small' }}>
@@ -76,11 +83,9 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 							)}
 						</Row>
 						<Row>{event?.resource?.flags?.includes('a') && <Icon icon="AttachOutline" />}</Row>
-						{!event.resource.calendar?.owner && !event?.resource?.iAmOrganizer && (
+						{showNeedActionIcon && (
 							<Row>
-								{event.resource?.participationStatus === PARTICIPATION_STATUS.NEED_ACTION && (
-									<Icon icon="CalendarWarning" color="primary" />
-								)}
+								<Icon icon="CalendarWarning" color="primary" />
 							</Row>
 						)}
 					</>

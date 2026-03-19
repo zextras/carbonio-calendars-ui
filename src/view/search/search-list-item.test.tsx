@@ -8,15 +8,16 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import SearchListItem from './search-list-item';
 import * as appointmentActions from '../../actions/appointment-actions-fn';
-import { PARTICIPATION_STATUS } from '../../constants/api';
-import { getInvite } from '../../store/actions/get-invite';
 import appointmentsSliceReducer from '../../store/slices/appointments-slice';
 import invitesSliceReducer from '../../store/slices/invites-slice';
 import { setupTest } from '@test-setup';
+import { PARTICIPATION_STATUS } from 'constants/api';
+import { getInvite } from 'store/actions/get-invite';
 import mockedData from 'test/generators';
 import { EventType } from 'types/event';
 
@@ -148,6 +149,40 @@ describe('SearchListItem', () => {
 		};
 		setupTest(<SearchListItem item={item} />, { store: mockStore });
 		expect(screen.getByTestId('icon: QuestionMarkOutline')).toBeVisible();
+	});
+
+	it('does not render appointment status icon for external calendars', () => {
+		const item = {
+			...baseItem,
+			resource: {
+				...baseItem.resource,
+				calendar: { ...baseItem.resource.calendar, id: 'external-search-cal' },
+				participationStatus: PARTICIPATION_STATUS.TENTATIVE
+			}
+		};
+
+		useFolderStore.setState((state) => ({
+			...state,
+			folders: {
+				...state.folders,
+				[item.resource.calendar.id]: {
+					id: item.resource.calendar.id,
+					name: 'External search calendar',
+					url: 'https://example.com/search.ics',
+					view: 'appointment',
+					uuid: 'external-search-cal-uuid',
+					activesyncdisabled: false,
+					recursive: true,
+					deletable: true,
+					isLink: false,
+					depth: 1,
+					children: []
+				}
+			}
+		}));
+
+		setupTest(<SearchListItem item={item} />, { store: mockStore });
+		expect(screen.queryByTestId('icon: QuestionMarkOutline')).not.toBeInTheDocument();
 	});
 
 	it('renders appointment icon for declined status', () => {
