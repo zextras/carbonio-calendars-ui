@@ -7,9 +7,11 @@ import React, { ReactElement, useMemo } from 'react';
 
 import { Container, Row, Text } from '@zextras/carbonio-design-system';
 import { Account, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { useFolder } from '@zextras/carbonio-ui-commons';
 import { map, reduce } from 'lodash';
 import { Trans } from 'react-i18next';
 
+import { isExternalSyncFolder } from '../../commons/utilities';
 import { EventType } from '../../types/event';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
@@ -142,6 +144,7 @@ type ComponentProps = {
 	event: EventType;
 	pt: number;
 	loggedInUser: Account;
+	isOrganizerPerspective: boolean;
 };
 
 const Component = ({
@@ -151,7 +154,8 @@ const Component = ({
 	message,
 	event,
 	pt,
-	loggedInUser
+	loggedInUser,
+	isOrganizerPerspective
 }: ComponentProps): ReactElement | null => {
 	const displayedParticipants = useMemo(
 		() => (
@@ -176,7 +180,7 @@ const Component = ({
 			width={width}
 			padding={{ horizontal: 'medium', bottom: 'extrasmall' }}
 		>
-			{event?.resource?.iAmOrganizer && (
+			{isOrganizerPerspective && (
 				<>
 					{pt > 2 ? (
 						<Text size="small" color="secondary" overflow="break-word">
@@ -188,7 +192,7 @@ const Component = ({
 				</>
 			)}
 
-			{!event?.resource?.iAmOrganizer && !event?.resource?.calendar?.owner && (
+			{!isOrganizerPerspective && !event?.resource?.calendar?.owner && (
 				<>
 					{' '}
 					{pt > 2 ? (
@@ -216,8 +220,21 @@ export const ParticipantsDisplayerSmall = ({
 	event
 }: ParticipantsDisplayerSmallType): ReactElement | null => {
 	const loggedInUser = useUserAccount();
+	const calendar = useFolder(event.resource.calendar.id);
 
 	if (!participants || Object.keys(participants)?.length === 0) return null;
+	const isExternalCalendar = isExternalSyncFolder(calendar ?? {});
+	const attendees = reduce(
+		participants,
+		(acc, value) => (value ? [...acc, ...value] : acc),
+		[] as Array<InviteParticipant>
+	);
+	const isLoggedInUserAttendee = attendees.some(
+		(attendee) =>
+			attendee?.email === loggedInUser.name || attendee?.name === loggedInUser.displayName
+	);
+	const isOrganizerPerspective =
+		event?.resource?.iAmOrganizer || (isExternalCalendar && !isLoggedInUserAttendee);
 	const pt = calculateSize(participants);
 	return (
 		<Container
@@ -228,7 +245,7 @@ export const ParticipantsDisplayerSmall = ({
 			width="fill"
 			padding={{ horizontal: 'medium' }}
 		>
-			{event?.resource?.iAmOrganizer && !event?.resource?.calendar?.owner ? (
+			{isOrganizerPerspective && !event?.resource?.calendar?.owner ? (
 				<DisplayParticipantsVisitor participant={participants} event={event} />
 			) : (
 				<>
@@ -246,6 +263,7 @@ export const ParticipantsDisplayerSmall = ({
 						event={event}
 						pt={pt}
 						loggedInUser={loggedInUser}
+						isOrganizerPerspective={isOrganizerPerspective}
 					/>
 
 					<Component
@@ -262,6 +280,7 @@ export const ParticipantsDisplayerSmall = ({
 						event={event}
 						pt={pt}
 						loggedInUser={loggedInUser}
+						isOrganizerPerspective={isOrganizerPerspective}
 					/>
 
 					<Component
@@ -278,6 +297,7 @@ export const ParticipantsDisplayerSmall = ({
 						event={event}
 						pt={pt}
 						loggedInUser={loggedInUser}
+						isOrganizerPerspective={isOrganizerPerspective}
 					/>
 
 					<Component
@@ -294,6 +314,7 @@ export const ParticipantsDisplayerSmall = ({
 						event={event}
 						pt={pt}
 						loggedInUser={loggedInUser}
+						isOrganizerPerspective={isOrganizerPerspective}
 					/>
 				</>
 			)}

@@ -18,6 +18,7 @@ import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { useFolder, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { Trans } from 'react-i18next';
 
+import { isExternalSyncFolder } from '../../commons/utilities';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 import { Invite, InviteOrganizer } from '../../types/store/invite';
 
@@ -39,10 +40,22 @@ export const OrganizerPart = ({
 	const account = useUserAccount();
 	const calendar = useFolder(invite.ciFolder);
 	const createSnackbar = useSnackbar();
-	const iAmAttendee = useMemo(
-		() => (!invite.isOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
-		[calendar, invite.isOrganizer]
+	const isExternalCalendar = useMemo(() => isExternalSyncFolder(calendar ?? {}), [calendar]);
+	const isLoggedInUserAttendee = useMemo(
+		() =>
+			invite?.attendees?.some(
+				(attendee) => attendee?.a === account.name || attendee?.a === account.displayName
+			) ?? false,
+		[account.displayName, account.name, invite?.attendees]
 	);
+	const showAttendeePerspective = useMemo(
+		() =>
+			!invite.isOrganizer &&
+			!(calendar as LinkFolder)?.owner &&
+			(!isExternalCalendar || isLoggedInUserAttendee),
+		[calendar, invite.isOrganizer, isExternalCalendar, isLoggedInUserAttendee]
+	);
+	const iAmAttendee = useMemo(() => showAttendeePerspective ?? false, [showAttendeePerspective]);
 	return (
 		<Container
 			orientation="vertical"
@@ -72,7 +85,7 @@ export const OrganizerPart = ({
 					</Text>
 				</Row>
 			)}
-			{!invite.isOrganizer && !(calendar as LinkFolder)?.owner ? (
+			{showAttendeePerspective ? (
 				<Row mainAlignment="flex-start" crossAlignment="flex-start" padding={{ vertical: 'small' }}>
 					<Avatar
 						label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
