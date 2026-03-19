@@ -195,6 +195,9 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const folders = useFoldersMap();
 	const folder = folders[event.resource.calendar.id];
 	const isExternalCalendar = isExternalSyncFolder(folder ?? {});
+	const displayedFreeBusy = isExternalCalendar
+		? event.resource.freeBusy
+		: event.resource.freeBusyActual;
 
 	const iAmAttendee =
 		!isExternalCalendar &&
@@ -208,7 +211,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 		<CustomEventFreeBusyStatus
 			color={event.resource.calendar.color.color}
 			background={event.resource.calendar.color.background}
-			freeBusyActual={event.resource.freeBusyActual}
+			freeBusyActual={displayedFreeBusy}
 		>
 			<Tooltip label={title} placement="top" disabled={!title} triggerRef={anchorRef}>
 				<Container
