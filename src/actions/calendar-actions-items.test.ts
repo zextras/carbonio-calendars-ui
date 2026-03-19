@@ -17,9 +17,10 @@ import {
 	noPermissionLabel,
 	removeFromListItem,
 	shareCalendarItem,
-	sharesInfoItem
+	sharesInfoItem,
+	syncExternalCalendarItem
 } from './calendar-actions-items';
-import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
+import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 import mockedData from '../test/generators';
 import { generateRoots } from '@test-utils/folders/roots-generator';
 
@@ -548,6 +549,51 @@ describe('calendar actions items', () => {
 			expect(shareCalendar).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
+				})
+			);
+		});
+	});
+
+	describe('syncExternalCalendarItem', () => {
+		test('shows last sync date when lsd is present', () => {
+			const createSnackbar = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '888',
+				f: '#y',
+				lsd: 1767276900
+			} as Folder & { lsd?: number };
+
+			const syncItem = syncExternalCalendarItem({ item, createSnackbar });
+
+			expect(syncItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.SYNC,
+					icon: 'SyncOutline',
+					label: 'label.sync',
+					disabled: false,
+					customComponent: expect.anything()
+				})
+			);
+		});
+
+		test('does not show last sync date when lsd is absent', () => {
+			const createSnackbar = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '889',
+				f: '#y'
+			} as Folder & { lsd?: number };
+
+			const syncItem = syncExternalCalendarItem({ item, createSnackbar });
+
+			expect(syncItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.SYNC,
+					icon: 'SyncOutline',
+					label: 'label.sync',
+					disabled: false,
+					customComponent: expect.anything()
 				})
 			);
 		});

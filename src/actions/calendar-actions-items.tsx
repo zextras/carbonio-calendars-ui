@@ -5,7 +5,15 @@
  */
 import React from 'react';
 
-import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
+import {
+	CloseModalFn,
+	Container,
+	CreateModalFn,
+	CreateSnackbarFn,
+	Icon,
+	Padding,
+	Text
+} from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import {
 	FOLDERS,
@@ -41,6 +49,18 @@ export type CalendarActionsItems = {
 	label: string;
 	onClick: (ev: React.SyntheticEvent | KeyboardEvent) => void;
 	tooltipLabel: string;
+	customComponent?: React.ReactNode;
+};
+
+const formatLsd = (lsd: number): string => {
+	const date = new Date(lsd * 1000);
+	const day = `${date.getDate()}`.padStart(2, '0');
+	const month = `${date.getMonth() + 1}`.padStart(2, '0');
+	const year = `${date.getFullYear()}`.slice(-2);
+	const hour = `${date.getHours()}`.padStart(2, '0');
+	const minute = `${date.getMinutes()}`.padStart(2, '0');
+
+	return `${day}/${month}/${year} ${hour}:${minute}`;
 };
 
 export const noPermissionLabel = t(
@@ -298,12 +318,26 @@ export const syncExternalCalendarItem = ({
 	item,
 	createSnackbar
 }: {
-	item: Folder;
+	item: Folder & { lsd?: number };
 	createSnackbar: CreateSnackbarFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SYNC,
 	icon: 'SyncOutline',
 	label: t('label.sync', 'Sync'),
+	customComponent: (
+		<Container orientation="horizontal" width="fill" mainAlignment="space-between">
+			<Container orientation="horizontal" mainAlignment="flex-start">
+				<Icon icon={'SyncOutline'} />
+				<Padding left="small" />
+				<Text>{t('label.sync', 'Sync')}</Text>
+			</Container>
+			{item?.lsd ? (
+				<Text size="small" color="secondary" style={{ overflow: 'visible' }}>
+					{t('label.last_sync', 'Last sync')}: {formatLsd(item?.lsd)}
+				</Text>
+			) : null}
+		</Container>
+	),
 	tooltipLabel: noPermissionLabel,
 	onClick: syncExternalCalendar({ item, createSnackbar }),
 	disabled: !isExternalSyncFolder(item) || isTrashOrNestedInIt(item)
