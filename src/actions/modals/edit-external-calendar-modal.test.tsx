@@ -29,14 +29,14 @@ type FolderSetupOptions = {
 	extraFolders?: Array<{ id: string; name: string }>;
 };
 
-const setupFolders = ({
-	folderId = DEFAULT_FOLDER_ID,
-	folderName = 'External calendar',
-	folderUrl = DEFAULT_FOLDER_URL,
-	color = 2,
-	rgb,
-	extraFolders = [{ id: '124', name: 'Team calendar' }]
-}: FolderSetupOptions = {}): void => {
+const setupFolders = (options: FolderSetupOptions = {}): void => {
+	const {
+		folderId = DEFAULT_FOLDER_ID,
+		folderName = 'External calendar',
+		folderUrl = DEFAULT_FOLDER_URL,
+		rgb,
+		extraFolders = [{ id: '124', name: 'Team calendar' }]
+	} = options;
 	const externalFolder = generateFolder({
 		id: folderId,
 		name: folderName,
@@ -45,7 +45,11 @@ const setupFolders = ({
 	});
 
 	externalFolder.url = folderUrl;
-	externalFolder.color = color;
+	if (Object.prototype.hasOwnProperty.call(options, 'color')) {
+		externalFolder.color = options.color;
+	} else {
+		externalFolder.color = 2;
+	}
 	externalFolder.rgb = rgb;
 
 	const customFolders = [
@@ -150,6 +154,28 @@ describe('EditExternalCalendarModal', () => {
 
 		expect(folderActionSpy).not.toHaveBeenCalled();
 		expect(onClose).toHaveBeenCalledTimes(1);
+	});
+
+	test('rgb-only folder maps to color index and does not trigger color update on rename', async () => {
+		setupFolders({ color: undefined, rgb: '#5AC8FA' });
+		const onClose = vi.fn();
+		const folderActionSpy = vi.spyOn(calendarActions, 'folderAction').mockResolvedValue({});
+		const { user } = setupTest(
+			<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={onClose} />
+		);
+
+		const nameInput = screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL });
+		await user.clear(nameInput);
+		await user.type(nameInput, 'Renamed rgb-only external calendar');
+		await user.click(screen.getByRole('button', { name: SAVE_CHANGES_LABEL }));
+
+		await waitFor(() => {
+			expect(folderActionSpy).toHaveBeenCalledWith({
+				op: FOLDER_OPERATIONS.RENAME,
+				name: 'Renamed rgb-only external calendar',
+				id: DEFAULT_FOLDER_ID
+			});
+		});
 	});
 
 	test('submits rename action and closes on success', async () => {
