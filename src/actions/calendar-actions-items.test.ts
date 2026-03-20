@@ -20,9 +20,9 @@ import {
 	sharesInfoItem,
 	syncExternalCalendarItem
 } from './calendar-actions-items';
-import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 import mockedData from '../test/generators';
 import { generateRoots } from '@test-utils/folders/roots-generator';
+import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 
 const randomUUID = faker.string.uuid();
 const TRASH_SUB_FOLDER_PATH = '/Trash/subFolder';
