@@ -7,6 +7,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { AppointmentReminder } from './appointment-reminder';
 import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../constants/api';
@@ -14,6 +15,7 @@ import { deleteAppointmentPermanent } from '../../store/actions/delete-appointme
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { Appointment } from '../../types/store/appointments';
+import * as notifications from '../notifications';
 import { setupTest } from '@test-setup';
 
 describe('appointment reminders', () => {
@@ -204,6 +206,110 @@ describe('appointment reminders', () => {
 			vi.advanceTimersByTime(1000);
 		});
 
+		expect(screen.queryByTestId('reminder-modal')).not.toBeInTheDocument();
+	});
+
+	test('does not notify for appointments from external calendars', async () => {
+		const externalCalendarId = 'external-cal-for-reminder';
+		const notificationSpy = vi.spyOn(notifications, 'showNotification').mockImplementation(vi.fn());
+		const playSpy = vi
+			.spyOn(HTMLMediaElement.prototype, 'play')
+			.mockImplementation(() => Promise.resolve());
+
+		useFolderStore.setState((state) => ({
+			...state,
+			folders: {
+				...state.folders,
+				[externalCalendarId]: {
+					id: externalCalendarId,
+					name: 'External Calendar',
+					url: 'https://example.com/calendar.ics',
+					f: '#y',
+					view: 'appointment',
+					uuid: 'external-cal-uuid',
+					activesyncdisabled: false,
+					recursive: true,
+					deletable: true,
+					isLink: false,
+					depth: 1,
+					children: []
+				}
+			}
+		}));
+
+		const now = Date.now();
+		const fakeReducers = {
+			appointments: {
+				appointments: {
+					externalAppt: {
+						id: 'externalAppt',
+						class: 'PUB',
+						flags: '',
+						alarm: true,
+						alarmData: [
+							{
+								nextAlarm: now - 1000,
+								alarmInstStart: now - 1000,
+								invId: 1,
+								compNum: 0,
+								name: 'External event',
+								loc: '',
+								alarm: [
+									{
+										action: 'DISPLAY',
+										trigger: [{ rel: [{ neg: 'true', m: 5, related: 'START' }] }],
+										desc: { description: '' }
+									}
+								]
+							}
+						],
+						hasEx: false,
+						fb: EVENT_DISPLAY_STATUS.FREE,
+						fba: EVENT_DISPLAY_STATUS.FREE,
+						fr: '',
+						d: 1234,
+						md: 0,
+						ms: 0,
+						ptst: PARTICIPATION_STATUS.ACCEPTED,
+						rev: 0,
+						status: 'CONF',
+						transp: '',
+						uid: '',
+						compNum: 0,
+						dur: 1800000,
+						allDay: false,
+						inst: [{ recur: false, ridZ: '', s: 0 }],
+						draft: false,
+						inviteId: 'external-invite-id',
+						isOrg: false,
+						loc: '',
+						otherAtt: false,
+						recur: false,
+						l: externalCalendarId,
+						name: 'External event',
+						neverSent: false,
+						or: {},
+						s: 0,
+						tags: []
+					} as Appointment
+				}
+			}
+		};
+
+		const emptyStore = mockedData.store.mockReduxStore(fakeReducers);
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<AppointmentReminder />, { store });
+
+		act(() => {
+			vi.advanceTimersByTime(2000);
+		});
+
+		expect(notificationSpy).not.toHaveBeenCalled();
+		expect(playSpy).not.toHaveBeenCalled();
 		expect(screen.queryByTestId('reminder-modal')).not.toBeInTheDocument();
 	});
 });
