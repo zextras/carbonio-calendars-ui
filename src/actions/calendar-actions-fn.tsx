@@ -318,7 +318,7 @@ export const syncExternalCalendar =
 			severity: 'info',
 			hideButton: true,
 			label: t('message.snackbar.external_calendar_syncing', 'Calendar sync has started'),
-			autoHideTimeout: 3000
+			autoHideTimeout: 6000
 		});
 		folderAction({ id: item.id, op: FOLDER_OPERATIONS.SYNC }).then((res: { Fault?: string }) => {
 			if (res.Fault) {
