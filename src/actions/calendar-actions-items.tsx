@@ -318,7 +318,7 @@ export const syncExternalCalendarItem = ({
 	item,
 	createSnackbar
 }: {
-	item: Folder & { lsd?: number };
+	item: Folder;
 	createSnackbar: CreateSnackbarFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SYNC,
