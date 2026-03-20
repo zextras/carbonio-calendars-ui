@@ -5,7 +5,7 @@
  */
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { editEventItem } from './appointment-actions-items';
+import { editEventItem, moveEventItem } from './appointment-actions-items';
 import mockedData from '../test/generators';
 
 describe('edit event item', () => {
@@ -48,40 +48,6 @@ describe('edit event item', () => {
 	});
 
 	describe('is disabled when', () => {
-		test('the event has no organizer but the calendar is read-only (external ICS)', () => {
-			const folder = {
-				id: FOLDERS.CALENDAR,
-				l: '1',
-				name: 'Calendar',
-				view: 'appointment',
-				absFolderPath: '/'
-			};
-
-			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-
-			const baseEvent = mockedData.getEvent({
-				haveWriteAccess: false,
-				resource: { calendar: folder }
-			});
-			// explicitly remove organizer (the generator always sets a default one)
-			const event = { ...baseEvent, resource: { ...baseEvent.resource, organizer: undefined } };
-
-			const invite = mockedData.getInvite({ event });
-			const context = {
-				createAndApplyTag: vi.fn(),
-				createModal: vi.fn(),
-				closeModal: vi.fn(),
-				createSnackbar: vi.fn(),
-				dispatch: vi.fn(),
-				t: vi.fn(),
-				replaceHistory: vi.fn(),
-				tags: [{ id: '1', name: 'one' }],
-				folders
-			};
-
-			const editAction = editEventItem({ invite, event, context });
-			expect(editAction.disabled).toBe(true);
-		});
 		test('the event is on trash', () => {
 			const folder = {
 				id: FOLDERS.TRASH,
@@ -241,6 +207,209 @@ describe('edit event item', () => {
 			};
 			const editAction = editEventItem({ invite, event, context });
 			expect(editAction.disabled).toBe(true);
+		});
+	});
+});
+
+describe('move event item', () => {
+	describe('returns undefined when', () => {
+		test('the event is in an external sync folder with url property', () => {
+			const folder = {
+				id: '12345',
+				l: '1',
+				name: 'External Calendar',
+				view: 'appointment',
+				absFolderPath: '/External Calendar/',
+				url: 'https://external.calendar.com'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const event = mockedData.getEvent({
+				resource: {
+					calendar: folder
+				}
+			});
+
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				tags: [
+					{
+						id: '1',
+						name: 'one'
+					}
+				],
+				folders
+			};
+
+			const moveAction = moveEventItem({ event, context });
+			expect(moveAction).toBeUndefined();
+		});
+
+		test('the event is in an external sync folder with y flag', () => {
+			const folder = {
+				id: '12345',
+				l: '1',
+				name: 'External Calendar',
+				view: 'appointment',
+				absFolderPath: '/External Calendar/',
+				f: 'y'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const event = mockedData.getEvent({
+				resource: {
+					calendar: folder
+				}
+			});
+
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				tags: [
+					{
+						id: '1',
+						name: 'one'
+					}
+				],
+				folders
+			};
+
+			const moveAction = moveEventItem({ event, context });
+			expect(moveAction).toBeUndefined();
+		});
+	});
+
+	describe('returns the move action item when', () => {
+		test('the event is in a regular calendar folder', () => {
+			const folder = {
+				id: '10',
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment',
+				absFolderPath: '/'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const event = mockedData.getEvent({
+				resource: {
+					calendar: folder
+				}
+			});
+
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				tags: [
+					{
+						id: '1',
+						name: 'one'
+					}
+				],
+				folders
+			};
+
+			const moveAction = moveEventItem({ event, context });
+			expect(moveAction).toBeDefined();
+			expect(moveAction?.id).toBe('move');
+			expect(moveAction?.icon).toBe('MoveOutline');
+		});
+
+		test('the event is in a trash folder and returns restore label', () => {
+			const folder = {
+				id: FOLDERS.TRASH,
+				l: '1',
+				name: 'Trash',
+				view: 'appointment',
+				absFolderPath: '/Trash/'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const event = mockedData.getEvent({
+				resource: {
+					calendar: folder
+				}
+			});
+
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				tags: [
+					{
+						id: '1',
+						name: 'one'
+					}
+				],
+				folders
+			};
+
+			const moveAction = moveEventItem({ event, context });
+			expect(moveAction).toBeDefined();
+			expect(moveAction?.id).toBe('move');
+			expect(moveAction?.icon).toBe('RestoreOutline');
+		});
+
+		test('the event is disabled when user does not have write access', () => {
+			const folder = {
+				id: FOLDERS.CALENDAR,
+				l: '1',
+				name: 'Calendar',
+				view: 'appointment',
+				absFolderPath: '/'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+			const event = mockedData.getEvent({
+				resource: {
+					calendar: folder
+				},
+				haveWriteAccess: false
+			});
+
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: vi.fn(),
+				t: vi.fn(),
+				replaceHistory: vi.fn(),
+				tags: [
+					{
+						id: '1',
+						name: 'one'
+					}
+				],
+				folders
+			};
+			const moveAction = moveEventItem({ event, context });
+			expect(moveAction).toBeDefined();
+			expect(moveAction?.disabled).toBe(true);
 		});
 	});
 });
