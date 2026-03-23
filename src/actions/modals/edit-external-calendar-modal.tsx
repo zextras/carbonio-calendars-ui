@@ -215,13 +215,13 @@ export const EditExternalCalendarModal = ({
 						style={{
 							whiteSpace: 'nowrap',
 							overflow: 'hidden',
-							textOverflow: 'ellipsis',
-							maxWidth: '85%'
+							textOverflow: 'ellipsis'
 						}}
 					>
 						{t('label.url', 'URL')}: {folder.url ?? '-'}
 					</Text>
 				</Tooltip>
+				<Padding horizontal={'extrasmall'} />
 				<Tooltip label={t('tooltip.copy_url', 'Copy URL')} placement="top">
 					<Button
 						type="ghost"
