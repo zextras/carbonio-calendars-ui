@@ -61,7 +61,7 @@ export const OrganizerPart = ({
 		<Row
 			mainAlignment="flex-start"
 			width="100%"
-			padding={{ top: 'extrasmall', bottom: 'extrasmall', left: '30px' }}
+			padding={{ top: 'extrasmall', bottom: 'extrasmall' }}
 		>
 			<Chip
 				label={organizer.a || organizer.d}
@@ -159,14 +159,21 @@ export const OrganizerPart = ({
 							size={isSummary ? 'small' : 'large'}
 							label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
 						/>
-						<Text style={{ padding: '0 0.5rem' }} size={fontSize}>
-							<Trans
-								i18nKey="message.somebody_is_organizer"
-								defaults="<strong>{{somebody}}</strong> is the organizer"
-								values={{ somebody: organizer.d || organizer.a }}
-							/>
-						</Text>
-						{organizerChip}
+						<Row
+							mainAlignment="flex-start"
+							crossAlignment="flex-start"
+							takeAvailableSpace
+							padding={{ left: 'small' }}
+						>
+							<Text size={fontSize}>
+								<Trans
+									i18nKey="message.somebody_is_organizer"
+									defaults="<strong>{{somebody}}</strong> is the organizer"
+									values={{ somebody: organizer.d || organizer.a }}
+								/>
+							</Text>
+							{organizerChip}
+						</Row>
 					</Row>
 				)
 			)}
