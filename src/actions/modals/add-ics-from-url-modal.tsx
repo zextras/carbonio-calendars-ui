@@ -130,7 +130,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 					replace: true,
 					severity: 'success',
 					hideButton: true,
-					label: t('message.snackbar.new_calendar_created', 'New calendar created'),
+					label: t('message.snackbar.new_calendar_added', 'Calendar added successfully'),
 					autoHideTimeout: 3000
 				});
 				onClose();
