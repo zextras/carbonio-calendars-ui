@@ -171,7 +171,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 		}
 
 		const tooltipText = t('tooltip.folder_external_status', 'Added from URL');
-		return RowWithIcon('Link2', 'primary', tooltipText, 'external-calendar-indicator');
+		return RowWithIcon('Link2', 'gray0', tooltipText, 'external-calendar-indicator');
 	}, [calendar, t]);
 
 	const userMail = useMemo(
