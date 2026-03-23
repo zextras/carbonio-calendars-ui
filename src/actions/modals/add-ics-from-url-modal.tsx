@@ -20,8 +20,10 @@ import { useTranslation } from 'react-i18next';
 import ModalFooter from '../../commons/modal-footer';
 import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
+import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { createFolderRequest } from 'soap/create-folder-request';
+import { folderAction } from 'store/actions/calendar-actions';
 
 export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
 	const [t] = useTranslation();
@@ -122,18 +124,22 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			rgb: selectedRgb,
 			f: '#',
 			view: 'appointment',
-			sync: 1
+			sync: 0 // do not sync at the same time, for big/huge calendars the notify handling takes a lot of time and the folder appear very late
 		})
-			.then(() => {
-				createSnackbar({
-					key: 'ics-url-calendar-created',
-					replace: true,
-					severity: 'success',
-					hideButton: true,
-					label: t('message.snackbar.new_calendar_added', 'Calendar added successfully'),
-					autoHideTimeout: 3000
-				});
-				onClose();
+			.then((createFolderResponse) => {
+				folderAction({ id: createFolderResponse.folder[0].id, op: FOLDER_OPERATIONS.SYNC }).then(
+					() => {
+						createSnackbar({
+							key: 'ics-url-calendar-created',
+							replace: true,
+							severity: 'success',
+							hideButton: true,
+							label: t('message.snackbar.new_calendar_added', 'Calendar added successfully'),
+							autoHideTimeout: 3000
+						});
+						onClose();
+					}
+				);
 			})
 			.catch(() => {
 				setIsSubmitting(false);

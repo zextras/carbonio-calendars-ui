@@ -102,7 +102,7 @@ describe('AddIcsFromUrlModal', () => {
 				rgb: '#000000',
 				f: '#',
 				view: 'appointment',
-				sync: 1
+				sync: 0
 			});
 		});
 
@@ -112,12 +112,6 @@ describe('AddIcsFromUrlModal', () => {
 	});
 
 	test('disables add button while submit request is in progress', async () => {
-		let resolveRequest: ((value: CreateFolderResponse) => void) | undefined;
-		const pendingRequest = new Promise<CreateFolderResponse>((resolve) => {
-			resolveRequest = resolve;
-		});
-
-		vi.spyOn(createFolderApi, 'createFolderRequest').mockReturnValue(pendingRequest);
 		const onClose = vi.fn();
 		const { user } = setupTest(<AddIcsFromUrlModal onClose={onClose} />);
 
@@ -129,11 +123,6 @@ describe('AddIcsFromUrlModal', () => {
 
 		await user.click(addButton);
 		expect(addButton).toBeDisabled();
-
-		resolveRequest?.({
-			folder: [],
-			_jsns: JSNS.mail
-		});
 
 		await waitFor(() => {
 			expect(onClose).toHaveBeenCalledTimes(1);
