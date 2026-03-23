@@ -186,21 +186,22 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 		[event?.resource?.tags]
 	);
 
+	const folders = useFoldersMap();
+	const folder = folders[event.resource.calendar.id];
+	const eventIsFromExternalCalendar = isExternalSyncFolder(folder ?? {});
+
 	const textOverflow = useMemo(
 		() => (hasTags || event.resource.isRecurrent || event.allDay ? 'ellipsis' : 'visible'),
 		[event.allDay, event.resource.isRecurrent, hasTags]
 	);
 
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
-	const folders = useFoldersMap();
-	const folder = folders[event.resource.calendar.id];
-	const isExternalCalendar = isExternalSyncFolder(folder ?? {});
-	const displayedFreeBusy = isExternalCalendar
+	const displayedFreeBusy = eventIsFromExternalCalendar
 		? event.resource.freeBusy
 		: event.resource.freeBusyActual;
 
 	const iAmAttendee =
-		!isExternalCalendar &&
+		!eventIsFromExternalCalendar &&
 		event.haveWriteAccess &&
 		event.resource.iAmAttendee &&
 		!event?.resource?.calendar?.owner &&
@@ -302,6 +303,17 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 														)}
 														<CustomEventTitle title={title} />
 													</>
+												)}
+												{eventIsFromExternalCalendar && (
+													<CustomEventIcon
+														iconName={'Link2'}
+														iconColor={'gray0'}
+														isIconVisible
+														tooltipLabel={t(
+															'label.external_calendar_event',
+															'Event from a calendar added from URL'
+														)}
+													/>
 												)}
 											</Row>
 										)}
