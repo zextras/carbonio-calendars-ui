@@ -157,14 +157,14 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			height="fit"
 		>
 			<ModalHeader onClose={onClose} title={t('action.add_ics_from_url', 'Add ICS from URL')} />
-			<Padding top={'small'} />
+			<Padding top="medium" />
 			<Text size="small" color="secondary">
 				{t(
 					'add_ics_from_url.description',
 					'Paste the .ics URL of the calendar you would like to add.'
 				)}
 			</Text>
-			<Padding top="small" />
+			<Padding top="medium" />
 			<Input
 				label={t('add_ics_from_url.url', 'Calendar URL*')}
 				background={'gray5'}
