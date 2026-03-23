@@ -18,7 +18,7 @@ import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { CreateFolderResponse } from 'types/soap/createFolder';
 
-const ICS_URL_LABEL = 'Calendar ICS URL*';
+const ICS_URL_LABEL = 'Calendar URL*';
 const CALENDAR_NAME_LABEL = 'Calendar name*';
 const VALID_ICS_URL = 'https://a/1.ics';
 

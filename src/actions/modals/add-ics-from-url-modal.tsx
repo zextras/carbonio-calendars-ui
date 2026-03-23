@@ -166,7 +166,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			</Text>
 			<Padding top="small" />
 			<Input
-				label={t('add_ics_from_url.ics_url', 'Calendar ICS URL*')}
+				label={t('add_ics_from_url.url', 'Calendar URL*')}
 				background={'gray5'}
 				hasError={!!urlError || isDuplicateCalendarUrl}
 				description={
