@@ -99,10 +99,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 						)}
 						{eventIsFromExternalCalendar && (
 							<Tooltip
-								label={t(
-									'label.event_from_external_calendar',
-									'Event from a calendar added from URL'
-								)}
+								label={t('label.external_calendar_event', 'Event from a calendar added from URL')}
 								placement="top"
 							>
 								<Row padding={{ right: 'small' }}>

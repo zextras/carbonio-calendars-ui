@@ -167,7 +167,7 @@ export const DetailsPart = ({
 						<SubjectRow subject={title} calendarColor={color.color} isPrivate={isPrivate} />
 						<CustomIconInfo
 							tooltipLabel={t(
-								'label.event_from_external_calendar',
+								'label.external_calendar_event',
 								'Event from a calendar added from URL'
 							)}
 							color={'gray0'}
