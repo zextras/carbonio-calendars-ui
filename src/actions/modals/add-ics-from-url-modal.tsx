@@ -188,7 +188,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 					<Text size="small" color="secondary">
 						{t(
 							'add_ics_from_url.sync_info',
-							'This calendar will be read-only and will sync automatically every 12 hours'
+							'This calendar will be read-only and will sync every 12 hours'
 						)}
 					</Text>
 				</>

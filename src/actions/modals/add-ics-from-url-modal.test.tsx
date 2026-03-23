@@ -154,7 +154,7 @@ describe('AddIcsFromUrlModal', () => {
 		await user.type(screen.getByRole('textbox', { name: ICS_URL_LABEL }), VALID_ICS_URL);
 
 		expect(
-			screen.getByText('This calendar will be read-only and will sync automatically every 12 hours')
+			screen.getByText('This calendar will be read-only and will sync every 12 hours')
 		).toBeVisible();
 	});
 
@@ -164,9 +164,7 @@ describe('AddIcsFromUrlModal', () => {
 		await user.type(screen.getByRole('textbox', { name: ICS_URL_LABEL }), 'a.b');
 
 		expect(
-			screen.queryByText(
-				'This calendar will be read-only and will sync automatically every 12 hours'
-			)
+			screen.queryByText('This calendar will be read-only and will sync every 12 hours')
 		).not.toBeInTheDocument();
 	});
 
