@@ -34,6 +34,8 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 	const [selectedColor, setSelectedColor] = useState('0');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	const TRASH_FOLDER_ID = '3'; // Zimbra default trash folder id
+
 	const appointmentFolderNames = useMemo(
 		() =>
 			map(folders, (folder) =>
@@ -50,6 +52,17 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 		[folders]
 	);
 
+	const duplicateCalendar = useMemo(
+		() =>
+			Object.values(folders).find(
+				(folder) =>
+					folder.view === 'appointment' &&
+					folder.url &&
+					folder.url.trim().toLowerCase() === icsUrl.trim().toLowerCase()
+			),
+		[folders, icsUrl]
+	);
+
 	const isDuplicateCalendarName = useMemo(
 		() =>
 			isSubmitting ? false : includes(appointmentFolderNames, calendarName.trim().toLowerCase()),
@@ -57,8 +70,13 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 	);
 
 	const isDuplicateCalendarUrl = useMemo(
-		() => (isSubmitting ? false : includes(appointmentFolderUrls, icsUrl.trim().toLowerCase())),
-		[appointmentFolderUrls, icsUrl, isSubmitting]
+		() => !!duplicateCalendar && !isSubmitting,
+		[duplicateCalendar, isSubmitting]
+	);
+
+	const isDuplicateInTrash = useMemo(
+		() => duplicateCalendar?.l === TRASH_FOLDER_ID,
+		[duplicateCalendar]
 	);
 
 	const urlError = useMemo(() => {
@@ -154,6 +172,21 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			});
 	};
 
+	let urlDescription: string | undefined = urlError;
+	if (!urlDescription && isDuplicateCalendarUrl) {
+		if (isDuplicateInTrash) {
+			urlDescription = t(
+				'add_ics_from_url.error.duplicate_calendar_url_trash',
+				'A calendar with the same URL already exists in your Trash. Please restore it or permanently delete it before adding again.'
+			);
+		} else {
+			urlDescription = t(
+				'add_ics_from_url.error.duplicate_calendar_url',
+				'A calendar with the same URL has already been added'
+			);
+		}
+	}
+
 	return (
 		<Container
 			data-testid={'add-ics-from-url-modal'}
@@ -175,15 +208,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 				label={t('add_ics_from_url.url', 'Calendar URL*')}
 				background={'gray5'}
 				hasError={!!urlError || isDuplicateCalendarUrl}
-				description={
-					urlError ??
-					(isDuplicateCalendarUrl
-						? t(
-								'add_ics_from_url.error.duplicate_calendar_url',
-								'A calendar with the same URL has already been added'
-							)
-						: undefined)
-				}
+				description={urlDescription}
 				value={icsUrl}
 				disabled={isSubmitting}
 				onChange={(event): void => setIcsUrl(event.target.value)}
