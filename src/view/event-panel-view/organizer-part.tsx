@@ -18,9 +18,9 @@ import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { useFolder, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { Trans } from 'react-i18next';
 
-import { isExternalSyncFolder } from '../../commons/utilities';
-import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
-import { Invite, InviteOrganizer } from '../../types/store/invite';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { copyEmailToClipboard, sendMsg } from 'store/actions/participant-displayer-actions';
+import { Invite, InviteOrganizer } from 'types/store/invite';
 
 type OrganizerPartProps = {
 	invite: Invite;
