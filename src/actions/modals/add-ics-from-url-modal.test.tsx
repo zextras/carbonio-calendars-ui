@@ -80,13 +80,21 @@ describe('AddIcsFromUrlModal', () => {
 	});
 
 	test('submits CreateFolderRequest with URL payload on add', async () => {
-		const createFolderResponse: CreateFolderResponse = {
-			folder: [],
-			_jsns: JSNS.mail
-		};
 		const createFolderRequestSpy = vi
 			.spyOn(createFolderApi, 'createFolderRequest')
-			.mockResolvedValue(createFolderResponse);
+			.mockResolvedValue({
+				_jsns: 'urn:zimbraMail',
+				folder: [
+					{
+						id: '123',
+						uuid: 'abc-123',
+						name: 'x',
+						activesyncdisabled: false,
+						recursive: false,
+						deletable: false
+					}
+				]
+			});
 		const onClose = vi.fn();
 		const { user } = setupTest(<AddIcsFromUrlModal onClose={onClose} />);
 
