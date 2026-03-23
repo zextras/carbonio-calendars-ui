@@ -6,15 +6,24 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { Divider, Icon, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { ZIMBRA_STANDARD_COLORS, useSortedTagsArray, Tag } from '@zextras/carbonio-ui-commons';
+import {
+	ZIMBRA_STANDARD_COLORS,
+	useSortedTagsArray,
+	Tag,
+	useFoldersMap
+} from '@zextras/carbonio-ui-commons';
 import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { PARTICIPATION_STATUS } from '../../constants/api';
-import { EventType } from '../../types/event';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { PARTICIPATION_STATUS } from 'constants/api';
+import { EventType } from 'types/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 	const [t] = useTranslation();
+	const folders = useFoldersMap();
+	const folder = folders[event.resource.calendar.id];
+	const eventIsFromExternalCalendar = isExternalSyncFolder(folder ?? {});
 	const tags = useSortedTagsArray();
 	const tagItems = useMemo(
 		() =>
@@ -87,6 +96,19 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 							<Row>
 								<Icon icon="CalendarWarning" color="primary" />
 							</Row>
+						)}
+						{eventIsFromExternalCalendar && (
+							<Tooltip
+								label={t(
+									'label.event_from_external_calendar',
+									'Event from a calendar added from URL'
+								)}
+								placement="top"
+							>
+								<Row padding={{ right: 'small' }}>
+									<Icon color="0" icon="Link2" />
+								</Row>
+							</Tooltip>
 						)}
 					</>
 				)}
