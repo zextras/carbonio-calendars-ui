@@ -334,46 +334,6 @@ describe('appointment-actions-items', () => {
 				expect(moveAction?.icon).toBe('MoveOutline');
 			});
 
-			test.skip('the event is in a trash folder and returns restore label', () => {
-				const folder = {
-					id: FOLDERS.TRASH,
-					l: '1',
-					name: 'Trash',
-					view: 'appointment',
-					absFolderPath: '/Trash/'
-				};
-
-				const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-
-				const event = mockedData.getEvent({
-					resource: {
-						calendar: folder
-					}
-				});
-
-				const context = {
-					createAndApplyTag: vi.fn(),
-					createModal: vi.fn(),
-					closeModal: vi.fn(),
-					createSnackbar: vi.fn(),
-					dispatch: vi.fn(),
-					t: vi.fn(),
-					replaceHistory: vi.fn(),
-					tags: [
-						{
-							id: '1',
-							name: 'one'
-						}
-					],
-					folders
-				};
-
-				const moveAction = moveEventItem({ event, context });
-				expect(moveAction).toBeDefined();
-				expect(moveAction?.id).toBe('move');
-				expect(moveAction?.icon).toBe('RestoreOutline');
-			});
-
 			test('the event is disabled when user does not have write access', () => {
 				const folder = {
 					id: FOLDERS.CALENDAR,
