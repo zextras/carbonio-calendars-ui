@@ -165,14 +165,16 @@ export const DetailsPart = ({
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow subject={title} calendarColor={color.color} isPrivate={isPrivate} />
-						<CustomIconInfo
-							tooltipLabel={t(
-								'label.external_calendar_event',
-								'Event from a calendar added from URL'
-							)}
-							color={'gray0'}
-							icon={'Link2'}
-						/>
+						{eventIsfromExternalCalendar && (
+							<CustomIconInfo
+								tooltipLabel={t(
+									'label.external_calendar_event',
+									'Event from a calendar added from URL'
+								)}
+								color={'gray0'}
+								icon={'Link2'}
+							/>
+						)}
 						<Padding right={'small'} />
 						{event.resource.isRecurrent && (
 							<CustomIconInfo
