@@ -129,8 +129,20 @@ export const EditExternalCalendarModal = ({
 		// Compare against the derived original index so rgb-only folders detect changes correctly.
 		const hasColorChanged = selectedColor !== originalColorIndex;
 
+		function successSnackbar(): void {
+			createSnackbar({
+				key: 'edit-external-calendar-success',
+				replace: true,
+				severity: 'success',
+				hideButton: true,
+				label: t('label.changes_saved', 'Changes saved'),
+				autoHideTimeout: 3000
+			});
+		}
+
 		if (!hasNameChanged && !hasColorChanged) {
 			onClose();
+			successSnackbar();
 			return;
 		}
 
@@ -156,14 +168,7 @@ export const EditExternalCalendarModal = ({
 							autoHideTimeout: 3000
 						});
 					} else {
-						createSnackbar({
-							key: 'edit-external-calendar-success',
-							replace: true,
-							severity: 'success',
-							hideButton: true,
-							label: t('label.changes_saved', 'Changes saved'),
-							autoHideTimeout: 3000
-						});
+						successSnackbar();
 					}
 					onClose();
 				})
