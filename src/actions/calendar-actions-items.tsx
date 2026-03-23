@@ -332,7 +332,7 @@ export const syncExternalCalendarItem = ({
 				<Text>{t('label.sync', 'Sync')}</Text>
 			</Container>
 			{item?.lsd ? (
-				<Text size="small" color="secondary" style={{ overflow: 'visible' }}>
+				<Text size="extrasmall" color="gray0" weight={'light'} style={{ overflow: 'visible' }}>
 					{t('label.last_sync', 'Last sync')}: {formatLsd(item?.lsd)}
 				</Text>
 			) : null}
