@@ -157,6 +157,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			height="fit"
 		>
 			<ModalHeader onClose={onClose} title={t('action.add_ics_from_url', 'Add ICS from URL')} />
+			<Padding top={'small'} />
 			<Text size="small" color="secondary">
 				{t(
 					'add_ics_from_url.description',
