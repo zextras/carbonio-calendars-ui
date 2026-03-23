@@ -229,6 +229,7 @@ export const EditExternalCalendarModal = ({
 						icon="Copy"
 						onClick={onCopyUrl}
 						disabled={!folder.url}
+						style={{ width: 'max-content' }}
 					/>
 				</Tooltip>
 			</Container>
