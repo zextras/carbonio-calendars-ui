@@ -56,6 +56,39 @@ export const OrganizerPart = ({
 		[calendar, invite.isOrganizer, isExternalCalendar, isLoggedInUserAttendee]
 	);
 	const iAmAttendee = useMemo(() => showAttendeePerspective ?? false, [showAttendeePerspective]);
+
+	const organizerChip = (
+		<Row
+			mainAlignment="flex-start"
+			width="100%"
+			padding={{ top: 'extrasmall', bottom: 'extrasmall', left: '30px' }}
+		>
+			<Chip
+				label={organizer.a || organizer.d}
+				background={'gray3'}
+				color="text"
+				data-testid={'Chip'}
+				hasAvatar={false}
+				actions={[
+					{
+						id: 'action1',
+						label: t('message.send_email', 'Send e-mail'),
+						type: 'button',
+						icon: 'EmailOutline',
+						onClick: () => sendMsg(organizer.a, organizer.d)
+					},
+					{
+						id: 'action2',
+						label: t('message.copy', 'Copy'),
+						type: 'button',
+						icon: 'Copy',
+						onClick: () => copyEmailToClipboard(organizer.a, createSnackbar)
+					}
+				]}
+			/>
+		</Row>
+	);
+
 	return (
 		<Container
 			orientation="vertical"
@@ -115,35 +148,7 @@ export const OrganizerPart = ({
 								/>
 							)}
 						</Text>
-						<Row
-							mainAlignment="flex-start"
-							width="100%"
-							padding={{ top: 'extrasmall', bottom: 'extrasmall' }}
-						>
-							<Chip
-								label={organizer.a || organizer.d}
-								background={'gray3'}
-								color="text"
-								data-testid={'Chip'}
-								hasAvatar={false}
-								actions={[
-									{
-										id: 'action1',
-										label: t('message.send_email', 'Send e-mail'),
-										type: 'button',
-										icon: 'EmailOutline',
-										onClick: () => sendMsg(organizer.a, organizer.d)
-									},
-									{
-										id: 'action2',
-										label: t('message.copy', 'Copy'),
-										type: 'button',
-										icon: 'Copy',
-										onClick: () => copyEmailToClipboard(organizer.a, createSnackbar)
-									}
-								]}
-							/>
-						</Row>
+						{organizerChip}
 					</Row>
 				</Row>
 			) : (
@@ -161,6 +166,7 @@ export const OrganizerPart = ({
 								values={{ somebody: organizer.d || organizer.a }}
 							/>
 						</Text>
+						{organizerChip}
 					</Row>
 				)
 			)}
