@@ -307,7 +307,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												{eventIsFromExternalCalendar && (
 													<CustomEventIcon
 														iconName={'Link2'}
-														iconColor={'gray0'}
+														iconColor={'currentColor'}
 														isIconVisible
 														tooltipLabel={t(
 															'label.external_calendar_event',
