@@ -132,5 +132,36 @@ describe('useEventActions', () => {
 			setupTest(modal);
 			expect(await screen.findByTestId('forward-appointment-modal')).toBeInTheDocument();
 		});
+
+		it('should hide move action for external calendar appointments', () => {
+			const externalEvent = {
+				resource: {
+					calendar: { id: '55' },
+					isRecurrent: false
+				},
+				haveWriteAccess: true
+			} as EventType;
+
+			const { result } = setupHook(useEventActions, {
+				initialProps: [
+					{
+						event: externalEvent,
+						context: {
+							folders: {
+								'55': {
+									id: '55',
+									url: 'https://example.com/calendar.ics',
+									view: 'appointment'
+								}
+							}
+						} as any
+					}
+				]
+			});
+
+			const actionsResult = result.current as InstanceActionsItems;
+			const moveAction = getActionByName(actionsResult, EVENT_ACTIONS.MOVE);
+			expect(moveAction).toBeUndefined();
+		});
 	});
 });

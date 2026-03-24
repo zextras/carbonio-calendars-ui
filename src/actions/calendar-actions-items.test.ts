@@ -8,6 +8,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-ui-commons';
 
 import {
+	addIcsFromUrlItem,
 	deleteCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
@@ -16,11 +17,12 @@ import {
 	noPermissionLabel,
 	removeFromListItem,
 	shareCalendarItem,
-	sharesInfoItem
+	sharesInfoItem,
+	syncExternalCalendarItem
 } from './calendar-actions-items';
-import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import mockedData from '../test/generators';
 import { generateRoots } from '@test-utils/folders/roots-generator';
+import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 
 const randomUUID = faker.string.uuid();
 const TRASH_SUB_FOLDER_PATH = '/Trash/subFolder';
@@ -120,6 +122,58 @@ describe('calendar actions items', () => {
 
 			const newItem = newCalendarItem({ createModal, closeModal, item });
 			expect(newItem).toStrictEqual(
+				expect.objectContaining({
+					disabled: true
+				})
+			);
+		});
+	});
+	describe('addIcsFromUrlItem', () => {
+		test(genericTestItemTitleForIconItem, () => {
+			const item = mockedData.calendars.getCalendar();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+
+			const addFromUrl = addIcsFromUrlItem({ createModal, closeModal, item });
+			expect(addFromUrl).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.ADD_ICS_URL,
+					icon: 'Link2',
+					label: t('action.add_ics_from_url', 'Add ICS from URL'),
+					tooltipLabel: noPermissionLabel,
+					onClick: expect.any(Function),
+					disabled: false
+				})
+			);
+		});
+
+		test.each([
+			{
+				...mockedData.calendars.getCalendar(),
+				id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}`
+			},
+			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.TRASH },
+			{ ...mockedData.calendars.getCalendar(), id: '153', absFolderPath: TRASH_SUB_FOLDER_PATH },
+			{ ...mockedData.calendars.getCalendar(), id: '153', isLink: true },
+			childFolder,
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.TRASH}` },
+			{
+				...mockedData.calendars.getCalendar(),
+				id: `${randomUUID}:153`,
+				absFolderPath: TRASH_SUB_FOLDER_PATH
+			},
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:153`, isLink: true }
+		])(genericTestTitleForEachCases, (item) => {
+			setupFoldersStore();
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+			const addFromUrl = addIcsFromUrlItem({
+				createModal,
+				closeModal,
+				item: item as Folder
+			});
+			expect(addFromUrl).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
 				})
@@ -344,13 +398,19 @@ describe('calendar actions items', () => {
 		test.each([
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.TRASH },
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.CALENDAR },
-			{ ...mockedData.calendars.getCalendar(), id: '153', perm: 'r' },
+			{ ...mockedData.calendars.getCalendar(), id: '153', perm: 'r', f: '#', url: undefined },
 			{
 				...mockedData.calendars.getCalendar(),
 				id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}`
 			},
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.TRASH}` },
-			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:153`, perm: 'r' },
+			{
+				...mockedData.calendars.getCalendar(),
+				id: `${randomUUID}:153`,
+				perm: 'r',
+				f: '#',
+				url: undefined
+			},
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
@@ -495,6 +555,51 @@ describe('calendar actions items', () => {
 			expect(shareCalendar).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
+				})
+			);
+		});
+	});
+
+	describe('syncExternalCalendarItem', () => {
+		test('shows last sync date when lsd is present', () => {
+			const createSnackbar = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '888',
+				f: '#y',
+				lsd: 1767276900
+			} as Folder & { lsd?: number };
+
+			const syncItem = syncExternalCalendarItem({ item, createSnackbar });
+
+			expect(syncItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.SYNC,
+					icon: 'SyncOutline',
+					label: 'label.sync',
+					disabled: false,
+					customComponent: expect.anything()
+				})
+			);
+		});
+
+		test('does not show last sync date when lsd is absent', () => {
+			const createSnackbar = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '889',
+				f: '#y'
+			} as Folder & { lsd?: number };
+
+			const syncItem = syncExternalCalendarItem({ item, createSnackbar });
+
+			expect(syncItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.SYNC,
+					icon: 'SyncOutline',
+					label: 'label.sync',
+					disabled: false,
+					customComponent: expect.anything()
 				})
 			);
 		});

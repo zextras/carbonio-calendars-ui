@@ -7,12 +7,13 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
-import { reducers } from '../../../store/redux';
-import { useAppStatusStore } from '../../../store/zustand/store';
-import mockedData from '../../../test/generators';
 import { MemoCustomEvent } from '../custom-event';
 import { setupTest } from '@test-setup';
+import { reducers } from 'store/redux';
+import { useAppStatusStore } from 'store/zustand/store';
+import mockedData from 'test/generators';
 
 describe('custom-event', () => {
 	test('if the event is not part of a recurrence it wont have a recurrent icon', async () => {
@@ -145,5 +146,132 @@ describe('custom-event', () => {
 			vi.advanceTimersByTime(250);
 		});
 		expect(useAppStatusStore.getState().summaryViewRef.current).toBeInTheDocument();
+	});
+
+	test('does not show attendee reply icon for external calendar events', async () => {
+		const event = mockedData.getEvent({
+			resource: {
+				iAmOrganizer: false,
+				calendar: { id: 'external-calendar' },
+				participationStatus: 'AC'
+			}
+		});
+
+		useFolderStore.setState((state) => ({
+			...state,
+			folders: {
+				...state.folders,
+				[event.resource.calendar.id]: {
+					id: event.resource.calendar.id,
+					name: 'External calendar',
+					url: 'https://example.com/calendar.ics',
+					view: 'appointment' as const,
+					uuid: 'external-cal-uuid',
+					activesyncdisabled: false,
+					recursive: true,
+					deletable: true,
+					isLink: false,
+					depth: 1,
+					children: []
+				}
+			}
+		}));
+
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		expect(screen.queryByTestId('icon: StatusAccept')).not.toBeInTheDocument();
+	});
+
+	test('does not show attendee reply icon for readonly events when external flags are unavailable', async () => {
+		const event = mockedData.getEvent({
+			haveWriteAccess: false,
+			resource: {
+				iAmOrganizer: false,
+				iAmAttendee: true,
+				calendar: { id: 'readonly-calendar', perm: 'r' },
+				participationStatus: 'TE'
+			}
+		});
+
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		expect(screen.queryByTestId('icon: StatusMaybe')).not.toBeInTheDocument();
+	});
+
+	test('uses owner free-busy perspective for external calendars in tooltip', async () => {
+		const event = mockedData.getEvent({
+			resource: {
+				iAmOrganizer: false,
+				calendar: { id: 'external-calendar-tooltip' },
+				freeBusy: 'O',
+				freeBusyActual: 'T'
+			}
+		});
+
+		useFolderStore.setState((state) => ({
+			...state,
+			folders: {
+				...state.folders,
+				[event.resource.calendar.id]: {
+					id: event.resource.calendar.id,
+					name: 'External calendar',
+					url: 'https://example.com/calendar.ics',
+					view: 'appointment' as const,
+					uuid: 'external-tooltip-cal-uuid',
+					activesyncdisabled: false,
+					recursive: true,
+					deletable: true,
+					isLink: false,
+					depth: 1,
+					children: []
+				}
+			}
+		}));
+
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		const { user } = setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		await user.hover(screen.getByTestId('calendar-event'));
+		expect(
+			await screen.findByText(/out of office appointment|tooltip\.out_of_office_appointment/i)
+		).toBeVisible();
+		expect(
+			screen.queryByText(/tentative appointment|tooltip\.tentative_appointment/i)
+		).not.toBeInTheDocument();
 	});
 });

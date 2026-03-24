@@ -8,6 +8,7 @@ import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
 import {
+	addIcsFromUrl,
 	deleteCalendar,
 	editCalendar,
 	emptyTrash,
@@ -16,6 +17,7 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
+	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
 import mockedData from '../test/generators';
@@ -78,6 +80,7 @@ describe('calendar-actions-fn', () => {
 			getSetupServer().resetHandlers();
 		});
 	});
+
 	test('empty trash fn', () => {
 		const createModal = vi.fn();
 		const closeModal = vi.fn();
@@ -85,6 +88,15 @@ describe('calendar-actions-fn', () => {
 		emptyTrashFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
+
+	test('add ics from url fn', () => {
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const addIcsFromUrlFn = addIcsFromUrl({ createModal, closeModal });
+		addIcsFromUrlFn();
+		expect(createModal).toHaveBeenCalledTimes(1);
+	});
+
 	test('edit calendar fn', () => {
 		const createModal = vi.fn();
 		const closeModal = vi.fn();
@@ -93,6 +105,7 @@ describe('calendar-actions-fn', () => {
 		editCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
+
 	test('delete calendar fn', () => {
 		const createModal = vi.fn();
 		const closeModal = vi.fn();
@@ -101,6 +114,7 @@ describe('calendar-actions-fn', () => {
 		deleteCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
+
 	describe('on click request to backend should remove the folder mountpoint', () => {
 		test('when the request is successful it creates an info snackbar', async () => {
 			const createSnackbar = vi.fn();
@@ -117,6 +131,7 @@ describe('calendar-actions-fn', () => {
 				})
 			);
 		});
+
 		test('when the request fails, it creates an error snackbar', async () => {
 			// disable console.warn raised by soapFetch
 			vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -145,6 +160,7 @@ describe('calendar-actions-fn', () => {
 			getSetupServer().resetHandlers();
 		});
 	});
+
 	describe('shares info fn', () => {
 		test('Characterization test - if response received does not contain links the creatModal is not called and no action is performed', () => {
 			const createModal = vi.fn();
@@ -230,5 +246,72 @@ describe('calendar-actions-fn', () => {
 		await waitFor(() => {
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
+	});
+
+	test('sync external calendar fn shows success snackbar', async () => {
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR };
+		const syncExternalCalendarFn = syncExternalCalendar({ createSnackbar, item });
+
+		await act(async () => syncExternalCalendarFn());
+		expect(createSnackbar).toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'info',
+				label: 'message.snackbar.external_calendar_syncing'
+			})
+		);
+		await waitFor(() => {
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'success',
+					label: 'message.snackbar.external_calendar_synced'
+				})
+			);
+		});
+	});
+
+	test('sync external calendar fn shows error snackbar when backend returns Fault', async () => {
+		// disable console.warn raised by soapFetch
+		vi.spyOn(console, 'warn').mockImplementation(vi.fn());
+		getSetupServer().use(
+			http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
+				HttpResponse.json({
+					Body: {
+						Fault: {}
+					}
+				})
+			)
+		);
+
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR };
+		const syncExternalCalendarFn = syncExternalCalendar({ createSnackbar, item });
+
+		await act(async () => syncExternalCalendarFn());
+
+		expect(createSnackbar).toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'info',
+				label: 'message.snackbar.external_calendar_syncing'
+			})
+		);
+
+		await waitFor(() => {
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		});
+
+		expect(createSnackbar).not.toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'success',
+				label: 'message.snackbar.external_calendar_synced'
+			})
+		);
+
+		getSetupServer().resetHandlers();
 	});
 });

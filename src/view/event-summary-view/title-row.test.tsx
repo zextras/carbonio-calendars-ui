@@ -9,8 +9,8 @@ import { screen } from '@testing-library/react';
 
 import { TitleRow } from './title-row';
 import mockedData from '../../test/generators';
-import { EventResourceCalendar } from '../../types/event';
 import { setupTest } from '@test-setup';
+import { EventResourceCalendar } from 'types/event';
 
 type EventProps = [
 	eventClass: 'PRI' | 'PUB',
@@ -85,6 +85,40 @@ describe('title-row', () => {
 			setupTest(<TitleRow event={event} />);
 
 			expect(screen.getByTestId('icon: Repeat')).toBeVisible();
+		});
+	});
+
+	describe('need action icon', () => {
+		test('shows warning icon only for writable attendee perspective', () => {
+			const event = mockedData.getEvent({
+				haveWriteAccess: true,
+				resource: {
+					iAmOrganizer: false,
+					iAmAttendee: true,
+					calendar: ownedCalendar,
+					participationStatus: 'NE'
+				}
+			});
+
+			setupTest(<TitleRow event={event} />);
+
+			expect(screen.getByTestId('icon: CalendarWarning')).toBeVisible();
+		});
+
+		test('does not show warning icon for readonly/external-like perspective', () => {
+			const event = mockedData.getEvent({
+				haveWriteAccess: false,
+				resource: {
+					iAmOrganizer: false,
+					iAmAttendee: true,
+					calendar: ownedCalendar,
+					participationStatus: 'NE'
+				}
+			});
+
+			setupTest(<TitleRow event={event} />);
+
+			expect(screen.queryByTestId('icon: CalendarWarning')).not.toBeInTheDocument();
 		});
 	});
 });

@@ -6,18 +6,23 @@
 import React, { useCallback, useMemo } from 'react';
 
 import { Container, Row, Avatar, Icon, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { useHistoryNavigation, useSortedTagsArray } from '@zextras/carbonio-ui-commons';
+import {
+	useHistoryNavigation,
+	useSortedTagsArray,
+	useFoldersMap
+} from '@zextras/carbonio-ui-commons';
 import { includes, filter } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { openAppointment } from '../../actions/appointment-actions-fn';
-import { PANEL_VIEW } from '../../constants';
-import { PARTICIPATION_STATUS } from '../../constants/api';
-import { getInvite } from '../../store/actions/get-invite';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectInstanceInvite } from '../../store/selectors/invites';
+import { openAppointment } from 'actions/appointment-actions-fn';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { PANEL_VIEW } from 'constants/index';
 import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
+import { getInvite } from 'store/actions/get-invite';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
+import { selectInstanceInvite } from 'store/selectors/invites';
 import { ActionsContext } from 'types/actions';
 import { EventType } from 'types/event';
 
@@ -31,6 +36,9 @@ const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
 	const organizedByLabel = `${t('search.organized_by', 'organized by')} ${organizerLabel}`;
 
 	const dispatch = useAppDispatch();
+	const folders = useFoldersMap();
+	const folder = folders[item.resource.calendar.id];
+	const isExternalCalendar = isExternalSyncFolder(folder ?? {});
 	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
 	const timeString = useGetDateRangeConvertedToTimezone(item.start ?? 0, item.end ?? 0);
 	const sortedTagsFromStore = useSortedTagsArray();
@@ -40,10 +48,11 @@ const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
 
 	const showPtstIcon = useMemo(
 		() =>
-			item.resource?.participationStatus === PARTICIPATION_STATUS.TENTATIVE ||
-			item.resource?.participationStatus === PARTICIPATION_STATUS.DECLINED ||
-			item.resource?.participationStatus === PARTICIPATION_STATUS.ACCEPTED,
-		[item.resource?.participationStatus]
+			!isExternalCalendar &&
+			(item.resource?.participationStatus === PARTICIPATION_STATUS.TENTATIVE ||
+				item.resource?.participationStatus === PARTICIPATION_STATUS.DECLINED ||
+				item.resource?.participationStatus === PARTICIPATION_STATUS.ACCEPTED),
+		[item.resource?.participationStatus, isExternalCalendar]
 	);
 
 	const [color, icon] = useMemo(() => {

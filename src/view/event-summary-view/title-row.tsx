@@ -6,15 +6,24 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { Divider, Icon, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { ZIMBRA_STANDARD_COLORS, useSortedTagsArray, Tag } from '@zextras/carbonio-ui-commons';
+import {
+	ZIMBRA_STANDARD_COLORS,
+	useSortedTagsArray,
+	Tag,
+	useFoldersMap
+} from '@zextras/carbonio-ui-commons';
 import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { PARTICIPATION_STATUS } from '../../constants/api';
-import { EventType } from '../../types/event';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { PARTICIPATION_STATUS } from 'constants/api';
+import { EventType } from 'types/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 	const [t] = useTranslation();
+	const folders = useFoldersMap();
+	const folder = folders[event.resource.calendar.id];
+	const eventIsFromExternalCalendar = isExternalSyncFolder(folder ?? {});
 	const tags = useSortedTagsArray();
 	const tagItems = useMemo(
 		() =>
@@ -43,6 +52,13 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 		}
 		return event.title;
 	}, [event, t]);
+
+	const showNeedActionIcon =
+		event.haveWriteAccess &&
+		event.resource.iAmAttendee &&
+		!event.resource.calendar?.owner &&
+		!event?.resource?.iAmOrganizer &&
+		event.resource?.participationStatus === PARTICIPATION_STATUS.NEED_ACTION;
 
 	return (
 		<>
@@ -76,12 +92,20 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 							)}
 						</Row>
 						<Row>{event?.resource?.flags?.includes('a') && <Icon icon="AttachOutline" />}</Row>
-						{!event.resource.calendar?.owner && !event?.resource?.iAmOrganizer && (
+						{showNeedActionIcon && (
 							<Row>
-								{event.resource?.participationStatus === PARTICIPATION_STATUS.NEED_ACTION && (
-									<Icon icon="CalendarWarning" color="primary" />
-								)}
+								<Icon icon="CalendarWarning" color="primary" />
 							</Row>
+						)}
+						{eventIsFromExternalCalendar && (
+							<Tooltip
+								label={t('label.external_calendar_event', 'Event from a calendar added from URL')}
+								placement="top"
+							>
+								<Row padding={{ right: 'small' }}>
+									<Icon color="0" icon="Link2" />
+								</Row>
+							</Tooltip>
 						)}
 					</>
 				)}

@@ -5,7 +5,15 @@
  */
 import React from 'react';
 
-import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
+import {
+	CloseModalFn,
+	Container,
+	CreateModalFn,
+	CreateSnackbarFn,
+	Icon,
+	Padding,
+	Text
+} from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import {
 	FOLDERS,
@@ -18,6 +26,7 @@ import {
 import { isNil } from 'lodash';
 
 import {
+	addIcsFromUrl,
 	deleteCalendar,
 	editCalendar,
 	emptyTrash,
@@ -27,10 +36,11 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
+	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
-import { isLinkChild, isMainRootChild } from '../commons/utilities';
-import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
+import { isExternalSyncFolder, isLinkChild, isMainRootChild } from 'commons/utilities';
+import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 
 export type CalendarActionsItems = {
 	id: CalendarActionsId;
@@ -39,6 +49,18 @@ export type CalendarActionsItems = {
 	label: string;
 	onClick: (ev: React.SyntheticEvent | KeyboardEvent) => void;
 	tooltipLabel: string;
+	customComponent?: React.ReactNode;
+};
+
+const formatLsd = (lsd: number): string => {
+	const date = new Date(lsd * 1000);
+	const day = `${date.getDate()}`.padStart(2, '0');
+	const month = `${date.getMonth() + 1}`.padStart(2, '0');
+	const year = `${date.getFullYear()}`.slice(-2);
+	const hour = `${date.getHours()}`.padStart(2, '0');
+	const minute = `${date.getMinutes()}`.padStart(2, '0');
+
+	return `${day}/${month}/${year} ${hour}:${minute}`;
 };
 
 export const noPermissionLabel = t(
@@ -126,11 +148,28 @@ export const editCalendarItem = ({
 }: {
 	createModal: CreateModalFn;
 	closeModal: CloseModalFn;
-	item: { id: string; absFolderPath?: string };
+	item: { id: string; absFolderPath?: string; f?: string; url?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
 	label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
+	tooltipLabel: noPermissionLabel,
+	onClick: editCalendar({ createModal, closeModal, item }),
+	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+});
+
+export const editExternalCalendarItem = ({
+	createModal,
+	closeModal,
+	item
+}: {
+	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
+	item: { id: string; absFolderPath?: string; f?: string; url?: string };
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.EDIT,
+	icon: 'Edit2Outline',
+	label: t('action.edit_calendar', 'Edit calendar'),
 	tooltipLabel: noPermissionLabel,
 	onClick: editCalendar({ createModal, closeModal, item }),
 	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
@@ -156,7 +195,7 @@ export const deleteCalendarItem = ({
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
 		hasId(item, FOLDERS.TRASH) ||
-		(item.perm ? !/w/.test(item.perm) : false)
+		(!isExternalSyncFolder(item) && (item.perm ? !/w/.test(item.perm) : false))
 });
 
 export const removeFromListItem = ({
@@ -252,6 +291,61 @@ export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarAc
 		isLinkChild(item)
 });
 
+const isIcsImportActionDisabled = (item: Folder): boolean =>
+	hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+	isTrashOrNestedInIt(item) ||
+	(item as LinkFolder).isLink ||
+	isLinkChild(item);
+
+export const addIcsFromUrlItem = ({
+	createModal,
+	closeModal,
+	item
+}: {
+	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
+	item: Folder;
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.ADD_ICS_URL,
+	icon: 'Link2',
+	label: t('action.add_ics_from_url', 'Add ICS from URL'),
+	tooltipLabel: noPermissionLabel,
+	onClick: addIcsFromUrl({ createModal, closeModal }),
+	disabled: isIcsImportActionDisabled(item)
+});
+
+export const syncExternalCalendarItem = ({
+	item,
+	createSnackbar
+}: {
+	item: Folder;
+	createSnackbar: CreateSnackbarFn;
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.SYNC,
+	icon: 'SyncOutline',
+	label: t('label.sync', 'Sync'),
+	customComponent: (
+		<Container orientation="horizontal" width="fit" mainAlignment="space-between">
+			<Container orientation="horizontal" mainAlignment="flex-start">
+				<Icon icon={'SyncOutline'} />
+				<Padding left="small" />
+				<Text>{t('label.sync', 'Sync')}</Text>
+			</Container>
+			{item?.lsd ? (
+				<>
+					<Padding left={'12px'} />
+					<Text size="extrasmall" color="gray0" weight={'light'} style={{ overflow: 'visible' }}>
+						{t('label.last_sync', 'Last sync')}: {formatLsd(item?.lsd)}
+					</Text>
+				</>
+			) : null}
+		</Container>
+	),
+	tooltipLabel: noPermissionLabel,
+	onClick: syncExternalCalendar({ item, createSnackbar }),
+	disabled: !isExternalSyncFolder(item) || isTrashOrNestedInIt(item)
+});
+
 export const importCalendarICSItem = (
 	item: Folder,
 	ref?: React.RefObject<HTMLInputElement>
@@ -265,9 +359,5 @@ export const importCalendarICSItem = (
 			ref.current.click();
 		}
 	},
-	disabled:
-		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
-		isTrashOrNestedInIt(item) ||
-		(item as LinkFolder).isLink ||
-		isLinkChild(item)
+	disabled: isIcsImportActionDisabled(item)
 });

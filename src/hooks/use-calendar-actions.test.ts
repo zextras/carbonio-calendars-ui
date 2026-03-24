@@ -200,9 +200,10 @@ describe('use calendar actions', () => {
 			initialProps: [calendarItem]
 		});
 
-		expect(result.current.length).toBe(5);
+		expect(result.current.length).toBe(6);
 		expect(result.current).toStrictEqual([
 			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.ADD_ICS_URL }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
@@ -229,9 +230,10 @@ describe('use calendar actions', () => {
 			initialProps: [calendarItem]
 		});
 
-		expect(result.current.length).toBe(4);
+		expect(result.current.length).toBe(5);
 		expect(result.current).toStrictEqual([
 			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.ADD_ICS_URL }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
@@ -367,9 +369,10 @@ describe('use calendar actions', () => {
 				initialProps: [customItem]
 			});
 
-			expect(result.current.length).toBe(6);
+			expect(result.current.length).toBe(7);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.ADD_ICS_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
@@ -398,9 +401,10 @@ describe('use calendar actions', () => {
 				initialProps: [trashedItem]
 			});
 
-			expect(result.current.length).toBe(5);
+			expect(result.current.length).toBe(6);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.ADD_ICS_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
@@ -451,9 +455,10 @@ describe('use calendar actions', () => {
 				initialProps: [customNestedItem]
 			});
 
-			expect(result.current.length).toBe(7);
+			expect(result.current.length).toBe(8);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.ADD_ICS_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
@@ -483,9 +488,10 @@ describe('use calendar actions', () => {
 				initialProps: [customNestedItem]
 			});
 
-			expect(result.current.length).toBe(6);
+			expect(result.current.length).toBe(7);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.ADD_ICS_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
@@ -658,5 +664,132 @@ describe('use calendar actions', () => {
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
 			]);
 		});
+	});
+
+	test('external calendar has only sync, edit and delete actions', () => {
+		const externalCalendarItem = {
+			name: 'External calendar',
+			id: '999',
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			url: 'https://a/1.ics',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 1,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(externalCalendarItem as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [externalCalendarItem]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.SYNC }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
+		]);
+	});
+
+	test('external calendar detected by folder flag has only sync, edit and delete actions', () => {
+		const externalCalendarByFlagItem = {
+			name: 'External calendar by flag',
+			id: '998',
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			f: 'y#',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 1,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(externalCalendarByFlagItem as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [externalCalendarByFlagItem]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.SYNC }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
+		]);
+	});
+
+	test('external calendar with perm:r still shows delete action', () => {
+		const externalCalendarWithPerm = {
+			name: 'External calendar with perm',
+			id: '997',
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			f: '#y',
+			perm: 'r',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 1,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(externalCalendarWithPerm as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [externalCalendarWithPerm]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.SYNC }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
+		]);
+	});
+
+	test('external calendar in trash shows restore action', () => {
+		const trashedExternalCalendarItem = {
+			name: 'External calendar in trash',
+			id: '996',
+			l: FOLDERS.TRASH,
+			parent: FOLDERS.TRASH,
+			f: '#y',
+			url: 'https://a/trashed.ics',
+			absFolderPath: '/Trash/External calendar in trash',
+			perm: 'r',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 2,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(trashedExternalCalendarItem as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [trashedExternalCalendarItem]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT })
+		]);
 	});
 });

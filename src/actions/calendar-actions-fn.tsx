@@ -11,20 +11,23 @@ import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbon
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
-import { FOLDER_OPERATIONS } from '../constants/api';
-import { getFolderRequest } from '../soap/get-folder-request';
-import { getShareInfoRequest } from '../soap/get-share-info-request';
+import { AddIcsFromUrlModal } from './modals/add-ics-from-url-modal';
 import { CreateGroupModal } from './modals/create-group-modal';
 import { DeleteModal } from './modals/delete-modal';
-import { EmptyModal } from './modals/empty-modal';
-import { folderAction } from '../store/actions/calendar-actions';
-import { StoreProvider } from '../store/redux';
-import { ActionsClick } from '../types/actions';
-import { NewModal } from '../view/move/new-calendar-modal';
 import { EditModal } from './modals/edit-modal/edit-modal';
+import { EmptyModal } from './modals/empty-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
+import { EditExternalCalendarModal } from 'actions/modals/edit-external-calendar-modal';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { FOLDER_OPERATIONS } from 'constants/api';
+import { getFolderRequest } from 'soap/get-folder-request';
+import { getShareInfoRequest } from 'soap/get-share-info-request';
+import { folderAction } from 'store/actions/calendar-actions';
+import { StoreProvider } from 'store/redux';
+import { ActionsClick } from 'types/actions';
+import { NewModal } from 'view/move/new-calendar-modal';
 
 export const newCalendar =
 	({
@@ -102,7 +105,16 @@ export const moveToRoot =
 		const root = getRoot(item.id);
 		folderAction({ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }).then(
 			(res: { Fault?: string }) => {
-				if (!res.Fault) {
+				if (res.Fault) {
+					createSnackbar({
+						key: `calendar-moved-root-error`,
+						replace: true,
+						severity: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
+				} else {
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -114,15 +126,6 @@ export const moveToRoot =
 									'message.snackbar.calendar_moved_to_root_folder',
 									'Calendar moved to Root folder'
 								),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `calendar-moved-root-error`,
-						replace: true,
-						severity: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000
 					});
 				}
@@ -159,6 +162,36 @@ export const emptyTrash =
 		);
 	};
 
+export const addIcsFromUrl =
+	({
+		createModal,
+		closeModal
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		const modalId = 'add-ics-from-url';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<AddIcsFromUrlModal onClose={(): void => closeModal(modalId)} />
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
+			},
+			true
+		);
+	};
+
 export const editCalendar =
 	({
 		createModal,
@@ -167,19 +200,28 @@ export const editCalendar =
 	}: {
 		createModal: CreateModalFn;
 		closeModal: CloseModalFn;
-		item: { id: string };
+		item: { id: string; f?: string; url?: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
 		}
+		const isExternal = isExternalSyncFolder(item);
 		const modalId = 'edit-calendar';
+
 		createModal(
 			{
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
+						{isExternal ? (
+							<EditExternalCalendarModal
+								folderId={item.id}
+								onClose={(): void => closeModal(modalId)}
+							/>
+						) : (
+							<EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
+						)}
 					</StoreProvider>
 				),
 				maxHeight: '90vh',
@@ -236,7 +278,16 @@ export const removeFromList =
 			e.stopPropagation();
 		}
 		folderAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then((res: { Fault?: string }) => {
-			if (!res.Fault) {
+			if (res.Fault) {
+				createSnackbar({
+					key: `shared-calendar-removed-error`,
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
+			} else {
 				createSnackbar({
 					key: `shared-calendar-removed`,
 					replace: true,
@@ -245,13 +296,47 @@ export const removeFromList =
 					label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully'),
 					autoHideTimeout: 3000
 				});
-			} else {
+			}
+		});
+	};
+
+export const syncExternalCalendar =
+	({
+		item,
+		createSnackbar
+	}: {
+		item: { id: string };
+		createSnackbar: CreateSnackbarFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+		createSnackbar({
+			key: `external-calendar-sync`,
+			replace: true,
+			severity: 'info',
+			hideButton: true,
+			label: t('message.snackbar.external_calendar_syncing', 'Calendar sync has started'),
+			autoHideTimeout: 6000
+		});
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.SYNC }).then((res: { Fault?: string }) => {
+			if (res.Fault) {
 				createSnackbar({
-					key: `shared-calendar-removed-error`,
+					key: `external-calendar-sync-error`,
 					replace: true,
 					severity: 'error',
 					hideButton: true,
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
+			} else {
+				createSnackbar({
+					key: `external-calendar-sync`,
+					replace: true,
+					severity: 'success',
+					hideButton: true,
+					label: t('message.snackbar.external_calendar_synced', 'Calendar synced successfully'),
 					autoHideTimeout: 3000
 				});
 			}

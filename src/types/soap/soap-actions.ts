@@ -46,6 +46,7 @@ export type FolderAction = {
 	recursive?: boolean;
 	name?: string;
 	color?: string;
+	rgb?: string;
 	f?: string;
 	zid?: string;
 	grant?: Grant | Grant[];

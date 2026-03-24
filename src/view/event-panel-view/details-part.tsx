@@ -25,6 +25,7 @@ import { NeverSentWarningRow } from '../event-summary-view/never-sent-warning-ro
 import TagsRow from '../event-summary-view/tags-row';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
+import { isExternalSyncFolder } from 'commons/utilities';
 
 const PaddedRow = styled(Row)`
 	padding: 0.25rem 0.25rem;
@@ -97,6 +98,7 @@ export const DetailsPart = ({
 	invite
 }: DetailsPartProps): ReactElement | null => {
 	const calendar = useFolder(event.resource.calendar.id);
+	const eventIsfromExternalCalendar = isExternalSyncFolder(calendar ?? {});
 	const [t] = useTranslation();
 
 	const color = useMemo(
@@ -163,6 +165,17 @@ export const DetailsPart = ({
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow subject={title} calendarColor={color.color} isPrivate={isPrivate} />
+						{eventIsfromExternalCalendar && (
+							<CustomIconInfo
+								tooltipLabel={t(
+									'label.external_calendar_event',
+									'Event from a calendar added from URL'
+								)}
+								color={'gray0'}
+								icon={'Link2'}
+							/>
+						)}
+						<Padding right={'small'} />
 						{event.resource.isRecurrent && (
 							<CustomIconInfo
 								tooltipLabel={t('label.recurrent', 'Recurrent appointment')}
