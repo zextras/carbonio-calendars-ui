@@ -43,8 +43,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 			),
 		[folders]
 	);
-
-	const appointmentFolderUrls = useMemo(
+	useMemo(
 		() =>
 			map(folders, (folder) =>
 				folder.view === 'appointment' && folder.url ? folder.url.trim().toLowerCase() : null
