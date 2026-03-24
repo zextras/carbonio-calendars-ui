@@ -325,16 +325,19 @@ export const syncExternalCalendarItem = ({
 	icon: 'SyncOutline',
 	label: t('label.sync', 'Sync'),
 	customComponent: (
-		<Container orientation="horizontal" width="fill" mainAlignment="space-between">
+		<Container orientation="horizontal" width="fit" mainAlignment="space-between">
 			<Container orientation="horizontal" mainAlignment="flex-start">
 				<Icon icon={'SyncOutline'} />
 				<Padding left="small" />
 				<Text>{t('label.sync', 'Sync')}</Text>
 			</Container>
 			{item?.lsd ? (
-				<Text size="extrasmall" color="gray0" weight={'light'} style={{ overflow: 'visible' }}>
-					{t('label.last_sync', 'Last sync')}: {formatLsd(item?.lsd)}
-				</Text>
+				<>
+					<Padding left={'12px'} />
+					<Text size="extrasmall" color="gray0" weight={'light'} style={{ overflow: 'visible' }}>
+						{t('label.last_sync', 'Last sync')}: {formatLsd(item?.lsd)}
+					</Text>
+				</>
 			) : null}
 		</Container>
 	),
