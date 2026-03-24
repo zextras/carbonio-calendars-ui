@@ -34,8 +34,6 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 	const [selectedColor, setSelectedColor] = useState('0');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const TRASH_FOLDER_ID = '3'; // Zimbra default trash folder id
-
 	const appointmentFolderNames = useMemo(
 		() =>
 			map(folders, (folder) =>
@@ -74,7 +72,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 	);
 
 	const isDuplicateInTrash = useMemo(
-		() => duplicateCalendar?.l === TRASH_FOLDER_ID,
+		() => duplicateCalendar?.l === FOLDERS.TRASH,
 		[duplicateCalendar]
 	);
 
@@ -176,7 +174,7 @@ export const AddIcsFromUrlModal = ({ onClose }: { onClose: () => void }): JSX.El
 		if (isDuplicateInTrash) {
 			urlDescription = t(
 				'add_ics_from_url.error.duplicate_calendar_url_trash',
-				'A calendar with the same URL already exists in your Trash. Please restore it or permanently delete it before adding again.'
+				'A calendar with the same URL is in Trash. Permanently delete it to proceed'
 			);
 		} else {
 			urlDescription = t(
