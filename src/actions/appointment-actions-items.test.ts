@@ -300,7 +300,8 @@ describe('appointment-actions-items', () => {
 					l: '1',
 					name: 'Calendar',
 					view: 'appointment',
-					absFolderPath: '/'
+					absFolderPath: '/',
+					f: '#'
 				};
 
 				const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
