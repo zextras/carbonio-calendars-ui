@@ -297,6 +297,10 @@ export default function CalendarComponent() {
 		return undefined;
 	}, [calendarView, calendars, isSplitLayoutEnabled]);
 
+	const handleClose = useCallback(() => {
+		useAppStatusStore.setState({ summaryViewId: undefined });
+	}, []);
+
 	return (
 		<>
 			{!isEmpty(calendars) && <CalendarSyncWithRange />}
@@ -315,16 +319,9 @@ export default function CalendarComponent() {
 					open={summaryViewOpen}
 					styleAsModal
 					placement="left"
-					onClose={() => {
-						useAppStatusStore.setState({ summaryViewId: undefined });
-					}}
+					onClose={handleClose}
 				>
-					<MemoEventSummaryView
-						events={events}
-						onClose={() => {
-							useAppStatusStore.setState({ summaryViewId: undefined });
-						}}
-					/>
+					<MemoEventSummaryView events={events} onClose={handleClose} />
 				</Popover>
 			)}
 			<BigCalendar
