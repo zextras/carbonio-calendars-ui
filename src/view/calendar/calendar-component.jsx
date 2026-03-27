@@ -317,7 +317,12 @@ export default function CalendarComponent() {
 					placement="left"
 					onClose={() => useAppStatusStore.setState({ summaryViewId: undefined })}
 				>
-					<MemoEventSummaryView events={events} />
+					<MemoEventSummaryView
+						events={events}
+						onClose={() => {
+							useAppStatusStore.setState({ summaryViewId: undefined });
+						}}
+					/>
 				</Popover>
 			)}
 			<BigCalendar
