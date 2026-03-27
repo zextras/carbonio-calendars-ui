@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.19.2...v1.19.3) (2026-03-27)
+
+
+### Bug Fixes
+
+* closing summary view on component when switching module ([07cb882](https://github.com/zextras/carbonio-calendars-ui/commit/07cb882e09b6b5dda6e06b4ec86738163dcbb60d))
+* event summary view tests ([af4807a](https://github.com/zextras/carbonio-calendars-ui/commit/af4807a8f731f45d67ce993d5f75c3c632c5d124))
+* modal correclty close on module change ([82e943a](https://github.com/zextras/carbonio-calendars-ui/commit/82e943aae74bcd720ecbaa5ba08a06e7956df2e5))
+* removed unecessary onClose fn ([1b0ee80](https://github.com/zextras/carbonio-calendars-ui/commit/1b0ee805d6dde03f567d2ba00f04b72d5e122ea2))
+
 ### [1.19.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.19.1...v1.19.2) (2026-02-27)
 
 ### [1.19.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.19.0...v1.19.1) (2026-02-24)
