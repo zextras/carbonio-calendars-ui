@@ -43,6 +43,9 @@ export const isMainRootChild = (item: { id: string }): boolean => {
 	return root?.id === FOLDERS.USER_ROOT;
 };
 
+export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolean =>
+	/y/.test(item.f ?? '') || !!item.url;
+
 export const calcColor = (label: string, theme: unknown): string => {
 	let sum = 0;
 	for (let i = 0; i < label?.length; i += 1) {

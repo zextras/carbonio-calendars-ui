@@ -17,6 +17,8 @@ export enum FOLDER_ACTIONS {
 	SHARE_URL = 'share_url',
 	FIND_SHARES = 'find_shares',
 	EXPORT_ICS = 'export_ics',
+	ADD_ICS_URL = 'add_ics_url',
+	SYNC = 'sync',
 	UPLOAD = 'upload'
 }
 

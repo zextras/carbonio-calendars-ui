@@ -12,9 +12,9 @@ import {
 	setupSidebarIntegrationTest,
 	typeCalendarName
 } from './utils';
-import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
 import { UserEvent } from '@test-setup';
 import { mockCreateCalendarApiOk, mockCreateCalendarFault } from '@test-utils/api/create-calendar';
+import { SIDEBAR_ROOT_SUBSECTION } from 'constants/sidebar';
 
 async function openNewCalendarModal(user: UserEvent, element: HTMLElement): Promise<HTMLElement> {
 	await user.rightClick(element);

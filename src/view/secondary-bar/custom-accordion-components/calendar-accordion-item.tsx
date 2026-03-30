@@ -35,14 +35,19 @@ import {
 } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
-import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
-import { recursiveToggleCheck, getFolderIcon, isLinkChild } from '../../../commons/utilities';
-import { useCalendarActions } from '../../../hooks/use-calendar-actions';
-import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
-import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import { NoOpRequest } from '../../../soap/noop-request';
-import { useAppDispatch } from '../../../store/redux/hooks';
-import { useRangeStart, useRangeEnd } from '../../../store/zustand/hooks';
+import { importCalendarICSFn } from 'actions/calendar-actions-fn';
+import {
+	recursiveToggleCheck,
+	getFolderIcon,
+	isExternalSyncFolder,
+	isLinkChild
+} from 'commons/utilities';
+import { useCalendarActions } from 'hooks/use-calendar-actions';
+import { useCheckedCalendarsQuery } from 'hooks/use-checked-calendars-query';
+import { setCalendarColor } from 'normalizations/normalizations-utils';
+import { NoOpRequest } from 'soap/noop-request';
+import { useAppDispatch } from 'store/redux/hooks';
+import { useRangeStart, useRangeEnd } from 'store/zustand/hooks';
 
 const CalendarContextMenuItem = ({
 	children,
@@ -62,8 +67,13 @@ const CalendarContextMenuItem = ({
 	);
 };
 
-const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JSX.Element => (
-	<Padding left="small">
+const RowWithIcon = (
+	icon: string,
+	color: string,
+	tooltipText: string,
+	testId?: string
+): React.JSX.Element => (
+	<Padding left="small" data-testid={testId}>
 		<Tooltip placement="right" label={tooltipText}>
 			<Row>
 				<Icon icon={icon} color={color} size="medium" />
@@ -153,6 +163,15 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 			return RowWithIcon('Shared', 'shared', tooltipText);
 		}
 		return null;
+	}, [calendar, t]);
+
+	const externalStatusIcon = useMemo<React.ReactNode>(() => {
+		if (!calendar || !isExternalSyncFolder(calendar)) {
+			return null;
+		}
+
+		const tooltipText = t('tooltip.folder_external_status', 'Added from URL');
+		return RowWithIcon('Link2', 'gray0', tooltipText, 'external-calendar-indicator');
 	}, [calendar, t]);
 
 	const userMail = useMemo(
@@ -264,6 +283,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
 						<AccordionItem item={accordionItem} />
 					</Tooltip>
+					{externalStatusIcon}
 					{sharedStatusIcon}
 				</Row>
 			</CalendarContextMenuItem>

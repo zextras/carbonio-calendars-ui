@@ -20,6 +20,7 @@ import { calculateOrdinalPosition } from 'view/editor/parts/recurrence/views/mon
 // Test constants
 const MONTHLY_OPTION_DAY_OF_MONTH = 'monthly-option-day-of-month';
 const MONTHLY_OPTION_ORDINAL_WEEKDAY = 'monthly-option-ordinal-weekday';
+const FIXED_MONDAY_START = new Date(2026, 0, 5, 9, 0, 0).getTime();
 
 // Human-readable helper functions
 const modal = {
@@ -82,10 +83,6 @@ const weekDaySelector = {
 				timeout: 3000
 			}
 		);
-	},
-
-	async selectTuesdayAndThursday(user: UserEvent): Promise<void> {
-		await this.selectDays(user, ['TUE', 'THU']);
 	}
 };
 
@@ -177,6 +174,21 @@ const getUpdatedEditor = (
 	store: ReturnType<typeof createStoreWithEditor>['store']
 ): ReturnType<typeof generateEditor> => values(store.getState().editor.editors)[0];
 
+const setEditorStartDate = (
+	store: ReturnType<typeof createStoreWithEditor>['store'],
+	editor: ReturnType<typeof generateEditor>,
+	start: number
+): void => {
+	store.dispatch({
+		type: 'editor/editEditorDate',
+		payload: {
+			id: editor.id,
+			start,
+			end: editor.end
+		}
+	});
+};
+
 describe('CustomRecurrenceModal', () => {
 	describe('UI Elements', () => {
 		it('should display cancel and customize buttons', () => {
@@ -217,6 +229,7 @@ describe('CustomRecurrenceModal', () => {
 			describe('weekly frequency', () => {
 				it('should save weekly frequency with initial day auto-selected when customized and confirmed', async () => {
 					const { store, editor } = createStoreWithEditor();
+					setEditorStartDate(store, editor, FIXED_MONDAY_START);
 
 					const { user } = setupTest(
 						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
@@ -227,7 +240,7 @@ describe('CustomRecurrenceModal', () => {
 					await weekDaySelector.waitForOptionsToLoad();
 					await modal.confirmCustomization(user);
 
-					const startDate = new Date(editor.start ?? Date.now());
+					const startDate = new Date(FIXED_MONDAY_START);
 					const dayOfWeek = startDate.getDay();
 					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 					const expectedInitialDay = dayCodes[dayOfWeek];
@@ -237,6 +250,7 @@ describe('CustomRecurrenceModal', () => {
 
 				it('should save selected week days for weekly frequency when customized and confirmed', async () => {
 					const { store, editor } = createStoreWithEditor();
+					setEditorStartDate(store, editor, FIXED_MONDAY_START);
 
 					const { user } = setupTest(
 						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
@@ -244,10 +258,15 @@ describe('CustomRecurrenceModal', () => {
 					);
 
 					await frequencySelector.select(user, 'week');
-					await weekDaySelector.selectTuesdayAndThursday(user);
+					await weekDaySelector.waitForOptionsToLoad();
+
+					const daysToSelect = ['TU', 'TH'];
+					const daysToSelectUi = ['TUE', 'THU'];
+
+					await weekDaySelector.selectDays(user, daysToSelectUi);
 					await modal.confirmCustomization(user);
 
-					recurrenceAssertions.expectWeekly(getUpdatedEditor(store), ['TU', 'TH']);
+					recurrenceAssertions.expectWeekly(getUpdatedEditor(store), daysToSelect);
 				}, 10000);
 
 				it('should initialize with saved weekly recurrence days when reopening modal', async () => {
@@ -300,6 +319,7 @@ describe('CustomRecurrenceModal', () => {
 
 				it('should allow unchecking a day when multiple days are selected', async () => {
 					const { store, editor } = createStoreWithEditor();
+					setEditorStartDate(store, editor, FIXED_MONDAY_START);
 
 					const { user } = setupTest(
 						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
@@ -310,13 +330,13 @@ describe('CustomRecurrenceModal', () => {
 					await weekDaySelector.waitForOptionsToLoad();
 
 					// Calculate which day is auto-selected based on the event's start date
-					const startDate = new Date(editor.start ?? Date.now());
+					const startDate = new Date(FIXED_MONDAY_START);
 					const dayOfWeek = startDate.getDay();
 					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 					const dayCodesUi = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 					const autoSelectedDay = dayCodes[dayOfWeek];
 
-					const aDayOtherThanSelected = dayCodes.find((day) => day !== autoSelectedDay);
+					const aDayOtherThanSelected = 'TU';
 					assert(
 						aDayOtherThanSelected,
 						'There should be at least one day other than the auto-selected day'
@@ -348,6 +368,7 @@ describe('CustomRecurrenceModal', () => {
 
 				it('should prevent unchecking the last remaining day', async () => {
 					const { store, editor } = createStoreWithEditor();
+					setEditorStartDate(store, editor, FIXED_MONDAY_START);
 
 					const { user } = setupTest(
 						<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />,
@@ -359,7 +380,7 @@ describe('CustomRecurrenceModal', () => {
 
 					// The initial state should have one day selected (the event's start day)
 					// Try to uncheck it - should not work (minimum one day required)
-					const startDate = new Date(editor.start ?? Date.now());
+					const startDate = new Date(FIXED_MONDAY_START);
 					const dayOfWeek = startDate.getDay();
 					const dayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 					const dayLabels = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];

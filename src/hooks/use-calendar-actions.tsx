@@ -8,7 +8,9 @@ import { Folder } from '@zextras/carbonio-ui-commons';
 import { filter } from 'lodash';
 
 import {
+	addIcsFromUrlItem,
 	deleteCalendarItem,
+	editExternalCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
 	exportAppointmentICSItem,
@@ -17,9 +19,11 @@ import {
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
+	syncExternalCalendarItem,
 	sharesInfoItem
-} from '../actions/calendar-actions-items';
-import { ActionsClick } from '../types/actions';
+} from 'actions/calendar-actions-items';
+import { isExternalSyncFolder } from 'commons/utilities';
+import { ActionsClick } from 'types/actions';
 
 type CalendarActionsProps = {
 	id: string;
@@ -36,9 +40,23 @@ export const useCalendarActions = (
 	const createSnackbar = useSnackbar();
 
 	if (!item) return [];
+	const isExternalCalendar = isExternalSyncFolder(item);
+
+	if (isExternalCalendar) {
+		return filter(
+			[
+				syncExternalCalendarItem({ item, createSnackbar }),
+				editExternalCalendarItem({ createModal, closeModal, item }),
+				deleteCalendarItem({ createModal, closeModal, item }),
+				moveToRootItem({ createSnackbar, item })
+			],
+			['disabled', false]
+		);
+	}
 
 	const actions = [
 		newCalendarItem({ createModal, closeModal, item }),
+		addIcsFromUrlItem({ createModal, closeModal, item }),
 		moveToRootItem({ createSnackbar, item }),
 		emptyTrashItem({ createModal, closeModal, item }),
 		editCalendarItem({ createModal, closeModal, item }),
