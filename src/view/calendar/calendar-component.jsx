@@ -315,9 +315,7 @@ export default function CalendarComponent() {
 					open={summaryViewOpen}
 					styleAsModal
 					placement="left"
-					onClose={() => {
-						useAppStatusStore.setState({ summaryViewId: undefined });
-					}}
+					onClose={() => useAppStatusStore.setState({ summaryViewId: undefined })}
 				>
 					<MemoEventSummaryView
 						events={events}

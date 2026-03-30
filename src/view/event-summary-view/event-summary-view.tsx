@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactElement, useEffect, useMemo } from 'react';
 
 import { Container, Divider } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
@@ -60,6 +60,8 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
 	);
 	const neverSentWarningLabel = useNeverSentWarningLabel(invite?.attendees);
+
+	useEffect(() => onClose, [onClose]);
 
 	if (!event) {
 		return null;
