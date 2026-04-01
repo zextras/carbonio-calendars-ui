@@ -76,7 +76,7 @@
 		"jsdom": "^27.4.0",
 		"msw": "^2.7.0",
 		"pinst": "^3.0.0",
-		"sonarqube-scanner": "^4.3.2",
+		"sonarqube-scanner": "^4.3.5",
 		"ts-node": "^10.9.2",
 		"typescript": "~5.7.2",
 		"vite-tsconfig-paths": "^5.1.4",
