@@ -5,7 +5,6 @@
  */
 
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 import { VITEST_DEFAULT_TIMEZONE } from './src/constants/test-environment';
@@ -18,14 +17,16 @@ const junitReporter: ['junit', { outputFile: string; console: boolean }] = [
 ];
 
 export default defineConfig({
+	resolve: {
+		tsconfigPaths: true
+	},
 	plugins: [
 		react({
 			jsxImportSource: '@emotion/react',
 			babel: {
 				plugins: ['@emotion/babel-plugin']
 			}
-		}),
-		tsconfigPaths()
+		})
 	],
 	define: {
 		BASE_PATH: JSON.stringify('/calendars')
