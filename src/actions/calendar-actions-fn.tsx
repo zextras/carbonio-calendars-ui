@@ -11,7 +11,7 @@ import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbon
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
-import { AddIcsFromUrlModal } from './modals/add-ics-from-url-modal';
+import { AddExternalCalendarModal } from './modals/add-external-calendar-modal';
 import { CreateGroupModal } from './modals/create-group-modal';
 import { DeleteModal } from './modals/delete-modal';
 import { EditModal } from './modals/edit-modal/edit-modal';
@@ -175,13 +175,13 @@ export const addIcsFromUrl =
 			e.stopPropagation();
 		}
 
-		const modalId = 'add-ics-from-url';
+		const modalId = 'add-external-calendar';
 		createModal(
 			{
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<AddIcsFromUrlModal onClose={(): void => closeModal(modalId)} />
+						<AddExternalCalendarModal onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				),
 				onClose: () => {
