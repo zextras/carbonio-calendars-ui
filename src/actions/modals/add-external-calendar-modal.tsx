@@ -96,6 +96,12 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		[duplicateCalendar]
 	);
 
+	const isDuplicateCaldavFolderName = useMemo(
+		() =>
+			isSubmitting ? false : includes(appointmentFolderNames, caldavFolderName.trim().toLowerCase()),
+		[appointmentFolderNames, caldavFolderName, isSubmitting]
+	);
+
 	const icsUrlError = useMemo(() => {
 		const trimmedUrl = calendarUrl.trim();
 		if (!trimmedUrl) {
@@ -282,7 +288,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		}
 		// CalDAV
 		const credentialsMissing = !noCredentials && (!caldavUsername.trim() || !caldavPassword.trim());
-		return !caldavHost.trim() || !caldavFolderName.trim() || credentialsMissing;
+		return !caldavHost.trim() || !caldavFolderName.trim() || credentialsMissing || isDuplicateCaldavFolderName;
 	}, [
 		isSubmitting,
 		calendarType,
@@ -296,7 +302,8 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		caldavUsername,
 		caldavPassword,
 		caldavHost,
-		caldavFolderName
+		caldavFolderName,
+		isDuplicateCaldavFolderName
 	]);
 
 	return (
@@ -388,18 +395,26 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 						disabled={isSubmitting}
 						onChange={(event): void => setCaldavHost(event.target.value)}
 					/>
-					<Padding top="medium" />
-					<Input
-						label={t('add_external_calendar.caldav.folder_name', 'Folder name*')}
-						background={'gray5'}
-						value={caldavFolderName}
-						description={t(
-							'add_external_calendar.caldav.folder_name_hint',
-							'Refers to the parent folder, which will contain all calendars from this host'
-						)}
-						disabled={isSubmitting}
-						onChange={(event): void => setCaldavFolderName(event.target.value)}
-					/>
+				<Padding top="medium" />
+				<Input
+					label={t('add_external_calendar.caldav.folder_name', 'Folder name*')}
+					background={'gray5'}
+					hasError={isDuplicateCaldavFolderName}
+					value={caldavFolderName}
+					description={
+						isDuplicateCaldavFolderName
+							? t(
+									'add_ics_from_url.error.duplicate_calendar_name',
+									'A calendar with the same name already exists'
+								)
+							: t(
+									'add_external_calendar.caldav.folder_name_hint',
+									'Refers to the parent folder, which will contain all calendars from this host'
+								)
+					}
+					disabled={isSubmitting}
+					onChange={(event): void => setCaldavFolderName(event.target.value)}
+				/>
 					<Padding top="medium" />
 					<Checkbox
 						value={noCredentials}

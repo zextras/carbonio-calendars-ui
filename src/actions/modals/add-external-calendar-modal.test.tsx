@@ -7,7 +7,7 @@
 import React from 'react';
 import { waitFor } from '@testing-library/react';
 import { JSNS } from '@zextras/carbonio-shell-ui';
-import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { AddExternalCalendarModal } from './add-external-calendar-modal';
 import * as createFolderApi from '../../soap/create-folder-request';
 import * as createDataSourceApi from '../../soap/create-data-source-request';
@@ -425,6 +425,144 @@ describe('AddExternalCalendarModal', () => {
 			expect(screen.getByRole('textbox', { name: URL_LABEL })).toBeDisabled();
 			expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeDisabled();
 			resolveRequest?.({ folder: [], _jsns: JSNS.mail });
+		});
+		test('shows success snackbar and closes modal on successful ICS creation', async () => {
+			vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue({
+				_jsns: 'urn:zimbraMail',
+				folder: [
+					{
+						id: '123',
+						uuid: 'abc-123',
+						name: 'x',
+						activesyncdisabled: false,
+						recursive: false,
+						deletable: false
+					}
+				]
+			});
+			const onClose = vi.fn();
+			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
+			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+			await waitFor(() => {
+				expect(screen.getByText('Calendar added successfully')).toBeVisible();
+			});
+			await waitFor(() => {
+				expect(onClose).toHaveBeenCalledTimes(1);
+			});
+		});
+		test('trims whitespace from calendar name and url before submission', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({
+					_jsns: 'urn:zimbraMail',
+					folder: [
+						{
+							id: '123',
+							uuid: 'abc-123',
+							name: 'Trimmed Calendar',
+							activesyncdisabled: false,
+							recursive: false,
+							deletable: false
+						}
+					]
+				});
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await user.type(
+				screen.getByRole('textbox', { name: URL_LABEL }),
+				'  https://example.com/cal.ics  '
+			);
+			await user.type(
+				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
+				'  Trimmed Calendar  '
+			);
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+			await waitFor(() => {
+				expect(createFolderSpy).toHaveBeenCalledWith(
+					expect.objectContaining({
+						name: 'Trimmed Calendar',
+						url: 'https://example.com/cal.ics'
+					})
+				);
+			});
+		});
+		test('shows duplicate calendar url error with in-trash message', async () => {
+			const trashUrl = 'https://trash.com/calendar.ics';
+			const folderInTrash = generateFolder({ view: 'appointment', l: FOLDERS.TRASH });
+			populateFoldersStore({ customFolders: [folderInTrash] });
+			useFolderStore.setState((state) => ({
+				folders: {
+					...state.folders,
+					[folderInTrash.id]: { ...folderInTrash, url: trashUrl }
+				}
+			}));
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), trashUrl);
+			expect(
+				screen.getByText('A calendar with the same URL is in Trash. Permanently delete it to proceed')
+			).toBeVisible();
+			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+		});
+		test('case-insensitive duplicate calendar name detection', async () => {
+			populateFoldersStore({
+				view: 'appointment',
+				customFolders: [generateFolder({ name: 'My Calendar', view: 'appointment' })]
+			});
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.type(
+				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
+				'my calendar'
+			);
+			expect(screen.getByText('A calendar with the same name already exists')).toBeVisible();
+			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+		});
+		test('case-insensitive duplicate calendar url detection', async () => {
+			const urlUpperCase = 'HTTPS://EXAMPLE.COM/CAL.ICS';
+			const folderWithUrl = generateFolder({ view: 'appointment' });
+			populateFoldersStore({ customFolders: [folderWithUrl] });
+			useFolderStore.setState((state) => ({
+				folders: {
+					...state.folders,
+					[folderWithUrl.id]: { ...folderWithUrl, url: 'https://example.com/cal.ics' }
+				}
+			}));
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), urlUpperCase);
+			expect(screen.getByText('A calendar with the same URL has already been added')).toBeVisible();
+			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+		});
+		test('shows invalid url error for malformed urls', async () => {
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: URL_LABEL }),
+				'not a valid url at all'
+			);
+			expect(
+				screen.getByText(
+					'Invalid URL. Please enter a valid http or https address'
+				)
+			).toBeVisible();
+			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+		});
+		test('clears url when switching from ICS to CalDAV and back', async () => {
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			const typeSelect = screen.getByText('ICS');
+
+			// Enter URL in ICS
+			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			expect(screen.getByRole('textbox', { name: URL_LABEL })).toHaveValue(VALID_ICS_URL);
+
+			// Switch to CalDAV
+			await user.click(typeSelect);
+			await user.click(screen.getByText('CalDAV'));
+			expect(screen.queryByRole('textbox', { name: URL_LABEL })).not.toBeInTheDocument();
+
+			// Switch back to ICS
+			await user.click(screen.getByText('CalDAV'));
+			await user.click(screen.getByText('ICS'));
+			expect(screen.getByRole('textbox', { name: URL_LABEL })).toHaveValue('');
 		});
 	});
 });
