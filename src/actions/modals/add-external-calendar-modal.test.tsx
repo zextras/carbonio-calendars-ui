@@ -15,11 +15,13 @@ import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { CreateFolderResponse } from 'types/soap/createFolder';
-const TYPE_LABEL = 'Type';
+
+const TYPE_LABEL = 'Type*';
 const URL_LABEL = 'Calendar URL*';
 const CALENDAR_NAME_LABEL = 'Calendar name*';
 const VALID_ICS_URL = 'https://a/1.ics';
 const VALID_CALDAV_HOST = 'https://caldav.example.com';
+
 describe('AddExternalCalendarModal', () => {
 	test('renders modal with title, type selector, url, name, color and disabled add button', () => {
 		setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);

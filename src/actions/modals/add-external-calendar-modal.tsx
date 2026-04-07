@@ -70,15 +70,15 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		[folders]
 	);
 
-const duplicateCalendar = useMemo(
-	() =>
-		Object.values(folders).find(
-			(folder) =>
-				folder.view === 'appointment' &&
-				folder.url?.trim().toLowerCase() === calendarUrl.trim().toLowerCase()
-		),
-	[folders, calendarUrl]
-);
+	const duplicateCalendar = useMemo(
+		() =>
+			Object.values(folders).find(
+				(folder) =>
+					folder.view === 'appointment' &&
+					folder.url?.trim().toLowerCase() === calendarUrl.trim().toLowerCase()
+			),
+		[folders, calendarUrl]
+	);
 
 	const isDuplicateCalendarName = useMemo(
 		() =>
@@ -281,8 +281,7 @@ const duplicateCalendar = useMemo(
 			);
 		}
 		// CalDAV
-		const credentialsMissing =
-			!noCredentials && (!caldavUsername.trim() || !caldavPassword.trim());
+		const credentialsMissing = !noCredentials && (!caldavUsername.trim() || !caldavPassword.trim());
 		return !caldavHost.trim() || !caldavFolderName.trim() || credentialsMissing;
 	}, [
 		isSubmitting,
@@ -314,7 +313,7 @@ const duplicateCalendar = useMemo(
 			/>
 			<Padding top="medium" />
 			<Select
-				label={t('label.type', 'Type')}
+				label={`${t('label.type', 'Type')}*`}
 				items={calendarTypeItems}
 				defaultSelection={calendarTypeItems[0]}
 				disabled={isSubmitting}
@@ -435,11 +434,7 @@ const duplicateCalendar = useMemo(
 			)}
 
 			<Padding top="medium" />
-			<ModalFooter
-				onConfirm={onConfirm}
-				label={t('label.add', 'Add')}
-				disabled={isAddDisabled}
-			/>
+			<ModalFooter onConfirm={onConfirm} label={t('label.add', 'Add')} disabled={isAddDisabled} />
 		</Container>
 	);
 };
