@@ -10,6 +10,7 @@ import { JSNS } from '@zextras/carbonio-shell-ui';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { AddExternalCalendarModal } from './add-external-calendar-modal';
 import * as createFolderApi from '../../soap/create-folder-request';
+import * as createDataSourceApi from '../../soap/create-data-source-request';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
@@ -43,9 +44,7 @@ describe('AddExternalCalendarModal', () => {
 		test('shows protocol error when url does not start with http or https', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), 'a.b');
-			expect(
-				screen.getByText("The URL should begin with 'http://' or 'https://'")
-			).toBeVisible();
+			expect(screen.getByText("The URL should begin with 'http://' or 'https://'")).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
 		test('shows invalid ics link error when url does not end with .ics', async () => {
@@ -65,9 +64,7 @@ describe('AddExternalCalendarModal', () => {
 				screen.getByRole('textbox', { name: URL_LABEL }),
 				'ftp://example.com/calendar.ics'
 			);
-			expect(
-				screen.getByText("The URL should begin with 'http://' or 'https://'")
-			).toBeVisible();
+			expect(screen.getByText("The URL should begin with 'http://' or 'https://'")).toBeVisible();
 		});
 		test('shows sync info text when a valid ics url is entered', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
@@ -95,9 +92,7 @@ describe('AddExternalCalendarModal', () => {
 			}));
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), existingUrl);
-			expect(
-				screen.getByText('A calendar with the same URL has already been added')
-			).toBeVisible();
+			expect(screen.getByText('A calendar with the same URL has already been added')).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
 		test('submits CreateFolderRequest with ICS URL payload on add', async () => {
@@ -149,9 +144,7 @@ describe('AddExternalCalendarModal', () => {
 
 			expect(screen.getByRole('textbox', { name: 'Host*' })).toBeVisible();
 			expect(screen.getByRole('textbox', { name: 'Folder name*' })).toBeVisible();
-			expect(
-				screen.getByText('This host does not require credentials')
-			).toBeVisible();
+			expect(screen.getByText('This host does not require credentials')).toBeVisible();
 			expect(screen.getByRole('textbox', { name: 'Username*' })).toBeVisible();
 			// PasswordInput renders as type="password", query by label text
 			expect(screen.getByLabelText('Password*')).toBeVisible();
@@ -235,6 +228,140 @@ describe('AddExternalCalendarModal', () => {
 					'Refers to the parent folder, which will contain all calendars from this host'
 				)
 			).toBeVisible();
+		});
+
+		test('submits CreateFolderRequest then CreateDataSourceRequest with credentials on add', async () => {
+			const folderResponse: CreateFolderResponse = {
+				_jsns: 'urn:zimbraMail',
+				folder: [
+					{
+						id: '42',
+						uuid: 'abc-42',
+						name: 'My CalDAV',
+						activesyncdisabled: false,
+						recursive: false,
+						deletable: false
+					}
+				]
+			};
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue(folderResponse);
+			const createDataSourceSpy = vi
+				.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
+			const onClose = vi.fn();
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
+			await selectCalDav(user);
+
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Host*' }),
+				'mailbox1.demo.zextras.io'
+			);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'My CalDAV');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Username*' }),
+				'user@demo.zextras.io'
+			);
+			await user.pasteInto(screen.getByLabelText('Password*'), 'secret');
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(createFolderSpy).toHaveBeenCalledWith({
+					l: '1',
+					name: 'My CalDAV',
+					view: 'appointment',
+					f: '#'
+				});
+			});
+
+			await waitFor(() => {
+				expect(createDataSourceSpy).toHaveBeenCalledWith({
+					name: 'My CalDAV',
+					pollingInterval: '1m',
+					isEnabled: '1',
+					l: '42',
+					host: 'mailbox1.demo.zextras.io',
+					username: 'user@demo.zextras.io',
+					password: 'secret',
+					a: { n: 'zimbraDataSourceAttribute', _content: 'p:/principals/users/_USERNAME_/' }
+				});
+			});
+
+			await waitFor(() => {
+				expect(onClose).toHaveBeenCalledTimes(1);
+			});
+		});
+
+		test('submits without credentials when "no credentials" is checked', async () => {
+			const folderResponse: CreateFolderResponse = {
+				_jsns: 'urn:zimbraMail',
+				folder: [
+					{
+						id: '99',
+						uuid: 'abc-99',
+						name: 'Public CalDAV',
+						activesyncdisabled: false,
+						recursive: false,
+						deletable: false
+					}
+				]
+			};
+			vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
+			const createDataSourceSpy = vi
+				.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'public.example.com');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'Public CalDAV');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(createDataSourceSpy).toHaveBeenCalledWith(
+					expect.not.objectContaining({ username: expect.anything(), password: expect.anything() })
+				);
+			});
+		});
+
+		test('shows error snackbar and re-enables add button when CalDAV creation fails', async () => {
+			const folderResponse: CreateFolderResponse = {
+				_jsns: 'urn:zimbraMail',
+				folder: [
+					{
+						id: '77',
+						uuid: 'abc-77',
+						name: 'Fail CalDAV',
+						activesyncdisabled: false,
+						recursive: false,
+						deletable: false
+					}
+				]
+			};
+			vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
+			vi.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest').mockRejectedValue(
+				new Error('Network error')
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Host*' }),
+				'mailbox1.demo.zextras.io'
+			);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'Fail CalDAV');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
+			});
+			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
 		});
 	});
 	describe('shared behaviour', () => {
