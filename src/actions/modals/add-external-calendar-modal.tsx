@@ -24,6 +24,7 @@ import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/cale
 import { ModalHeader } from 'commons/modal-header';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { createCalDavDataSourceRequest } from 'soap/create-data-source-request';
 import { createFolderRequest } from 'soap/create-folder-request';
 import { folderAction } from 'store/actions/calendar-actions';
 
@@ -195,10 +196,58 @@ const duplicateCalendar = useMemo(
 					});
 				});
 		} else {
-			// TODO: CalDAV creation flow – to be implemented in a future iteration.
-			// The host, folderName, noCredentials, username and password values are captured in state
-			// and ready for the CalDAV-specific SOAP/REST call.
-			setIsSubmitting(false);
+			// CalDAV flow:
+			// 1. Create an empty appointment folder to hold the synced calendar items.
+			// 2. Create a CalDAV data source that points to that folder.
+			createFolderRequest({
+				l: FOLDERS.USER_ROOT,
+				name: caldavFolderName.trim(),
+				view: 'appointment',
+				f: '#'
+			})
+				.then((createFolderResponse) => {
+					const folderId = createFolderResponse.folder[0].id;
+
+					return createCalDavDataSourceRequest({
+						name: caldavFolderName.trim(),
+						pollingInterval: '1m',
+						isEnabled: '1',
+						l: folderId,
+						host: caldavHost.trim(),
+						...(noCredentials
+							? {}
+							: {
+									username: caldavUsername.trim(),
+									password: caldavPassword
+								}),
+						a: {
+							n: 'zimbraDataSourceAttribute',
+							_content: 'p:/principals/users/_USERNAME_/'
+						}
+					});
+				})
+				.then(() => {
+					createSnackbar({
+						key: 'caldav-calendar-created',
+						replace: true,
+						severity: 'success',
+						hideButton: true,
+						label: t('message.snackbar.new_calendar_added', 'Calendar added successfully'),
+						autoHideTimeout: 3000
+					});
+					onClose();
+				})
+				.catch(() => {
+					setIsSubmitting(false);
+					createSnackbar({
+						key: 'caldav-calendar-create-error',
+						replace: true,
+						severity: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
+				});
 		}
 	};
 
