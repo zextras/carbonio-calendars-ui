@@ -8,7 +8,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-ui-commons';
 
 import {
-	addIcsFromUrlItem,
+	addExternalCalendarsItem,
 	deleteCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
@@ -134,12 +134,12 @@ describe('calendar actions items', () => {
 			const createModal = vi.fn();
 			const closeModal = vi.fn();
 
-			const addFromUrl = addIcsFromUrlItem({ createModal, closeModal, item });
+			const addFromUrl = addExternalCalendarsItem({ createModal, closeModal, item });
 			expect(addFromUrl).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.ADD_ICS_URL,
 					icon: 'Link2',
-					label: t('action.add_ics_from_url', 'Add ICS from URL'),
+					label: t('action.add_external_calendars', 'Add External Calendars'),
 					tooltipLabel: noPermissionLabel,
 					onClick: expect.any(Function),
 					disabled: false
@@ -168,7 +168,7 @@ describe('calendar actions items', () => {
 			setupFoldersStore();
 			const createModal = vi.fn();
 			const closeModal = vi.fn();
-			const addFromUrl = addIcsFromUrlItem({
+			const addFromUrl = addExternalCalendarsItem({
 				createModal,
 				closeModal,
 				item: item as Folder

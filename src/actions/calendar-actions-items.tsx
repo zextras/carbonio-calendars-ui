@@ -297,7 +297,7 @@ const isIcsImportActionDisabled = (item: Folder): boolean =>
 	(item as LinkFolder).isLink ||
 	isLinkChild(item);
 
-export const addIcsFromUrlItem = ({
+export const addExternalCalendarsItem = ({
 	createModal,
 	closeModal,
 	item
@@ -308,7 +308,7 @@ export const addIcsFromUrlItem = ({
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.ADD_ICS_URL,
 	icon: 'Link2',
-	label: t('action.add_ics_from_url', 'Add ICS from URL'),
+	label: t('action.add_external_calendars', 'Add External Calendars'),
 	tooltipLabel: noPermissionLabel,
 	onClick: addIcsFromUrl({ createModal, closeModal }),
 	disabled: isIcsImportActionDisabled(item)

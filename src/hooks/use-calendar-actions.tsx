@@ -8,7 +8,7 @@ import { Folder } from '@zextras/carbonio-ui-commons';
 import { filter } from 'lodash';
 
 import {
-	addIcsFromUrlItem,
+	addExternalCalendarsItem,
 	deleteCalendarItem,
 	editExternalCalendarItem,
 	editCalendarItem,
@@ -56,7 +56,7 @@ export const useCalendarActions = (
 
 	const actions = [
 		newCalendarItem({ createModal, closeModal, item }),
-		addIcsFromUrlItem({ createModal, closeModal, item }),
+		addExternalCalendarsItem({ createModal, closeModal, item }),
 		moveToRootItem({ createSnackbar, item }),
 		emptyTrashItem({ createModal, closeModal, item }),
 		editCalendarItem({ createModal, closeModal, item }),
