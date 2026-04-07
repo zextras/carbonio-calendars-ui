@@ -1,0 +1,42 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+import { JSNS } from '@zextras/carbonio-shell-ui';
+
+export type DataSourceAttribute = {
+	/** Attribute name, e.g. "zimbraDataSourceAttribute" */
+	n: string;
+	_content: string;
+};
+
+export type CalDavDataSourceParams = {
+	/** Data source / calendar display name */
+	name: string;
+	/** Polling interval, e.g. "1m" */
+	pollingInterval: string;
+	/** Whether the data source is enabled ("1") or disabled ("0") */
+	isEnabled: '0' | '1';
+	/** ID of the parent folder that will hold the synced calendar items */
+	l: string;
+	/** CalDAV server host (hostname or full base URL) */
+	host: string;
+	/** CalDAV account username (omit when the server requires no credentials) */
+	username?: string;
+	/** CalDAV account password (omit when the server requires no credentials) */
+	password?: string;
+	/** Additional data-source attributes, e.g. the CalDAV principal path */
+	a?: DataSourceAttribute;
+};
+
+export type CreateCalDavDataSourceRequest = {
+	_jsns: typeof JSNS.mail;
+	caldav: CalDavDataSourceParams;
+};
+
+export type CreateCalDavDataSourceResponse = {
+	_jsns: typeof JSNS.mail;
+	caldav?: { id: string }[];
+};
