@@ -6,9 +6,11 @@
 import React, { useMemo, useState } from 'react';
 
 import {
+	Checkbox,
 	Container,
 	Input,
 	Padding,
+	PasswordInput,
 	Select,
 	Text,
 	useSnackbar
@@ -44,11 +46,21 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 	);
 
 	const [calendarType, setCalendarType] = useState<CalendarType>(CALENDAR_TYPE_ICS);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	// ── ICS state ──────────────────────────────────────────────────────────────
 	const [calendarUrl, setCalendarUrl] = useState('');
 	const [calendarName, setCalendarName] = useState('');
 	const [selectedColor, setSelectedColor] = useState('0');
-	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	// ── CalDAV state ───────────────────────────────────────────────────────────
+	const [caldavHost, setCaldavHost] = useState('');
+	const [caldavFolderName, setCaldavFolderName] = useState('');
+	const [noCredentials, setNoCredentials] = useState(false);
+	const [caldavUsername, setCaldavUsername] = useState('');
+	const [caldavPassword, setCaldavPassword] = useState('');
+
+	// ── ICS validation ─────────────────────────────────────────────────────────
 	const appointmentFolderNames = useMemo(
 		() =>
 			map(folders, (folder) =>
@@ -57,16 +69,15 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		[folders]
 	);
 
-	const duplicateCalendar = useMemo(
-		() =>
-			Object.values(folders).find(
-				(folder) =>
-					folder.view === 'appointment' &&
-					folder.url &&
-					folder.url.trim().toLowerCase() === calendarUrl.trim().toLowerCase()
-			),
-		[folders, calendarUrl]
-	);
+const duplicateCalendar = useMemo(
+	() =>
+		Object.values(folders).find(
+			(folder) =>
+				folder.view === 'appointment' &&
+				folder.url?.trim().toLowerCase() === calendarUrl.trim().toLowerCase()
+		),
+	[folders, calendarUrl]
+);
 
 	const isDuplicateCalendarName = useMemo(
 		() =>
@@ -84,7 +95,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		[duplicateCalendar]
 	);
 
-	const urlError = useMemo(() => {
+	const icsUrlError = useMemo(() => {
 		const trimmedUrl = calendarUrl.trim();
 		if (!trimmedUrl) {
 			return undefined;
@@ -107,7 +118,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 				);
 			}
 
-			if (calendarType === CALENDAR_TYPE_ICS && !/\.ics$/i.test(parsedUrl.pathname)) {
+			if (!/\.ics$/i.test(parsedUrl.pathname)) {
 				return t(
 					'add_ics_from_url.error.invalid_ics_link',
 					'Invalid URL. Make sure it links directly to an .ics calendar file'
@@ -121,7 +132,10 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		}
 
 		return undefined;
-	}, [calendarUrl, calendarType, t]);
+	}, [calendarUrl, t]);
+
+	// keep urlError as an alias so the variable name used in the JSX below is unchanged
+	const urlError = calendarType === CALENDAR_TYPE_ICS ? icsUrlError : undefined;
 
 	const colorItems = useMemo(
 		() => buildCalendarColorItems((colorLabel) => t(`colors.${colorLabel}`)),
@@ -134,6 +148,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		[selectedColor]
 	);
 
+	// ── Submit ─────────────────────────────────────────────────────────────────
 	const onConfirm = (): void => {
 		if (isSubmitting) {
 			return;
@@ -141,20 +156,22 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 		setIsSubmitting(true);
 
-		// TODO: CalDAV-specific creation flow will be implemented.
-		// Both ICS and CalDAV use the same CreateFolder SOAP request for now.
-		createFolderRequest({
-			l: FOLDERS.USER_ROOT,
-			name: calendarName.trim(),
-			url: calendarUrl.trim(),
-			rgb: selectedRgb,
-			f: '#',
-			view: 'appointment',
-			sync: 0 // do not sync at the same time, for big/huge calendars the notify handling takes a lot of time and the folder appear very late
-		})
-			.then((createFolderResponse) => {
-				folderAction({ id: createFolderResponse.folder[0].id, op: FOLDER_OPERATIONS.SYNC }).then(
-					() => {
+		if (calendarType === CALENDAR_TYPE_ICS) {
+			// ICS flow: create a synced folder from a remote .ics URL
+			createFolderRequest({
+				l: FOLDERS.USER_ROOT,
+				name: calendarName.trim(),
+				url: calendarUrl.trim(),
+				rgb: selectedRgb,
+				f: '#',
+				view: 'appointment',
+				sync: 0 // do not sync at the same time – for big calendars the notify handling takes time
+			})
+				.then((createFolderResponse) => {
+					folderAction({
+						id: createFolderResponse.folder[0].id,
+						op: FOLDER_OPERATIONS.SYNC
+					}).then(() => {
 						createSnackbar({
 							key: 'external-calendar-created',
 							replace: true,
@@ -164,22 +181,28 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 							autoHideTimeout: 3000
 						});
 						onClose();
-					}
-				);
-			})
-			.catch(() => {
-				setIsSubmitting(false);
-				createSnackbar({
-					key: 'external-calendar-create-error',
-					replace: true,
-					severity: 'error',
-					hideButton: true,
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000
+					});
+				})
+				.catch(() => {
+					setIsSubmitting(false);
+					createSnackbar({
+						key: 'external-calendar-create-error',
+						replace: true,
+						severity: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
 				});
-			});
+		} else {
+			// TODO: CalDAV creation flow – to be implemented in a future iteration.
+			// The host, folderName, noCredentials, username and password values are captured in state
+			// and ready for the CalDAV-specific SOAP/REST call.
+			setIsSubmitting(false);
+		}
 	};
 
+	// ── ICS url description (error/duplicate text) ─────────────────────────────
 	let urlDescription: string | undefined = urlError;
 	if (!urlDescription && isDuplicateCalendarUrl) {
 		if (isDuplicateInTrash) {
@@ -194,6 +217,39 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			);
 		}
 	}
+
+	// ── ADD button disabled logic ──────────────────────────────────────────────
+	const isAddDisabled = useMemo(() => {
+		if (isSubmitting) return true;
+		if (calendarType === CALENDAR_TYPE_ICS) {
+			return (
+				!calendarUrl.trim() ||
+				!calendarName.trim() ||
+				selectedColor === '' ||
+				!!urlError ||
+				isDuplicateCalendarName ||
+				isDuplicateCalendarUrl
+			);
+		}
+		// CalDAV
+		const credentialsMissing =
+			!noCredentials && (!caldavUsername.trim() || !caldavPassword.trim());
+		return !caldavHost.trim() || !caldavFolderName.trim() || credentialsMissing;
+	}, [
+		isSubmitting,
+		calendarType,
+		calendarUrl,
+		calendarName,
+		selectedColor,
+		urlError,
+		isDuplicateCalendarName,
+		isDuplicateCalendarUrl,
+		noCredentials,
+		caldavUsername,
+		caldavPassword,
+		caldavHost,
+		caldavFolderName
+	]);
 
 	return (
 		<Container
@@ -221,69 +277,119 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 				}}
 			/>
 			<Padding top="medium" />
-			<Input
-				label={t('add_ics_from_url.url', 'Calendar URL*')}
-				background={'gray5'}
-				hasError={!!urlError || isDuplicateCalendarUrl}
-				description={urlDescription}
-				value={calendarUrl}
-				disabled={isSubmitting}
-				onChange={(event): void => setCalendarUrl(event.target.value)}
-			/>
-			{!urlError && !isDuplicateCalendarUrl && (
+
+			{calendarType === CALENDAR_TYPE_ICS ? (
 				<>
-					<Padding top="extrasmall" />
-					<Text size="small" color="secondary">
-						{t(
-							'add_ics_from_url.sync_info',
-							'This calendar will be read-only and will sync every 12 hours'
+					<Input
+						label={t('add_ics_from_url.url', 'Calendar URL*')}
+						background={'gray5'}
+						hasError={!!urlError || isDuplicateCalendarUrl}
+						description={urlDescription}
+						value={calendarUrl}
+						disabled={isSubmitting}
+						onChange={(event): void => setCalendarUrl(event.target.value)}
+					/>
+					{!urlError && !isDuplicateCalendarUrl && (
+						<>
+							<Padding top="extrasmall" />
+							<Text size="small" color="secondary">
+								{t(
+									'add_ics_from_url.sync_info',
+									'This calendar will be read-only and will sync every 12 hours'
+								)}
+							</Text>
+						</>
+					)}
+					<Padding top="medium" />
+					<Input
+						label={t('add_ics_from_url.calendar_name', 'Calendar name*')}
+						background={'gray5'}
+						hasError={isDuplicateCalendarName}
+						description={
+							isDuplicateCalendarName
+								? t(
+										'add_ics_from_url.error.duplicate_calendar_name',
+										'A calendar with the same name already exists'
+									)
+								: undefined
+						}
+						value={calendarName}
+						disabled={isSubmitting}
+						onChange={(event): void => setCalendarName(event.target.value)}
+					/>
+					<Padding top="medium" />
+					<Select
+						label={t('label.select_color', 'Select color')}
+						items={colorItems}
+						defaultSelection={colorItems[0]}
+						LabelFactory={CalendarColorLabelFactory}
+						disabled={isSubmitting}
+						onChange={(value): void => {
+							if (value) {
+								setSelectedColor(value);
+							}
+						}}
+					/>
+				</>
+			) : (
+				<>
+					<Input
+						label={t('add_external_calendar.caldav.host', 'Host*')}
+						background={'gray5'}
+						value={caldavHost}
+						disabled={isSubmitting}
+						onChange={(event): void => setCaldavHost(event.target.value)}
+					/>
+					<Padding top="medium" />
+					<Input
+						label={t('add_external_calendar.caldav.folder_name', 'Folder name*')}
+						background={'gray5'}
+						value={caldavFolderName}
+						description={t(
+							'add_external_calendar.caldav.folder_name_hint',
+							'Refers to the parent folder, which will contain all calendars from this host'
 						)}
-					</Text>
+						disabled={isSubmitting}
+						onChange={(event): void => setCaldavFolderName(event.target.value)}
+					/>
+					<Padding top="medium" />
+					<Checkbox
+						value={noCredentials}
+						label={t(
+							'add_external_calendar.caldav.no_credentials',
+							'This host does not require credentials'
+						)}
+						onClick={(): void => setNoCredentials((prev) => !prev)}
+						disabled={isSubmitting}
+					/>
+					{!noCredentials && (
+						<>
+							<Padding top="medium" />
+							<Input
+								label={t('add_external_calendar.caldav.username', 'Username*')}
+								background={'gray5'}
+								value={caldavUsername}
+								disabled={isSubmitting}
+								onChange={(event): void => setCaldavUsername(event.target.value)}
+							/>
+							<Padding top="medium" />
+							<PasswordInput
+								label={t('add_external_calendar.caldav.password', 'Password*')}
+								background={'gray5'}
+								value={caldavPassword}
+								disabled={isSubmitting}
+								onChange={(event): void => setCaldavPassword(event.target.value)}
+							/>
+						</>
+					)}
 				</>
 			)}
-			<Padding top="medium" />
-			<Input
-				label={t('add_ics_from_url.calendar_name', 'Calendar name*')}
-				background={'gray5'}
-				hasError={isDuplicateCalendarName}
-				description={
-					isDuplicateCalendarName
-						? t(
-								'add_ics_from_url.error.duplicate_calendar_name',
-								'A calendar with the same name already exists'
-							)
-						: undefined
-				}
-				value={calendarName}
-				disabled={isSubmitting}
-				onChange={(event): void => setCalendarName(event.target.value)}
-			/>
-			<Padding top="medium" />
-			<Select
-				label={t('label.select_color', 'Select color')}
-				items={colorItems}
-				defaultSelection={colorItems[0]}
-				LabelFactory={CalendarColorLabelFactory}
-				disabled={isSubmitting}
-				onChange={(value): void => {
-					if (value) {
-						setSelectedColor(value);
-					}
-				}}
-			/>
+
 			<Padding top="medium" />
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('label.add', 'Add')}
-				disabled={
-					!calendarUrl.trim() ||
-					!calendarName.trim() ||
-					selectedColor === '' ||
-					isSubmitting ||
-					!!urlError ||
-					isDuplicateCalendarName ||
-					isDuplicateCalendarUrl
-				}
+				disabled={isAddDisabled}
 			/>
 		</Container>
 	);
