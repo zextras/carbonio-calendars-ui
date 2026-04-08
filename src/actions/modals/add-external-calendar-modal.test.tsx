@@ -5,12 +5,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
+
 import { waitFor } from '@testing-library/react';
 import { JSNS } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
+
 import { AddExternalCalendarModal } from './add-external-calendar-modal';
-import * as createFolderApi from '../../soap/create-folder-request';
 import * as createDataSourceApi from '../../soap/create-data-source-request';
+import * as createFolderApi from '../../soap/create-folder-request';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
@@ -453,21 +455,19 @@ describe('AddExternalCalendarModal', () => {
 			});
 		});
 		test('trims whitespace from calendar name and url before submission', async () => {
-			const createFolderSpy = vi
-				.spyOn(createFolderApi, 'createFolderRequest')
-				.mockResolvedValue({
-					_jsns: 'urn:zimbraMail',
-					folder: [
-						{
-							id: '123',
-							uuid: 'abc-123',
-							name: 'Trimmed Calendar',
-							activesyncdisabled: false,
-							recursive: false,
-							deletable: false
-						}
-					]
-				});
+			const createFolderSpy = vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue({
+				_jsns: 'urn:zimbraMail',
+				folder: [
+					{
+						id: '123',
+						uuid: 'abc-123',
+						name: 'Trimmed Calendar',
+						activesyncdisabled: false,
+						recursive: false,
+						deletable: false
+					}
+				]
+			});
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(
 				screen.getByRole('textbox', { name: URL_LABEL }),
@@ -500,7 +500,9 @@ describe('AddExternalCalendarModal', () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), trashUrl);
 			expect(
-				screen.getByText('A calendar with the same URL is in Trash. Permanently delete it to proceed')
+				screen.getByText(
+					'A calendar with the same URL is in Trash. Permanently delete it to proceed'
+				)
 			).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
@@ -511,10 +513,7 @@ describe('AddExternalCalendarModal', () => {
 			});
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(
-				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
-				'my calendar'
-			);
+			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'my calendar');
 			expect(screen.getByText('A calendar with the same name already exists')).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
@@ -540,9 +539,7 @@ describe('AddExternalCalendarModal', () => {
 				'not a valid url at all'
 			);
 			expect(
-				screen.getByText(
-					'Invalid URL. Please enter a valid http or https address'
-				)
+				screen.getByText('Invalid URL. Please enter a valid http or https address')
 			).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});

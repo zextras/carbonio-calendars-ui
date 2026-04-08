@@ -15,7 +15,7 @@ import {
 	Text,
 	useTheme
 } from '@zextras/carbonio-design-system';
-import { map, filter, reduce, uniqBy } from 'lodash';
+import { map, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { Attachment } from './attachment';

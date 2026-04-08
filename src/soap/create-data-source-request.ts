@@ -31,4 +31,3 @@ export const createCalDavDataSourceRequest = async (
 		.catch((error) => {
 			throw new Error(error);
 		});
-

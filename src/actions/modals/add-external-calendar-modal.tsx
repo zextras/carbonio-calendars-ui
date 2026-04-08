@@ -98,7 +98,9 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 	const isDuplicateCaldavFolderName = useMemo(
 		() =>
-			isSubmitting ? false : includes(appointmentFolderNames, caldavFolderName.trim().toLowerCase()),
+			isSubmitting
+				? false
+				: includes(appointmentFolderNames, caldavFolderName.trim().toLowerCase()),
 		[appointmentFolderNames, caldavFolderName, isSubmitting]
 	);
 
@@ -288,7 +290,12 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		}
 		// CalDAV
 		const credentialsMissing = !noCredentials && (!caldavUsername.trim() || !caldavPassword.trim());
-		return !caldavHost.trim() || !caldavFolderName.trim() || credentialsMissing || isDuplicateCaldavFolderName;
+		return (
+			!caldavHost.trim() ||
+			!caldavFolderName.trim() ||
+			credentialsMissing ||
+			isDuplicateCaldavFolderName
+		);
 	}, [
 		isSubmitting,
 		calendarType,
@@ -336,7 +343,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			{calendarType === CALENDAR_TYPE_ICS ? (
 				<>
 					<Input
-						label={t('add_ics_from_url.url', 'Calendar URL*')}
+						label={`${t('add_ics_from_url.url', 'Calendar URL')}*`}
 						background={'gray5'}
 						hasError={!!urlError || isDuplicateCalendarUrl}
 						description={urlDescription}
@@ -357,7 +364,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 					)}
 					<Padding top="medium" />
 					<Input
-						label={t('add_ics_from_url.calendar_name', 'Calendar name*')}
+						label={`${t('add_ics_from_url.calendar_name', 'Calendar name')}*`}
 						background={'gray5'}
 						hasError={isDuplicateCalendarName}
 						description={
@@ -389,32 +396,32 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			) : (
 				<>
 					<Input
-						label={t('add_external_calendar.caldav.host', 'Host*')}
+						label={`${t('add_external_calendar.caldav.host', 'Host')}*`}
 						background={'gray5'}
 						value={caldavHost}
 						disabled={isSubmitting}
 						onChange={(event): void => setCaldavHost(event.target.value)}
 					/>
-				<Padding top="medium" />
-				<Input
-					label={t('add_external_calendar.caldav.folder_name', 'Folder name*')}
-					background={'gray5'}
-					hasError={isDuplicateCaldavFolderName}
-					value={caldavFolderName}
-					description={
-						isDuplicateCaldavFolderName
-							? t(
-									'add_ics_from_url.error.duplicate_calendar_name',
-									'A calendar with the same name already exists'
-								)
-							: t(
-									'add_external_calendar.caldav.folder_name_hint',
-									'Refers to the parent folder, which will contain all calendars from this host'
-								)
-					}
-					disabled={isSubmitting}
-					onChange={(event): void => setCaldavFolderName(event.target.value)}
-				/>
+					<Padding top="medium" />
+					<Input
+						label={`${t('add_external_calendar.caldav.folder_name', 'Folder name')}*`}
+						background={'gray5'}
+						hasError={isDuplicateCaldavFolderName}
+						value={caldavFolderName}
+						description={
+							isDuplicateCaldavFolderName
+								? t(
+										'add_ics_from_url.error.duplicate_calendar_name',
+										'A calendar with the same name already exists'
+									)
+								: t(
+										'add_external_calendar.caldav.folder_name_hint',
+										'Refers to the parent folder, which will contain all calendars from this host'
+									)
+						}
+						disabled={isSubmitting}
+						onChange={(event): void => setCaldavFolderName(event.target.value)}
+					/>
 					<Padding top="medium" />
 					<Checkbox
 						value={noCredentials}
@@ -429,7 +436,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 						<>
 							<Padding top="medium" />
 							<Input
-								label={t('add_external_calendar.caldav.username', 'Username*')}
+								label={`${t('add_external_calendar.caldav.username', 'Username')}*`}
 								background={'gray5'}
 								value={caldavUsername}
 								disabled={isSubmitting}
@@ -437,7 +444,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 							/>
 							<Padding top="medium" />
 							<PasswordInput
-								label={t('add_external_calendar.caldav.password', 'Password*')}
+								label={`${t('add_external_calendar.caldav.password', 'Password')}*`}
 								background={'gray5'}
 								value={caldavPassword}
 								disabled={isSubmitting}
