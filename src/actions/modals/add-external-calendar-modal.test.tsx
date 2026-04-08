@@ -248,6 +248,7 @@ describe('AddExternalCalendarModal', () => {
 					}
 				]
 			};
+
 			const createFolderSpy = vi
 				.spyOn(createFolderApi, 'createFolderRequest')
 				.mockResolvedValue(folderResponse);
@@ -282,6 +283,9 @@ describe('AddExternalCalendarModal', () => {
 
 			await waitFor(() => {
 				expect(createDataSourceSpy).toHaveBeenCalledWith({
+					connectionType: 'ssl',
+					importOnly: '1',
+					port: '443',
 					name: 'My CalDAV',
 					pollingInterval: '1m',
 					isEnabled: '1',
