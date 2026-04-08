@@ -222,6 +222,9 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 						isEnabled: '1',
 						l: folderId,
 						host: caldavHost.trim(),
+						port: '443',
+						connectionType: 'ssl',
+						importOnly: '1',
 						...(noCredentials
 							? {}
 							: {

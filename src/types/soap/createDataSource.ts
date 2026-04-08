@@ -29,6 +29,12 @@ export type CalDavDataSourceParams = {
 	password?: string;
 	/** Additional data-source attributes, e.g. the CalDAV principal path */
 	a?: DataSourceAttribute;
+	/** CalDAV server port (omit to use the default port, usually 443 for SSL and 80 for cleartext) */
+	port?: string;
+	/** Connection type, e.g. "ssl" */
+	connectionType?: 'ssl' | 'cleartext' | 'tls' | 'tls_if_available';
+	/** Whether to import the calendar items only once ("1") or to keep the calendar in sync ("0") */
+	importOnly?: '0' | '1';
 };
 
 export type CreateCalDavDataSourceRequest = {
