@@ -287,7 +287,7 @@ describe('AddExternalCalendarModal', () => {
 					importOnly: '1',
 					port: '443',
 					name: 'My CalDAV',
-					pollingInterval: '1m',
+					pollingInterval: '12h',
 					isEnabled: '1',
 					l: '42',
 					host: 'mailbox1.demo.zextras.io',

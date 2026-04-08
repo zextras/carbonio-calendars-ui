@@ -33,7 +33,7 @@ export type CalDavDataSourceParams = {
 	port?: string;
 	/** Connection type, e.g. "ssl" */
 	connectionType?: 'ssl' | 'cleartext' | 'tls' | 'tls_if_available';
-	/** Whether to import the calendar items only once ("1") or to keep the calendar in sync ("0") */
+	/** Indicates that this datasource is used for one way (incoming) import versus two-way sync*/
 	importOnly?: '0' | '1';
 };
 

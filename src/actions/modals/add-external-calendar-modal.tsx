@@ -218,7 +218,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 					return createCalDavDataSourceRequest({
 						name: caldavFolderName.trim(),
-						pollingInterval: '1m',
+						pollingInterval: '12h',
 						isEnabled: '1',
 						l: folderId,
 						host: caldavHost.trim(),
