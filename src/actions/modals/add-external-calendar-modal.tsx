@@ -5,22 +5,15 @@
  */
 import React, { useMemo, useState } from 'react';
 
-import {
-	Checkbox,
-	Container,
-	Input,
-	Padding,
-	PasswordInput,
-	Select,
-	Text,
-	useSnackbar
-} from '@zextras/carbonio-design-system';
+import { Container, Padding, Select, useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { AddExternalCalendarModalCaldavFlow } from './add-external-calendar-modal-caldav-flow';
+import { AddExternalCalendarModalIcsFlow } from './add-external-calendar-modal-ics-flow';
 import ModalFooter from '../../commons/modal-footer';
-import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
+import { buildCalendarColorItems } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
@@ -344,118 +337,35 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			<Padding top="medium" />
 
 			{calendarType === CALENDAR_TYPE_ICS ? (
-				<>
-					<Input
-						label={`${t('add_ics_from_url.url', 'Calendar URL')}*`}
-						background={'gray5'}
-						hasError={!!urlError || isDuplicateCalendarUrl}
-						description={urlDescription}
-						value={calendarUrl}
-						disabled={isSubmitting}
-						onChange={(event): void => setCalendarUrl(event.target.value)}
-					/>
-					{!urlError && !isDuplicateCalendarUrl && (
-						<>
-							<Padding top="extrasmall" />
-							<Text size="small" color="secondary">
-								{t(
-									'add_ics_from_url.sync_info',
-									'This calendar will be read-only and will sync every 12 hours'
-								)}
-							</Text>
-						</>
-					)}
-					<Padding top="medium" />
-					<Input
-						label={`${t('add_ics_from_url.calendar_name', 'Calendar name')}*`}
-						background={'gray5'}
-						hasError={isDuplicateCalendarName}
-						description={
-							isDuplicateCalendarName
-								? t(
-										'add_ics_from_url.error.duplicate_calendar_name',
-										'A calendar with the same name already exists'
-									)
-								: undefined
-						}
-						value={calendarName}
-						disabled={isSubmitting}
-						onChange={(event): void => setCalendarName(event.target.value)}
-					/>
-					<Padding top="medium" />
-					<Select
-						label={t('label.select_color', 'Select color')}
-						items={colorItems}
-						defaultSelection={colorItems[0]}
-						LabelFactory={CalendarColorLabelFactory}
-						disabled={isSubmitting}
-						onChange={(value): void => {
-							if (value) {
-								setSelectedColor(value);
-							}
-						}}
-					/>
-				</>
+				<AddExternalCalendarModalIcsFlow
+					calendarUrl={calendarUrl}
+					urlError={urlError}
+					urlDescription={urlDescription}
+					isDuplicateCalendarUrl={isDuplicateCalendarUrl}
+					isSubmitting={isSubmitting}
+					calendarName={calendarName}
+					isDuplicateCalendarName={isDuplicateCalendarName}
+					selectedColor={selectedColor}
+					colorItems={colorItems}
+					onCalendarUrlChange={setCalendarUrl}
+					onCalendarNameChange={setCalendarName}
+					onSelectedColorChange={setSelectedColor}
+				/>
 			) : (
-				<>
-					<Input
-						label={`${t('add_external_calendar.caldav.host', 'Host')}*`}
-						background={'gray5'}
-						value={caldavHost}
-						disabled={isSubmitting}
-						onChange={(event): void => setCaldavHost(event.target.value)}
-					/>
-					<Padding top="medium" />
-					<Input
-						label={`${t('add_external_calendar.caldav.folder_name', 'Folder name')}*`}
-						background={'gray5'}
-						hasError={isDuplicateCaldavFolderName}
-						value={caldavFolderName}
-						description={
-							isDuplicateCaldavFolderName
-								? t(
-										'add_ics_from_url.error.duplicate_calendar_name',
-										'A calendar with the same name already exists'
-									)
-								: t(
-										'add_external_calendar.caldav.folder_name_hint',
-										'Refers to the parent folder, which will contain all calendars from this host'
-									)
-						}
-						disabled={isSubmitting}
-						onChange={(event): void => setCaldavFolderName(event.target.value)}
-					/>
-					<Padding top="medium" />
-					<Checkbox
-						value={noCredentials}
-						label={t(
-							'add_external_calendar.caldav.no_credentials',
-							'This host does not require credentials'
-						)}
-						onClick={(): void => setNoCredentials((prev) => !prev)}
-						disabled={isSubmitting}
-					/>
-					{!noCredentials && (
-						<>
-							<Padding top="medium" />
-							<Input
-								label={`${t('add_external_calendar.caldav.username', 'Username')}*`}
-								background={'gray5'}
-								value={caldavUsername}
-								disabled={isSubmitting}
-								onChange={(event): void => setCaldavUsername(event.target.value)}
-							/>
-							<Padding top="medium" />
-							<PasswordInput
-								label={`${t('add_external_calendar.caldav.password', 'Password')}*`}
-								background={'gray5'}
-								value={caldavPassword}
-								disabled={isSubmitting}
-								onChange={(event): void => setCaldavPassword(event.target.value)}
-							/>
-						</>
-					)}
-				</>
+				<AddExternalCalendarModalCaldavFlow
+					caldavHost={caldavHost}
+					caldavFolderName={caldavFolderName}
+					isDuplicateCaldavFolderName={isDuplicateCaldavFolderName}
+					noCredentials={noCredentials}
+					caldavUsername={caldavUsername}
+					caldavPassword={caldavPassword}
+					isSubmitting={isSubmitting}
+					onCaldavHostChange={setCaldavHost}
+					onCaldavFolderNameChange={setCaldavFolderName}
+					onNoCredentialsChange={setNoCredentials}
+					onCaldavUsernameChange={setCaldavUsername}
+					onCaldavPasswordChange={setCaldavPassword}
+				/>
 			)}
 
 			<Padding top="medium" />
