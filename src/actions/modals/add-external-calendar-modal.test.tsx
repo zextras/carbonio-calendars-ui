@@ -227,11 +227,7 @@ describe('AddExternalCalendarModal', () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await selectCalDav(user);
 
-			expect(
-				screen.getByText(
-					'Refers to the parent folder, which will contain all calendars from this host'
-				)
-			).toBeVisible();
+			expect(screen.getByText('Choose a name to identify these calendars')).toBeVisible();
 		});
 
 		test('submits CreateFolderRequest then CreateDataSourceRequest with credentials on add', async () => {
