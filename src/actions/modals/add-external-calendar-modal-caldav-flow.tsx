@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { Checkbox, Input, Padding, PasswordInput } from '@zextras/carbonio-design-system';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 type AddExternalCalendarModalCaldavFlowProps = {
 	caldavHost: string;
@@ -46,6 +46,10 @@ export const AddExternalCalendarModalCaldavFlow = ({
 				background={'gray5'}
 				value={caldavHost}
 				disabled={isSubmitting}
+				description={t(
+					'add_external_calendar.caldav.host_name_hint',
+					'Refers to the CalDAV server address. Example: calendar.example.com'
+				)}
 				onChange={(event): void => onCaldavHostChange(event.target.value)}
 			/>
 			<Padding top="medium" />
@@ -62,7 +66,7 @@ export const AddExternalCalendarModalCaldavFlow = ({
 							)
 						: t(
 								'add_external_calendar.caldav.folder_name_hint',
-								'Refers to the parent folder, which will contain all calendars from this host'
+								'Choose a name to identify these calendars'
 							)
 				}
 				disabled={isSubmitting}
@@ -101,5 +105,3 @@ export const AddExternalCalendarModalCaldavFlow = ({
 		</>
 	);
 };
-
-
