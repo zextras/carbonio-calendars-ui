@@ -5,7 +5,7 @@
  */
 import { TextProps } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import type { Folder } from '@zextras/carbonio-ui-commons';
+import type { DataSourceType, Folder } from '@zextras/carbonio-ui-commons';
 import {
 	ROOT_NAME,
 	FOLDERS,
@@ -45,6 +45,29 @@ export const isMainRootChild = (item: { id: string }): boolean => {
 
 export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolean =>
 	/y/.test(item.f ?? '') || !!item.url;
+
+/**
+ * A folder returned in GetFolderResponse that is the root of a DataSource.
+ * Regular folders and CalDAV sub-folders will have dsId/dsType as undefined.
+ */
+export interface FolderDataSourceInfo {
+	/** ID of the DataSource this folder is the root of. Absent on non-datasource folders. */
+	dsId?: string;
+	/** Type of the DataSource. Always present when dsId is present. */
+	dsType?: DataSourceType;
+}
+
+/** Type guard - narrows to a datasource root folder */
+export function isDataSourceRootFolder(
+	folder: FolderDataSourceInfo
+): folder is FolderDataSourceInfo & { dsId: string; dsType: DataSourceType } {
+	return folder.dsId !== undefined && folder.dsType !== undefined;
+}
+
+/** Type guard - checks specifically for CalDAV */
+export function isCaldavRootFolder(folder: FolderDataSourceInfo): boolean {
+	return isDataSourceRootFolder(folder) && folder.dsType === 'caldav';
+}
 
 export const calcColor = (label: string, theme: unknown): string => {
 	let sum = 0;
@@ -430,6 +453,9 @@ export const getFolderIcon = ({
 	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
 	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
 	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+	if (isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })) {
+		return checked ? 'GroupCalendar' : 'GroupCalendarOutline';
+	}
 	return checked ? 'Calendar2' : 'CalendarOutline';
 };
 
