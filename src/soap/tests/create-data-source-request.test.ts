@@ -8,12 +8,17 @@ import { JSNS } from '@zextras/carbonio-shell-ui';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-ui-soap-lib';
 
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
-import { createCalDavDataSourceRequest } from 'soap/create-data-source-request';
+import {
+	createCalDavDataSourceRequest,
+	testCalDavDataSourceRequest
+} from 'soap/create-data-source-request';
 import { generateApiErrorResponse } from 'test/generators/api';
 import {
 	CalDavDataSourceParams,
 	CreateCalDavDataSourceRequest,
-	CreateCalDavDataSourceResponse
+	CreateCalDavDataSourceResponse,
+	TestCalDavDataSourceRequest,
+	TestCalDavDataSourceResponse
 } from 'types/soap/createDataSource';
 
 const params: CalDavDataSourceParams = {
@@ -32,54 +37,128 @@ const successResponse: CreateCalDavDataSourceResponse = {
 	caldav: [{ id: '100' }]
 };
 
-describe('createCalDavDataSourceRequest', () => {
-	it('sends the correct CreateDataSource SOAP request', async () => {
-		const apiInterceptor = createSoapAPIInterceptor<
-			CreateCalDavDataSourceRequest,
-			CreateCalDavDataSourceResponse
-		>('CreateDataSource', successResponse);
+const testParams = {
+	name: 'My CalDAV Calendar',
+	host: 'mailbox1.demo.zextras.io',
+	username: 'user@demo.zextras.io',
+	password: 'secret',
+	connectionType: 'ssl' as const,
+	port: '443',
+	a: { n: 'zimbraDataSourceAttribute', _content: 'p:/principals/users/_USERNAME_/' }
+};
 
-		await createCalDavDataSourceRequest(params);
-		const apiParams = await apiInterceptor;
+const testSuccessResponse: TestCalDavDataSourceResponse = {
+	_jsns: JSNS.mail,
+	caldav: [{ success: true }]
+};
 
-		expect(apiParams).toEqual({
-			_jsns: JSNS.mail,
-			caldav: params
+describe('data source API', () => {
+	describe('createCalDavDataSourceRequest', () => {
+		it('sends the correct CreateDataSource SOAP request', async () => {
+			const apiInterceptor = createSoapAPIInterceptor<
+				CreateCalDavDataSourceRequest,
+				CreateCalDavDataSourceResponse
+			>('CreateDataSource', successResponse);
+
+			await createCalDavDataSourceRequest(params);
+			const apiParams = await apiInterceptor;
+
+			expect(apiParams).toEqual({
+				_jsns: JSNS.mail,
+				caldav: params
+			});
+		});
+
+		it('omits username and password when no credentials are provided', async () => {
+			const paramsWithoutCredentials: CalDavDataSourceParams = {
+				name: 'No-Auth CalDAV',
+				pollingInterval: '1m',
+				isEnabled: '1',
+				l: '99',
+				host: 'public.caldav.example.com',
+				a: { n: 'zimbraDataSourceAttribute', _content: 'p:/principals/users/_USERNAME_/' }
+			};
+
+			const apiInterceptor = createSoapAPIInterceptor<
+				CreateCalDavDataSourceRequest,
+				CreateCalDavDataSourceResponse
+			>('CreateDataSource', successResponse);
+
+			await createCalDavDataSourceRequest(paramsWithoutCredentials);
+			const apiParams = await apiInterceptor;
+
+			expect(apiParams.caldav).not.toHaveProperty('username');
+			expect(apiParams.caldav).not.toHaveProperty('password');
+			expect(apiParams.caldav.l).toBe('99');
+		});
+
+		it('throws when the API returns a Fault', async () => {
+			const faultyResponse = generateApiErrorResponse();
+			createSoapAPIInterceptor<CreateCalDavDataSourceRequest, ErrorSoapBodyResponse>(
+				'CreateDataSource',
+				faultyResponse
+			);
+
+			await expect(createCalDavDataSourceRequest(params)).rejects.toThrow(
+				faultyResponse.Fault.Reason.Text
+			);
 		});
 	});
 
-	it('omits username and password when no credentials are provided', async () => {
-		const paramsWithoutCredentials: CalDavDataSourceParams = {
-			name: 'No-Auth CalDAV',
-			pollingInterval: '1m',
-			isEnabled: '1',
-			l: '99',
-			host: 'public.caldav.example.com',
-			a: { n: 'zimbraDataSourceAttribute', _content: 'p:/principals/users/_USERNAME_/' }
-		};
+	describe('testCalDavDataSourceRequest', () => {
+		it('sends the correct TestDataSource SOAP request', async () => {
+			const apiInterceptor = createSoapAPIInterceptor<
+				TestCalDavDataSourceRequest,
+				TestCalDavDataSourceResponse
+			>('TestDataSource', testSuccessResponse);
 
-		const apiInterceptor = createSoapAPIInterceptor<
-			CreateCalDavDataSourceRequest,
-			CreateCalDavDataSourceResponse
-		>('CreateDataSource', successResponse);
+			await testCalDavDataSourceRequest(testParams);
+			const apiParams = await apiInterceptor;
 
-		await createCalDavDataSourceRequest(paramsWithoutCredentials);
-		const apiParams = await apiInterceptor;
+			expect(apiParams).toEqual({
+				_jsns: JSNS.mail,
+				caldav: testParams
+			});
+		});
 
-		expect(apiParams.caldav).not.toHaveProperty('username');
-		expect(apiParams.caldav).not.toHaveProperty('password');
-		expect(apiParams.caldav.l).toBe('99');
-	});
+		it('throws when TestDataSource returns a Fault', async () => {
+			const faultyResponse = generateApiErrorResponse();
+			createSoapAPIInterceptor<TestCalDavDataSourceRequest, ErrorSoapBodyResponse>(
+				'TestDataSource',
+				faultyResponse
+			);
 
-	it('throws when the API returns a Fault', async () => {
-		const faultyResponse = generateApiErrorResponse();
-		createSoapAPIInterceptor<CreateCalDavDataSourceRequest, ErrorSoapBodyResponse>(
-			'CreateDataSource',
-			faultyResponse
-		);
+			await expect(testCalDavDataSourceRequest(testParams)).rejects.toThrow(
+				faultyResponse.Fault.Reason.Text
+			);
+		});
 
-		await expect(createCalDavDataSourceRequest(params)).rejects.toThrow(
-			faultyResponse.Fault.Reason.Text
-		);
+		it('throws when caldav validation fails', async () => {
+			const failResponse: TestCalDavDataSourceResponse = {
+				_jsns: JSNS.mail,
+				caldav: [{ success: false, error: 'Invalid credentials' }]
+			};
+			createSoapAPIInterceptor<TestCalDavDataSourceRequest, TestCalDavDataSourceResponse>(
+				'TestDataSource',
+				failResponse
+			);
+
+			await expect(testCalDavDataSourceRequest(testParams)).rejects.toThrow('Invalid credentials');
+		});
+
+		it('throws with generic message when caldav validation fails without error detail', async () => {
+			const failResponse: TestCalDavDataSourceResponse = {
+				_jsns: JSNS.mail,
+				caldav: [{ success: false }]
+			};
+			createSoapAPIInterceptor<TestCalDavDataSourceRequest, TestCalDavDataSourceResponse>(
+				'TestDataSource',
+				failResponse
+			);
+
+			await expect(testCalDavDataSourceRequest(testParams)).rejects.toThrow(
+				'Failed to validate CalDAV data source'
+			);
+		});
 	});
 });

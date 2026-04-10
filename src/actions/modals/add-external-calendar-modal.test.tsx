@@ -188,6 +188,17 @@ describe('AddExternalCalendarModal', () => {
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
 
+		test('add button is disabled when host, folder name, and username are filled but password is missing', async () => {
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), VALID_CALDAV_HOST);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'My Calendars');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'user@example.com');
+
+			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+		});
+
 		test('add button is enabled when host, folder name, username and password are filled', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await selectCalDav(user);
@@ -202,15 +213,19 @@ describe('AddExternalCalendarModal', () => {
 			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
 		});
 
-		test('checking "no credentials" hides username and password fields', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await selectCalDav(user);
+	test('checking "no credentials" hides password field only', async () => {
+		const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+		await selectCalDav(user);
 
-			await user.click(screen.getByText('This host does not require credentials'));
+		expect(screen.getByRole('textbox', { name: 'Username*' })).toBeVisible();
+		// Password field starts hidden because "no credentials" checkbox is not checked initially
+		expect(screen.queryByLabelText('Password*')).toBeInTheDocument();
 
-			expect(screen.queryByRole('textbox', { name: 'Username*' })).not.toBeInTheDocument();
-			expect(screen.queryByRole('textbox', { name: 'Password*' })).not.toBeInTheDocument();
-		});
+		await user.click(screen.getByText('This host does not require credentials'));
+
+		expect(screen.getByRole('textbox', { name: 'Username*' })).toBeVisible();
+		expect(screen.queryByLabelText('Password*')).not.toBeInTheDocument();
+	});
 
 		test('add button is enabled when "no credentials" is checked and host and folder name are filled', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
@@ -218,6 +233,7 @@ describe('AddExternalCalendarModal', () => {
 
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), VALID_CALDAV_HOST);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'My Calendars');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'user@example.com');
 			await user.click(screen.getByText('This host does not require credentials'));
 
 			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
@@ -248,6 +264,9 @@ describe('AddExternalCalendarModal', () => {
 			const createFolderSpy = vi
 				.spyOn(createFolderApi, 'createFolderRequest')
 				.mockResolvedValue(folderResponse);
+		const testDataSourceSpy = vi
+			.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest')
+			.mockResolvedValue({ _jsns: 'urn:zimbraMail', caldav: [{ success: true }] });
 			const createDataSourceSpy = vi
 				.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
 				.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
@@ -267,6 +286,18 @@ describe('AddExternalCalendarModal', () => {
 			);
 			await user.pasteInto(screen.getByLabelText('Password*'), 'secret');
 			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(testDataSourceSpy).toHaveBeenCalledWith({
+					connectionType: 'ssl',
+					port: '443',
+					name: 'My CalDAV',
+					host: 'mailbox1.demo.zextras.io',
+					username: 'user@demo.zextras.io',
+					password: 'secret',
+					a: { n: 'zimbraDataSourceAttribute', _content: 'p:/principals/users/_USERNAME_/' }
+				});
+			});
 
 			await waitFor(() => {
 				expect(createFolderSpy).toHaveBeenCalledWith({
@@ -298,39 +329,44 @@ describe('AddExternalCalendarModal', () => {
 			});
 		});
 
-		test('submits without credentials when "no credentials" is checked', async () => {
-			const folderResponse: CreateFolderResponse = {
-				_jsns: 'urn:zimbraMail',
-				folder: [
-					{
-						id: '99',
-						uuid: 'abc-99',
-						name: 'Public CalDAV',
-						activesyncdisabled: false,
-						recursive: false,
-						deletable: false
-					}
-				]
-			};
-			vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
-			const createDataSourceSpy = vi
-				.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
-				.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
-
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await selectCalDav(user);
-
-			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'public.example.com');
-			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'Public CalDAV');
-			await user.click(screen.getByText('This host does not require credentials'));
-			await user.click(screen.getByRole('button', { name: 'Add' }));
-
-			await waitFor(() => {
-				expect(createDataSourceSpy).toHaveBeenCalledWith(
-					expect.not.objectContaining({ username: expect.anything(), password: expect.anything() })
-				);
-			});
+	test('submits without credentials when "no credentials" is checked', async () => {
+		const folderResponse: CreateFolderResponse = {
+			_jsns: 'urn:zimbraMail',
+			folder: [
+				{
+					id: '99',
+					uuid: 'abc-99',
+					name: 'Public CalDAV',
+					activesyncdisabled: false,
+					recursive: false,
+					deletable: false
+				}
+			]
+		};
+		vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
+		vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockResolvedValue({
+			_jsns: 'urn:zimbraMail',
+			caldav: [{ success: true }]
 		});
+		const createDataSourceSpy = vi
+			.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
+			.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
+
+		const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+		await selectCalDav(user);
+
+		await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'public.example.com');
+		await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'Public CalDAV');
+		await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'public-user');
+		await user.click(screen.getByText('This host does not require credentials'));
+		await user.click(screen.getByRole('button', { name: 'Add' }));
+
+		await waitFor(() => {
+			expect(createDataSourceSpy).toHaveBeenCalledWith(
+				expect.not.objectContaining({ password: expect.anything() })
+			);
+		});
+	});
 
 		test('shows error snackbar and re-enables add button when CalDAV creation fails', async () => {
 			const folderResponse: CreateFolderResponse = {
@@ -346,10 +382,14 @@ describe('AddExternalCalendarModal', () => {
 					}
 				]
 			};
-			vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
-			vi.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest').mockRejectedValue(
-				new Error('Network error')
-			);
+		vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
+		vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockResolvedValue({
+			_jsns: 'urn:zimbraMail',
+			caldav: [{ success: true }]
+		});
+		vi.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest').mockRejectedValue(
+			new Error('Network error')
+		);
 
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await selectCalDav(user);
@@ -359,12 +399,41 @@ describe('AddExternalCalendarModal', () => {
 				'mailbox1.demo.zextras.io'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'Fail CalDAV');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
 			await user.click(screen.getByText('This host does not require credentials'));
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
 			await waitFor(() => {
 				expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
 			});
+			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
+		});
+
+		test('shows error snackbar and skips folder creation when TestDataSource fails', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', folder: [] });
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error('Auth failed')
+			);
+			const createDataSourceSpy = vi
+				.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'invalid.example.com');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Folder name*' }), 'Fail Fast');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
+			});
+			expect(createFolderSpy).not.toHaveBeenCalled();
+			expect(createDataSourceSpy).not.toHaveBeenCalled();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
 		});
 	});
