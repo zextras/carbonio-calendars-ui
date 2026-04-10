@@ -5,8 +5,8 @@
  */
 import React from 'react';
 
-import { Checkbox, Input, Padding, PasswordInput } from '@zextras/carbonio-design-system';
-import { Trans, useTranslation } from 'react-i18next';
+import { Switch, Input, Padding, PasswordInput } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
 
 type AddExternalCalendarModalCaldavFlowProps = {
 	caldavHost: string;
@@ -73,7 +73,15 @@ export const AddExternalCalendarModalCaldavFlow = ({
 				onChange={(event): void => onCaldavFolderNameChange(event.target.value)}
 			/>
 			<Padding top="medium" />
-			<Checkbox
+			<Input
+				label={`${t('add_external_calendar.caldav.username', 'Username')}*`}
+				background={'gray5'}
+				value={caldavUsername}
+				disabled={isSubmitting}
+				onChange={(event): void => onCaldavUsernameChange(event.target.value)}
+			/>
+			<Padding top="medium" />
+			<Switch
 				value={noCredentials}
 				label={t(
 					'add_external_calendar.caldav.no_credentials',
@@ -84,14 +92,6 @@ export const AddExternalCalendarModalCaldavFlow = ({
 			/>
 			{!noCredentials && (
 				<>
-					<Padding top="medium" />
-					<Input
-						label={`${t('add_external_calendar.caldav.username', 'Username')}*`}
-						background={'gray5'}
-						value={caldavUsername}
-						disabled={isSubmitting}
-						onChange={(event): void => onCaldavUsernameChange(event.target.value)}
-					/>
 					<Padding top="medium" />
 					<PasswordInput
 						label={`${t('add_external_calendar.caldav.password', 'Password')}*`}
