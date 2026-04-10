@@ -213,18 +213,17 @@ describe('AddExternalCalendarModal', () => {
 			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
 		});
 
-	test('checking "no credentials" hides password field only', async () => {
+	test('checking "no credentials" disables password field only', async () => {
 		const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 		await selectCalDav(user);
 
 		expect(screen.getByRole('textbox', { name: 'Username*' })).toBeVisible();
-		// Password field starts hidden because "no credentials" checkbox is not checked initially
-		expect(screen.queryByLabelText('Password*')).toBeInTheDocument();
+		expect(screen.getByLabelText('Password*')).toBeEnabled();
 
 		await user.click(screen.getByText('This host does not require credentials'));
 
 		expect(screen.getByRole('textbox', { name: 'Username*' })).toBeVisible();
-		expect(screen.queryByLabelText('Password*')).not.toBeInTheDocument();
+		expect(screen.getByLabelText('Password*')).toBeDisabled();
 	});
 
 		test('add button is enabled when "no credentials" is checked and host and folder name are filled', async () => {

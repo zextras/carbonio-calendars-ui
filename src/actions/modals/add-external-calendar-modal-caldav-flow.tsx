@@ -90,18 +90,14 @@ export const AddExternalCalendarModalCaldavFlow = ({
 				onClick={(): void => onNoCredentialsChange(!noCredentials)}
 				disabled={isSubmitting}
 			/>
-			{!noCredentials && (
-				<>
-					<Padding top="medium" />
-					<PasswordInput
-						label={`${t('add_external_calendar.caldav.password', 'Password')}*`}
-						background={'gray5'}
-						value={caldavPassword}
-						disabled={isSubmitting}
-						onChange={(event): void => onCaldavPasswordChange(event.target.value)}
-					/>
-				</>
-			)}
+			<Padding top="medium" />
+			<PasswordInput
+				label={`${t('add_external_calendar.caldav.password', 'Password')}*`}
+				background={'gray5'}
+				value={caldavPassword}
+				disabled={isSubmitting || noCredentials}
+				onChange={(event): void => onCaldavPasswordChange(event.target.value)}
+			/>
 		</>
 	);
 };
