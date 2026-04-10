@@ -17,7 +17,10 @@ import { buildCalendarColorItems } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
-import { createCalDavDataSourceRequest } from 'soap/create-data-source-request';
+import {
+	createCalDavDataSourceRequest,
+	testCalDavDataSourceRequest
+} from 'soap/create-data-source-request';
 import { createFolderRequest } from 'soap/create-folder-request';
 import { folderAction } from 'store/actions/calendar-actions';
 
@@ -198,36 +201,40 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 				});
 		} else {
 			// CalDAV flow:
-			// 1. Create an empty appointment folder to hold the synced calendar items.
-			// 2. Create a CalDAV data source that points to that folder.
-			createFolderRequest({
-				l: FOLDERS.USER_ROOT,
+			// 1. Test CalDAV connectivity and credentials before creating anything.
+			// 2. Create an empty appointment folder to hold the synced calendar items.
+			// 3. Create a CalDAV data source that points to that folder.
+			const caldavPayload = {
 				name: caldavFolderName.trim(),
-				view: 'appointment',
-				f: '#'
-			})
+				host: caldavHost.trim(),
+				port: '443' as const,
+				connectionType: 'ssl' as const,
+				username: caldavUsername.trim(),
+				...(noCredentials ? {} : { password: caldavPassword }),
+				a: {
+					n: 'zimbraDataSourceAttribute',
+					_content: 'p:/principals/users/_USERNAME_/'
+				}
+			};
+
+			testCalDavDataSourceRequest(caldavPayload)
+				.then(() =>
+					createFolderRequest({
+						l: FOLDERS.USER_ROOT,
+						name: caldavFolderName.trim(),
+						view: 'appointment',
+						f: '#'
+					})
+				)
 				.then((createFolderResponse) => {
 					const folderId = createFolderResponse.folder[0].id;
 
 					return createCalDavDataSourceRequest({
-						name: caldavFolderName.trim(),
+						...caldavPayload,
 						pollingInterval: '12h',
 						isEnabled: '1',
-						l: folderId,
-						host: caldavHost.trim(),
-						port: '443',
-						connectionType: 'ssl',
 						importOnly: '1',
-						...(noCredentials
-							? {}
-							: {
-									username: caldavUsername.trim(),
-									password: caldavPassword
-								}),
-						a: {
-							n: 'zimbraDataSourceAttribute',
-							_content: 'p:/principals/users/_USERNAME_/'
-						}
+						l: folderId
 					});
 				})
 				.then(() => {
@@ -285,7 +292,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			);
 		}
 		// CalDAV
-		const credentialsMissing = !noCredentials && (!caldavUsername.trim() || !caldavPassword.trim());
+		const credentialsMissing = !caldavUsername.trim() || (!noCredentials && !caldavPassword.trim());
 		return (
 			!caldavHost.trim() ||
 			!caldavFolderName.trim() ||
