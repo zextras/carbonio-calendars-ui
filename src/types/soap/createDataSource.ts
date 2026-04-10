@@ -46,3 +46,21 @@ export type CreateCalDavDataSourceResponse = {
 	_jsns: typeof JSNS.mail;
 	caldav?: { id: string }[];
 };
+
+export type TestCalDavDataSourceParams = Omit<
+	CalDavDataSourceParams,
+	'pollingInterval' | 'isEnabled' | 'l' | 'importOnly'
+>;
+
+export type TestCalDavDataSourceRequest = {
+	_jsns: typeof JSNS.mail;
+	caldav: TestCalDavDataSourceParams;
+};
+
+export type TestCalDavDataSourceResponse = {
+	_jsns: typeof JSNS.mail;
+	caldav?: Array<{
+		success: boolean;
+		error?: string;
+	}>;
+};
