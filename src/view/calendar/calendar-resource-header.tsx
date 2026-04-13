@@ -3,18 +3,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { Row, Text } from '@zextras/carbonio-design-system';
 
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 
-export type CalendarResourceHeaderProps = {
+export type CalendarResource = {
 	id: string;
-	label: string;
-	resource: {
-		color: number;
-	};
+	title: string;
+	color: number | undefined;
+};
+
+export type CalendarResourceHeaderProps = {
+	index: number;
+	label: ReactNode;
+	resource: CalendarResource;
 };
 
 export const CalendarResourceHeader = (props: CalendarResourceHeaderProps): React.JSX.Element => {
@@ -23,7 +27,7 @@ export const CalendarResourceHeader = (props: CalendarResourceHeaderProps): Reac
 	});
 	return (
 		<Row
-			key={props.id}
+			key={props.index}
 			background={backgroundColor.background}
 			borderColor={backgroundColor.color}
 			height="2.25rem"
