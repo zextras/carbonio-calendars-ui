@@ -18,7 +18,6 @@ import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
 
 import { FOLDER_OPERATIONS } from '../constants/api';
-import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
@@ -369,15 +368,6 @@ export const getFolderTranslatedName = ({
 		default:
 			return folderName;
 	}
-};
-
-export const getFolderIconColor = (f: Folder): string => {
-	if (f?.color) {
-		return Number(f.color) < 10
-			? CALENDARS_STANDARD_COLORS[Number(f.color)].color
-			: (f?.rgb ?? CALENDARS_STANDARD_COLORS[0].color);
-	}
-	return CALENDARS_STANDARD_COLORS[0].color;
 };
 
 export type RecursiveToggleCheckProps = {
