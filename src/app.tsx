@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AuthGuard } from './auth-guard';
 import { CenteredSpinner } from './components/CenteredSpinner';
+import { QuotaRefreshHandler } from './components/quota-refresh-handler';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -227,6 +228,7 @@ export default function App(): React.JSX.Element {
 				<InitializeTags />
 				<SyncDataHandler />
 				<Notifications />
+				<QuotaRefreshHandler />
 			</StoreProvider>
 		</AuthGuard>
 	);
