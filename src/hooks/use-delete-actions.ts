@@ -9,7 +9,7 @@ import { CreateSnackbarFn, useSnackbar } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, Folders } from '@zextras/carbonio-ui-commons';
 import { TFunction } from 'i18next';
 import { size } from 'lodash';
-import moment from 'moment';
+import { format, subDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
@@ -190,7 +190,7 @@ export const useDeleteActions = (
 			createSnackbar
 		};
 		const eventDate = event?.resource?.ridZ ?? event.start.valueOf();
-		const untilDate = moment(eventDate).subtract(1, 'day').format('YYYYMMDD');
+		const untilDate = format(subDays(new Date(eventDate), 1), 'yyyyMMdd');
 		const deleteFunction = (): void => {
 			const modifiedInvite = {
 				...invite,
@@ -222,7 +222,7 @@ export const useDeleteActions = (
 					folders: context.folders
 				}
 			});
-			const isTheFirstInstance = moment(untilDate).isSameOrBefore(moment(invite.start.d));
+			const isTheFirstInstance = new Date(untilDate) <= new Date(invite.start.d);
 			const draft = !(size(invite?.participants) > 0);
 			return deleteAll || isTheFirstInstance
 				? deleteEvent(event, ctxt)
@@ -274,7 +274,7 @@ export const useDeleteActions = (
 				tz: invite?.start?.tz,
 				allDay: event?.allDay
 			}),
-			s: moment(event.start).valueOf(),
+			s: event.start.getTime(),
 			folders: context.folders
 		};
 		deleteEvent(event, ctxt)

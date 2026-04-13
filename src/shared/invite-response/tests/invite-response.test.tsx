@@ -10,7 +10,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy, values } from 'lodash';
-import moment from 'moment-timezone';
+import { parse } from 'date-fns';
 
 import * as handler from '../../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../../constants';
@@ -147,14 +147,14 @@ describe('invite response component', () => {
 										{
 											d: '20240128T090000',
 											tz: 'Europe/Berlin',
-											u: moment('20240128T090000').valueOf()
+											u: parse('20240128T090000', "yyyyMMdd'T'HHmmss", new Date()).getTime()
 										}
 									],
 									e: [
 										{
 											d: '20240130T093000',
 											tz: 'Europe/Berlin',
-											u: moment('20240130T093000').valueOf()
+											u: parse('20240130T093000', "yyyyMMdd'T'HHmmss", new Date()).getTime()
 										}
 									]
 								}

@@ -6,10 +6,10 @@
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { Folders, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
-import moment from 'moment';
-import momentLocalizer from 'react-widgets-moment';
+import { addSeconds } from 'date-fns';
 import { Dispatch } from 'redux';
 
+import { dateFnsLocalizer } from './date-fns-react-widgets-localizer';
 import { getIdentityItems } from './get-identity-items';
 import { PREFS_DEFAULTS } from '../constants';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
@@ -20,18 +20,17 @@ import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { getNewId } from '../utils/event';
 
-momentLocalizer();
+dateFnsLocalizer();
 
 export const getEndTime = ({ start, duration }: { start: number; duration: string }): number => {
-	const now = moment(start);
 	if (duration?.includes('m')) {
 		const interval = parseInt(duration, 10) * 60;
-		const value = now.add(interval, 's').valueOf();
-		return isNaN(value) ? now.valueOf() + 3600 : value;
+		const value = addSeconds(new Date(start), interval).getTime();
+		return isNaN(value) ? start + 3600 : value;
 	}
 	const interval = parseInt(duration, 10);
-	const value = now.add(interval, 's').valueOf();
-	return isNaN(value) ? now.valueOf() + 3600 : value;
+	const value = addSeconds(new Date(start), interval).getTime();
+	return isNaN(value) ? start + 3600 : value;
 };
 
 export const disabledFields = {
@@ -76,7 +75,7 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 		'id',
 		zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
 	]);
-	const defaultTimezone = moment.tz.guess(true);
+	const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 	return {
 		attach: undefined,

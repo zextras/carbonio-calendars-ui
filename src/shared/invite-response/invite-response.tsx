@@ -10,9 +10,7 @@ import { Container, Row, Icon, Divider, Spinner } from '@zextras/carbonio-design
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { filter, includes } from 'lodash';
-import moment from 'moment';
-
-import 'moment-timezone';
+import { endOfDay } from 'date-fns';
 import { AvailabilityChecker } from './parts/availability-checker';
 import { EventDetails } from './parts/event-details';
 import InviteHeaderPart from './parts/invite-header-part';
@@ -66,7 +64,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		[mailMsg?.participants]
 	);
 
-	const getEndOfDay = (day: string | number): number => moment(day).endOf('day').valueOf();
+	const getEndOfDay = (day: string | number): number => endOfDay(new Date(day)).getTime();
 
 	const proposedStartTime = mailMsg.invite[0]?.comp?.[0]?.s?.[0]?.d;
 	const proposedEndTime = mailMsg.invite[0]?.comp?.[0]?.e?.[0]?.d;
@@ -98,7 +96,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					<AvailabilityChecker
 						email={email}
 						rootId={root.id}
-						start={invite?.start?.u ?? moment(proposedStartTime).valueOf()}
+						start={invite?.start?.u ?? (proposedStartTime ? new Date(proposedStartTime).getTime() : 0)}
 						end={invite?.end?.u ?? getEndOfDay(proposedEndTime)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}
@@ -108,9 +106,9 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					<ProposedTimeReply
 						id={invite?.apptId}
 						start={
-							proposedStartTime ? moment(proposedStartTime).valueOf() : (invite?.start?.u ?? 0)
+							proposedStartTime ? new Date(proposedStartTime).getTime() : (invite?.start?.u ?? 0)
 						}
-						end={proposedEndTime ? moment(proposedEndTime).valueOf() : (invite?.end?.u ?? 0)}
+						end={proposedEndTime ? new Date(proposedEndTime).getTime() : (invite?.end?.u ?? 0)}
 						moveToTrash={moveToTrash}
 						title={mailMsg.subject}
 						to={to}

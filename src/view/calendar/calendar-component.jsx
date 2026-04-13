@@ -8,8 +8,9 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Popover, useTheme } from '@zextras/carbonio-design-system';
 import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
-import moment from 'moment-timezone';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { differenceInDays, format as dateFnsFormat, getDay, isSameDay, parse as dateFnsParse, startOfWeek as dateFnsStartOfWeek } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
 
@@ -75,22 +76,28 @@ export default function CalendarComponent() {
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const anchorElement = useSummaryViewRef();
-	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
-	const localizer = momentLocalizer(moment);
+	const firstDayOfWeek = Number(prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0);
+	const customLocale = useMemo(
+		() => ({ ...enUS, options: { ...enUS.options, weekStartsOn: firstDayOfWeek } }),
+		[firstDayOfWeek]
+	);
+	const localizer = useMemo(
+		() =>
+			dateFnsLocalizer({
+				format: dateFnsFormat,
+				parse: dateFnsParse,
+				startOfWeek: dateFnsStartOfWeek,
+				getDay,
+				locales: { 'en-US': customLocale }
+			}),
+		[customLocale]
+	);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 
 	const [isSplitLayoutEnabled] = useSplitLayoutPrefs();
 	const { onEventDropOrResize, handleSelect, onRangeChange, onNavigate, date } =
 		useCalendarComponentUtils();
-
-	if (prefs.zimbraPrefLocale) {
-		moment.updateLocale(prefs.zimbraPrefLocale, {
-			week: {
-				dow: firstDayOfWeek
-			}
-		});
-	}
 
 	const workingSchedule = useMemo(
 		() => workWeek(prefs.zimbraPrefCalendarWorkingHours),
@@ -222,9 +229,9 @@ export default function CalendarComponent() {
 
 	const draggableAccessor = useCallback(
 		(calendarEvent) => {
-			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+			const startAndEndSameDay = isSameDay(calendarEvent.start, calendarEvent.end);
 
-			if (!isSameDay) {
+			if (!startAndEndSameDay) {
 				/* Drag is disabled for events that span over multiple days due to an issue with the library */
 				return false;
 			}
@@ -242,9 +249,9 @@ export default function CalendarComponent() {
 
 	const resizableAccessor = useCallback(
 		(calendarEvent) => {
-			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+			const startAndEndSameDay = isSameDay(calendarEvent.start, calendarEvent.end);
 
-			if (!isSameDay) {
+			if (!startAndEndSameDay) {
 				/* Resize is disabled for events that span over multiple days due to an issue with the library */
 				return false;
 			}
@@ -268,7 +275,7 @@ export default function CalendarComponent() {
 	);
 
 	const allDayAccessor = useCallback((calendarEvent) => {
-		const diffInDays = moment(calendarEvent.end).diff(calendarEvent.start, 'days');
+		const diffInDays = differenceInDays(calendarEvent.end, calendarEvent.start);
 
 		return diffInDays > 0 || calendarEvent.allDay;
 	}, []);

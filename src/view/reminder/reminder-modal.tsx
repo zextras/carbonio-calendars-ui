@@ -9,7 +9,6 @@ import { Container, CustomModal } from '@zextras/carbonio-design-system';
 import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { find, isEmpty, map, omit } from 'lodash';
-import moment from 'moment';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
@@ -42,7 +41,7 @@ export const ReminderModal = ({
 	const dismissAll = useCallback(() => {
 		const dismissItems = map(reminders, (a) => ({
 			id: a.id,
-			dismissedAt: moment().valueOf()
+			dismissedAt: Date.now()
 		}));
 		setShowNewTimeModal(false);
 		if (dismissItems.length > 0) {

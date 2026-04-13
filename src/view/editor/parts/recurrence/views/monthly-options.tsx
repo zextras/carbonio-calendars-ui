@@ -7,7 +7,7 @@ import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useSt
 
 import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import moment from 'moment';
+import { getDate } from 'date-fns';
 
 import { calculateOrdinalPosition } from './monthly-options-utils';
 import { RecurrenceContext } from 'commons/recurrence-context';
@@ -71,7 +71,7 @@ export const MonthlyOptions = ({ editorId }: { editorId: string }): ReactElement
 	// Calculate day of month from start date
 	const dayOfMonth = useMemo(() => {
 		if (!editorEventStartDate) return 1;
-		return moment(editorEventStartDate).date();
+		return getDate(new Date(editorEventStartDate));
 	}, [editorEventStartDate]);
 
 	// Calculate ordinal position and weekday from start date

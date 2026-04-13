@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
 import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { useFolder } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
-import moment from 'moment';
+
 import { useTranslation } from 'react-i18next';
 
 import { ImageAndIconPart } from './image-and-icon-part';
@@ -116,12 +116,12 @@ export const DetailsPart = ({
 			...omitBy(
 				{
 					allDay: event.allDay,
-					start: moment(event.start).valueOf(),
-					end: moment(event.end).valueOf()
+					start: event.start.getTime(),
+					end: event.end.getTime()
 				},
 				isNil
 			),
-			...{ timezone: invite?.tz ?? moment.tz.guess() }
+			...{ timezone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone }
 		}),
 		[event.allDay, event.end, event.start, invite?.tz]
 	);

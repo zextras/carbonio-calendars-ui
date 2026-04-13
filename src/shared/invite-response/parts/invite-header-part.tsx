@@ -8,7 +8,7 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import moment from 'moment';
+
 import { Trans, useTranslation } from 'react-i18next';
 
 import { MESSAGE_METHOD } from 'constants/api';
@@ -36,12 +36,12 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	const allDay = invite.allDay ?? false;
 
 	const localStartTime = useMemo(
-		() => moment(invite.start?.d ?? invite.start.u).valueOf(),
+		() => new Date(invite.start?.d ?? invite.start.u).getTime(),
 		[invite.start?.d, invite.start.u]
 	);
 
 	const localEndTime = useMemo(
-		() => moment(invite.end?.d ?? invite.end.u).valueOf(),
+		() => new Date(invite.end?.d ?? invite.end.u).getTime(),
 		[invite.end?.d, invite.end.u]
 	);
 
@@ -55,8 +55,8 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	});
 
 	const counterDate = useGetDateRangeConvertedToTimezone(
-		proposedStartTime ? moment(proposedStartTime).valueOf() : 0,
-		proposedEndTime ? moment(proposedEndTime).valueOf() : 0,
+		proposedStartTime ? new Date(proposedStartTime).getTime() : 0,
+		proposedEndTime ? new Date(proposedEndTime).getTime() : 0,
 		{
 			allDay,
 			timeZone

@@ -14,7 +14,7 @@ import {
 	Text
 } from '@zextras/carbonio-design-system';
 import { find, toUpper } from 'lodash';
-import moment from 'moment';
+import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import CustomRepeatSelectItem from '../components/custom-repeat';
@@ -153,7 +153,7 @@ export const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null
 														...defaultValue,
 														byday: {
 															wkday: [
-																{ day: toUpper(`${moment(start).format('dddd').slice(0, 2)}`) }
+																{ day: toUpper(format(new Date(start ?? 0), 'EEEE').slice(0, 2)) }
 															]
 														}
 													}

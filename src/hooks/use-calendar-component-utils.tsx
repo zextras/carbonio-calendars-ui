@@ -10,7 +10,7 @@ import { addBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, usePrefs } from '@zextras/carbonio-ui-commons';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
-import moment, { Moment } from 'moment';
+import { endOfDay, getDay, getHours, getMinutes, startOfDay, subDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -71,21 +71,21 @@ export const useCalendarComponentUtils = (): {
 			inviteStart,
 			eventStart
 		}: {
-			dropStart: Moment;
-			inviteStart: Moment;
-			eventStart: Moment;
+			dropStart: Date;
+			inviteStart: Date;
+			eventStart: Date;
 			isAllDay?: boolean;
 			isSeries?: boolean;
 		}) => {
 			if (isAllDay) {
-				return dropStart.startOf('day').valueOf();
+				return startOfDay(dropStart).getTime();
 			}
 			if (isSeries) {
-				const diff = dropStart.diff(eventStart);
-				return inviteStart.add(diff).valueOf();
+				const diff = dropStart.getTime() - eventStart.getTime();
+				return new Date(inviteStart.getTime() + diff).getTime();
 			}
 
-			return dropStart.valueOf();
+			return dropStart.getTime();
 		},
 		[]
 	);
@@ -99,21 +99,21 @@ export const useCalendarComponentUtils = (): {
 			eventEnd,
 			eventAllDay
 		}: {
-			dropEnd: Moment;
-			inviteEnd: Moment;
-			eventEnd: Moment;
+			dropEnd: Date;
+			inviteEnd: Date;
+			eventEnd: Date;
 			isAllDay?: boolean;
 			isSeries?: boolean;
 			eventAllDay: boolean;
 		}) => {
 			if (isAllDay || eventAllDay) {
-				return dropEnd.startOf('day').valueOf();
+				return startOfDay(dropEnd).getTime();
 			}
 			if (isSeries) {
-				const diff = dropEnd.diff(eventEnd);
-				return inviteEnd.add(diff).valueOf();
+				const diff = dropEnd.getTime() - eventEnd.getTime();
+				return new Date(inviteEnd.getTime() + diff).getTime();
 			}
-			return dropEnd.valueOf();
+			return dropEnd.getTime();
 		},
 		[]
 	);
@@ -136,12 +136,12 @@ export const useCalendarComponentUtils = (): {
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
 				if (payload) {
-					const inviteStart = moment(payload.m[0].inv[0].comp[0].s[0].u);
-					const eventStart = moment(event.start);
-					const dropStart = moment(start);
-					const inviteEnd = moment(payload.m[0].inv[0].comp[0].e[0].u);
-					const eventEnd = moment(event.end);
-					const dropEnd = moment(end);
+					const inviteStart = new Date(payload.m[0].inv[0].comp[0].s[0].u);
+					const eventStart = event.start;
+					const dropStart = new Date(start);
+					const inviteEnd = new Date(payload.m[0].inv[0].comp[0].e[0].u);
+					const eventEnd = event.end;
+					const dropEnd = new Date(end);
 					const eventAllDay = event.allDay;
 					const invite = normalizeInvite(payload.m[0]);
 					const startTime = getStart({
@@ -273,7 +273,7 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				(event.allDay !== isAllDay && moment(event.start).day() === moment(event.end).day())
+				(event.allDay !== isAllDay && getDay(event.start) === getDay(event.end))
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {
@@ -320,18 +320,18 @@ export const useCalendarComponentUtils = (): {
 
 			if (!summaryViewOpen && !action && isDefaultCalendar) {
 				const isAllDay =
-					moment(e.end).hours() === moment(e.start).hours() &&
-					moment(e.end).minutes() === moment(e.start).minutes() &&
-					!moment(e.start).isSame(moment(e.end));
-				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
+					getHours(e.end) === getHours(e.start) &&
+					getMinutes(e.end) === getMinutes(e.start) &&
+					e.start.getTime() !== e.end.getTime();
+				const end = isAllDay ? subDays(e.end, 1) : e.end;
 				const editor = generateEditor({
 					context: {
 						dispatch,
 						folders: calendarFolders,
-						start: moment(e.start).valueOf(),
-						originalStart: moment(e.start).valueOf(),
-						originalEnd: end.valueOf(),
-						end: end.valueOf(),
+						start: e.start.getTime(),
+						originalStart: e.start.getTime(),
+						originalEnd: end.getTime(),
+						end: end.getTime(),
 						allDay: isAllDay ?? false,
 						freeBusy: isAllDay ? EVENT_DISPLAY_STATUS.FREE : EVENT_DISPLAY_STATUS.BUSY,
 						panel: false
@@ -356,14 +356,14 @@ export const useCalendarComponentUtils = (): {
 					const min = datesMin(...range);
 					const max = datesMax(...range);
 					setRange({
-						start: moment(min).startOf('day').valueOf(),
-						end: moment(max).endOf('day').valueOf()
+						start: startOfDay(new Date(min)).getTime(),
+						end: endOfDay(new Date(max)).getTime()
 					});
 				}
 			} else {
 				setRange({
-					start: moment(range.start).startOf('day').valueOf(),
-					end: moment(range.end).endOf('day').valueOf()
+					start: startOfDay(new Date(range.start)).getTime(),
+					end: endOfDay(new Date(range.end)).getTime()
 				});
 			}
 		},

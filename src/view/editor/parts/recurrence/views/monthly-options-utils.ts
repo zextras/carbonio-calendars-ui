@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import moment from 'moment';
+import { addDays, getDate, getDay, getMonth } from 'date-fns';
 
 /**
  * Interface representing the result of calculating ordinal position and weekday code
@@ -36,17 +36,17 @@ const DAY_CODES = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
  * // Returns: { ordinalPosition: -1, weekdayCode: 'TH' }
  */
 export const calculateOrdinalPosition = (date: Date | number | string): OrdinalPositionResult => {
-	const momentDate = moment(date);
-	const dayOfWeek = momentDate.day(); // 0 = Sunday, 6 = Saturday
-	const currentDayOfMonth = momentDate.date();
+	const dateObj = new Date(date);
+	const dayOfWeek = getDay(dateObj); // 0 = Sunday, 6 = Saturday
+	const currentDayOfMonth = getDate(dateObj);
 
 	// Calculate which occurrence of this weekday in the month (1st, 2nd, 3rd, etc.)
 	const occurrence = Math.ceil(currentDayOfMonth / 7);
 
 	// Detect if this is the last occurrence of this weekday in the month.
 	// If adding 7 days changes the month, there is no next same weekday in this month.
-	const nextWeek = moment(momentDate).add(7, 'days');
-	const isLastOccurrence = nextWeek.month() !== momentDate.month();
+	const nextWeek = addDays(dateObj, 7);
+	const isLastOccurrence = getMonth(nextWeek) !== getMonth(dateObj);
 	const computedOrdinalPosition = isLastOccurrence ? -1 : occurrence;
 
 	return {

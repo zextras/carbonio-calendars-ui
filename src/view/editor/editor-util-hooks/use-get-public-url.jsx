@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react';
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -31,7 +31,7 @@ export const useGetPublicUrl = ({ editorId }) => {
 		() =>
 			t('label.public_link_description', {
 				title,
-				date: moment().format('yyyy-MM-DD_hh:mm'),
+				date: format(new Date(), "yyyy-MM-dd_hh:mm"),
 				defaultValue: 'Generated from {{title}} on {{date}}'
 			}),
 		[title]

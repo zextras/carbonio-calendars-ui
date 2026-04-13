@@ -15,7 +15,7 @@ import {
 	hasId
 } from '@zextras/carbonio-ui-commons';
 import { find, forEach, isNil, map, reduce, some } from 'lodash';
-import moment from 'moment';
+import { addSeconds, differenceInSeconds, formatDistanceToNow } from 'date-fns';
 
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
@@ -283,7 +283,7 @@ export const getTimeToDisplayData = (
 	text: string;
 } => {
 	const { start, end, alarmData } = reminder;
-	const difference = moment(end).diff(moment(start), 'seconds');
+	const difference = differenceInSeconds(end, start);
 	if (start.valueOf() < currentTime && end.valueOf() > currentTime) {
 		return {
 			color: 'info',
@@ -299,13 +299,13 @@ export const getTimeToDisplayData = (
 	if (start.valueOf() < currentTime) {
 		return {
 			color: 'error',
-			text: moment(start).from(moment())
+			text: formatDistanceToNow(start, { addSuffix: true })
 		};
 	}
 	if (alarmData && alarmData?.[0] && alarmData?.[0]?.alarmInstStart) {
 		if (
 			alarmData[0].alarmInstStart < currentTime &&
-			moment(alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() > currentTime
+			addSeconds(new Date(alarmData[0].alarmInstStart), difference).getTime() > currentTime
 		) {
 			return {
 				color: 'info',
@@ -315,13 +315,13 @@ export const getTimeToDisplayData = (
 		if (alarmData[0].alarmInstStart < currentTime) {
 			return {
 				color: 'error',
-				text: moment(alarmData[0].alarmInstStart).fromNow()
+				text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), { addSuffix: true })
 			};
 		}
 	}
 	return {
 		color: 'info',
-		text: moment(alarmData[0].alarmInstStart).fromNow()
+		text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), { addSuffix: true })
 	};
 };
 

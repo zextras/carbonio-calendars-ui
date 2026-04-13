@@ -3,29 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import moment from 'moment';
+import { endOfDay, startOfDay } from 'date-fns';
 
 import { Invite } from '../types/store/invite';
 
 export const inviteToEvent = (invite: Invite): any => ({
 	start: invite.allDay
-		? new Date(moment(invite?.start?.d).startOf('day').valueOf())
-		: new Date(moment(invite?.start?.d).valueOf() ?? invite?.start?.u),
+		? startOfDay(new Date(invite?.start?.d ?? 0))
+		: new Date(invite?.start?.d ?? invite?.start?.u ?? 0),
 	end: invite.allDay
-		? new Date(
-				moment(invite?.start?.d)
-					.add(
-						moment
-							.duration(moment(invite.end.d).diff(moment(invite.start.d)), 'milliseconds')
-							.asDays(),
-						'days'
-					)
-					.endOf('day')
-					.valueOf()
-			)
+		? endOfDay(new Date(invite.end.d))
 		: new Date(
-				(invite?.start?.u ?? moment(invite?.start?.d).valueOf()) +
-					moment(invite.end.d).diff(moment(invite.start.d))
+				(invite?.start?.u ?? new Date(invite?.start?.d ?? 0).getTime()) +
+					(new Date(invite.end.d).getTime() - new Date(invite.start.d).getTime())
 			),
 	resource: {
 		id: invite.apptId,

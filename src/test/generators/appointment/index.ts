@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { faker } from '@faker-js/faker';
+import { format, startOfMinute } from 'date-fns';
 import { isNil, omitBy } from 'lodash';
-import moment from 'moment';
 
 import { ROOM_DIVIDER } from '../../../constants';
 import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../../constants/api';
@@ -26,6 +26,8 @@ const getDefaultAppointment = (): Appointment => {
 		lastName: organizerLastName
 	});
 
+	const now = startOfMinute(new Date());
+
 	return {
 		id: faker.string.uuid(),
 		class: 'PUB' as InviteClass,
@@ -33,7 +35,7 @@ const getDefaultAppointment = (): Appointment => {
 		alarm: false,
 		fb: EVENT_DISPLAY_STATUS.BUSY,
 		fr: `${ROOM_DIVIDER} ${organizerFirstName} ${organizerLastName} have invited you to a new meeting! Subject: ...`,
-		d: moment().valueOf(),
+		d: Date.now(),
 		fba: EVENT_DISPLAY_STATUS.BUSY,
 		md: 0,
 		ms: 0,
@@ -48,8 +50,8 @@ const getDefaultAppointment = (): Appointment => {
 		inst: [
 			{
 				recur: false,
-				ridZ: moment().set('second', 0).set('millisecond', 0).format('YYYYMMDD[T]HHmmss[Z]'),
-				s: moment().set('second', 0).set('millisecond', 0).valueOf()
+				ridZ: format(now, "yyyyMMdd'T'HHmmss'Z'"),
+				s: now.getTime()
 			}
 		],
 		draft: false,
@@ -90,8 +92,8 @@ export default (context: GetAppointmentProps | undefined = {}): Appointment => {
 							? [
 									{
 										recur: false,
-										ridZ: moment(event.resource.start).format('YYYYMMDD[T]HHmmss[Z]'),
-										s: moment(event.resource.start).valueOf()
+										ridZ: format(new Date(event.resource.start), "yyyyMMdd'T'HHmmss'Z'"),
+										s: event.resource.start
 									}
 								]
 							: undefined,

@@ -8,8 +8,8 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
+import { addDays, addHours, addMinutes, endOfDay, format, startOfDay, subMinutes } from 'date-fns';
 import { map } from 'lodash';
-import moment from 'moment';
 
 import {
 	EditorAvailabilityWarningRow,
@@ -20,7 +20,7 @@ import { CALENDAR_RESOURCES } from '../../../constants';
 import { reducers } from '../../../store/redux';
 import { setupTest } from '@test-setup';
 
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'yyyy/MM/dd';
 const attendeeId = faker.internet.email();
 
 describe('editor availability warning row', () => {
@@ -30,12 +30,12 @@ describe('editor availability warning row', () => {
 				id: attendeeId,
 				email: attendeeId,
 				b: [],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
-			const start = moment().valueOf();
-			const end = moment().add(30, 'minutes').valueOf();
+			const start = Date.now();
+			const end = addMinutes(new Date(), 30).getTime();
 			const attendeesAvailabilityList = [item];
 			const isAllDay = false;
 			const isBusy = getIsBusyAtTimeOfTheEvent(
@@ -49,18 +49,18 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(false);
 		});
 		test('If the appointment starts while attendee is busy the function return true', () => {
-			const slotS = moment().subtract(15, 'minutes').valueOf();
-			const slotE = moment().add(15, 'minutes').valueOf();
+			const slotS = subMinutes(new Date(), 15).getTime();
+			const slotE = addMinutes(new Date(), 15).getTime();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
-			const start = moment().valueOf();
-			const end = moment().add(30, 'minutes').valueOf();
+			const start = Date.now();
+			const end = addMinutes(new Date(), 30).getTime();
 			const attendeesAvailabilityList = [item];
 			const isAllDay = false;
 			const isBusy = getIsBusyAtTimeOfTheEvent(
@@ -75,18 +75,18 @@ describe('editor availability warning row', () => {
 		});
 		// (end > slot.s && end < slot.e)
 		test('If the appointment ends while attendee is busy the function return true', () => {
-			const slotS = moment().valueOf();
-			const slotE = moment().add(30, 'minutes').valueOf();
+			const slotS = Date.now();
+			const slotE = addMinutes(new Date(), 30).getTime();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
-			const start = moment().subtract(15, 'minutes').valueOf();
-			const end = moment().add(15, 'minutes').valueOf();
+			const start = subMinutes(new Date(), 15).getTime();
+			const end = addMinutes(new Date(), 15).getTime();
 			const attendeesAvailabilityList = [item];
 			const isAllDay = false;
 			const isBusy = getIsBusyAtTimeOfTheEvent(
@@ -101,18 +101,18 @@ describe('editor availability warning row', () => {
 		});
 		// (start < slot.s && end > slot.e)
 		test('If the appointment starts before the attendee is busy but ends after the attendee is busy the function return true', () => {
-			const slotS = moment().valueOf();
-			const slotE = moment().add(15, 'minutes').valueOf();
+			const slotS = Date.now();
+			const slotE = addMinutes(new Date(), 15).getTime();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
-			const start = moment().subtract(15, 'minutes').valueOf();
-			const end = moment().add(30, 'minutes').valueOf();
+			const start = subMinutes(new Date(), 15).getTime();
+			const end = addMinutes(new Date(), 30).getTime();
 			const attendeesAvailabilityList = [item];
 			const isAllDay = false;
 			const isBusy = getIsBusyAtTimeOfTheEvent(
@@ -127,18 +127,18 @@ describe('editor availability warning row', () => {
 		});
 		// start === slot.s
 		test('If the appointment starts when the attendee has another appointment starting at the same time the function return true', () => {
-			const slotS = moment().valueOf();
-			const slotE = moment().add(30, 'minutes').valueOf();
+			const slotS = Date.now();
+			const slotE = addMinutes(new Date(), 30).getTime();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
-			const start = moment().valueOf();
-			const end = moment().add(15, 'minutes').valueOf();
+			const start = Date.now();
+			const end = addMinutes(new Date(), 15).getTime();
 			const attendeesAvailabilityList = [item];
 			const isAllDay = false;
 			const isBusy = getIsBusyAtTimeOfTheEvent(
@@ -153,16 +153,16 @@ describe('editor availability warning row', () => {
 		});
 		// end === slot.e
 		test('If the appointment ends when the attendee has another appointment ending at the same time the function return true', () => {
-			const slotS = moment().valueOf();
-			const slotE = moment().add(30, 'minutes').valueOf();
+			const slotS = Date.now();
+			const slotE = addMinutes(new Date(), 30).getTime();
 
-			const start = moment().subtract(15, 'minutes').valueOf();
-			const end = moment().add(30, 'minutes').valueOf();
+			const start = subMinutes(new Date(), 15).getTime();
+			const end = addMinutes(new Date(), 30).getTime();
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
@@ -180,17 +180,17 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(true);
 		});
 		test('If the appointment ends on a different day from start the function return false', () => {
-			const slotS = moment().add(5, 'minutes').valueOf();
-			const slotE = moment().add(30, 'minutes').valueOf();
+			const slotS = addMinutes(new Date(), 5).getTime();
+			const slotE = addMinutes(new Date(), 30).getTime();
 
-			const start = moment().valueOf();
-			const end = moment().add(1, 'day').valueOf();
+			const start = Date.now();
+			const end = addDays(new Date(), 1).getTime();
 
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
@@ -208,17 +208,17 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(false);
 		});
 		test('If the appointment lasts all day but allDay is not checked the function return true', () => {
-			const slotS = moment().add(5, 'minutes').valueOf();
-			const slotE = moment().add(30, 'minutes').valueOf();
+			const slotS = addMinutes(new Date(), 5).getTime();
+			const slotE = addMinutes(new Date(), 30).getTime();
 
-			const start = moment().startOf('day').valueOf();
-			const end = moment().add(1, 'day').startOf('day').valueOf();
+			const start = startOfDay(new Date()).getTime();
+			const end = startOfDay(addDays(new Date(), 1)).getTime();
 
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
@@ -236,17 +236,17 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(true);
 		});
 		test('If the appointment is all day for 1 day and the attendee is busy the function return true', () => {
-			const slotS = moment().add(5, 'minutes').valueOf();
-			const slotE = moment().add(30, 'minutes').valueOf();
+			const slotS = addMinutes(new Date(), 5).getTime();
+			const slotE = addMinutes(new Date(), 30).getTime();
 
-			const start = moment().valueOf();
-			const end = moment().add(30, 'minutes').valueOf();
+			const start = Date.now();
+			const end = addMinutes(new Date(), 30).getTime();
 
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [{ s: slotS, e: slotE }],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
@@ -264,14 +264,14 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(true);
 		});
 		test('If the appointment is all day for 1 day and the attendee is not busy the function return false', () => {
-			const start = moment().valueOf();
-			const end = moment().add(30, 'minutes').valueOf();
+			const start = Date.now();
+			const end = addMinutes(new Date(), 30).getTime();
 
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
@@ -289,14 +289,14 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(false);
 		});
 		test('If the appointment is all day for more than 1 day and the attendee is not busy the function return false', () => {
-			const start = moment().valueOf();
-			const end = moment().add(2, 'days').valueOf();
+			const start = Date.now();
+			const end = addDays(new Date(), 2).getTime();
 
 			const item = {
 				id: attendeeId,
 				email: attendeeId,
 				b: [],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: []
 			};
@@ -316,8 +316,8 @@ describe('editor availability warning row', () => {
 	});
 	describe('EditorAvailabilityWarningRow', () => {
 		test('If a room is busy at the time of the event, there will be a warning string to inform the user', async () => {
-			const busyStart = moment().add(5, 'hours').valueOf();
-			const busyEnd = moment().add(5, 'hours').add(30, 'minutes').valueOf();
+			const busyStart = addHours(new Date(), 5).getTime();
+			const busyEnd = addMinutes(addHours(new Date(), 5), 30).getTime();
 
 			const roomId = faker.string.uuid();
 			const roomEmail = faker.internet.email();
@@ -339,16 +339,16 @@ describe('editor availability warning row', () => {
 						e: busyEnd
 					}
 				],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: [
 					{
-						s: moment().startOf('day').valueOf(),
-						e: moment().add(5, 'hours').valueOf()
+						s: startOfDay(new Date()).getTime(),
+						e: addHours(new Date(), 5).getTime()
 					},
 					{
-						s: moment().add(5, 'hours').add(30, 'minutes').valueOf(),
-						e: moment().endOf('day').valueOf()
+						s: addMinutes(addHours(new Date(), 5), 30).getTime(),
+						e: endOfDay(new Date()).getTime()
 					}
 				]
 			};
@@ -389,8 +389,8 @@ describe('editor availability warning row', () => {
 			expect(labelSelector).toBeVisible();
 		});
 		test('If a room is not busy at the time of the event, there wont be a warning string to inform the user', async () => {
-			const freeStart = moment().startOf('day').valueOf();
-			const freeEnd = moment().add(5, 'hours').valueOf();
+			const freeStart = startOfDay(new Date()).getTime();
+			const freeEnd = addHours(new Date(), 5).getTime();
 
 			const roomId = faker.string.uuid();
 			const roomEmail = faker.internet.email();
@@ -408,11 +408,11 @@ describe('editor availability warning row', () => {
 				email: roomEmail,
 				b: [
 					{
-						s: moment().add(5, 'hours').valueOf(),
-						e: moment().add(5, 'hours').add(30, 'minutes').valueOf()
+						s: addHours(new Date(), 5).getTime(),
+						e: addMinutes(addHours(new Date(), 5), 30).getTime()
 					}
 				],
-				requestedDays: [moment().format(dateFormat)],
+				requestedDays: [format(new Date(), dateFormat)],
 				t: [],
 				f: [
 					{
@@ -420,8 +420,8 @@ describe('editor availability warning row', () => {
 						e: freeEnd
 					},
 					{
-						s: moment().add(5, 'hours').add(30, 'minutes').valueOf(),
-						e: moment().endOf('day').valueOf()
+						s: addMinutes(addHours(new Date(), 5), 30).getTime(),
+						e: endOfDay(new Date()).getTime()
 					}
 				]
 			};

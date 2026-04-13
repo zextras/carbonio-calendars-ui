@@ -10,7 +10,7 @@ import { Container, List, Row, Text, Padding, ListItem } from '@zextras/carbonio
 import { QueryChip } from '@zextras/carbonio-search-ui';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map, sortBy } from 'lodash';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 import { AdvancedFilterButton } from './parts/advanced-filter-button';
 import SearchListItem from './search-list-item';
@@ -54,14 +54,14 @@ const SearchList = ({
 		[appointments]
 	);
 
-	const dateStartValue = moment(dateStart).format('DD/MM/YYYY');
+	const dateStartValue = format(new Date(dateStart), 'dd/MM/yyyy');
 
 	const dateStartString = useMemo(
 		() => `${t('search.from_date', 'From Date')} ${dateStartValue}`,
 		[dateStartValue]
 	);
 
-	const dateEndValue = moment(dateEnd).format('DD/MM/YYYY');
+	const dateEndValue = format(new Date(dateEnd), 'dd/MM/yyyy');
 
 	const dateEndString = useMemo(
 		() => `${t('search.to_date', 'to Date')} ${dateEndValue}`,

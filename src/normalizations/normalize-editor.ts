@@ -6,7 +6,7 @@
 
 import { getRoot, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
 import { filter, find, isNil, map, omitBy } from 'lodash';
-import moment, { Moment } from 'moment';
+import { endOfDay, set, startOfDay } from 'date-fns';
 
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import type { EditorContext } from '../commons/editor-generator';
@@ -86,8 +86,8 @@ export type EventPropType = {
 	};
 	title: string;
 	allDay: boolean;
-	start: Date | Moment;
-	end: Date | Moment;
+	start: Date;
+	end: Date;
 };
 
 const setEditorDate = ({
@@ -105,37 +105,38 @@ const setEditorDate = ({
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const start = invite?.start?.u ?? moment(invite?.start?.d).valueOf();
-			const end = invite?.end?.u ?? moment(invite?.end?.d).valueOf();
+			const start = invite?.start?.u ?? new Date(invite?.start?.d ?? 0).getTime();
+			const end = invite?.end?.u ?? new Date(invite?.end?.d ?? 0).getTime();
 
 			const currentStartDate = new Date(start);
 			const currentEndDate = new Date(end);
 
 			return {
 				start: event?.allDay
-					? moment(currentStartDate)?.startOf('date').valueOf()
+					? startOfDay(currentStartDate).getTime()
 					: currentStartDate.getTime(),
 				end: event?.allDay
-					? moment(currentEndDate)?.endOf('date').valueOf()
+					? endOfDay(currentEndDate).getTime()
 					: currentEndDate.getTime()
 			};
 		}
 
-		const currentStartDate = new Date(moment(event?.start).valueOf());
-		const currentEndDate = new Date(moment(event?.end).valueOf());
+		const currentStartDate = event?.start instanceof Date ? event.start : new Date(event?.start ?? 0);
+		const currentEndDate = event?.end instanceof Date ? event.end : new Date(event?.end ?? 0);
 
 		return {
 			start: event?.allDay
-				? moment(currentStartDate)?.startOf('date').valueOf()
-				: moment(currentStartDate).valueOf(),
+				? startOfDay(currentStartDate).getTime()
+				: currentStartDate.getTime(),
 			end: event?.allDay
-				? moment(currentEndDate)?.endOf('date').valueOf()
-				: moment(currentEndDate).valueOf()
+				? endOfDay(currentEndDate).getTime()
+				: currentEndDate.getTime()
 		};
 	}
+	const now = set(new Date(), { seconds: 0, milliseconds: 0 });
 	return {
-		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
-		end: moment().set('second', 0).set('millisecond', 0).valueOf() + endDur
+		start: now.getTime(),
+		end: now.getTime() + endDur
 	};
 };
 

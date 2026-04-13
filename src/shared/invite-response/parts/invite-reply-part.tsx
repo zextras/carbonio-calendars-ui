@@ -16,7 +16,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { addBoard, Board } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
-import moment from 'moment';
+
 import { useTranslation } from 'react-i18next';
 
 import { sendResponse } from '../invite-reply-actions';
@@ -45,7 +45,7 @@ const normalizeEditorFromMailMessage = (
 	allDay: messageData.allDay ?? false,
 	freeBusy: messageData.fb,
 	class: messageData.class,
-	timezone: messageData?.s[0]?.tz ?? moment.tz.guess(true),
+	timezone: messageData?.s[0]?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
 	recur: messageData.recur,
 	richText: messageData.descHtml?.[0]?._content ?? '',
 	plainText: messageData.desc[0]?._content ?? '',
@@ -53,10 +53,10 @@ const normalizeEditorFromMailMessage = (
 	equipment: getEquipments(messageData.at),
 	room: getVirtualRoom(messageData.xprop),
 	uid: messageData.uid,
-	originalStart: messageData.s[0].u ?? moment(messageData.s[0].d).valueOf(),
-	originalEnd: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
-	start: messageData.s[0].u ?? moment(messageData.s[0].d).valueOf(),
-	end: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
+	originalStart: messageData.s[0].u ?? new Date(messageData.s[0].d).getTime(),
+	originalEnd: messageData.e[0].u ?? new Date(messageData.e[0].d).getTime(),
+	start: messageData.s[0].u ?? new Date(messageData.s[0].d).getTime(),
+	end: messageData.e[0].u ?? new Date(messageData.e[0].d).getTime(),
 	attendees: [
 		{
 			email: messageData.or.a ?? messageData.or.url

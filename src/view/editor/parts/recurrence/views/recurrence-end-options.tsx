@@ -16,10 +16,10 @@ import {
 	Text
 } from '@zextras/carbonio-design-system';
 import { isNaN, isNil, isNumber } from 'lodash';
-import moment from 'moment';
+import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import momentLocalizer from 'react-widgets-moment';
 
+import { dateFnsLocalizer } from 'commons/date-fns-react-widgets-localizer';
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { RADIO_VALUES } from 'constants/recurrence';
 import { useAppSelector } from 'store/redux/hooks';
@@ -30,7 +30,7 @@ import {
 } from 'store/selectors/editor';
 import { Count } from 'types/editor';
 
-momentLocalizer();
+dateFnsLocalizer();
 
 const radioInitialState = (count: number | undefined, until: string | undefined): string => {
 	if (count) {
@@ -57,7 +57,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 	const initialPickerValue = useMemo(
 		() =>
 			// Use editor value or start date
-			until ? new Date(moment(until).valueOf()) : new Date(moment(start).valueOf()),
+			until ? new Date(until) : new Date(start ?? 0),
 		[start, until]
 	);
 
@@ -107,7 +107,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 				case RADIO_VALUES.END_AFTER_UNTIL:
 					setNewEndValue({
 						until: {
-							d: moment(pickerValue).format('YYYYMMDD')
+							d: format(pickerValue, 'yyyyMMdd')
 						}
 					});
 					setRadioValue(ev);
@@ -132,7 +132,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 	const onDateChange = useCallback(
 		(d: Date | null) => {
 			if (!isDatePickerDisabled && d) {
-				const fullData = moment(d.valueOf()).format('YYYYMMDD');
+				const fullData = format(d, 'yyyyMMdd');
 				setPickerValue(d);
 				setNewEndValue({ until: { d: fullData } });
 			}

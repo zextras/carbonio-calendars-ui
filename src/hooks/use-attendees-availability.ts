@@ -6,7 +6,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { map, differenceBy, filter, includes, find } from 'lodash';
-import moment from 'moment';
+import { endOfDay, format, startOfDay } from 'date-fns';
 
 import { getFreeBusyRequest } from '../soap/get-free-busy-request';
 import { Editor } from '../types/editor';
@@ -37,10 +37,10 @@ export const useAttendeesAvailability = (
 
 	useEffect(() => {
 		if (start && attendeesWithEmail && attendeesWithEmail.length > 0) {
-			const currentStartDay = moment(start).format('YYYY/MM/DD');
+			const currentStartDay = format(new Date(start), 'yyyy/MM/dd');
 
-			const newRangeStart = moment(start).startOf('day').valueOf();
-			const newRangeEnd = moment(start).endOf('day').valueOf();
+			const newRangeStart = startOfDay(new Date(start)).getTime();
+			const newRangeEnd = endOfDay(new Date(start)).getTime();
 
 			if (!attendeesAvailabilityList) {
 				const uid = map(attendeesWithEmail, (attendee) => attendee.email).join(',');
@@ -81,7 +81,7 @@ export const useAttendeesAvailability = (
 						}
 					);
 				}
-				const previousStartDay = moment(previousStart).format('YYYY/MM/DD');
+				const previousStartDay = format(new Date(previousStart ?? 0), 'yyyy/MM/dd');
 
 				if (currentStartDay !== previousStartDay) {
 					setPreviousStart(start);

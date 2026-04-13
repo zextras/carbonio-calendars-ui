@@ -7,7 +7,7 @@ import React, { useCallback } from 'react';
 
 import { Container, Icon, Row, Tooltip, Padding, Text } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import moment, { Moment } from 'moment';
+import { format, getDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import { TagIconComponent } from '../../../commons/tag-icon-component';
@@ -17,27 +17,25 @@ import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { useNeverSentWarningLabel } from '../../../hooks/use-never-sent-warning-label';
 import { EventType } from '../../../types/event';
 
-const useEventTimeString = (start: Moment | Date, end: Moment | Date, allDay: boolean): string => {
+const useEventTimeString = (start: Date, end: Date, allDay: boolean): string => {
 	const [t] = useTranslation();
-	const isSingleAllDay = moment(start).day() === moment(end).day() && allDay;
-	const isMultiAllDay = moment(start).day() !== moment(end).day() && allDay;
-	const isMulti = moment(start).day() !== moment(end).day() && !allDay;
+	const isSingleAllDay = getDay(start) === getDay(end) && allDay;
+	const isMultiAllDay = getDay(start) !== getDay(end) && allDay;
+	const isMulti = getDay(start) !== getDay(end) && !allDay;
 
 	if (isSingleAllDay) {
 		return t('label.all_day', 'All day');
 	}
 	if (isMulti) {
-		return `${moment(start).format('MMMM Do YYYY hh:mm A')} - ${moment(end).format(
-			'MMMM Do YYYY hh:mm A'
-		)}`;
+		return `${format(start, 'MMMM do yyyy hh:mm a')} - ${format(end, 'MMMM do yyyy hh:mm a')}`;
 	}
 	if (isMultiAllDay) {
-		return `${moment(start).format('MMMM Do YYYY')} - ${moment(end).format('MMMM Do YYYY')} - ${t(
+		return `${format(start, 'MMMM do yyyy')} - ${format(end, 'MMMM do yyyy')} - ${t(
 			'label.all_day',
 			'All day'
 		)}`;
 	}
-	return `${moment(start).format('hh:mm A')} - ${moment(end).format('hh:mm A')}`;
+	return `${format(start, 'hh:mm a')} - ${format(end, 'hh:mm a')}`;
 };
 
 export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element => {

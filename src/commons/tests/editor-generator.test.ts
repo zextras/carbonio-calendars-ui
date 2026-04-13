@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import moment from 'moment';
+import { addMinutes } from 'date-fns';
 
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import { PREFS_DEFAULTS } from '../../constants';
@@ -70,7 +70,7 @@ describe('Editor generator', () => {
 			expect(editor.attachmentFiles).toStrictEqual([]);
 			expect(editor.attendees).toStrictEqual([]);
 			expect(editor.class).toBe('PUB');
-			expect(editor.end).toBe(moment(editor.start).add('60', 'minutes').valueOf());
+			expect(editor.end).toBe(addMinutes(new Date(editor.start ?? 0), 60).getTime());
 			expect(editor.exceptId).toBeUndefined();
 			expect(editor.freeBusy).toBe(EVENT_DISPLAY_STATUS.BUSY);
 			expect(editor.id).toBe('new-1');
@@ -237,7 +237,7 @@ describe('Editor generator', () => {
 			expect(editor.optionalAttendees).toStrictEqual([]);
 			expect(editor.freeBusy).toBe(EVENT_DISPLAY_STATUS.FREE);
 			expect(editor.start).toBeLessThanOrEqual(new Date().valueOf());
-			expect(editor.end).toBe(moment(editor.start).valueOf());
+			expect(editor.end).toBe(editor.start);
 			expect(editor.allDay).toBe(true);
 			expect(editor.reminder).toBe('10');
 			expect(editor.recur[0].add[0].rule[0].freq).toBe('DAI');

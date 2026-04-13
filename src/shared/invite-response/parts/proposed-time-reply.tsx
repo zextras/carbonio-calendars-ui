@@ -9,7 +9,7 @@ import { Container, Padding, Button, Divider, useSnackbar } from '@zextras/carbo
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { find, map } from 'lodash';
-import moment from 'moment-timezone';
+
 import { useTranslation } from 'react-i18next';
 
 import { generateEditor } from '../../../commons/editor-generator';
@@ -73,9 +73,13 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 								attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
 								isInstance: !!ridZ,
 								originalStart:
-									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d).valueOf() ?? start,
+									(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d
+										? new Date(appointmentToNormalize.inv[0].comp[0].s[0].d).getTime()
+										: undefined) ?? start,
 								originalEnd:
-									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d).valueOf() ?? end,
+									(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d
+										? new Date(appointmentToNormalize.inv[0].comp[0].e[0].d).getTime()
+										: undefined) ?? end,
 								exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
 								start,
 								end,

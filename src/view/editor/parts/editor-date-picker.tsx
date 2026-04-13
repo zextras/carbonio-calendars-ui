@@ -6,7 +6,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Padding, Row } from '@zextras/carbonio-design-system';
-import moment from 'moment';
+
 
 import EndDatePicker from '../../../commons/end-date-picker';
 import StartDatePicker from '../../../commons/start-date-picker';
@@ -25,7 +25,7 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
-	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
+	const diff = useMemo(() => (end ?? 0) - (start ?? 0), [end, start]);
 	const dispatch = useAppDispatch();
 
 	const onChange = useCallback(

@@ -7,12 +7,9 @@ import React, { useCallback, useMemo } from 'react';
 
 import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import moment from 'moment';
-import momentLocalizer from 'react-widgets-moment';
+import { getHours as dateFnsGetHours, getMinutes as dateFnsGetMinutes, set as dateFnsSet } from 'date-fns';
 
 import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
-
-momentLocalizer();
 const getHour = (hour) => {
 	switch (hour) {
 		case '00':
@@ -46,11 +43,7 @@ const getMin = (min) => {
 const getDate = (time) => {
 	const hour = time.split('').slice(0, 2).join('');
 	const min = time.split('').slice(2, 4).join('');
-	return new Date(
-		moment()
-			.hour(getHour(hour))
-			.minute(Number(getMin(min)))
-	);
+	return dateFnsSet(new Date(), { hours: getHour(hour), minutes: Number(getMin(min)) });
 };
 export default function StartDatePicker({ start, onChange, day, showEnd, disabled, label }) {
 	const onStartChange = useCallback(
@@ -58,8 +51,8 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 			if (d) {
 				onChange({
 					start: showEnd,
-					hour: moment(d).hour() < 10 ? `0${moment(d).hour()}` : moment(d).hour(),
-					minute: moment(d).minute() < 10 ? `0${moment(d).minute()}` : moment(d).minute(),
+					hour: dateFnsGetHours(d) < 10 ? `0${dateFnsGetHours(d)}` : dateFnsGetHours(d),
+					minute: dateFnsGetMinutes(d) < 10 ? `0${dateFnsGetMinutes(d)}` : dateFnsGetMinutes(d),
 					day
 				});
 			}
