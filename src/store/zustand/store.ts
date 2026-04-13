@@ -6,7 +6,7 @@
 import React from 'react';
 
 import moment from 'moment';
-import { View } from 'react-big-calendar';
+import type { View } from 'react-big-calendar';
 import { create } from 'zustand';
 
 export type SetRange = ({ start, end }: { start: number; end: number }) => void;

@@ -9,7 +9,7 @@ import { Popover, useTheme } from '@zextras/carbonio-design-system';
 import { usePrefs, isTrashOrNestedInIt, Folders } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
-import { Calendar, Components, momentLocalizer } from 'react-big-calendar';
+import { Calendar, type Components, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
 

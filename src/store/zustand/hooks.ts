@@ -6,7 +6,7 @@
 
 import { MutableRefObject } from 'react';
 
-import { View } from 'react-big-calendar';
+import type { View } from 'react-big-calendar';
 
 import { AppState, SetRange, useAppStatusStore } from './store';
 

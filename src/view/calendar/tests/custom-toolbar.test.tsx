@@ -7,7 +7,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act } from '@testing-library/react';
-import { View } from 'react-big-calendar';
+import type { View } from 'react-big-calendar';
 
 import { useLocalStorage } from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import { reducers } from '../../../store/redux';

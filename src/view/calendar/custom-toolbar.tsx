@@ -15,7 +15,7 @@ import {
 	Padding,
 	AnyColor
 } from '@zextras/carbonio-design-system';
-import { NavigateAction, View } from 'react-big-calendar';
+import type { NavigateAction, View } from 'react-big-calendar';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarToolbar } from '../../components/calendar-toolbar';
