@@ -9,7 +9,9 @@ import { http, HttpResponse } from 'msw';
 
 import {
 	addIcsFromUrl,
+	deleteCaldavCalendar,
 	deleteCalendar,
+	editCaldavCalendar,
 	editCalendar,
 	emptyTrash,
 	findShares,
@@ -17,6 +19,7 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
+	syncCaldavCalendar,
 	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
@@ -74,6 +77,7 @@ describe('calendar-actions-fn', () => {
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
 					severity: 'error',
+					// eslint-disable-next-line
 					label: 'label.error_try_again'
 				})
 			);
@@ -313,5 +317,38 @@ describe('calendar-actions-fn', () => {
 		);
 
 		getSetupServer().resetHandlers();
+	});
+
+	test('sync caldav calendar shows error when datasource id is missing', async () => {
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR };
+		const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+
+		await act(async () => syncCaldavCalendarFn());
+
+		expect(createSnackbar).toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'error',
+				label: 'label.error_try_again'
+			})
+		);
+	});
+
+	test('edit caldav calendar fn on click create modal is called once', () => {
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: '99', dsId: '10' };
+		const editCaldavCalendarFn = editCaldavCalendar({ createModal, closeModal, item });
+		editCaldavCalendarFn();
+		expect(createModal).toHaveBeenCalledTimes(1);
+	});
+
+	test('delete caldav calendar fn on click create modal is called once', () => {
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: '99', name: 'My CalDAV', dsId: '10' };
+		const deleteCaldavCalendarFn = deleteCaldavCalendar({ createModal, closeModal, item });
+		deleteCaldavCalendarFn();
+		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 });

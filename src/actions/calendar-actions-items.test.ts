@@ -9,7 +9,9 @@ import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-u
 
 import {
 	addExternalCalendarsItem,
+	deleteCaldavCalendarItem,
 	deleteCalendarItem,
+	editCaldavCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
 	moveToRootItem,
@@ -17,6 +19,7 @@ import {
 	noPermissionLabel,
 	removeFromListItem,
 	shareCalendarItem,
+	syncCaldavCalendarItem,
 	sharesInfoItem,
 	syncExternalCalendarItem
 } from './calendar-actions-items';
@@ -600,6 +603,67 @@ describe('calendar actions items', () => {
 					label: 'label.sync',
 					disabled: false,
 					customComponent: expect.anything()
+				})
+			);
+		});
+	});
+
+	describe('CalDAV dedicated actions', () => {
+		test('syncCaldavCalendarItem is enabled for caldav root folders', () => {
+			const createSnackbar = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '990',
+				dsId: '10',
+				dsType: 'caldav'
+			} as Folder;
+
+			const syncItem = syncCaldavCalendarItem({ item, createSnackbar });
+			expect(syncItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.SYNC,
+					label: 'label.sync',
+					disabled: false
+				})
+			);
+		});
+
+		test('editCaldavCalendarItem has edit-name label', () => {
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '991',
+				dsId: '11',
+				dsType: 'caldav'
+			} as Folder;
+
+			const editItem = editCaldavCalendarItem({ createModal, closeModal, item });
+			expect(editItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.EDIT,
+					label: 'action.edit_name',
+					disabled: false
+				})
+			);
+		});
+
+		test('deleteCaldavCalendarItem has permanent-delete label', () => {
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '992',
+				dsId: '12',
+				dsType: 'caldav'
+			} as Folder;
+
+			const deleteItem = deleteCaldavCalendarItem({ createModal, closeModal, item });
+			expect(deleteItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.DELETE,
+					label: 'label.delete_permanently',
+					disabled: false
 				})
 			);
 		});

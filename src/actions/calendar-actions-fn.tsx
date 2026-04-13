@@ -13,7 +13,9 @@ import moment from 'moment';
 
 import { AddExternalCalendarModal } from './modals/add-external-calendar-modal';
 import { CreateGroupModal } from './modals/create-group-modal';
+import { DeleteCaldavCalendarModal } from './modals/delete-caldav-calendar-modal';
 import { DeleteModal } from './modals/delete-modal';
+import { EditCaldavCalendarModal } from './modals/edit-caldav-calendar-modal';
 import { EditModal } from './modals/edit-modal/edit-modal';
 import { EmptyModal } from './modals/empty-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
@@ -24,7 +26,9 @@ import { isExternalSyncFolder } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { getFolderRequest } from 'soap/get-folder-request';
 import { getShareInfoRequest } from 'soap/get-share-info-request';
+import { importDataRequest } from 'soap/import-data-request';
 import { folderAction } from 'store/actions/calendar-actions';
+import { deleteCalendarAction } from 'store/actions/delete-calendar-action';
 import { StoreProvider } from 'store/redux';
 import { ActionsClick } from 'types/actions';
 import { NewModal } from 'view/move/new-calendar-modal';
@@ -341,6 +345,135 @@ export const syncExternalCalendar =
 				});
 			}
 		});
+	};
+
+export const syncCaldavCalendar =
+	({
+		item,
+		createSnackbar
+	}: {
+		item: { id?: string; dsId?: string };
+		createSnackbar: CreateSnackbarFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		if (!item.dsId) {
+			createSnackbar({
+				key: `caldav-calendar-sync-error`,
+				replace: true,
+				severity: 'error',
+				hideButton: true,
+				label: t('label.error_try_again', 'Something went wrong, please try again'),
+				autoHideTimeout: 3000
+			});
+			return;
+		}
+
+		createSnackbar({
+			key: `caldav-calendar-sync`,
+			replace: true,
+			severity: 'info',
+			hideButton: true,
+			label: t('message.snackbar.external_calendar_syncing', 'Calendar sync has started'),
+			autoHideTimeout: 6000
+		});
+
+		importDataRequest(item.dsId)
+			.then(() => {
+				createSnackbar({
+					key: `caldav-calendar-sync`,
+					replace: true,
+					severity: 'success',
+					hideButton: true,
+					label: t('message.snackbar.external_calendar_synced', 'Calendar synced successfully'),
+					autoHideTimeout: 3000
+				});
+			})
+			.catch(() => {
+				createSnackbar({
+					key: `caldav-calendar-sync-error`,
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
+			});
+	};
+
+export const editCaldavCalendar =
+	({
+		createModal,
+		closeModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+		item: { id: string };
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		const modalId = 'edit-caldav-calendar';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<EditCaldavCalendarModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
+			},
+			true
+		);
+	};
+
+export const deleteCaldavCalendar =
+	({
+		createModal,
+		closeModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+		item: { id: string; name: string };
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		const modalId = 'delete-caldav-calendar';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<DeleteCaldavCalendarModal
+							folder={item}
+							onConfirm={(): Promise<void> =>
+								deleteCalendarAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then(
+									() => undefined
+								)
+							}
+							onClose={(): void => closeModal(modalId)}
+						/>
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
+			},
+			true
+		);
 	};
 
 export const sharesInfo =
