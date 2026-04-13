@@ -54,7 +54,7 @@ export const AddExternalCalendarModalCaldavFlow = ({
 			/>
 			<Padding top="medium" />
 			<Input
-				label={`${t('add_external_calendar.caldav.folder_name', 'Folder name')}*`}
+				label={`${t('add_external_calendar.caldav.calendar_name', 'Calendars’ name')}*`}
 				background={'gray5'}
 				hasError={isDuplicateCaldavFolderName}
 				value={caldavFolderName}
@@ -65,8 +65,8 @@ export const AddExternalCalendarModalCaldavFlow = ({
 								'A calendar with the same name already exists'
 							)
 						: t(
-								'add_external_calendar.caldav.folder_name_hint',
-								'Choose a name to identify these calendars'
+								'add_external_calendar.caldav.calendar_name_hint',
+								'Choose a name to identify all calendars from this host'
 							)
 				}
 				disabled={isSubmitting}
