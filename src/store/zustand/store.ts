@@ -6,6 +6,7 @@
 import React from 'react';
 
 import moment from 'moment';
+import { View } from 'react-big-calendar';
 import { create } from 'zustand';
 
 export type SetRange = ({ start, end }: { start: number; end: number }) => void;
@@ -14,10 +15,8 @@ export type CalendarRange = {
 	end: number;
 };
 
-export type CalendarView = 'week' | 'day' | 'month' | 'work_week';
-
 export type AppState = {
-	calendarView: CalendarView | undefined;
+	calendarView: View | undefined;
 	date: Date;
 	summaryViewId: string | undefined;
 	range: CalendarRange;

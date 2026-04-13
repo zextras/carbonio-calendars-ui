@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -15,11 +15,12 @@ import {
 	Padding,
 	AnyColor
 } from '@zextras/carbonio-design-system';
+import { NavigateAction, View } from 'react-big-calendar';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarToolbar } from '../../components/calendar-toolbar';
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
-import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
+import { useAppStatusStore } from '../../store/zustand/store';
 
 const CustomContainer = styled(Container)<{ $color?: AnyColor }>`
 	border: 0.0625rem solid;
@@ -35,9 +36,9 @@ const CustomButton = styled(Button)`
 
 export interface CustomToolbarProps {
 	label: string;
-	onView: (arg: CalendarView) => void;
-	onNavigate: (arg: string) => void;
-	view: CalendarView;
+	onView: (arg: View) => void;
+	onNavigate: (navigate: NavigateAction, date?: Date | undefined) => void;
+	view: View;
 }
 
 export const CustomToolbar = ({
@@ -45,7 +46,7 @@ export const CustomToolbar = ({
 	onView,
 	onNavigate,
 	view
-}: CustomToolbarProps): ReactElement => {
+}: CustomToolbarProps): React.JSX.Element => {
 	const [t] = useTranslation();
 	const [prefSplitLayoutEnabled, setPrefSplitLayoutEnabled] = useSplitLayoutPrefs();
 
