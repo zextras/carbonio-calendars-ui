@@ -5,6 +5,8 @@
  */
 import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
+import { publishQuotaChangedEventUnconditional } from '../event-bus/quota-changed';
+
 export const emptyCalendarTrashRequest = async (): Promise<any> =>
 	legacySoapFetch<any, any>('EmptyCalendarTrash', {
 		_jsns: 'urn:zimbraMail'
@@ -13,6 +15,7 @@ export const emptyCalendarTrashRequest = async (): Promise<any> =>
 			if ('Fault' in response) {
 				throw new Error(response.Fault.Reason.Text, { cause: response.Fault });
 			}
+			publishQuotaChangedEventUnconditional();
 			return response;
 		})
 		.catch((error) => {
