@@ -31,8 +31,8 @@ import { ModifyStandardMessageModal } from '../view/modals/modify-standard-messa
 
 export const useCalendarComponentUtils = (): {
 	onEventDropOrResize: (a: {
-		start: Date;
-		end: Date;
+		start: string | Date;
+		end: string | Date;
 		event: EventType;
 		isAllDay?: boolean;
 	}) => void;
@@ -126,12 +126,12 @@ export const useCalendarComponentUtils = (): {
 			isAllDay,
 			isSeries
 		}: {
-			start: Date;
-			end: Date;
+			start: string | Date;
+			end: string | Date;
 			event: EventType;
 			isAllDay?: boolean;
 			isSeries?: boolean;
-		}) => {
+		}): void => {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
@@ -247,8 +247,8 @@ export const useCalendarComponentUtils = (): {
 			isAllDay,
 			resourceId
 		}: {
-			start: Date;
-			end: Date;
+			start: string | Date;
+			end: string | Date;
 			event: EventType;
 			isAllDay?: boolean;
 			resourceId?: string;
