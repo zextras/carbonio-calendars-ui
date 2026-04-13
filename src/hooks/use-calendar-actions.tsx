@@ -9,7 +9,9 @@ import { filter } from 'lodash';
 
 import {
 	addExternalCalendarsItem,
+	deleteCaldavCalendarItem,
 	deleteCalendarItem,
+	editCaldavCalendarItem,
 	editExternalCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
@@ -19,10 +21,11 @@ import {
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
+	syncCaldavCalendarItem,
 	syncExternalCalendarItem,
 	sharesInfoItem
 } from 'actions/calendar-actions-items';
-import { isExternalSyncFolder } from 'commons/utilities';
+import { isCaldavRootFolder, isExternalSyncFolder } from 'commons/utilities';
 import { ActionsClick } from 'types/actions';
 
 type CalendarActionsProps = {
@@ -40,7 +43,19 @@ export const useCalendarActions = (
 	const createSnackbar = useSnackbar();
 
 	if (!item) return [];
+	const isCaldavCalendar = isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType });
 	const isExternalCalendar = isExternalSyncFolder(item);
+
+	if (isCaldavCalendar) {
+		return filter(
+			[
+				syncCaldavCalendarItem({ item, createSnackbar }),
+				editCaldavCalendarItem({ createModal, closeModal, item }),
+				deleteCaldavCalendarItem({ createModal, closeModal, item })
+			],
+			['disabled', false]
+		);
+	}
 
 	if (isExternalCalendar) {
 		return filter(
