@@ -6,7 +6,7 @@
 import React, { FC, useState } from 'react';
 
 import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from 'commons/modal-header';
@@ -58,7 +58,13 @@ export const DeleteCaldavCalendarModal: FC<DeleteCaldavCalendarModalProps> = ({
 
 	return (
 		<Container padding={{ all: 'small' }}>
-			<ModalHeader title={t('label.delete_permanently', 'Delete permanently')} onClose={onClose} />
+			<ModalHeader
+				title={t('message.delete_external_host_permanently', {
+					name: folder.name,
+					defaultValue: "Delete '{{name}}' permanently"
+				})}
+				onClose={onClose}
+			/>
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}
 				mainAlignment="center"
@@ -66,16 +72,16 @@ export const DeleteCaldavCalendarModal: FC<DeleteCaldavCalendarModalProps> = ({
 				height="fit"
 			>
 				<Text overflow="break-word">
-					<Trans
-						i18nKey="message.you_sure_delete_calendar"
-						defaults={'Are you sure you want to permanently delete the "{{name}}" calendar?'}
-						values={{ name: folder.name }}
-					/>
+					{t('message.you_sure_delete_external_host_calendars', {
+						name: folder.name,
+						defaultValue:
+							"Are you sure you want to permanently delete all the external calendars inside '{{name}}'? This action is irreversible."
+					})}
 				</Text>
 			</Container>
 			<ModalFooter
 				onConfirm={handleConfirm}
-				label={t('label.delete', 'Delete')}
+				label={t('label.yes_delete', 'YES, DELETE')}
 				color="error"
 				disabled={isSubmitting}
 			/>
