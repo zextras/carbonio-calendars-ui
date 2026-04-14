@@ -85,5 +85,6 @@ All backend calls go through SOAP requests (not REST). Request definitions live 
 - `@emotion/react` + `@emotion/styled` — CSS-in-JS styling
 - `@zextras/carbonio-design-system` — shared UI component library
 - `@zextras/carbonio-ui-commons` — shared utilities across Carbonio modules
-- `moment` + `moment-timezone` — date/time handling (the whole app uses moment, not date-fns or Luxon)
+- `date-fns` — date/time handling (moment and moment-timezone have been removed)
+- `src/commons/date-fns-react-widgets-localizer.ts` — locale-aware localizer for react-widgets date pickers; call `dateFnsLocalizer()` once at module level where needed, use `getDateFnsLocale()` to pass the current locale to `DateTimePicker`
 - `i18next` + `react-i18next` — internationalization
