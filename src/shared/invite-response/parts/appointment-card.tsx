@@ -7,7 +7,7 @@ import React, { useCallback } from 'react';
 
 import { Container, Icon, Row, Tooltip, Padding, Text } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { format, getDay } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import { TagIconComponent } from '../../../commons/tag-icon-component';
@@ -19,9 +19,9 @@ import { EventType } from '../../../types/event';
 
 const useEventTimeString = (start: Date, end: Date, allDay: boolean): string => {
 	const [t] = useTranslation();
-	const isSingleAllDay = getDay(start) === getDay(end) && allDay;
-	const isMultiAllDay = getDay(start) !== getDay(end) && allDay;
-	const isMulti = getDay(start) !== getDay(end) && !allDay;
+	const isSingleAllDay = isSameDay(start, end) && allDay;
+	const isMultiAllDay = !isSameDay(start, end) && allDay;
+	const isMulti = !isSameDay(start, end) && !allDay;
 
 	if (isSingleAllDay) {
 		return t('label.all_day', 'All day');

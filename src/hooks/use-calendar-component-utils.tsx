@@ -10,7 +10,7 @@ import { addBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, usePrefs } from '@zextras/carbonio-ui-commons';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
-import { endOfDay, getDay, getHours, getMinutes, startOfDay, subDays } from 'date-fns';
+import { endOfDay, getDay, getHours, getMinutes, isSameDay, startOfDay, subDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -273,7 +273,7 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				(event.allDay !== isAllDay && getDay(event.start) === getDay(event.end))
+				(event.allDay !== isAllDay && isSameDay(event.start, event.end))
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {

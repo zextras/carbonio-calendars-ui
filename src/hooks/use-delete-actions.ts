@@ -228,12 +228,12 @@ export const useDeleteActions = (
 				}
 			});
 			const untilDateParsed = parse(untilDate, 'yyyyMMdd', new Date());
-		const startDateParsed = invite.start?.u
-			? new Date(invite.start.u)
-			: invite.start.d
-				? new Date(parseDateFromICS(invite.start.d))
-				: new Date(0);
-		const isTheFirstInstance = untilDateParsed <= startDateParsed;
+			const startDateParsed = invite.start?.u
+				? new Date(invite.start.u)
+				: invite.start.d
+					? new Date(parseDateFromICS(invite.start.d))
+					: new Date(0);
+			const isTheFirstInstance = untilDateParsed <= startDateParsed;
 			const draft = !(size(invite?.participants) > 0);
 			return deleteAll || isTheFirstInstance
 				? deleteEvent(event, ctxt)
