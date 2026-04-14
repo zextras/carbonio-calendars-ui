@@ -13,8 +13,8 @@ import {
 	SingleSelectionOnChange,
 	Text
 } from '@zextras/carbonio-design-system';
-import { find } from 'lodash';
 import { getDay } from 'date-fns';
+import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import CustomRepeatSelectItem from '../components/custom-repeat';
@@ -153,7 +153,11 @@ export const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null
 														...defaultValue,
 														byday: {
 															wkday: [
-																{ day: ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'][getDay(new Date(start ?? 0))] }
+																{
+																	day: ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'][
+																		getDay(new Date(start ?? 0))
+																	]
+																}
 															]
 														}
 													}

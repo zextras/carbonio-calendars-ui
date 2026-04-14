@@ -7,7 +7,6 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { Popover, useTheme } from '@zextras/carbonio-design-system';
 import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
-import { filter, find, isEmpty, map, minBy } from 'lodash';
 import {
 	differenceInDays,
 	format as dateFnsFormat,
@@ -16,7 +15,7 @@ import {
 	parse as dateFnsParse,
 	startOfWeek as dateFnsStartOfWeek
 } from 'date-fns';
-import { getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
+import { filter, find, isEmpty, map, minBy } from 'lodash';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
@@ -49,6 +48,7 @@ import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
 import EventPanelView from '../event-panel-view/event-panel-view';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
+import { getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
 
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -86,7 +86,10 @@ export default function CalendarComponent() {
 	const firstDayOfWeek = Number(prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0);
 	const dateFnsLocale = getDateFnsLocale();
 	const customLocale = useMemo(
-		() => ({ ...dateFnsLocale, options: { ...(dateFnsLocale.options ?? {}), weekStartsOn: firstDayOfWeek } }),
+		() => ({
+			...dateFnsLocale,
+			options: { ...(dateFnsLocale.options ?? {}), weekStartsOn: firstDayOfWeek }
+		}),
 		[dateFnsLocale, firstDayOfWeek]
 	);
 	const localizer = useMemo(

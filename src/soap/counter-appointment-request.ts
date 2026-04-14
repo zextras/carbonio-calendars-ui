@@ -44,13 +44,21 @@ export const counterAppointmentRequest = async ({
 						allDay: appt.allDay ? '1' : '0',
 						e: {
 							tz: appt?.timezone,
-							d: formatInTimeZone(new Date(appt.end ?? 0), appt.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone, "yyyyMMdd'T'HHmm'00'")
+							d: formatInTimeZone(
+								new Date(appt.end ?? 0),
+								appt.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
+								"yyyyMMdd'T'HHmm'00'"
+							)
 						},
 						exceptId: appt.exceptId,
 						or: { a: appt.organizer?.email },
 						s: {
 							tz: appt?.timezone,
-							d: formatInTimeZone(new Date(appt.start ?? 0), appt.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone, "yyyyMMdd'T'HHmm'00'")
+							d: formatInTimeZone(
+								new Date(appt.start ?? 0),
+								appt.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
+								"yyyyMMdd'T'HHmm'00'"
+							)
 						}
 					}
 				]
