@@ -316,13 +316,13 @@ export const getTimeToDisplayData = (
 		if (alarmData[0].alarmInstStart < currentTime) {
 			return {
 				color: 'error',
-				text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), { addSuffix: true })
+				text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), { addSuffix: true, locale: getDateFnsLocale() })
 			};
 		}
 	}
 	return {
 		color: 'info',
-		text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), { addSuffix: true })
+		text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), { addSuffix: true, locale: getDateFnsLocale() })
 	};
 };
 
