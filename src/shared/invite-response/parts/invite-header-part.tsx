@@ -37,12 +37,12 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	const allDay = invite.allDay ?? false;
 
 	const localStartTime = useMemo(
-		() => invite.start?.u ?? (invite.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0),
+		() => invite.start?.u ?? (invite.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0),
 		[invite.start?.d, invite.start?.u]
 	);
 
 	const localEndTime = useMemo(
-		() => invite.end?.u ?? (invite.end?.d ? new Date(parseDateFromICS(invite.end.d)).getTime() : 0),
+		() => invite.end?.u ?? (invite.end?.d ? parseDateFromICS(invite.end.d).getTime() : 0),
 		[invite.end?.d, invite.end?.u]
 	);
 
@@ -56,8 +56,8 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	});
 
 	const counterDate = useGetDateRangeConvertedToTimezone(
-		proposedStartTime ? new Date(parseDateFromICS(proposedStartTime)).getTime() : 0,
-		proposedEndTime ? new Date(parseDateFromICS(proposedEndTime)).getTime() : 0,
+		proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0,
+		proposedEndTime ? parseDateFromICS(proposedEndTime).getTime() : 0,
 		{
 			allDay,
 			timeZone

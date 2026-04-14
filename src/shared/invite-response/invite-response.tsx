@@ -66,7 +66,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	);
 
 	const getEndOfDay = (day: string | number): number =>
-		endOfDay(typeof day === 'string' ? new Date(parseDateFromICS(day)) : new Date(day)).getTime();
+		endOfDay(typeof day === 'string' ? parseDateFromICS(day) : new Date(day)).getTime();
 
 	const proposedStartTime = mailMsg.invite[0]?.comp?.[0]?.s?.[0]?.d;
 	const proposedEndTime = mailMsg.invite[0]?.comp?.[0]?.e?.[0]?.d;
@@ -101,7 +101,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						start={
 							invite?.start?.u ??
 							(proposedStartTime
-								? new Date(parseDateFromICS(proposedStartTime)).getTime()
+								? parseDateFromICS(proposedStartTime).getTime()
 								: 0)
 						}
 						end={invite?.end?.u ?? getEndOfDay(proposedEndTime)}
@@ -114,12 +114,12 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						id={invite?.apptId}
 						start={
 							proposedStartTime
-								? new Date(parseDateFromICS(proposedStartTime)).getTime()
+								? parseDateFromICS(proposedStartTime).getTime()
 								: (invite?.start?.u ?? 0)
 						}
 						end={
 							proposedEndTime
-								? new Date(parseDateFromICS(proposedEndTime)).getTime()
+								? parseDateFromICS(proposedEndTime).getTime()
 								: (invite?.end?.u ?? 0)
 						}
 						moveToTrash={moveToTrash}

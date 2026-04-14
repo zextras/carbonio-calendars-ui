@@ -46,11 +46,11 @@ export const buildMessagePart = ({
 	const endAsString = inst?.d ?? fullInvite.end.d;
 
 	const parsedStart = applyTimezoneToLocalDate(
-		new Date(parseDateFromICS(startAsString)),
+		parseDateFromICS(startAsString),
 		inst?.tz ?? fullInvite?.end?.tz
 	);
 	const parsedEnd = applyTimezoneToLocalDate(
-		new Date(parseDateFromICS(endAsString)),
+		parseDateFromICS(endAsString),
 		inst?.tz ?? fullInvite?.end?.tz
 	);
 

@@ -16,6 +16,7 @@ import {
 } from '@zextras/carbonio-ui-commons';
 import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import { addSeconds, differenceInSeconds, formatDistanceToNow } from 'date-fns';
+import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
 
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
@@ -299,7 +300,7 @@ export const getTimeToDisplayData = (
 	if (start.valueOf() < currentTime) {
 		return {
 			color: 'error',
-			text: formatDistanceToNow(start, { addSuffix: true })
+			text: formatDistanceToNow(start, { addSuffix: true, locale: getDateFnsLocale() })
 		};
 	}
 	if (alarmData && alarmData?.[0] && alarmData?.[0]?.alarmInstStart) {

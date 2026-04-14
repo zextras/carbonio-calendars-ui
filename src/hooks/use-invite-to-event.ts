@@ -14,23 +14,23 @@ export const inviteToEvent = (invite: Invite): any => ({
 				invite?.start?.u
 					? new Date(invite.start.u)
 					: invite?.start?.d
-						? new Date(parseDateFromICS(invite.start.d))
+						? parseDateFromICS(invite.start.d)
 						: new Date(0)
 			)
-		: new Date(invite?.start?.u ?? (invite?.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0)),
+		: new Date(invite?.start?.u ?? (invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0)),
 	end: invite.allDay
 		? endOfDay(
 				invite?.end?.u
 					? new Date(invite.end.u)
 					: invite?.end?.d
-						? new Date(parseDateFromICS(invite.end.d))
+						? parseDateFromICS(invite.end.d)
 						: new Date(0)
 			)
 		: new Date(
 				(invite?.start?.u ??
-					(invite?.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0)) +
-					((invite?.end?.d ? new Date(parseDateFromICS(invite.end.d)).getTime() : 0) -
-						(invite?.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0))
+					(invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0)) +
+					((invite?.end?.d ? parseDateFromICS(invite.end.d).getTime() : 0) -
+						(invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0))
 			),
 	resource: {
 		id: invite.apptId,

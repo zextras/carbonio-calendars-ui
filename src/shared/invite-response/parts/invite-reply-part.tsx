@@ -56,16 +56,16 @@ const normalizeEditorFromMailMessage = (
 	uid: messageData.uid,
 	originalStart:
 		messageData.s[0].u ??
-		(messageData.s[0].d ? new Date(parseDateFromICS(messageData.s[0].d)).getTime() : 0),
+		(messageData.s[0].d ? parseDateFromICS(messageData.s[0].d).getTime() : 0),
 	originalEnd:
 		messageData.e[0].u ??
-		(messageData.e[0].d ? new Date(parseDateFromICS(messageData.e[0].d)).getTime() : 0),
+		(messageData.e[0].d ? parseDateFromICS(messageData.e[0].d).getTime() : 0),
 	start:
 		messageData.s[0].u ??
-		(messageData.s[0].d ? new Date(parseDateFromICS(messageData.s[0].d)).getTime() : 0),
+		(messageData.s[0].d ? parseDateFromICS(messageData.s[0].d).getTime() : 0),
 	end:
 		messageData.e[0].u ??
-		(messageData.e[0].d ? new Date(parseDateFromICS(messageData.e[0].d)).getTime() : 0),
+		(messageData.e[0].d ? parseDateFromICS(messageData.e[0].d).getTime() : 0),
 	attendees: [
 		{
 			email: messageData.or.a ?? messageData.or.url

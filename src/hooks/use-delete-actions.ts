@@ -193,7 +193,7 @@ export const useDeleteActions = (
 		const eventDate = event?.resource?.ridZ ?? event.start.valueOf();
 		const parsedEventDate =
 			typeof eventDate === 'string'
-				? new Date(parseDateFromICS(eventDate))
+				? parseDateFromICS(eventDate)
 				: new Date(eventDate);
 		const untilDate = format(subDays(parsedEventDate, 1), 'yyyyMMdd');
 		const deleteFunction = (): void => {
@@ -231,7 +231,7 @@ export const useDeleteActions = (
 			const startDateParsed = invite.start?.u
 				? new Date(invite.start.u)
 				: invite.start.d
-					? new Date(parseDateFromICS(invite.start.d))
+					? parseDateFromICS(invite.start.d)
 					: new Date(0);
 			const isTheFirstInstance = untilDateParsed <= startDateParsed;
 			const draft = !(size(invite?.participants) > 0);

@@ -76,20 +76,16 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 								originalStart:
 									(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.u ??
 										(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d
-											? new Date(
-													parseDateFromICS(
-														appointmentToNormalize.inv[0].comp[0].s[0].d
-													)
+											? parseDateFromICS(
+													appointmentToNormalize.inv[0].comp[0].s[0].d
 												).getTime()
 											: undefined)) ??
 									start,
 								originalEnd:
 									(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.u ??
 										(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d
-											? new Date(
-													parseDateFromICS(
-														appointmentToNormalize.inv[0].comp[0].e[0].d
-													)
+											? parseDateFromICS(
+													appointmentToNormalize.inv[0].comp[0].e[0].d
 												).getTime()
 											: undefined)) ??
 									end,
