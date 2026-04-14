@@ -107,11 +107,8 @@ const setEditorDate = ({
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
 			const start =
-				invite?.start?.u ??
-				(invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0);
-			const end =
-				invite?.end?.u ??
-				(invite?.end?.d ? parseDateFromICS(invite.end.d).getTime() : 0);
+				invite?.start?.u ?? (invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0);
+			const end = invite?.end?.u ?? (invite?.end?.d ? parseDateFromICS(invite.end.d).getTime() : 0);
 
 			const currentStartDate = new Date(start);
 			const currentEndDate = new Date(end);

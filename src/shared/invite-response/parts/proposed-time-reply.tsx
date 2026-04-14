@@ -74,20 +74,16 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 								attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
 								isInstance: !!ridZ,
 								originalStart:
-									(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.u ??
-										(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d
-											? parseDateFromICS(
-													appointmentToNormalize.inv[0].comp[0].s[0].d
-												).getTime()
-											: undefined)) ??
+									appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.u ??
+									(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d
+										? parseDateFromICS(appointmentToNormalize.inv[0].comp[0].s[0].d).getTime()
+										: undefined) ??
 									start,
 								originalEnd:
-									(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.u ??
-										(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d
-											? parseDateFromICS(
-													appointmentToNormalize.inv[0].comp[0].e[0].d
-												).getTime()
-											: undefined)) ??
+									appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.u ??
+									(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d
+										? parseDateFromICS(appointmentToNormalize.inv[0].comp[0].e[0].d).getTime()
+										: undefined) ??
 									end,
 								exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
 								start,

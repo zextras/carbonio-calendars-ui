@@ -100,9 +100,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						rootId={root.id}
 						start={
 							invite?.start?.u ??
-							(proposedStartTime
-								? parseDateFromICS(proposedStartTime).getTime()
-								: 0)
+							(proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0)
 						}
 						end={invite?.end?.u ?? getEndOfDay(proposedEndTime)}
 						allDay={invite.allDay ?? false}
@@ -118,9 +116,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 								: (invite?.start?.u ?? 0)
 						}
 						end={
-							proposedEndTime
-								? parseDateFromICS(proposedEndTime).getTime()
-								: (invite?.end?.u ?? 0)
+							proposedEndTime ? parseDateFromICS(proposedEndTime).getTime() : (invite?.end?.u ?? 0)
 						}
 						moveToTrash={moveToTrash}
 						title={mailMsg.subject}
