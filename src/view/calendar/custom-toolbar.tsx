@@ -15,12 +15,13 @@ import {
 	Padding,
 	AnyColor
 } from '@zextras/carbonio-design-system';
-import type { NavigateAction, View } from 'react-big-calendar';
+import type { ToolbarProps } from 'react-big-calendar';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarToolbar } from '../../components/calendar-toolbar';
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
 import { useAppStatusStore } from '../../store/zustand/store';
+import { EventType } from '../../types/event';
 
 const CustomContainer = styled(Container)<{ $color?: AnyColor }>`
 	border: 0.0625rem solid;
@@ -34,19 +35,12 @@ const CustomButton = styled(Button)`
 	border-radius: 0;
 `;
 
-export interface CustomToolbarProps {
-	label: string;
-	onView: (arg: View) => void;
-	onNavigate: (navigate: NavigateAction, date?: Date | undefined) => void;
-	view: View;
-}
-
 export const CustomToolbar = ({
 	label,
 	onView,
 	onNavigate,
 	view
-}: CustomToolbarProps): React.JSX.Element => {
+}: ToolbarProps<EventType>): React.JSX.Element => {
 	const [t] = useTranslation();
 	const [prefSplitLayoutEnabled, setPrefSplitLayoutEnabled] = useSplitLayoutPrefs();
 
