@@ -14,6 +14,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { MESSAGE_METHOD } from 'constants/api';
 import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
 import { Invite } from 'types/store/invite';
+import { parseDateFromICS } from 'utils/dates';
 
 type InviteHeaderPartProps = {
 	mailMsg: any;
@@ -36,13 +37,13 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	const allDay = invite.allDay ?? false;
 
 	const localStartTime = useMemo(
-		() => new Date(invite.start?.d ?? invite.start.u).getTime(),
-		[invite.start?.d, invite.start.u]
+		() => invite.start?.u ?? (invite.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0),
+		[invite.start?.d, invite.start?.u]
 	);
 
 	const localEndTime = useMemo(
-		() => new Date(invite.end?.d ?? invite.end.u).getTime(),
-		[invite.end?.d, invite.end.u]
+		() => invite.end?.u ?? (invite.end?.d ? new Date(parseDateFromICS(invite.end.d)).getTime() : 0),
+		[invite.end?.d, invite.end?.u]
 	);
 
 	const originalDate = useGetDateRangeConvertedToTimezone(localStartTime ?? 0, localEndTime ?? 0, {
@@ -55,8 +56,8 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	});
 
 	const counterDate = useGetDateRangeConvertedToTimezone(
-		proposedStartTime ? new Date(proposedStartTime).getTime() : 0,
-		proposedEndTime ? new Date(proposedEndTime).getTime() : 0,
+		proposedStartTime ? new Date(parseDateFromICS(proposedStartTime)).getTime() : 0,
+		proposedEndTime ? new Date(parseDateFromICS(proposedEndTime)).getTime() : 0,
 		{
 			allDay,
 			timeZone

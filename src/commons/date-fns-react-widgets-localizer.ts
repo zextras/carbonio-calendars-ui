@@ -79,7 +79,7 @@ export function dateFnsLocalizer(): void {
 			century: (date: Date, _culture: string, l: { format: (d: Date, f: string) => string }) =>
 				`${l.format(date, 'yyyy')} - ${l.format(endOfCentury(date), 'yyyy')}`
 		},
-		firstOfWeek: (): number => 0,
+		firstOfWeek: (): number => Number(getUserSettings().prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0),
 		parse: (value: string, formatStr: string): Date | null => {
 			if (!value) return null;
 			const parsed = parse(value, formatStr, new Date(), { locale: cachedLocale });

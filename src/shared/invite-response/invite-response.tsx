@@ -11,6 +11,7 @@ import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { filter, includes } from 'lodash';
 import { endOfDay } from 'date-fns';
+import { parseDateFromICS } from '../../utils/dates';
 import { AvailabilityChecker } from './parts/availability-checker';
 import { EventDetails } from './parts/event-details';
 import InviteHeaderPart from './parts/invite-header-part';
@@ -64,7 +65,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		[mailMsg?.participants]
 	);
 
-	const getEndOfDay = (day: string | number): number => endOfDay(new Date(day)).getTime();
+	const getEndOfDay = (day: string | number): number =>
+		endOfDay(typeof day === 'string' ? new Date(parseDateFromICS(day)) : new Date(day)).getTime();
 
 	const proposedStartTime = mailMsg.invite[0]?.comp?.[0]?.s?.[0]?.d;
 	const proposedEndTime = mailMsg.invite[0]?.comp?.[0]?.e?.[0]?.d;
@@ -97,7 +99,10 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						email={email}
 						rootId={root.id}
 						start={
-							invite?.start?.u ?? (proposedStartTime ? new Date(proposedStartTime).getTime() : 0)
+							invite?.start?.u ??
+							(proposedStartTime
+								? new Date(parseDateFromICS(proposedStartTime)).getTime()
+								: 0)
 						}
 						end={invite?.end?.u ?? getEndOfDay(proposedEndTime)}
 						allDay={invite.allDay ?? false}
@@ -108,9 +113,15 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					<ProposedTimeReply
 						id={invite?.apptId}
 						start={
-							proposedStartTime ? new Date(proposedStartTime).getTime() : (invite?.start?.u ?? 0)
+							proposedStartTime
+								? new Date(parseDateFromICS(proposedStartTime)).getTime()
+								: (invite?.start?.u ?? 0)
 						}
-						end={proposedEndTime ? new Date(proposedEndTime).getTime() : (invite?.end?.u ?? 0)}
+						end={
+							proposedEndTime
+								? new Date(parseDateFromICS(proposedEndTime)).getTime()
+								: (invite?.end?.u ?? 0)
+						}
 						moveToTrash={moveToTrash}
 						title={mailMsg.subject}
 						to={to}

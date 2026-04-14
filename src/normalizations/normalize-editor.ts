@@ -10,6 +10,7 @@ import { endOfDay, set, startOfDay } from 'date-fns';
 
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import type { EditorContext } from '../commons/editor-generator';
+import { parseDateFromICS } from '../utils/dates';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
@@ -105,8 +106,12 @@ const setEditorDate = ({
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const start = invite?.start?.u ?? new Date(invite?.start?.d ?? 0).getTime();
-			const end = invite?.end?.u ?? new Date(invite?.end?.d ?? 0).getTime();
+			const start =
+				invite?.start?.u ??
+				(invite?.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0);
+			const end =
+				invite?.end?.u ??
+				(invite?.end?.d ? new Date(parseDateFromICS(invite.end.d)).getTime() : 0);
 
 			const currentStartDate = new Date(start);
 			const currentEndDate = new Date(end);

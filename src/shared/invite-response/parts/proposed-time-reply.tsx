@@ -13,6 +13,7 @@ import { find, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { generateEditor } from '../../../commons/editor-generator';
+import { parseDateFromICS } from '../../../utils/dates';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
 import { normalizeCalendarEvent } from '../../../normalizations/normalize-calendar-events';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
@@ -73,13 +74,25 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 								attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
 								isInstance: !!ridZ,
 								originalStart:
-									(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d
-										? new Date(appointmentToNormalize.inv[0].comp[0].s[0].d).getTime()
-										: undefined) ?? start,
+									(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.u ??
+										(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d
+											? new Date(
+													parseDateFromICS(
+														appointmentToNormalize.inv[0].comp[0].s[0].d
+													)
+												).getTime()
+											: undefined)) ??
+									start,
 								originalEnd:
-									(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d
-										? new Date(appointmentToNormalize.inv[0].comp[0].e[0].d).getTime()
-										: undefined) ?? end,
+									(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.u ??
+										(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d
+											? new Date(
+													parseDateFromICS(
+														appointmentToNormalize.inv[0].comp[0].e[0].d
+													)
+												).getTime()
+											: undefined)) ??
+									end,
 								exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
 								start,
 								end,

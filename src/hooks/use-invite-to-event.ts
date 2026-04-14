@@ -6,16 +6,31 @@
 import { endOfDay, startOfDay } from 'date-fns';
 
 import { Invite } from '../types/store/invite';
+import { parseDateFromICS } from '../utils/dates';
 
 export const inviteToEvent = (invite: Invite): any => ({
 	start: invite.allDay
-		? startOfDay(new Date(invite?.start?.d ?? 0))
-		: new Date(invite?.start?.d ?? invite?.start?.u ?? 0),
+		? startOfDay(
+				invite?.start?.u
+					? new Date(invite.start.u)
+					: invite?.start?.d
+						? new Date(parseDateFromICS(invite.start.d))
+						: new Date(0)
+			)
+		: new Date(invite?.start?.u ?? (invite?.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0)),
 	end: invite.allDay
-		? endOfDay(new Date(invite.end.d))
+		? endOfDay(
+				invite?.end?.u
+					? new Date(invite.end.u)
+					: invite?.end?.d
+						? new Date(parseDateFromICS(invite.end.d))
+						: new Date(0)
+			)
 		: new Date(
-				(invite?.start?.u ?? new Date(invite?.start?.d ?? 0).getTime()) +
-					(new Date(invite.end.d).getTime() - new Date(invite.start.d).getTime())
+				(invite?.start?.u ??
+					(invite?.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0)) +
+					((invite?.end?.d ? new Date(parseDateFromICS(invite.end.d)).getTime() : 0) -
+						(invite?.start?.d ? new Date(parseDateFromICS(invite.start.d)).getTime() : 0))
 			),
 	resource: {
 		id: invite.apptId,

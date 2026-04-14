@@ -16,7 +16,7 @@ import {
 	parse as dateFnsParse,
 	startOfWeek as dateFnsStartOfWeek
 } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
@@ -84,9 +84,10 @@ export default function CalendarComponent() {
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const anchorElement = useSummaryViewRef();
 	const firstDayOfWeek = Number(prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0);
+	const dateFnsLocale = getDateFnsLocale();
 	const customLocale = useMemo(
-		() => ({ ...enUS, options: { ...enUS.options, weekStartsOn: firstDayOfWeek } }),
-		[firstDayOfWeek]
+		() => ({ ...dateFnsLocale, options: { ...(dateFnsLocale.options ?? {}), weekStartsOn: firstDayOfWeek } }),
+		[dateFnsLocale, firstDayOfWeek]
 	);
 	const localizer = useMemo(
 		() =>

@@ -9,11 +9,12 @@ import { CreateSnackbarFn, useSnackbar } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, Folders } from '@zextras/carbonio-ui-commons';
 import { TFunction } from 'i18next';
 import { size } from 'lodash';
-import { format, subDays } from 'date-fns';
+import { format, parse, subDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
+import { parseDateFromICS } from '../utils/dates';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -190,7 +191,11 @@ export const useDeleteActions = (
 			createSnackbar
 		};
 		const eventDate = event?.resource?.ridZ ?? event.start.valueOf();
-		const untilDate = format(subDays(new Date(eventDate), 1), 'yyyyMMdd');
+		const parsedEventDate =
+			typeof eventDate === 'string'
+				? new Date(parseDateFromICS(eventDate))
+				: new Date(eventDate);
+		const untilDate = format(subDays(parsedEventDate, 1), 'yyyyMMdd');
 		const deleteFunction = (): void => {
 			const modifiedInvite = {
 				...invite,
@@ -222,7 +227,13 @@ export const useDeleteActions = (
 					folders: context.folders
 				}
 			});
-			const isTheFirstInstance = new Date(untilDate) <= new Date(invite.start.d);
+			const untilDateParsed = parse(untilDate, 'yyyyMMdd', new Date());
+		const startDateParsed = invite.start?.u
+			? new Date(invite.start.u)
+			: invite.start.d
+				? new Date(parseDateFromICS(invite.start.d))
+				: new Date(0);
+		const isTheFirstInstance = untilDateParsed <= startDateParsed;
 			const draft = !(size(invite?.participants) > 0);
 			return deleteAll || isTheFirstInstance
 				? deleteEvent(event, ctxt)

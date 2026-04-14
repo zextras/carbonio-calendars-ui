@@ -26,7 +26,10 @@ export const useGetReminderItems = (
 	const [t] = useTranslation();
 
 	const diff = useMemo(
-		() => differenceInSeconds(new Date(alarmData?.[0]?.alarmInstStart ?? 0), new Date()),
+		() =>
+			alarmData?.[0]?.alarmInstStart !== undefined
+				? differenceInSeconds(new Date(alarmData[0].alarmInstStart), new Date())
+				: 0,
 		[alarmData]
 	);
 	const beforeList = useMemo(

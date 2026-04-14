@@ -20,6 +20,7 @@ import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-u
 import { useTranslation } from 'react-i18next';
 
 import { sendResponse } from '../invite-reply-actions';
+import { parseDateFromICS } from 'utils/dates';
 import { generateEditor } from 'commons/editor-generator';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDAR_BOARD_ID } from 'constants/index';
@@ -53,10 +54,18 @@ const normalizeEditorFromMailMessage = (
 	equipment: getEquipments(messageData.at),
 	room: getVirtualRoom(messageData.xprop),
 	uid: messageData.uid,
-	originalStart: messageData.s[0].u ?? new Date(messageData.s[0].d).getTime(),
-	originalEnd: messageData.e[0].u ?? new Date(messageData.e[0].d).getTime(),
-	start: messageData.s[0].u ?? new Date(messageData.s[0].d).getTime(),
-	end: messageData.e[0].u ?? new Date(messageData.e[0].d).getTime(),
+	originalStart:
+		messageData.s[0].u ??
+		(messageData.s[0].d ? new Date(parseDateFromICS(messageData.s[0].d)).getTime() : 0),
+	originalEnd:
+		messageData.e[0].u ??
+		(messageData.e[0].d ? new Date(parseDateFromICS(messageData.e[0].d)).getTime() : 0),
+	start:
+		messageData.s[0].u ??
+		(messageData.s[0].d ? new Date(parseDateFromICS(messageData.s[0].d)).getTime() : 0),
+	end:
+		messageData.e[0].u ??
+		(messageData.e[0].d ? new Date(parseDateFromICS(messageData.e[0].d)).getTime() : 0),
 	attendees: [
 		{
 			email: messageData.or.a ?? messageData.or.url
