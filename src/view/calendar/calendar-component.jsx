@@ -8,7 +8,14 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Popover, useTheme } from '@zextras/carbonio-design-system';
 import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
-import { differenceInDays, format as dateFnsFormat, getDay, isSameDay, parse as dateFnsParse, startOfWeek as dateFnsStartOfWeek } from 'date-fns';
+import {
+	differenceInDays,
+	format as dateFnsFormat,
+	getDay,
+	isSameDay,
+	parse as dateFnsParse,
+	startOfWeek as dateFnsStartOfWeek
+} from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';

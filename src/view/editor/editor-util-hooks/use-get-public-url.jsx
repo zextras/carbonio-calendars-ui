@@ -31,7 +31,7 @@ export const useGetPublicUrl = ({ editorId }) => {
 		() =>
 			t('label.public_link_description', {
 				title,
-				date: format(new Date(), "yyyy-MM-dd_hh:mm"),
+				date: format(new Date(), 'yyyy-MM-dd_hh:mm'),
 				defaultValue: 'Generated from {{title}} on {{date}}'
 			}),
 		[title]

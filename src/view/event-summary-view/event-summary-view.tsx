@@ -8,7 +8,6 @@ import React, { ReactElement, useEffect, useMemo } from 'react';
 import { Container, Divider } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
 
-
 import { ActionsButtonsRow } from './actions-buttons-row';
 import { CalendarInfoRow } from './calendar-info-row';
 import { DescriptionFragmentRow } from './description-fragment-row';

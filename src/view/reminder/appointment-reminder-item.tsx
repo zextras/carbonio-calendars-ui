@@ -68,10 +68,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	);
 
 	const isSetNewTimeAllowed = useMemo(
-		() =>
-			(start.getTime() < Date.now() ||
-				alarmData[0].alarmInstStart < Date.now()) &&
-			isOrganizer,
+		() => (start.getTime() < Date.now() || alarmData[0].alarmInstStart < Date.now()) && isOrganizer,
 		[alarmData, isOrganizer, start]
 	);
 

@@ -41,11 +41,7 @@ export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement 
 	// Looks horrible but there is no other way to pass and sync the workingSchedule
 	schedule = useMemo(() => workingSchedule, [workingSchedule]);
 	const [min, max, range] = useMemo(
-		() => [
-			startOfDay(date),
-			endOfDay(date),
-			WorkView.range(date)
-		],
+		() => [startOfDay(date), endOfDay(date), WorkView.range(date)],
 		[date]
 	);
 

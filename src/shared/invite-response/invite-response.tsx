@@ -96,7 +96,9 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					<AvailabilityChecker
 						email={email}
 						rootId={root.id}
-						start={invite?.start?.u ?? (proposedStartTime ? new Date(proposedStartTime).getTime() : 0)}
+						start={
+							invite?.start?.u ?? (proposedStartTime ? new Date(proposedStartTime).getTime() : 0)
+						}
 						end={invite?.end?.u ?? getEndOfDay(proposedEndTime)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}

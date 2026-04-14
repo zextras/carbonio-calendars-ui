@@ -45,7 +45,7 @@ describe('SearchView', () => {
 	};
 
 	beforeEach(() => {
-		vi.spyOn(console, 'warn').mockImplementation(() => {});
+		vi.spyOn(console, 'warn').mockImplementation(vi.fn());
 	});
 
 	afterEach(() => {

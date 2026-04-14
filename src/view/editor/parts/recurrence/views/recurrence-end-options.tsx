@@ -19,7 +19,7 @@ import { isNaN, isNil, isNumber } from 'lodash';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
-import { dateFnsLocalizer } from 'commons/date-fns-react-widgets-localizer';
+import { dateFnsLocalizer, getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
 import { RecurrenceContext } from 'commons/recurrence-context';
 import { RADIO_VALUES } from 'constants/recurrence';
 import { useAppSelector } from 'store/redux/hooks';
@@ -223,7 +223,8 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 						defaultValue={initialPickerValue}
 						onChange={onDateChange}
 						disabled={isDatePickerDisabled}
-						dateFormat="dd/MM/yyyy"
+						dateFormat="P"
+						locale={getDateFnsLocale()}
 					/>
 				</Container>
 			</Row>

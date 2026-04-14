@@ -7,9 +7,15 @@ import React, { useCallback, useMemo } from 'react';
 
 import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { getHours as dateFnsGetHours, getMinutes as dateFnsGetMinutes, set as dateFnsSet } from 'date-fns';
+import {
+	getHours as dateFnsGetHours,
+	getMinutes as dateFnsGetMinutes,
+	set as dateFnsSet
+} from 'date-fns';
 
 import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
+import { getDateFnsLocale } from '../../commons/date-fns-react-widgets-localizer';
+
 const getHour = (hour) => {
 	switch (hour) {
 		case '00':
@@ -74,7 +80,8 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 				disabled={disabled}
 				showTimeSelectOnly
 				timeIntervals={30}
-				dateFormat="hh:mm aa"
+				dateFormat="p"
+				locale={getDateFnsLocale()}
 				onChange={onStartChange}
 				timeCaption={t('label.time', 'Time')}
 				customInput={

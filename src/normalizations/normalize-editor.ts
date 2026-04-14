@@ -112,25 +112,18 @@ const setEditorDate = ({
 			const currentEndDate = new Date(end);
 
 			return {
-				start: event?.allDay
-					? startOfDay(currentStartDate).getTime()
-					: currentStartDate.getTime(),
-				end: event?.allDay
-					? endOfDay(currentEndDate).getTime()
-					: currentEndDate.getTime()
+				start: event?.allDay ? startOfDay(currentStartDate).getTime() : currentStartDate.getTime(),
+				end: event?.allDay ? endOfDay(currentEndDate).getTime() : currentEndDate.getTime()
 			};
 		}
 
-		const currentStartDate = event?.start instanceof Date ? event.start : new Date(event?.start ?? 0);
+		const currentStartDate =
+			event?.start instanceof Date ? event.start : new Date(event?.start ?? 0);
 		const currentEndDate = event?.end instanceof Date ? event.end : new Date(event?.end ?? 0);
 
 		return {
-			start: event?.allDay
-				? startOfDay(currentStartDate).getTime()
-				: currentStartDate.getTime(),
-			end: event?.allDay
-				? endOfDay(currentEndDate).getTime()
-				: currentEndDate.getTime()
+			start: event?.allDay ? startOfDay(currentStartDate).getTime() : currentStartDate.getTime(),
+			end: event?.allDay ? endOfDay(currentEndDate).getTime() : currentEndDate.getTime()
 		};
 	}
 	const now = set(new Date(), { seconds: 0, milliseconds: 0 });

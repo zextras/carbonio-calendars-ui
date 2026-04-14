@@ -7,7 +7,6 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Padding, Row } from '@zextras/carbonio-design-system';
 
-
 import EndDatePicker from '../../../commons/end-date-picker';
 import StartDatePicker from '../../../commons/start-date-picker';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
