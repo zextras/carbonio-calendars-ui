@@ -109,7 +109,7 @@ export const EditCaldavCalendarModal = ({
 			<ModalHeader onClose={onClose} title={t('action.edit_name', 'Edit name')} />
 			<Padding top="medium" />
 			<Input
-				label={t('add_ics_from_url.calendar_name', 'Calendar name*')}
+				label={`${t('label.calendars_name', "Calendars' name")}*`}
 				background={'gray5'}
 				hasError={isDuplicateCalendarName}
 				description={
