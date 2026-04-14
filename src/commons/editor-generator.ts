@@ -26,11 +26,11 @@ export const getEndTime = ({ start, duration }: { start: number; duration: strin
 	if (duration?.includes('m')) {
 		const interval = parseInt(duration, 10) * 60;
 		const value = addSeconds(new Date(start), interval).getTime();
-		return isNaN(value) ? start + 3600 : value;
+		return isNaN(value) ? addSeconds(new Date(start), 3600).getTime() : value;
 	}
 	const interval = parseInt(duration, 10);
 	const value = addSeconds(new Date(start), interval).getTime();
-	return isNaN(value) ? start + 3600 : value;
+	return isNaN(value) ? addSeconds(new Date(start), 3600).getTime() : value;
 };
 
 export const disabledFields = {
