@@ -27,9 +27,9 @@ export const useGetReminderItems = (
 
 	const diff = useMemo(
 		() =>
-			alarmData?.[0]?.alarmInstStart !== undefined
-				? differenceInSeconds(new Date(alarmData[0].alarmInstStart), new Date())
-				: 0,
+			alarmData?.[0]?.alarmInstStart === undefined
+				? 0
+				: differenceInSeconds(new Date(alarmData[0].alarmInstStart), new Date()),
 		[alarmData]
 	);
 	const beforeList = useMemo(

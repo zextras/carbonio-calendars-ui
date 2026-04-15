@@ -124,9 +124,9 @@ const setEditorDate = ({
 	event: EventPropType | undefined;
 }): { start: number; end: number } => {
 	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getPrefs();
-	const endDur = (zimbraPrefCalendarDefaultApptDuration as string).includes('m')
-		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
-		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
+	const endDur = zimbraPrefCalendarDefaultApptDuration.includes('m')
+		? parseInt(zimbraPrefCalendarDefaultApptDuration, 10) * 60 * 1000
+		: parseInt(zimbraPrefCalendarDefaultApptDuration, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
 			return resolveEditorDatePair(

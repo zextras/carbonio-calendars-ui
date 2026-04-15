@@ -75,7 +75,7 @@ export const AppointmentReminder = (): ReactElement | null => {
 		() =>
 			filter(alarms ?? [], (appt) =>
 				isReminderCandidate(appt, reminderRange.start, reminderRange.end)
-			) as ReminderItem[],
+			),
 		[alarms, reminderRange.end, reminderRange.start]
 	);
 

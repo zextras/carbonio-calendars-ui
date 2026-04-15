@@ -120,7 +120,7 @@ export const DetailsPart = ({
 				},
 				isNil
 			),
-			...{ timezone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone }
+			timezone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
 		}),
 		[event.allDay, event.end, event.start, invite?.tz]
 	);

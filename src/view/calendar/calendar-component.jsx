@@ -88,7 +88,7 @@ export default function CalendarComponent() {
 	const customLocale = useMemo(
 		() => ({
 			...dateFnsLocale,
-			options: { ...(dateFnsLocale.options ?? {}), weekStartsOn: firstDayOfWeek }
+			options: { ...dateFnsLocale.options, weekStartsOn: firstDayOfWeek }
 		}),
 		[dateFnsLocale, firstDayOfWeek]
 	);

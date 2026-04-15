@@ -73,7 +73,7 @@ export function dateFnsLocalizer(): void {
 	const rawLocale = getUserSettings().prefs.zimbraPrefLocale ?? navigator.language;
 	// Normalise BCP 47 tags (e.g. 'it-IT' → 'it', 'zh-CN' → 'zh_CN') to match map keys.
 	// Zimbra uses underscore separators (zh_CN); navigator.language uses hyphens (zh-CN).
-	const normalized = rawLocale.replace(/-/g, '_');
+	const normalized = rawLocale.replaceAll('-', '_');
 	const importer = LOCALE_IMPORT_MAP[normalized] ?? LOCALE_IMPORT_MAP[normalized.split('_')[0]];
 	if (importer) {
 		importer().then((locale) => {
