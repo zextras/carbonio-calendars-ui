@@ -18,8 +18,8 @@ import {
 	Tooltip,
 	TextProps
 } from '@zextras/carbonio-design-system';
-import { noop } from 'lodash';
 import { addMinutes, format, getHours, getMinutes, set, subMinutes } from 'date-fns';
+import { noop } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';

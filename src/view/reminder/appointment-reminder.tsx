@@ -6,8 +6,8 @@
 import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 
 import { FOLDERS, useFoldersMap, LinkFolder } from '@zextras/carbonio-ui-commons';
-import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 import { addDays, differenceInSeconds, subDays } from 'date-fns';
+import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 
 import { ReminderModal } from './reminder-modal';
 import sound from '../../assets/notification.mp3';

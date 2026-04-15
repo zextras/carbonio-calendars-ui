@@ -9,8 +9,8 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
-import { keyBy, values } from 'lodash';
 import { parse } from 'date-fns';
+import { keyBy, values } from 'lodash';
 
 import * as handler from '../../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../../constants';

@@ -5,18 +5,18 @@
  */
 
 import { getRoot, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
-import { filter, find, isNil, map, omitBy } from 'lodash';
 import { endOfDay, set, startOfDay } from 'date-fns';
+import { filter, find, isNil, map, omitBy } from 'lodash';
 
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import type { EditorContext } from '../commons/editor-generator';
-import { parseDateFromICS } from '../utils/dates';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
+import { parseDateFromICS } from '../utils/dates';
 
 // TODO: REMOVE IF RELATED TO OLD CHAT PRODUCT
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

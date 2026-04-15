@@ -15,8 +15,8 @@ import {
 	Padding
 } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, useFoldersMap } from '@zextras/carbonio-ui-commons';
-import { isNil } from 'lodash';
 import { differenceInMinutes, format, isSameDay, isSameMonth, isSameYear } from 'date-fns';
+import { isNil } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 

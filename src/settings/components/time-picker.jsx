@@ -7,9 +7,9 @@ import React from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { dateFnsLocalizer } from '../../commons/date-fns-react-widgets-localizer';
 
 import StartTimePicker from './start-time-picker';
+import { dateFnsLocalizer } from '../../commons/date-fns-react-widgets-localizer';
 
 dateFnsLocalizer();
 

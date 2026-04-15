@@ -6,8 +6,8 @@
 import React, { useMemo } from 'react';
 
 import { ChipItem, Row, Text } from '@zextras/carbonio-design-system';
-import { find, intersectionBy, isNil, startsWith } from 'lodash';
 import { addDays, differenceInDays, format, startOfDay } from 'date-fns';
+import { find, intersectionBy, isNil, startsWith } from 'lodash';
 
 import {
 	AttendeesAvailabilityListType,

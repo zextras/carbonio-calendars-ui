@@ -5,8 +5,8 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 
-import { map, differenceBy, filter, includes, find } from 'lodash';
 import { endOfDay, format, startOfDay } from 'date-fns';
+import { map, differenceBy, filter, includes, find } from 'lodash';
 
 import { getFreeBusyRequest } from '../soap/get-free-busy-request';
 import { Editor } from '../types/editor';

@@ -9,8 +9,8 @@ import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, usePrefs } from '@zextras/carbonio-ui-commons';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
+import { endOfDay, getHours, getMinutes, isSameDay, startOfDay, subDays } from 'date-fns';
 import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
-import { endOfDay, getDay, getHours, getMinutes, isSameDay, startOfDay, subDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 

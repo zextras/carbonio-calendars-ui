@@ -6,12 +6,13 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { add as datesAdd } from 'date-arithmetic';
-import { find, findLast, reduce } from 'lodash';
 import { endOfDay, format, getDay, setDay, startOfDay } from 'date-fns';
+import { find, findLast, reduce } from 'lodash';
 import { Navigate } from 'react-big-calendar';
 import TimeGrid from 'react-big-calendar/lib/TimeGrid';
 
 import { WorkWeekDay } from '../../utils/work-week';
+import { getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
 
 // Needed by the "range" and "title" functions
 let schedule: WorkWeekDay[] = [];
@@ -95,11 +96,12 @@ WorkView.weekBounds = (week: WorkWeekDay[]): WorkWeekBounds => {
 // no-unused-vars: Actually called by BigCalendar
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 WorkView.title = (titleDate: Date): string => {
+	const locale = getDateFnsLocale();
 	const { start, end } = WorkView.weekBounds(schedule);
 	const startDate = setDay(titleDate, start);
 	const endDate = datesAdd(startDate, end - start, 'day');
-	const isMonthSame = format(startDate, 'MMMM') === format(endDate, 'MMMM');
+	const isMonthSame = format(startDate, 'MMMM', { locale }) === format(endDate, 'MMMM', { locale });
 	return isMonthSame
-		? `${format(startDate, 'MMMM dd')} - ${format(endDate, 'dd')}`
-		: ` ${format(startDate, 'MMMM dd')} - ${format(endDate, 'MMMM dd')}`;
+		? `${format(startDate, 'MMMM dd', { locale })} - ${format(endDate, 'dd', { locale })}`
+		: ` ${format(startDate, 'MMMM dd', { locale })} - ${format(endDate, 'MMMM dd', { locale })}`;
 };

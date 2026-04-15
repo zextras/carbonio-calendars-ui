@@ -8,7 +8,6 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
-
 import { Trans, useTranslation } from 'react-i18next';
 
 import { MESSAGE_METHOD } from 'constants/api';

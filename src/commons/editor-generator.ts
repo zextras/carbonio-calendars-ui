@@ -5,8 +5,8 @@
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { Folders, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
-import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import { addSeconds } from 'date-fns';
+import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import { Dispatch } from 'redux';
 
 import { dateFnsLocalizer } from './date-fns-react-widgets-localizer';

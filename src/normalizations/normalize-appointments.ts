@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, isNil, map, omitBy, reduce } from 'lodash';
 import { formatInTimeZone } from 'date-fns-tz';
+import { filter, isNil, map, omitBy, reduce } from 'lodash';
 
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 

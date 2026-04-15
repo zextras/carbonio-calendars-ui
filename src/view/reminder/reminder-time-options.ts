@@ -7,8 +7,8 @@
 import { useMemo } from 'react';
 
 import { DropdownItem } from '@zextras/carbonio-design-system';
-import { filter } from 'lodash';
 import { differenceInSeconds } from 'date-fns';
+import { filter } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { AlarmType } from '../../types/event';

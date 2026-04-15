@@ -16,11 +16,9 @@ import {
 } from '@zextras/carbonio-design-system';
 import { addBoard, Board } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
-
 import { useTranslation } from 'react-i18next';
 
 import { sendResponse } from '../invite-reply-actions';
-import { parseDateFromICS } from 'utils/dates';
 import { generateEditor } from 'commons/editor-generator';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDAR_BOARD_ID } from 'constants/index';
@@ -29,6 +27,7 @@ import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 import { useAppDispatch } from 'store/redux/hooks';
 import { Editor } from 'types/editor';
 import type { InviteReplyPartArguments, InviteResponseArguments } from 'types/integrations';
+import { parseDateFromICS } from 'utils/dates';
 import { CalendarSelector } from 'view/editor/parts/calendar-selector';
 
 const normalizeEditorFromMailMessage = (

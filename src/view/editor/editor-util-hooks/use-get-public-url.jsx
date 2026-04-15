@@ -8,8 +8,8 @@ import { useCallback, useMemo } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
-import { filter, map } from 'lodash';
 import { format } from 'date-fns';
+import { filter, map } from 'lodash';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {

@@ -8,8 +8,8 @@ import React from 'react';
 import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbonio-ui-commons';
-import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import { format } from 'date-fns';
+import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 
 import { AddIcsFromUrlModal } from './modals/add-ics-from-url-modal';
 import { CreateGroupModal } from './modals/create-group-modal';

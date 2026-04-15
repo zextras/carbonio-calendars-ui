@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
-import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
-import { format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
+import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 
 import { Rel } from './normalizations-utils';
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';

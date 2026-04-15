@@ -14,10 +14,10 @@ import {
 	getUpdateFolder,
 	hasId
 } from '@zextras/carbonio-ui-commons';
-import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import { addSeconds, differenceInSeconds, formatDistanceToNow } from 'date-fns';
-import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
+import { find, forEach, isNil, map, reduce, some } from 'lodash';
 
+import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';

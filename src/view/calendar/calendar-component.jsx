@@ -48,7 +48,7 @@ import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
 import EventPanelView from '../event-panel-view/event-panel-view';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
-import { getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
+import { useDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
 
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -84,7 +84,7 @@ export default function CalendarComponent() {
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const anchorElement = useSummaryViewRef();
 	const firstDayOfWeek = Number(prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0);
-	const dateFnsLocale = getDateFnsLocale();
+	const dateFnsLocale = useDateFnsLocale();
 	const customLocale = useMemo(
 		() => ({
 			...dateFnsLocale,
@@ -347,6 +347,7 @@ export default function CalendarComponent() {
 				popup
 				dayLayoutAlgorithm="no-overlap"
 				selectable
+				culture="en-US"
 				localizer={localizer}
 				defaultView={defaultView}
 				events={events}

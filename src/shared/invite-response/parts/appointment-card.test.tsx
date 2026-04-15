@@ -7,8 +7,8 @@ import React from 'react';
 
 import { screen } from '@testing-library/react';
 import { useTagStore } from '@zextras/carbonio-ui-commons';
-import { map, values } from 'lodash';
 import { format } from 'date-fns';
+import { map, values } from 'lodash';
 
 import { AppointmentCard } from './appointment-card';
 import { PARTICIPATION_STATUS } from '../../../constants/api';

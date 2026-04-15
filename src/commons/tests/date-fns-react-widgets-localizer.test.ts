@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { renderHook, act } from '@testing-library/react';
 import { format } from 'date-fns';
 
 import defaultSettings from '@test-utils/settings/default-settings';
@@ -174,6 +175,65 @@ describe('dateFnsLocalizer', () => {
 				value: originalLanguage,
 				configurable: true
 			});
+		});
+	});
+
+	describe('useDateFnsLocale', () => {
+		it('returns enUS by default before any locale loads', async () => {
+			const { useDateFnsLocale } = await import('../date-fns-react-widgets-localizer');
+			const { result } = renderHook(() => useDateFnsLocale());
+			expect(result.current.code).toBe('en-US');
+		});
+
+		it('re-renders with the correct locale once dateFnsLocalizer resolves', async () => {
+			const shellMock = await import('@zextras/carbonio-shell-ui');
+			vi.mocked(shellMock.getUserSettings).mockReturnValue({
+				...defaultSettings,
+				prefs: { ...defaultSettings.prefs, zimbraPrefLocale: 'it' }
+			});
+			const { dateFnsLocalizer, useDateFnsLocale } =
+				await import('../date-fns-react-widgets-localizer');
+			const { result } = renderHook(() => useDateFnsLocale());
+			expect(result.current.code).toBe('en-US');
+			dateFnsLocalizer();
+			await act(flushPromises);
+			expect(result.current.code).toBe('it');
+		});
+
+		it('initialises with the already-loaded locale when the hook mounts after dateFnsLocalizer resolves', async () => {
+			const shellMock = await import('@zextras/carbonio-shell-ui');
+			vi.mocked(shellMock.getUserSettings).mockReturnValue({
+				...defaultSettings,
+				prefs: { ...defaultSettings.prefs, zimbraPrefLocale: 'it' }
+			});
+			const { dateFnsLocalizer, useDateFnsLocale } =
+				await import('../date-fns-react-widgets-localizer');
+			// Locale loads before the hook is mounted
+			dateFnsLocalizer();
+			await flushPromises();
+			const { result } = renderHook(() => useDateFnsLocale());
+			expect(result.current.code).toBe('it');
+		});
+
+		it('cleans up the subscription on unmount', async () => {
+			const shellMock = await import('@zextras/carbonio-shell-ui');
+			vi.mocked(shellMock.getUserSettings).mockReturnValue({
+				...defaultSettings,
+				prefs: { ...defaultSettings.prefs, zimbraPrefLocale: 'it' }
+			});
+			const { dateFnsLocalizer, useDateFnsLocale } =
+				await import('../date-fns-react-widgets-localizer');
+			const { result, unmount } = renderHook(() => useDateFnsLocale());
+			unmount();
+			// After unmount, loading the locale must not throw (subscriber was removed)
+			await expect(
+				act(async () => {
+					dateFnsLocalizer();
+					await flushPromises();
+				})
+			).resolves.not.toThrow();
+			// Locale is updated in cachedLocale but the unmounted hook's state is still enUS
+			expect(result.current.code).toBe('en-US');
 		});
 	});
 });

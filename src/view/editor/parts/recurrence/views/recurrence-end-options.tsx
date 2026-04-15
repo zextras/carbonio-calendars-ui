@@ -15,8 +15,8 @@ import {
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
-import { isNaN, isNil, isNumber } from 'lodash';
 import { format, parse } from 'date-fns';
+import { isNaN, isNil, isNumber } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { dateFnsLocalizer, getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';

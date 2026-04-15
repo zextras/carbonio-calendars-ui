@@ -9,8 +9,8 @@ import { Container, List, Row, Text, Padding, ListItem } from '@zextras/carbonio
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { QueryChip } from '@zextras/carbonio-search-ui';
 import { t } from '@zextras/carbonio-shell-ui';
-import { map, sortBy } from 'lodash';
 import { format } from 'date-fns';
+import { map, sortBy } from 'lodash';
 
 import { AdvancedFilterButton } from './parts/advanced-filter-button';
 import SearchListItem from './search-list-item';

@@ -13,8 +13,8 @@ import {
 	set as dateFnsSet
 } from 'date-fns';
 
-import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
 import { getDateFnsLocale } from '../../commons/date-fns-react-widgets-localizer';
+import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
 
 const getHour = (hour) => {
 	switch (hour) {

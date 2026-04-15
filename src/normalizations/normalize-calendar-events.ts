@@ -5,8 +5,8 @@
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { getRoot, Folder, Folders, LinkFolder } from '@zextras/carbonio-ui-commons';
-import { find, reduce, map, isEmpty } from 'lodash';
 import { addDays, endOfDay, startOfDay } from 'date-fns';
+import { find, reduce, map, isEmpty } from 'lodash';
 
 import { setCalendarColor } from './normalizations-utils';
 import { PARTICIPATION_STATUS } from '../constants/api';

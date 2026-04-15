@@ -9,9 +9,9 @@ import styled from '@emotion/styled';
 import { Container, Row, Icon, Divider, Spinner } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
-import { filter, includes } from 'lodash';
 import { endOfDay } from 'date-fns';
-import { parseDateFromICS } from '../../utils/dates';
+import { filter, includes } from 'lodash';
+
 import { AvailabilityChecker } from './parts/availability-checker';
 import { EventDetails } from './parts/event-details';
 import InviteHeaderPart from './parts/invite-header-part';
@@ -24,6 +24,7 @@ import { MESSAGE_METHOD } from '../../constants/api';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
+import { parseDateFromICS } from '../../utils/dates';
 
 const InviteContainer = styled(Container)`
 	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};

@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useEffect, useState } from 'react';
+
 import { getUserSettings } from '@zextras/carbonio-shell-ui';
 import type { Locale } from 'date-fns';
 import { addYears, format, isValid, parse } from 'date-fns';
@@ -35,9 +37,25 @@ const LOCALE_IMPORT_MAP: Record<string, (() => Promise<Locale>) | undefined> = {
 
 let cachedLocale: Locale = enUS;
 let initialized = false;
+const localeSubscribers = new Set<(locale: Locale) => void>();
 
 export function getDateFnsLocale(): Locale {
 	return cachedLocale;
+}
+
+export function useDateFnsLocale(): Locale {
+	const [locale, setLocale] = useState(cachedLocale);
+
+	useEffect(() => {
+		// Catch updates that happened between initial render and effect registration
+		setLocale(cachedLocale);
+		localeSubscribers.add(setLocale);
+		return () => {
+			localeSubscribers.delete(setLocale);
+		};
+	}, []);
+
+	return locale;
 }
 
 function endOfDecade(date: Date): Date {
@@ -60,6 +78,7 @@ export function dateFnsLocalizer(): void {
 	if (importer) {
 		importer().then((locale) => {
 			cachedLocale = locale;
+			localeSubscribers.forEach((fn) => fn(locale));
 		});
 	}
 

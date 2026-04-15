@@ -7,14 +7,13 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { CreateSnackbarFn, useSnackbar } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, Folders } from '@zextras/carbonio-ui-commons';
+import { format, parse, subDays } from 'date-fns';
 import { TFunction } from 'i18next';
 import { size } from 'lodash';
-import { format, parse, subDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
-import { parseDateFromICS } from '../utils/dates';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -22,6 +21,7 @@ import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { parseDateFromICS } from '../utils/dates';
 import { getInstanceExceptionId } from '../utils/event';
 
 const generateAppointmentDeletedSnackbar = (
