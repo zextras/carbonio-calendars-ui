@@ -47,13 +47,13 @@ export const counterAppointmentRequest = async ({
 						seq: 1,
 						allDay: appt.allDay ? '1' : '0',
 						e: {
-							tz: appt.timezone,
+							tz,
 							d: formatICS(endDate)
 						},
 						exceptId: appt.exceptId,
 						or: { a: appt.organizer?.email },
 						s: {
-							tz: appt.timezone,
+							tz,
 							d: formatICS(startDate)
 						}
 					}

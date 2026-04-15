@@ -103,7 +103,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							invite?.start?.u ??
 							(proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0)
 						}
-						end={invite?.end?.u ?? getEndOfDay(proposedEndTime)}
+						end={invite?.end?.u ?? (proposedEndTime ? getEndOfDay(proposedEndTime) : 0)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}
 					/>
