@@ -8,39 +8,19 @@ import { endOfDay, startOfDay } from 'date-fns';
 import { Invite } from '../types/store/invite';
 import { parseDateFromICS } from '../utils/dates';
 
+function resolveTimestamp(comp: { u?: number; d?: string } | undefined): number {
+	if (comp === undefined) return 0;
+	if (comp.u !== undefined) return comp.u;
+	if (comp.d) return parseDateFromICS(comp.d).getTime();
+	return 0;
+}
+
 export const inviteToEvent = (invite: Invite): any => {
-	let startDateForAllDay: Date;
-	if (invite?.start?.u) {
-		startDateForAllDay = new Date(invite.start.u);
-	} else if (invite?.start?.d) {
-		startDateForAllDay = parseDateFromICS(invite.start.d);
-	} else {
-		startDateForAllDay = new Date(0);
-	}
-
-	let endDateForAllDay: Date;
-	if (invite?.end?.u) {
-		endDateForAllDay = new Date(invite.end.u);
-	} else if (invite?.end?.d) {
-		endDateForAllDay = parseDateFromICS(invite.end.d);
-	} else {
-		endDateForAllDay = new Date(0);
-	}
-
+	const startDate = new Date(resolveTimestamp(invite?.start));
+	const endDate = new Date(resolveTimestamp(invite?.end));
 	return {
-		start: invite.allDay
-			? startOfDay(startDateForAllDay)
-			: new Date(
-					invite?.start?.u ?? (invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0)
-				),
-		end: invite.allDay
-			? endOfDay(endDateForAllDay)
-			: new Date(
-					(invite?.start?.u ??
-						(invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0)) +
-						((invite?.end?.d ? parseDateFromICS(invite.end.d).getTime() : 0) -
-							(invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0))
-				),
+		start: invite.allDay ? startOfDay(startDate) : startDate,
+		end: invite.allDay ? endOfDay(endDate) : endDate,
 		resource: {
 			id: invite.apptId,
 			inviteId: invite.id,

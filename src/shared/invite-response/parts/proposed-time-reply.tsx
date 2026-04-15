@@ -28,7 +28,7 @@ function resolveCompTimestamp(
 ): number {
 	if (comp === undefined) return fallback;
 	if (comp.u !== undefined) return comp.u;
-	if (comp.d !== undefined) return parseDateFromICS(comp.d).getTime();
+	if (comp.d) return parseDateFromICS(comp.d).getTime();
 	return fallback;
 }
 

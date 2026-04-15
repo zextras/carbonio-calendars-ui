@@ -91,6 +91,29 @@ export type EventPropType = {
 	end: Date;
 };
 
+function resolveInviteTimestamp(comp: { u?: number; d?: string } | undefined): number {
+	if (comp === undefined) return 0;
+	if (comp.u !== undefined) return comp.u;
+	if (comp.d) return parseDateFromICS(comp.d).getTime();
+	return 0;
+}
+
+function coerceToDate(val: Date | number | undefined): Date {
+	if (val instanceof Date) return val;
+	return new Date(val ?? 0);
+}
+
+function resolveEditorDatePair(
+	startDate: Date,
+	endDate: Date,
+	allDay: boolean | undefined
+): { start: number; end: number } {
+	if (allDay) {
+		return { start: startOfDay(startDate).getTime(), end: endOfDay(endDate).getTime() };
+	}
+	return { start: startDate.getTime(), end: endDate.getTime() };
+}
+
 const setEditorDate = ({
 	editorType,
 	invite,
@@ -101,38 +124,25 @@ const setEditorDate = ({
 	event: EventPropType | undefined;
 }): { start: number; end: number } => {
 	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getPrefs();
-	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
+	const endDur = (zimbraPrefCalendarDefaultApptDuration as string).includes('m')
 		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const start =
-				invite?.start?.u ?? (invite?.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0);
-			const end = invite?.end?.u ?? (invite?.end?.d ? parseDateFromICS(invite.end.d).getTime() : 0);
-
-			const currentStartDate = new Date(start);
-			const currentEndDate = new Date(end);
-
-			return {
-				start: event?.allDay ? startOfDay(currentStartDate).getTime() : currentStartDate.getTime(),
-				end: event?.allDay ? endOfDay(currentEndDate).getTime() : currentEndDate.getTime()
-			};
+			return resolveEditorDatePair(
+				new Date(resolveInviteTimestamp(invite.start)),
+				new Date(resolveInviteTimestamp(invite.end)),
+				event?.allDay
+			);
 		}
-
-		const currentStartDate =
-			event?.start instanceof Date ? event.start : new Date(event?.start ?? 0);
-		const currentEndDate = event?.end instanceof Date ? event.end : new Date(event?.end ?? 0);
-
-		return {
-			start: event?.allDay ? startOfDay(currentStartDate).getTime() : currentStartDate.getTime(),
-			end: event?.allDay ? endOfDay(currentEndDate).getTime() : currentEndDate.getTime()
-		};
+		return resolveEditorDatePair(
+			coerceToDate(event?.start),
+			coerceToDate(event?.end),
+			event?.allDay
+		);
 	}
 	const now = set(new Date(), { seconds: 0, milliseconds: 0 });
-	return {
-		start: now.getTime(),
-		end: now.getTime() + endDur
-	};
+	return { start: now.getTime(), end: now.getTime() + endDur };
 };
 
 export const normalizeCalendarEditor = (folder: CalendarEditor): CalendarEditor => {

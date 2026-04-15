@@ -21,6 +21,18 @@ import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { showNotification } from '../notifications';
 
+function isReminderCandidate(appt: ReminderItem, rangeStart: number, rangeEnd: number): boolean {
+	if (!appt?.alarmData?.length) return false;
+	const nextAlarm = appt?.alarmData?.[0]?.nextAlarm;
+	if (!nextAlarm) return false;
+	return (
+		nextAlarm >= rangeStart &&
+		nextAlarm <= rangeEnd &&
+		!includes(appt?.inviteId, ':') &&
+		appt?.calendar?.id !== FOLDERS.TRASH
+	);
+}
+
 export const AppointmentReminder = (): ReactElement | null => {
 	const [reminders, setReminders] = useState<Reminders>({});
 	const appointments = useAppSelector(selectAppointmentsArray);
@@ -61,17 +73,10 @@ export const AppointmentReminder = (): ReactElement | null => {
 
 	const appointmentsToRemind = useMemo(
 		() =>
-			filter(
-				alarms ?? [],
-				(appt) =>
-					appt?.alarmData?.length &&
-					appt?.alarmData?.[0]?.nextAlarm &&
-					(appt?.alarmData?.[0]?.nextAlarm ?? 0) >= (reminderRange?.start ?? 0) &&
-					(appt?.alarmData?.[0]?.nextAlarm ?? 0) <= (reminderRange?.end ?? 0) &&
-					!includes(appt?.inviteId, ':') &&
-					appt?.calendar?.id !== FOLDERS.TRASH
+			filter(alarms ?? [], (appt) =>
+				isReminderCandidate(appt, reminderRange.start, reminderRange.end)
 			) as ReminderItem[],
-		[alarms, reminderRange?.end, reminderRange?.start]
+		[alarms, reminderRange.end, reminderRange.start]
 	);
 
 	useEffect(() => {
