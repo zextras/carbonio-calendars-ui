@@ -22,6 +22,7 @@ import {
 	testCalDavDataSourceRequest
 } from 'soap/create-data-source-request';
 import { createFolderRequest } from 'soap/create-folder-request';
+import { importDataRequest } from 'soap/import-data-request';
 import { folderAction } from 'store/actions/calendar-actions';
 
 const CALENDAR_TYPE_ICS = 'ics' as const;
@@ -236,6 +237,13 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 						importOnly: '1',
 						l: folderId
 					});
+				})
+				.then((createDataSourceResponse) => {
+					const dataSourceId = createDataSourceResponse.caldav?.[0]?.id;
+					if (!dataSourceId) {
+						throw new Error('Data source ID not received from server');
+					}
+					return importDataRequest(dataSourceId);
 				})
 				.then(() => {
 					createSnackbar({
