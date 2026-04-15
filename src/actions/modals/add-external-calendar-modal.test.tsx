@@ -13,6 +13,7 @@ import { FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { AddExternalCalendarModal } from './add-external-calendar-modal';
 import * as createDataSourceApi from '../../soap/create-data-source-request';
 import * as createFolderApi from '../../soap/create-folder-request';
+import * as importDataApi from '../../soap/import-data-request';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
