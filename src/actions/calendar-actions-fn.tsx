@@ -25,6 +25,7 @@ import { EditExternalCalendarModal } from 'actions/modals/edit-external-calendar
 import { isExternalSyncFolder } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { getFolderRequest } from 'soap/get-folder-request';
+import { getImportStatusRequest } from 'soap/get-import-status-request';
 import { getShareInfoRequest } from 'soap/get-share-info-request';
 import { importDataRequest } from 'soap/import-data-request';
 import { folderAction } from 'store/actions/calendar-actions';
@@ -381,16 +382,74 @@ export const syncCaldavCalendar =
 			autoHideTimeout: 6000
 		});
 
-		importDataRequest(item.dsId)
-			.then(() => {
-				createSnackbar({
-					key: `caldav-calendar-sync`,
-					replace: true,
-					severity: 'success',
-					hideButton: true,
-					label: t('message.snackbar.external_calendar_synced', 'Calendar synced successfully'),
-					autoHideTimeout: 3000
+		const dsId = item.dsId;
+		const POLL_INTERVAL_MS = 2000;
+		const MAX_POLLS = 30; // up to ~60 seconds
+
+		const pollImportStatus = (attempt: number): void => {
+			getImportStatusRequest()
+				.then((statusResponse) => {
+					const entry = statusResponse.caldav?.find((e) => e.id === dsId);
+
+					if (!entry || entry.isRunning) {
+						// Still in progress – keep polling if within limit
+						if (attempt < MAX_POLLS) {
+							setTimeout(() => pollImportStatus(attempt + 1), POLL_INTERVAL_MS);
+						} else {
+							// Timed out – treat as success (sync continues in background)
+							createSnackbar({
+								key: `caldav-calendar-sync`,
+								replace: true,
+								severity: 'success',
+								hideButton: true,
+								label: t(
+									'message.snackbar.external_calendar_synced',
+									'Calendar synced successfully'
+								),
+								autoHideTimeout: 3000
+							});
+						}
+						return;
+					}
+
+					if (entry.success === false) {
+						createSnackbar({
+							key: `caldav-calendar-sync-error`,
+							replace: true,
+							severity: 'error',
+							hideButton: true,
+							label: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
+					} else {
+						createSnackbar({
+							key: `caldav-calendar-sync`,
+							replace: true,
+							severity: 'success',
+							hideButton: true,
+							label: t(
+								'message.snackbar.external_calendar_synced',
+								'Calendar synced successfully'
+							),
+							autoHideTimeout: 3000
+						});
+					}
+				})
+				.catch(() => {
+					createSnackbar({
+						key: `caldav-calendar-sync-error`,
+						replace: true,
+						severity: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
 				});
+		};
+
+		importDataRequest(dsId)
+			.then(() => {
+				pollImportStatus(0);
 			})
 			.catch(() => {
 				createSnackbar({
