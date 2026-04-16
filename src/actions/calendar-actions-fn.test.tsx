@@ -24,7 +24,9 @@ import {
 	sharesInfo
 } from './calendar-actions-fn';
 import mockedData from '../test/generators';
+import * as getImportStatusApi from '../soap/get-import-status-request';
 import { getSetupServer } from '@jest-setup';
+import { createSoapAPIInterceptor } from "@test-utils/network/msw/create-api-interceptor";
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 
@@ -332,6 +334,113 @@ describe('calendar-actions-fn', () => {
 				label: 'label.error_try_again'
 			})
 		);
+	});
+
+	test('sync caldav calendar shows success snackbar after polling completes', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-10' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest')
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: [{ id: 'ds-10', isRunning: true }]
+				})
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: [{ id: 'ds-10', isRunning: false, success: true }]
+				});
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'info',
+					label: 'message.snackbar.external_calendar_syncing'
+				})
+			);
+
+			// Flush importDataRequest + first immediate GetImportStatus call (running=true)
+			await act(async () => {
+				await Promise.resolve();
+			});
+
+			// Trigger the scheduled poll and flush its promise chain (success=true)
+			await act(async () => {
+				vi.advanceTimersByTime(2000);
+				await Promise.resolve();
+			});
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'success',
+					label: 'message.snackbar.external_calendar_synced'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('sync caldav calendar shows error snackbar when import status reports failure', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-10' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockResolvedValue({
+				_jsns: 'urn:zimbraMail',
+				caldav: [{ id: 'ds-10', isRunning: false, success: false }]
+			});
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			// Flush importDataRequest + immediate GetImportStatus call (success=false)
+			await act(async () => {
+				await Promise.resolve();
+			});
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('sync caldav calendar shows error snackbar when importDataRequest fails', async () => {
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR, dsId: 'ds-10' };
+
+		getSetupServer().use(
+			http.post('/service/soap/ImportDataRequest', async () =>
+				HttpResponse.json({ Body: { Fault: { Reason: { Text: 'import failed' } } } })
+			)
+		);
+
+		const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+		await act(async () => syncCaldavCalendarFn());
+
+		await waitFor(() => {
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		});
+
+		getSetupServer().resetHandlers();
 	});
 
 	test('edit caldav calendar fn on click create modal is called once', () => {
