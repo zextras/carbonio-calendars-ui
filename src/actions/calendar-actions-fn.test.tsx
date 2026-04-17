@@ -443,6 +443,117 @@ describe('calendar-actions-fn', () => {
 		getSetupServer().resetHandlers();
 	});
 
+	test('sync caldav calendar shows success snackbar when polling times out (MAX_POLLS)', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-timeout' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			// Always return isRunning=true so we never finish
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockResolvedValue({
+				_jsns: 'urn:zimbraMail',
+				caldav: [{ id: 'ds-timeout', isRunning: true }]
+			});
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			// Drain initial importData + first poll
+			await act(async () => { await Promise.resolve(); });
+
+			// Advance through 30 poll intervals (MAX_POLLS)
+			for (let i = 0; i < 30; i += 1) {
+				// eslint-disable-next-line no-await-in-loop
+				await act(async () => {
+					vi.advanceTimersByTime(2000);
+					await Promise.resolve();
+				});
+			}
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'success',
+					label: 'message.snackbar.external_calendar_synced'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('sync caldav calendar shows error when getImportStatusRequest throws during polling', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-err' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockRejectedValue(
+				new Error('status error')
+			);
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			// Flush importDataRequest + immediate status check
+			await act(async () => { await Promise.resolve(); });
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('sync caldav calendar shows success when entry is not found in status response', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-missing' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			// Return a response that doesn't contain our dsId, and subsequent call returns it done
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest')
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: []  // entry not present yet
+				})
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: [{ id: 'ds-missing', isRunning: false, success: true }]
+				});
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			// Flush initial poll (entry missing)
+			await act(async () => { await Promise.resolve(); });
+
+			// Advance to next poll
+			await act(async () => {
+				vi.advanceTimersByTime(2000);
+				await Promise.resolve();
+			});
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'success',
+					label: 'message.snackbar.external_calendar_synced'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
 	test('edit caldav calendar fn on click create modal is called once', () => {
 		const createModal = vi.fn();
 		const closeModal = vi.fn();
