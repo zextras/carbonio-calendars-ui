@@ -7,7 +7,7 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { FOLDER_VIEW, Grant } from '@zextras/carbonio-ui-commons';
+import { FOLDER_VIEW, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { generateFolder } from '../../../../../__test__/mocks/folders/folders-generator';
 import { setupTest, screen } from '../../../../../__test__/test-setup';
@@ -105,11 +105,14 @@ describe('MainEditModal', () => {
 			reducer: combineReducers(reducers)
 		});
 		const parentFolderId = faker.string.uuid();
-		const caldavParentFolder = generateFolder({
+		const caldavParentFolder = {
+			...generateFolder({
 			view: FOLDER_VIEW.appointment,
-			id: parentFolderId,
-			dsType: 'caldav'
-		});
+			id: parentFolderId
+			}),
+			dsId: parentFolderId,
+			dsType: 'caldav' as const
+		};
 		const caldavChildFolder = generateFolder({
 			view: FOLDER_VIEW.appointment,
 			parent: parentFolderId,
@@ -118,7 +121,6 @@ describe('MainEditModal', () => {
 		});
 
 		// Setup the folder store with both parent and child
-		const { useFolderStore } = require('@zextras/carbonio-ui-commons');
 		useFolderStore.setState(() => ({
 			roots: {},
 			folders: {
