@@ -355,7 +355,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			>
 				<Input
 					label={placeholder}
-					backgroundColor="gray5"
+					background="gray5"
 					defaultValue={folderName}
 					onChange={(e): void => {
 						setFolderName(e.target.value);
