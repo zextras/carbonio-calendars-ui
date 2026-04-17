@@ -18,7 +18,7 @@ import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { useFolder, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { Trans } from 'react-i18next';
 
-import { isExternalSyncFolder } from 'commons/utilities';
+import { isIcsOrCaldavExternalFolder } from 'commons/utilities';
 import { copyEmailToClipboard, sendMsg } from 'store/actions/participant-displayer-actions';
 import { Invite, InviteOrganizer } from 'types/store/invite';
 
@@ -40,7 +40,10 @@ export const OrganizerPart = ({
 	const account = useUserAccount();
 	const calendar = useFolder(invite.ciFolder);
 	const createSnackbar = useSnackbar();
-	const isExternalCalendar = useMemo(() => isExternalSyncFolder(calendar ?? {}), [calendar]);
+	const isExternalCalendar = useMemo(
+		() => isIcsOrCaldavExternalFolder(calendar ?? {}),
+		[calendar]
+	);
 	const isLoggedInUserAttendee = useMemo(
 		() =>
 			invite?.attendees?.some(

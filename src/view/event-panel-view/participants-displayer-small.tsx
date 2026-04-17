@@ -11,7 +11,7 @@ import { useFolder } from '@zextras/carbonio-ui-commons';
 import { map, reduce } from 'lodash';
 import { Trans } from 'react-i18next';
 
-import { isExternalSyncFolder } from '../../commons/utilities';
+import { isIcsOrCaldavExternalFolder } from '../../commons/utilities';
 import { EventType } from '../../types/event';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
@@ -223,7 +223,7 @@ export const ParticipantsDisplayerSmall = ({
 	const calendar = useFolder(event.resource.calendar.id);
 
 	if (!participants || Object.keys(participants)?.length === 0) return null;
-	const isExternalCalendar = isExternalSyncFolder(calendar ?? {});
+	const isExternalCalendar = isIcsOrCaldavExternalFolder(calendar ?? {});
 	const attendees = reduce(
 		participants,
 		(acc, value) => (value ? [...acc, ...value] : acc),

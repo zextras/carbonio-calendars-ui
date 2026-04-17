@@ -5,11 +5,13 @@
  */
 import {
 	getFolderIcon,
+	isCaldavChild,
 	isCaldavRootFolder,
 	isDataSourceRootFolder,
 	replaceLinkToAnchor
 } from '../utilities';
 import { generateFolder } from '@test-utils/folders/folders-generator';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
 describe('replaceLinkToAnchor', () => {
 	it('should return an empty string when content is empty', () => {
@@ -112,5 +114,30 @@ describe('datasource folder helpers', () => {
 			})
 		).toBe('Calendar2');
 	});
-});
 
+	it('recognizes CalDAV child folders by checking parent is a caldav datasource root', () => {
+		const caldavRoot = generateFolder({
+			id: 'caldav-ds-1',
+			view: 'appointment'
+		});
+		caldavRoot.dsId = 'caldav-ds-1';
+		caldavRoot.dsType = 'caldav';
+
+		const caldavChild = generateFolder({
+			id: 'caldav-cal-1',
+			parent: 'caldav-ds-1',
+			l: 'caldav-ds-1',
+			view: 'appointment'
+		});
+
+		useFolderStore.setState(() => ({
+			folders: {
+				'caldav-ds-1': caldavRoot,
+				'caldav-cal-1': caldavChild
+			}
+		}));
+
+		expect(isCaldavChild(caldavChild)).toBe(true);
+		expect(isCaldavChild(caldavRoot)).toBe(false);
+	});
+});

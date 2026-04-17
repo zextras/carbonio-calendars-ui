@@ -11,6 +11,7 @@ import { OrganizerPart } from '../organizer-part';
 import { ParticipantsDisplayerSmall } from '../participants-displayer-small';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { screen, setupTest } from '@test-setup';
+import * as utilities from '../../commons/utilities';
 
 vi.mock('@zextras/carbonio-ui-commons', async () => {
 	const actual = await vi.importActual('@zextras/carbonio-ui-commons');
@@ -20,12 +21,26 @@ vi.mock('@zextras/carbonio-ui-commons', async () => {
 	};
 });
 
+vi.mock('../../commons/utilities', async () => {
+	const actual = await vi.importActual('../../commons/utilities');
+	return {
+		...actual,
+		isCaldavChild: vi.fn()
+	};
+});
+
 const organizer = { a: 'owner@example.com', d: 'Calendar Owner' };
 
 const baseInvite = {
 	ciFolder: 'ext-cal',
 	isOrganizer: false,
 	organizer
+};
+
+const caldavDsParent = {
+	id: 'caldav-ds-1',
+	dsId: 'caldav-ds-1',
+	dsType: 'caldav'
 };
 
 describe('external calendar perspective', () => {
@@ -123,5 +138,78 @@ describe('external calendar perspective', () => {
 		);
 
 		expect(screen.getByText('participants.Not_answered')).toBeVisible();
+	});
+
+	test('OrganizerPart does not show "invited you" for CalDAV calendar when logged user is not attendee', () => {
+		// CalDAV calendars are children of a datasource root folder
+		// The child itself doesn't have dsId/dsType, but its parent does
+		vi.mocked(useFolder).mockReturnValue({
+			id: 'caldav-cal',
+			parent: 'caldav-ds-1',
+			l: 'caldav-ds-1'
+		} as never);
+		vi.mocked(utilities.isCaldavChild).mockReturnValue(true);
+
+		setupTest(
+			<OrganizerPart
+				invite={{ ...baseInvite, ciFolder: 'caldav-cal', attendees: [{ a: 'someone@example.com' }] } as never}
+				organizer={organizer as never}
+			/>
+		);
+
+		expect(screen.queryByText(/invited you/i)).not.toBeInTheDocument();
+		expect(screen.getByText(/is the organizer/i)).toBeVisible();
+	});
+
+	test('OrganizerPart keeps attendee wording for CalDAV calendar when logged user is attendee', () => {
+		// CalDAV calendars are children of a datasource root folder
+		// The child itself doesn't have dsId/dsType, but its parent does
+		vi.mocked(useFolder).mockReturnValue({
+			id: 'caldav-cal',
+			parent: 'caldav-ds-1',
+			l: 'caldav-ds-1'
+		} as never);
+		vi.mocked(utilities.isCaldavChild).mockReturnValue(true);
+
+		setupTest(
+			<OrganizerPart
+				invite={{ ...baseInvite, ciFolder: 'caldav-cal', attendees: [{ a: 'me@example.com' }] } as never}
+				organizer={organizer as never}
+			/>
+		);
+
+		expect(screen.getByText(/invited you/i)).toBeVisible();
+	});
+
+	test('ParticipantsDisplayerSmall uses owner perspective for CalDAV calendars', () => {
+		// CalDAV calendars are children of a datasource root folder
+		// The child itself doesn't have dsId/dsType, but its parent does
+		vi.mocked(useFolder).mockReturnValue({
+			id: 'caldav-cal',
+			parent: 'caldav-ds-1',
+			l: 'caldav-ds-1'
+		} as never);
+		vi.mocked(utilities.isCaldavChild).mockReturnValue(true);
+
+		setupTest(
+			<ParticipantsDisplayerSmall
+				event={
+					{
+						resource: {
+							iAmOrganizer: false,
+							calendar: { id: 'caldav-cal' }
+						}
+					} as never
+				}
+				participants={
+					{
+						NE: [{ name: 'Default User', email: 'default@example.com' }]
+					} as never
+				}
+			/>
+		);
+
+		expect(screen.getByText('participants.Invited_Visitor')).toBeVisible();
+		expect(screen.queryByText('participants.Not_answered')).not.toBeInTheDocument();
 	});
 });
