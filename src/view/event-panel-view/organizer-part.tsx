@@ -40,10 +40,7 @@ export const OrganizerPart = ({
 	const account = useUserAccount();
 	const calendar = useFolder(invite.ciFolder);
 	const createSnackbar = useSnackbar();
-	const isExternalCalendar = useMemo(
-		() => isIcsOrCaldavExternalFolder(calendar ?? {}),
-		[calendar]
-	);
+	const isExternalCalendar = useMemo(() => isIcsOrCaldavExternalFolder(calendar ?? {}), [calendar]);
 	const isLoggedInUserAttendee = useMemo(
 		() =>
 			invite?.attendees?.some(

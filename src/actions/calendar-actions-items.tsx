@@ -385,7 +385,8 @@ export const syncCaldavCalendarItem = ({
 	),
 	tooltipLabel: noPermissionLabel,
 	onClick: syncCaldavCalendar({ item, createSnackbar }),
-	disabled: !isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType }) || isTrashOrNestedInIt(item)
+	disabled:
+		!isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType }) || isTrashOrNestedInIt(item)
 });
 
 export const editCaldavCalendarItem = ({

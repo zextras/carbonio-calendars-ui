@@ -40,15 +40,15 @@ import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';
-import { useEditModalContext } from "commons/edit-modal-context";
-import { isCaldavChild } from "commons/utilities";
-import { SHARE_USER_TYPE } from "constants/index";
-import { FOLDER_OPERATIONS } from "constants/api";
-import { CALENDARS_STANDARD_COLORS } from "constants/calendar";
-import { folderAction } from "store/actions/calendar-actions";
-import { sendShareCalendarNotification } from "store/actions/send-share-calendar-notification";
-import { useAppDispatch } from "store/redux/hooks";
-import { containPublicShareGrant } from "utils/calendars-share";
+import { useEditModalContext } from 'commons/edit-modal-context';
+import { isCaldavChild } from 'commons/utilities';
+import { SHARE_USER_TYPE } from 'constants/index';
+import { FOLDER_OPERATIONS } from 'constants/api';
+import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { folderAction } from 'store/actions/calendar-actions';
+import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
+import { useAppDispatch } from 'store/redux/hooks';
+import { containPublicShareGrant } from 'utils/calendars-share';
 
 const Square = styled.div<{ $color: AnyColor }>`
 	width: 1.125rem;

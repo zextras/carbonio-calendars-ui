@@ -73,7 +73,9 @@ export function isCaldavRootFolder(folder: FolderDataSourceInfo): boolean {
  * CalDAV calendars live under a parent folder that has dsType === 'caldav',
  * but the children themselves don't have dsId/dsType properties.
  */
-export const isCaldavChild = (folder: FolderDataSourceInfo & { parent?: string; l?: string }): boolean => {
+export const isCaldavChild = (
+	folder: FolderDataSourceInfo & { parent?: string; l?: string }
+): boolean => {
 	const foldersMap = getFoldersMap();
 	// Try to get parent by parent property first, then by l property (parent folder id)
 	const parentId = folder.parent || folder.l;
@@ -86,8 +88,9 @@ export const isCaldavChild = (folder: FolderDataSourceInfo & { parent?: string; 
  * Check if a folder is an external sync folder (ICS or CalDAV).
  * External sync folders should use "owner perspective" for attendee visibility.
  */
-export const isIcsOrCaldavExternalFolder = (item: FolderDataSourceInfo & { f?: string; url?: string; parent?: string; l?: string }): boolean =>
-	isExternalSyncFolder(item) || isCaldavRootFolder(item) || isCaldavChild(item);
+export const isIcsOrCaldavExternalFolder = (
+	item: FolderDataSourceInfo & { f?: string; url?: string; parent?: string; l?: string }
+): boolean => isExternalSyncFolder(item) || isCaldavRootFolder(item) || isCaldavChild(item);
 
 export const calcColor = (label: string, theme: unknown): string => {
 	let sum = 0;

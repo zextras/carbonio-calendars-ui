@@ -248,12 +248,12 @@ describe('calendar actions items', () => {
 			const caldavChild = { id: 'caldav-cal', depth: 2, parent: 'caldav-ds-1', l: 'caldav-ds-1' };
 			const caldavRoot = { id: 'caldav-ds-1', dsId: 'caldav-ds-1', dsType: 'caldav' as const };
 
-		useFolderStore.setState(() => ({
-			folders: {
-				'caldav-ds-1': caldavRoot as Folder,
-				'caldav-cal': caldavChild as Folder
-			}
-		}));
+			useFolderStore.setState(() => ({
+				folders: {
+					'caldav-ds-1': caldavRoot as Folder,
+					'caldav-cal': caldavChild as Folder
+				}
+			}));
 
 			const moveToRoot = moveToRootItem({ createSnackbar, item: caldavChild });
 			expect(moveToRoot).toStrictEqual(

@@ -382,7 +382,7 @@ export const syncCaldavCalendar =
 			autoHideTimeout: 6000
 		});
 
-		const dsId = item.dsId;
+		const { dsId } = item;
 		const POLL_INTERVAL_MS = 2000;
 		const MAX_POLLS = 30; // up to ~60 seconds
 
@@ -427,10 +427,7 @@ export const syncCaldavCalendar =
 							replace: true,
 							severity: 'success',
 							hideButton: true,
-							label: t(
-								'message.snackbar.external_calendar_synced',
-								'Calendar synced successfully'
-							),
+							label: t('message.snackbar.external_calendar_synced', 'Calendar synced successfully'),
 							autoHideTimeout: 3000
 						});
 					}

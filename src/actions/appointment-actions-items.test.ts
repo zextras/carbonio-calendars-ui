@@ -292,7 +292,6 @@ describe('appointment-actions-items', () => {
 				expect(moveAction).toBeUndefined();
 			});
 
-
 			test('the folder has read-only permissions', () => {
 				const folder = {
 					id: '12345',

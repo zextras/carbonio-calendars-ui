@@ -6,10 +6,7 @@
 import { JSNS } from '@zextras/carbonio-shell-ui';
 import { ErrorSoapBodyResponse, legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
-import {
-	GetImportStatusRequest,
-	GetImportStatusResponse
-} from 'types/soap/getImportStatus';
+import { GetImportStatusRequest, GetImportStatusResponse } from 'types/soap/getImportStatus';
 
 export const getImportStatusRequest = async (): Promise<GetImportStatusResponse> =>
 	legacySoapFetch<GetImportStatusRequest, GetImportStatusResponse | ErrorSoapBodyResponse>(
@@ -25,4 +22,3 @@ export const getImportStatusRequest = async (): Promise<GetImportStatusResponse>
 		.catch((error) => {
 			throw new Error(error);
 		});
-

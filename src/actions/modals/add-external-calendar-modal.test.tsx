@@ -281,13 +281,13 @@ describe('AddExternalCalendarModal', () => {
 			const testDataSourceSpy = vi
 				.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest')
 				.mockResolvedValue({ _jsns: 'urn:zimbraMail', caldav: [{ success: true }] });
-		const createDataSourceSpy = vi
-			.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
-			.mockResolvedValue({ _jsns: 'urn:zimbraMail', caldav: [{ id: 'ds-42' }] });
-		const importDataSpy = vi
-			.spyOn(importDataApi, 'importDataRequest')
-			.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
-		const onClose = vi.fn();
+			const createDataSourceSpy = vi
+				.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', caldav: [{ id: 'ds-42' }] });
+			const importDataSpy = vi
+				.spyOn(importDataApi, 'importDataRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
+			const onClose = vi.fn();
 
 			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
 			await selectCalDav(user);
@@ -341,14 +341,14 @@ describe('AddExternalCalendarModal', () => {
 				});
 			});
 
-		await waitFor(() => {
-			expect(importDataSpy).toHaveBeenCalledWith('ds-42');
-		});
+			await waitFor(() => {
+				expect(importDataSpy).toHaveBeenCalledWith('ds-42');
+			});
 
-		await waitFor(() => {
-			expect(onClose).toHaveBeenCalledTimes(1);
+			await waitFor(() => {
+				expect(onClose).toHaveBeenCalledTimes(1);
+			});
 		});
-	});
 
 		test('submits without credentials when "no credentials" is checked', async () => {
 			const folderResponse: CreateFolderResponse = {
@@ -364,16 +364,15 @@ describe('AddExternalCalendarModal', () => {
 					}
 				]
 			};
-		vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
-		vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockResolvedValue({
-			_jsns: 'urn:zimbraMail',
-			caldav: [{ success: true }]
-		});
-		const createDataSourceSpy = vi
-			.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
-			.mockResolvedValue({ _jsns: 'urn:zimbraMail', caldav: [{ id: 'ds-99' }] });
-		vi.spyOn(importDataApi, 'importDataRequest')
-			.mockResolvedValue({ _jsns: 'urn:zimbraMail' });
+			vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue(folderResponse);
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockResolvedValue({
+				_jsns: 'urn:zimbraMail',
+				caldav: [{ success: true }]
+			});
+			const createDataSourceSpy = vi
+				.spyOn(createDataSourceApi, 'createCalDavDataSourceRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', caldav: [{ id: 'ds-99' }] });
+			vi.spyOn(importDataApi, 'importDataRequest').mockResolvedValue({ _jsns: 'urn:zimbraMail' });
 
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await selectCalDav(user);

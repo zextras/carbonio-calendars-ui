@@ -25,4 +25,3 @@ export type GetImportStatusResponse = {
 	_jsns: typeof JSNS.mail;
 	caldav?: ImportStatusEntry[];
 };
-

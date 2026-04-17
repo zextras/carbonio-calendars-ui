@@ -26,7 +26,7 @@ import {
 import mockedData from '../test/generators';
 import * as getImportStatusApi from '../soap/get-import-status-request';
 import { getSetupServer } from '@jest-setup';
-import { createSoapAPIInterceptor } from "@test-utils/network/msw/create-api-interceptor";
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 

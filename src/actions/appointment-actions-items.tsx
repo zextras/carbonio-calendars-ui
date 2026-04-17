@@ -46,17 +46,11 @@ export const getDisabledActionTooltip = (context: ActionsContext, event: EventTy
 	const isCaldav = isCaldavChild(folder);
 
 	if (isCaldav && isReadOnly) {
-		return t(
-			'tooltip.readonly_caldav_action',
-			'This calendar is read-only'
-		);
+		return t('tooltip.readonly_caldav_action', 'This calendar is read-only');
 	}
 
 	if (isReadOnly) {
-		return t(
-			'tooltip.readonly_action',
-			'This calendar is read-only'
-		);
+		return t('tooltip.readonly_action', 'This calendar is read-only');
 	}
 
 	return t('label.no_rights', 'You do not have permission to perform this action');

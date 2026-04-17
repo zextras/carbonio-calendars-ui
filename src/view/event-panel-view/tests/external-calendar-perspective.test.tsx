@@ -146,7 +146,13 @@ describe('external calendar perspective', () => {
 
 		setupTest(
 			<OrganizerPart
-				invite={{ ...baseInvite, ciFolder: 'caldav-cal', attendees: [{ a: 'someone@example.com' }] } as never}
+				invite={
+					{
+						...baseInvite,
+						ciFolder: 'caldav-cal',
+						attendees: [{ a: 'someone@example.com' }]
+					} as never
+				}
 				organizer={organizer as never}
 			/>
 		);
@@ -167,7 +173,9 @@ describe('external calendar perspective', () => {
 
 		setupTest(
 			<OrganizerPart
-				invite={{ ...baseInvite, ciFolder: 'caldav-cal', attendees: [{ a: 'me@example.com' }] } as never}
+				invite={
+					{ ...baseInvite, ciFolder: 'caldav-cal', attendees: [{ a: 'me@example.com' }] } as never
+				}
 				organizer={organizer as never}
 			/>
 		);

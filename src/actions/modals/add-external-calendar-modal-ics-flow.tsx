@@ -84,9 +84,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 			<Select
 				label={t('label.select_color', 'Select color')}
 				items={colorItems}
-				defaultSelection={
-					colorItems.find((item) => item.value === selectedColor) ?? colorItems[0]
-				}
+				defaultSelection={colorItems.find((item) => item.value === selectedColor) ?? colorItems[0]}
 				LabelFactory={CalendarColorLabelFactory}
 				disabled={isSubmitting}
 				onChange={(value): void => {
@@ -98,4 +96,3 @@ export const AddExternalCalendarModalIcsFlow = ({
 		</>
 	);
 };
-
