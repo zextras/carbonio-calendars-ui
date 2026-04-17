@@ -349,10 +349,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	if (isCaldavChildReadOnly) {
 		calendarNameInput = (
 			<Tooltip
-				label={t(
-					'cannot_edit_caldav_readonly',
-					'You cannot edit the name of a read-only calendar'
-				)}
+				label={t('cannot_edit_caldav_readonly', 'You cannot edit the name of a read-only calendar')}
 				placement="top"
 				maxWidth="fit-content"
 			>
@@ -393,10 +390,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				hasError={showDupWarning}
 				description={
 					showDupWarning
-						? t(
-								'folder.modal.new.duplicate_warning',
-								'Calendar with the same name already exists'
-						  )
+						? t('folder.modal.new.duplicate_warning', 'Calendar with the same name already exists')
 						: undefined
 				}
 				defaultValue={folderName}
