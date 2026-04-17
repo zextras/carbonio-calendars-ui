@@ -11,9 +11,9 @@ import { useFolder } from '@zextras/carbonio-ui-commons';
 import { map, reduce } from 'lodash';
 import { Trans } from 'react-i18next';
 
-import { isIcsOrCaldavExternalFolder } from '../../commons/utilities';
-import { EventType } from '../../types/event';
-import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
+import { isIcsOrCaldavExternalFolder } from "commons/utilities";
+import { EventType } from "types/event";
+import { InviteParticipant, InviteParticipants } from "types/store/invite";
 
 type ParticipantProps = { participant: InviteParticipants; event: EventType };
 
