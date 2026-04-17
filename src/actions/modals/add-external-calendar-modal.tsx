@@ -208,8 +208,8 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			const caldavPayload = {
 				name: caldavFolderName.trim(),
 				host: caldavHost.trim(),
-				port: '8080' as const,
-				connectionType: 'cleartext' as const,
+				port: '443' as const,
+				connectionType: 'ssl' as const,
 				username: caldavUsername.trim(),
 				...(noCredentials ? {} : { password: caldavPassword }),
 				a: {
