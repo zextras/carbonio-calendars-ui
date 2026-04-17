@@ -107,8 +107,8 @@ describe('MainEditModal', () => {
 		const parentFolderId = faker.string.uuid();
 		const caldavParentFolder = {
 			...generateFolder({
-			view: FOLDER_VIEW.appointment,
-			id: parentFolderId
+				view: FOLDER_VIEW.appointment,
+				id: parentFolderId
 			}),
 			dsId: parentFolderId,
 			dsType: 'caldav' as const
