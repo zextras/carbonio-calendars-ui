@@ -25,7 +25,8 @@ vi.mock('commons/utilities', async () => {
 	const actual = await vi.importActual('commons/utilities');
 	return {
 		...actual,
-		isCaldavChild: vi.fn()
+		isCaldavChild: vi.fn(),
+		isIcsOrCaldavExternalFolder: vi.fn()
 	};
 });
 
@@ -40,6 +41,7 @@ const baseInvite = {
 describe('external calendar perspective', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		vi.mocked(utilities.isIcsOrCaldavExternalFolder).mockReturnValue(false);
 		shell.useUserAccount.mockReturnValue({
 			name: 'me@example.com',
 			displayName: 'Me'
@@ -52,6 +54,7 @@ describe('external calendar perspective', () => {
 			f: '#y',
 			url: 'https://a/1.ics'
 		} as never);
+		vi.mocked(utilities.isIcsOrCaldavExternalFolder).mockReturnValue(true);
 
 		setupTest(
 			<OrganizerPart
@@ -70,6 +73,7 @@ describe('external calendar perspective', () => {
 			f: '#y',
 			url: 'https://a/1.ics'
 		} as never);
+		vi.mocked(utilities.isIcsOrCaldavExternalFolder).mockReturnValue(true);
 
 		setupTest(
 			<OrganizerPart
@@ -87,6 +91,7 @@ describe('external calendar perspective', () => {
 			f: '#y',
 			url: 'https://a/1.ics'
 		} as never);
+		vi.mocked(utilities.isIcsOrCaldavExternalFolder).mockReturnValue(true);
 
 		setupTest(
 			<ParticipantsDisplayerSmall
@@ -143,6 +148,7 @@ describe('external calendar perspective', () => {
 			l: 'caldav-ds-1'
 		} as never);
 		vi.mocked(utilities.isCaldavChild).mockReturnValue(true);
+		vi.mocked(utilities.isIcsOrCaldavExternalFolder).mockReturnValue(true);
 
 		setupTest(
 			<OrganizerPart
@@ -170,6 +176,7 @@ describe('external calendar perspective', () => {
 			l: 'caldav-ds-1'
 		} as never);
 		vi.mocked(utilities.isCaldavChild).mockReturnValue(true);
+		vi.mocked(utilities.isIcsOrCaldavExternalFolder).mockReturnValue(true);
 
 		setupTest(
 			<OrganizerPart
@@ -192,6 +199,7 @@ describe('external calendar perspective', () => {
 			l: 'caldav-ds-1'
 		} as never);
 		vi.mocked(utilities.isCaldavChild).mockReturnValue(true);
+		vi.mocked(utilities.isIcsOrCaldavExternalFolder).mockReturnValue(true);
 
 		setupTest(
 			<ParticipantsDisplayerSmall
