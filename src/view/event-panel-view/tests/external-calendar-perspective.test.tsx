@@ -11,7 +11,7 @@ import { OrganizerPart } from '../organizer-part';
 import { ParticipantsDisplayerSmall } from '../participants-displayer-small';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { screen, setupTest } from '@test-setup';
-import * as utilities from '../../commons/utilities';
+import * as utilities from 'commons/utilities';
 
 vi.mock('@zextras/carbonio-ui-commons', async () => {
 	const actual = await vi.importActual('@zextras/carbonio-ui-commons');
@@ -35,12 +35,6 @@ const baseInvite = {
 	ciFolder: 'ext-cal',
 	isOrganizer: false,
 	organizer
-};
-
-const caldavDsParent = {
-	id: 'caldav-ds-1',
-	dsId: 'caldav-ds-1',
-	dsType: 'caldav'
 };
 
 describe('external calendar perspective', () => {
