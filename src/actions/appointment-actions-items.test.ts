@@ -291,6 +291,85 @@ describe('appointment-actions-items', () => {
 				const moveAction = moveEventItem({ event, context });
 				expect(moveAction).toBeUndefined();
 			});
+
+
+			test('the folder has read-only permissions', () => {
+				const folder = {
+					id: '12345',
+					l: '1',
+					name: 'Read Only Calendar',
+					view: 'appointment',
+					absFolderPath: '/Read Only Calendar/',
+					perm: 'r'
+				};
+
+				const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+
+				const event = mockedData.getEvent({
+					resource: {
+						calendar: folder,
+						iAmOrganizer: true
+					}
+				});
+
+				const context = {
+					createAndApplyTag: vi.fn(),
+					createModal: vi.fn(),
+					closeModal: vi.fn(),
+					createSnackbar: vi.fn(),
+					dispatch: vi.fn(),
+					t: vi.fn(),
+					replaceHistory: vi.fn(),
+					tags: [
+						{
+							id: '1',
+							name: 'one'
+						}
+					],
+					folders
+				};
+
+				const moveAction = moveEventItem({ event, context });
+				expect(moveAction).toBeUndefined();
+			});
+
+			test('event calendar has read-only permissions and folder map does not contain it', () => {
+				const folder = {
+					id: 'missing-in-map',
+					l: '1',
+					name: 'Read Only Calendar',
+					view: 'appointment',
+					absFolderPath: '/Read Only Calendar/',
+					perm: 'r'
+				};
+
+				const event = mockedData.getEvent({
+					resource: {
+						calendar: folder,
+						iAmOrganizer: true
+					}
+				});
+
+				const context = {
+					createAndApplyTag: vi.fn(),
+					createModal: vi.fn(),
+					closeModal: vi.fn(),
+					createSnackbar: vi.fn(),
+					dispatch: vi.fn(),
+					t: vi.fn(),
+					replaceHistory: vi.fn(),
+					tags: [
+						{
+							id: '1',
+							name: 'one'
+						}
+					],
+					folders: mockedData.calendars.getCalendarsMap({ length: 0 })
+				};
+
+				const moveAction = moveEventItem({ event, context });
+				expect(moveAction).toBeUndefined();
+			});
 		});
 	});
 });

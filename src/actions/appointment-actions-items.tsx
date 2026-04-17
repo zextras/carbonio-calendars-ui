@@ -126,7 +126,15 @@ export const moveEventItem = ({
 	context: ActionsContext;
 }): AppointmentActionsItems | undefined => {
 	const folder = find(context.folders, ['id', event.resource.calendar.id]);
+	// External sync folders (ICS) don't support moving
 	if (isExternalSyncFolder(folder ?? {})) {
+		return undefined;
+	}
+
+	// Use folder-map permissions when present, otherwise fallback to event calendar permissions.
+	const folderPerm = folder?.perm ?? event.resource.calendar?.perm;
+	const hasWriteAccess = !folderPerm || /w/.test(folderPerm);
+	if (!hasWriteAccess) {
 		return undefined;
 	}
 
