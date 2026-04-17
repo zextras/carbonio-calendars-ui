@@ -241,6 +241,27 @@ describe('calendar actions items', () => {
 				})
 			);
 		});
+
+		test('return disabled set to true when it is a CalDAV child calendar', () => {
+			const createSnackbar = vi.fn();
+			// CalDAV calendars are children of a datasource root folder
+			const caldavChild = { id: 'caldav-cal', depth: 2, parent: 'caldav-ds-1', l: 'caldav-ds-1' };
+			const caldavRoot = { id: 'caldav-ds-1', dsId: 'caldav-ds-1', dsType: 'caldav' as const };
+
+			useFolderStore.setState(() => ({
+				folders: {
+					'caldav-ds-1': caldavRoot,
+					'caldav-cal': caldavChild
+				}
+			}));
+
+			const moveToRoot = moveToRootItem({ createSnackbar, item: caldavChild });
+			expect(moveToRoot).toStrictEqual(
+				expect.objectContaining({
+					disabled: true
+				})
+			);
+		});
 	});
 	describe('emptyTrashItem', () => {
 		test(genericTestItemTitleForIconItem, () => {

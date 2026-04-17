@@ -43,6 +43,7 @@ import {
 	sharesInfo
 } from './calendar-actions-fn';
 import {
+	isCaldavChild,
 	isCaldavRootFolder,
 	isExternalSyncFolder,
 	isLinkChild,
@@ -101,7 +102,7 @@ export const moveToRootItem = ({
 	item
 }: {
 	createSnackbar: CreateSnackbarFn;
-	item: { id: string; absFolderPath?: string; depth: number };
+	item: { id: string; absFolderPath?: string; depth: number; parent?: string; l?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 	icon: 'MoveOutline',
@@ -114,7 +115,8 @@ export const moveToRootItem = ({
 		hasId(item, FOLDERS.CALENDAR) ||
 		item.depth < 2 ||
 		isLinkChild(item) ||
-		!!(item as LinkFolder)?.owner,
+		!!(item as LinkFolder)?.owner ||
+		isCaldavChild(item),
 	tooltipLabel: noPermissionLabel,
 	onClick: moveToRoot({ createSnackbar, item })
 });
