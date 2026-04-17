@@ -345,6 +345,68 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		return caldavChild && isReadOnly;
 	}, [folder]);
 
+	let calendarNameInput: React.JSX.Element;
+	if (isCaldavChildReadOnly) {
+		calendarNameInput = (
+			<Tooltip
+				label={t(
+					'cannot_edit_caldav_readonly',
+					'You cannot edit the name of a read-only calendar'
+				)}
+				placement="top"
+				maxWidth="fit-content"
+			>
+				<Input
+					label={placeholder}
+					backgroundColor="gray5"
+					defaultValue={folderName}
+					onChange={(e): void => {
+						setFolderName(e.target.value);
+					}}
+					disabled
+				/>
+			</Tooltip>
+		);
+	} else if (hasId(folder, FOLDERS.CALENDAR)) {
+		calendarNameInput = (
+			<Tooltip
+				label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
+				placement="top"
+				maxWidth="fit-content"
+			>
+				<Input
+					label={placeholder}
+					backgroundColor="gray5"
+					defaultValue={folderName}
+					onChange={(e): void => {
+						setFolderName(e.target.value);
+					}}
+					disabled
+				/>
+			</Tooltip>
+		);
+	} else {
+		calendarNameInput = (
+			<Input
+				label={placeholder}
+				background="gray5"
+				hasError={showDupWarning}
+				description={
+					showDupWarning
+						? t(
+								'folder.modal.new.duplicate_warning',
+								'Calendar with the same name already exists'
+						  )
+						: undefined
+				}
+				defaultValue={folderName}
+				onChange={(e): void => {
+					setFolderName(e.target.value);
+				}}
+			/>
+		);
+	}
+
 	return (
 		<Container data-testid="MainEditModal" style={{ overflowY: 'auto' }}>
 			<ModalHeader onClose={onClose} title={title} showCloseIcon />
@@ -357,60 +419,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					gap="1rem"
 				>
 					{/* Calendar name */}
-					{isCaldavChildReadOnly ? (
-						<Tooltip
-							label={t(
-								'cannot_edit_caldav_readonly',
-								'You cannot edit the name of a read-only calendar'
-							)}
-							placement="top"
-							maxWidth="fit-content"
-						>
-							<Input
-								label={placeholder}
-								backgroundColor="gray5"
-								defaultValue={folderName}
-								onChange={(e): void => {
-									setFolderName(e.target.value);
-								}}
-								disabled
-							/>
-						</Tooltip>
-					) : hasId(folder, FOLDERS.CALENDAR) ? (
-						<Tooltip
-							label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
-							placement="top"
-							maxWidth="fit-content"
-						>
-							<Input
-								label={placeholder}
-								backgroundColor="gray5"
-								defaultValue={folderName}
-								onChange={(e): void => {
-									setFolderName(e.target.value);
-								}}
-								disabled
-							/>
-						</Tooltip>
-					) : (
-						<Input
-							label={placeholder}
-							background="gray5"
-							hasError={showDupWarning}
-							description={
-								showDupWarning
-									? t(
-											'folder.modal.new.duplicate_warning',
-											'Calendar with the same name already exists'
-										)
-									: undefined
-							}
-							defaultValue={folderName}
-							onChange={(e): void => {
-								setFolderName(e.target.value);
-							}}
-						/>
-					)}
+					{calendarNameInput}
 
 					{/* Type and number of appointments */}
 					<Container
