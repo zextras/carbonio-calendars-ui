@@ -5,6 +5,7 @@
  */
 
 import { useModal } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { find, indexOf } from 'lodash';
 import { Mock } from 'vitest';
 
@@ -163,5 +164,74 @@ describe('useEventActions', () => {
 			const moveAction = getActionByName(actionsResult, EVENT_ACTIONS.MOVE);
 			expect(moveAction).toBeUndefined();
 		});
+
+			it('should show read-only tooltip for disabled apply-tag action on read-only calendars', () => {
+				const readOnlyEvent = {
+					resource: {
+						calendar: { id: '55' },
+						isRecurrent: false
+					},
+					haveWriteAccess: false
+				} as EventType;
+
+				const { result } = setupHook(useEventActions, {
+					initialProps: [
+						{
+							event: readOnlyEvent,
+							context: {
+								folders: {
+									'55': {
+										id: '55',
+										perm: 'r',
+										view: 'appointment'
+									}
+								}
+							} as any
+						}
+					]
+				});
+
+				const actionsResult = result.current as InstanceActionsItems;
+				const applyTagAction = getActionByName(actionsResult, EVENT_ACTIONS.APPLY_TAG);
+
+				expect(applyTagAction).toEqual(
+					expect.objectContaining({
+						disabled: true,
+						tooltipLabel: t('tooltip.readonly_action', 'This calendar is read-only')
+					})
+				);
+			});
+
+			it('should keep generic no-rights tooltip for disabled apply-tag action when folder is missing', () => {
+				const readOnlyEvent = {
+					resource: {
+						calendar: { id: 'missing-folder' },
+						isRecurrent: false
+					},
+					haveWriteAccess: false
+				} as EventType;
+
+				const { result } = setupHook(useEventActions, {
+					initialProps: [
+						{
+							event: readOnlyEvent,
+							context: { folders: {} } as any
+						}
+					]
+				});
+
+				const actionsResult = result.current as InstanceActionsItems;
+				const applyTagAction = getActionByName(actionsResult, EVENT_ACTIONS.APPLY_TAG);
+
+				expect(applyTagAction).toEqual(
+					expect.objectContaining({
+						disabled: true,
+						tooltipLabel: t(
+							'label.no_rights',
+							'You do not have permission to perform this action'
+						)
+					})
+				);
+			});
 	});
 });

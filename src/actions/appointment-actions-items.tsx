@@ -35,7 +35,7 @@ import { ForwardAppointmentModal } from 'view/modals/forward-appointment/forward
 /**
  * Get appropriate tooltip message for disabled actions based on calendar permissions
  */
-const getDisabledActionTooltip = (context: ActionsContext, event: EventType): string => {
+export const getDisabledActionTooltip = (context: ActionsContext, event: EventType): string => {
 	const folder = find(context.folders, ['id', event.resource.calendar.id]);
 	if (!folder) {
 		return t('label.no_rights', 'You do not have permission to perform this action');
