@@ -21,7 +21,7 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
-import { isExternalSyncFolder } from 'commons/utilities';
+import { isExternalSyncFolder, isCaldavChild } from 'commons/utilities';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { EVENT_ACTIONS } from 'constants/event-actions';
 import { InviteReplyVerb } from 'soap/send-invite-reply-request';
@@ -31,6 +31,36 @@ import { EventType } from 'types/event';
 import { Invite } from 'types/store/invite';
 import { isOrganizerOrHaveEqualRights } from 'utils/store/event';
 import { ForwardAppointmentModal } from 'view/modals/forward-appointment/forward-appointment-modal';
+
+/**
+ * Get appropriate tooltip message for disabled actions based on calendar permissions
+ */
+const getDisabledActionTooltip = (context: ActionsContext, event: EventType): string => {
+	const folder = find(context.folders, ['id', event.resource.calendar.id]);
+	if (!folder) {
+		return t('label.no_rights', 'You do not have permission to perform this action');
+	}
+
+	const folderPerm = folder.perm ?? event.resource.calendar?.perm;
+	const isReadOnly = folderPerm && !/w/.test(folderPerm);
+	const isCaldav = isCaldavChild(folder);
+
+	if (isCaldav && isReadOnly) {
+		return t(
+			'tooltip.readonly_caldav_action',
+			'This calendar is read-only'
+		);
+	}
+
+	if (isReadOnly) {
+		return t(
+			'tooltip.readonly_action',
+			'This calendar is read-only'
+		);
+	}
+
+	return t('label.no_rights', 'You do not have permission to perform this action');
+};
 
 export const openEventItem = ({
 	event,
@@ -145,7 +175,7 @@ export const moveEventItem = ({
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
 		disabled: !event?.haveWriteAccess,
-		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+		tooltipLabel: getDisabledActionTooltip(context, event),
 		onClick: moveAppointment({ event, context })
 	};
 };
@@ -165,7 +195,7 @@ export const editEventItem = ({
 		icon: 'Edit2Outline',
 		label: t('label.edit', 'Edit'),
 		disabled: !isOrganizerOrHaveEqualRights(event, absFolderPath),
-		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+		tooltipLabel: getDisabledActionTooltip(context, event),
 		onClick: editAppointment({ event, invite, context })
 	};
 };
@@ -251,7 +281,7 @@ export const deleteEventItem = ({
 				icon: 'DeletePermanentlyOutline',
 				label: t('label.delete_permanently', 'Delete permanently'),
 				disabled: !event?.haveWriteAccess,
-				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+				tooltipLabel: getDisabledActionTooltip(context, event),
 				onClick: deletePermanently({ event, context })
 			}
 		: {
@@ -259,7 +289,7 @@ export const deleteEventItem = ({
 				icon: 'Trash2Outline',
 				label: t('action.delete', 'Delete'),
 				disabled: !event?.haveWriteAccess,
-				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+				tooltipLabel: getDisabledActionTooltip(context, event),
 				onClick: moveToTrash({ event, invite, context })
 			};
 
