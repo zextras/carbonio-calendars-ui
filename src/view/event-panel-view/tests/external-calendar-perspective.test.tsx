@@ -21,8 +21,8 @@ vi.mock('@zextras/carbonio-ui-commons', async () => {
 	};
 });
 
-vi.mock('../../commons/utilities', async () => {
-	const actual = await vi.importActual('../../commons/utilities');
+vi.mock('commons/utilities', async () => {
+	const actual = await vi.importActual('commons/utilities');
 	return {
 		...actual,
 		isCaldavChild: vi.fn()
