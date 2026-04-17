@@ -99,4 +99,48 @@ describe('MainEditModal', () => {
 
 		expect(screen.getByText('Public share URLS')).toBeVisible();
 	});
+
+	it('should disable the name input for caldav child with read-only permissions', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		const parentFolderId = faker.string.uuid();
+		const caldavParentFolder = generateFolder({
+			view: FOLDER_VIEW.appointment,
+			id: parentFolderId,
+			dsType: 'caldav'
+		});
+		const caldavChildFolder = generateFolder({
+			view: FOLDER_VIEW.appointment,
+			parent: parentFolderId,
+			l: parentFolderId,
+			perm: 'r' // read-only
+		});
+
+		// Setup the folder store with both parent and child
+		const { useFolderStore } = require('@zextras/carbonio-ui-commons');
+		useFolderStore.setState(() => ({
+			roots: {},
+			folders: {
+				[parentFolderId]: caldavParentFolder,
+				[caldavChildFolder.id]: caldavChildFolder
+			}
+		}));
+
+		const totalAppointments = faker.number.int({ min: 1, max: 100 });
+		const grant: Array<Grant> = [];
+
+		setupTest(
+			<MainEditModalTestWrapper
+				folder={caldavChildFolder}
+				totalAppointments={totalAppointments}
+				grant={grant}
+			/>,
+			{ store }
+		);
+
+		// Check that the name input is disabled
+		const nameInput = screen.getByDisplayValue(caldavChildFolder.name);
+		expect(nameInput).toBeDisabled();
+	});
 });
