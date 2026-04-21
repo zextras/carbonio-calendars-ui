@@ -38,7 +38,7 @@ export const DeleteCaldavCalendarModal: FC<DeleteCaldavCalendarModalProps> = ({
 					replace: true,
 					severity: 'success',
 					hideButton: true,
-					label: t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted'),
+					label: t('message.snackbar.caldav_calendars_permanently_deleted', 'Calendars permanently deleted'),
 					autoHideTimeout: 3000
 				});
 				onClose();

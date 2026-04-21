@@ -36,7 +36,7 @@ describe('DeleteCaldavCalendarModal', () => {
 		);
 		await user.click(screen.getByRole('button', { name: 'YES, DELETE' }));
 		await waitFor(() => expect(onConfirm).toHaveBeenCalledTimes(1));
-		await waitFor(() => expect(screen.getByText('Calendar permanently deleted')).toBeVisible());
+		await waitFor(() => expect(screen.getByText('Calendars permanently deleted')).toBeVisible());
 		await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
 	});
 
