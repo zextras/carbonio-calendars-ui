@@ -487,15 +487,57 @@ describe('AddExternalCalendarModal', () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await selectCalDav(user);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'missing.example.com');
-			await user.pasteInto(screen.getByRole('textbox', { name: 'Calendars’ name*' }), 'Missing Host');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				'Missing Host'
+			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
 			await user.click(screen.getByText('This host does not require credentials'));
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
 			await waitFor(() => {
-				expect(screen.getByText('This host address could not be reached')).toBeVisible();
+				expect(
+					screen.getByText('Host not found. Make sure the address is correct and try again')
+				).toBeVisible();
 			});
+			expect(screen.getAllByText('This host address could not be reached').length).toBeGreaterThan(
+				0
+			);
+			expect(
+				screen.queryByText('Refers to the CalDAV server address. Example: calendar.example.com')
+			).not.toBeInTheDocument();
 			expect(createFolderSpy).not.toHaveBeenCalled();
+		});
+
+		test('clears inline host error when user changes host after a host-related failure', async () => {
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error('DAV server returned an error: 404')
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+			const hostInput = screen.getByRole('textbox', { name: 'Host*' });
+			await user.pasteInto(hostInput, 'missing.example.com');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				'Missing Host'
+			);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(
+					screen.getByText('Host not found. Make sure the address is correct and try again')
+				).toBeVisible();
+			});
+
+			await user.clear(hostInput);
+			await user.type(hostInput, 'calendar.example.com');
+
+			expect(
+				screen.getByText('Refers to the CalDAV server address. Example: calendar.example.com')
+			).toBeVisible();
 		});
 
 		test('shows specific error message when TestDataSource returns 401', async () => {
@@ -565,8 +607,13 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
 			await waitFor(() => {
-				expect(screen.getByText('This host address could not be reached')).toBeVisible();
+				expect(
+					screen.getByText('Host not found. Make sure the address is correct and try again')
+				).toBeVisible();
 			});
+			expect(screen.getAllByText('This host address could not be reached').length).toBeGreaterThan(
+				0
+			);
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});
 
@@ -590,8 +637,13 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
 			await waitFor(() => {
-				expect(screen.getByText('This host address could not be reached')).toBeVisible();
+				expect(
+					screen.getByText('Host not found. Make sure the address is correct and try again')
+				).toBeVisible();
 			});
+			expect(screen.getAllByText('This host address could not be reached').length).toBeGreaterThan(
+				0
+			);
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});
 	});

@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 type AddExternalCalendarModalCaldavFlowProps = {
 	caldavHost: string;
+	caldavHostError?: string;
 	caldavFolderName: string;
 	isDuplicateCaldavFolderName: boolean;
 	noCredentials: boolean;
@@ -25,6 +26,7 @@ type AddExternalCalendarModalCaldavFlowProps = {
 
 export const AddExternalCalendarModalCaldavFlow = ({
 	caldavHost,
+	caldavHostError,
 	caldavFolderName,
 	isDuplicateCaldavFolderName,
 	noCredentials,
@@ -44,12 +46,16 @@ export const AddExternalCalendarModalCaldavFlow = ({
 			<Input
 				label={`${t('add_external_calendar.caldav.host', 'Host')}*`}
 				background={'gray5'}
+				hasError={!!caldavHostError}
 				value={caldavHost}
 				disabled={isSubmitting}
-				description={t(
-					'add_external_calendar.caldav.host_name_hint',
-					'Refers to the CalDAV server address. Example: calendar.example.com'
-				)}
+				description={
+					caldavHostError ??
+					t(
+						'add_external_calendar.caldav.host_name_hint',
+						'Refers to the CalDAV server address. Example: calendar.example.com'
+					)
+				}
 				onChange={(event): void => onCaldavHostChange(event.target.value)}
 			/>
 			<Padding top="medium" />

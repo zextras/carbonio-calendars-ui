@@ -34,7 +34,7 @@ const getCaldavTestErrorMessage = (
 	error: unknown,
 	host: string,
 	t: (key: string, defaultValue: string) => string
-): string => {
+): { message: string; isHostRelated: boolean } => {
 	const errorMessage = error instanceof Error ? error.message : String(error);
 	const normalizedErrorMessage = errorMessage.trim().toLowerCase();
 	const normalizedSanitizedMessage = normalizedErrorMessage
@@ -44,24 +44,33 @@ const getCaldavTestErrorMessage = (
 	const messageForMatching = normalizedSanitizedMessage || normalizedErrorMessage;
 
 	if (/\b404\b/.test(messageForMatching)) {
-		return t(
-			'add_external_calendar.error.caldav_host_unreachable',
-			'This host address could not be reached'
-		);
+		return {
+			message: t(
+				'add_external_calendar.error.caldav_host_unreachable',
+				'This host address could not be reached'
+			),
+			isHostRelated: true
+		};
 	}
 
 	if (/\b401\b/.test(messageForMatching)) {
-		return t(
-			'add_external_calendar.error.caldav_auth_required',
-			'Authentication required for this host'
-		);
+		return {
+			message: t(
+				'add_external_calendar.error.caldav_auth_required',
+				'Authentication required for this host'
+			),
+			isHostRelated: false
+		};
 	}
 
 	if (/\b5\d\d\b/.test(messageForMatching)) {
-		return t(
-			'add_external_calendar.error.caldav_server_unavailable',
-			'Server currently unavailable, please try again'
-		);
+		return {
+			message: t(
+				'add_external_calendar.error.caldav_server_unavailable',
+				'Server currently unavailable, please try again'
+			),
+			isHostRelated: false
+		};
 	}
 
 	// Some backends return only the host string (for example "test.com") without status code.
@@ -77,13 +86,19 @@ const getCaldavTestErrorMessage = (
 				normalizedHostLikeMatch.includes(normalizedHost)));
 
 	if (matchesHost) {
-		return t(
-			'add_external_calendar.error.caldav_host_unreachable',
-			'This host address could not be reached'
-		);
+		return {
+			message: t(
+				'add_external_calendar.error.caldav_host_unreachable',
+				'This host address could not be reached'
+			),
+			isHostRelated: true
+		};
 	}
 
-	return t('label.error_try_again', 'Something went wrong, please try again');
+	return {
+		message: t('label.error_try_again', 'Something went wrong, please try again'),
+		isHostRelated: false
+	};
 };
 
 export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
@@ -113,6 +128,11 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 	const [noCredentials, setNoCredentials] = useState(false);
 	const [caldavUsername, setCaldavUsername] = useState('');
 	const [caldavPassword, setCaldavPassword] = useState('');
+	const [caldavHostError, setCaldavHostError] = useState<string | undefined>(undefined);
+	const caldavHostErrorDescription = t(
+		'add_external_calendar.error.caldav_host_not_found_description',
+		'Host not found. Make sure the address is correct and try again'
+	);
 
 	// ── ICS validation ─────────────────────────────────────────────────────────
 	const appointmentFolderNames = useMemo(
@@ -217,6 +237,8 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		if (isSubmitting) {
 			return;
 		}
+
+		setCaldavHostError(undefined);
 
 		setIsSubmitting(true);
 
@@ -326,13 +348,15 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 						})
 				)
 				.catch((error) => {
+					const { message, isHostRelated } = getCaldavTestErrorMessage(error, caldavHost, t);
 					setIsSubmitting(false);
+					setCaldavHostError(isHostRelated ? caldavHostErrorDescription : undefined);
 					createSnackbar({
 						key: 'caldav-calendar-test-error',
 						replace: true,
 						severity: 'error',
 						hideButton: true,
-						label: getCaldavTestErrorMessage(error, caldavHost, t),
+						label: message,
 						autoHideTimeout: 3000
 					});
 				});
@@ -438,13 +462,17 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			) : (
 				<AddExternalCalendarModalCaldavFlow
 					caldavHost={caldavHost}
+					caldavHostError={caldavHostError}
 					caldavFolderName={caldavFolderName}
 					isDuplicateCaldavFolderName={isDuplicateCaldavFolderName}
 					noCredentials={noCredentials}
 					caldavUsername={caldavUsername}
 					caldavPassword={caldavPassword}
 					isSubmitting={isSubmitting}
-					onCaldavHostChange={setCaldavHost}
+					onCaldavHostChange={(value): void => {
+						setCaldavHostError(undefined);
+						setCaldavHost(value);
+					}}
 					onCaldavFolderNameChange={setCaldavFolderName}
 					onNoCredentialsChange={setNoCredentials}
 					onCaldavUsernameChange={setCaldavUsername}
