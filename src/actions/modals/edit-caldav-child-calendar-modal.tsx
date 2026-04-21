@@ -49,8 +49,8 @@ export const EditCaldavChildCalendarModal = ({
 	const normalizedCurrentName = (folder?.name ?? '').trim().toLowerCase();
 	const isReadOnly = folder?.perm && !/w/.test(folder.perm);
 	const nameDisabledTooltip = t(
-		'cannot_edit_caldav_readonly',
-		'You cannot edit the name of a read-only calendar'
+		'cannot_edit_caldav_calendar',
+		'You cannot edit the name of this calendar'
 	);
 
 	const originalColorIndex = folder?.rgb
