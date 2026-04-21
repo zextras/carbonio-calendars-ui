@@ -58,6 +58,22 @@ describe('EditCaldavCalendarModal', () => {
 		expect(screen.getByRole('button', { name: 'Save Changes' })).toBeDisabled();
 	});
 
+	it('does not show duplicate warning when keeping the current name', () => {
+		const sameNameFolder = generateFolder({
+			id: 'same-name-folder',
+			name: FOLDER_NAME,
+			view: 'appointment'
+		});
+		populateFoldersStore({ customFolders: [mockFolder, sameNameFolder] });
+
+		setupTest(<EditCaldavCalendarModal folderId={FOLDER_ID} onClose={vi.fn()} />);
+
+		expect(
+			screen.queryByText('A calendar with the same name already exists')
+		).not.toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Save Changes' })).toBeEnabled();
+	});
+
 	it('calls onClose without folderAction when name is unchanged', async () => {
 		const folderActionSpy = vi.spyOn(calendarActions, 'folderAction');
 		const onClose = vi.fn();

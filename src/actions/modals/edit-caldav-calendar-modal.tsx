@@ -30,6 +30,7 @@ export const EditCaldavCalendarModal = ({
 	const createSnackbar = useSnackbar();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [calendarName, setCalendarName] = useState(folder?.name ?? '');
+	const normalizedCurrentName = (folder?.name ?? '').trim().toLowerCase();
 
 	const appointmentFolderNames = useMemo(
 		() =>
@@ -39,10 +40,14 @@ export const EditCaldavCalendarModal = ({
 		[folders, folderId]
 	);
 
-	const isDuplicateCalendarName = useMemo(
-		() => includes(appointmentFolderNames, calendarName.trim().toLowerCase()),
-		[appointmentFolderNames, calendarName]
-	);
+	const isDuplicateCalendarName = useMemo(() => {
+		const normalizedInputName = calendarName.trim().toLowerCase();
+		if (normalizedInputName === normalizedCurrentName) {
+			return false;
+		}
+
+		return includes(appointmentFolderNames, normalizedInputName);
+	}, [appointmentFolderNames, calendarName, normalizedCurrentName]);
 
 	const onConfirm = (): void => {
 		if (!folder || isSubmitting) {
