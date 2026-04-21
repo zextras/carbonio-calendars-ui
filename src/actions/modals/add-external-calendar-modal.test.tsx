@@ -475,6 +475,125 @@ describe('AddExternalCalendarModal', () => {
 			expect(createDataSourceSpy).not.toHaveBeenCalled();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
 		});
+
+		test('shows specific error message when TestDataSource returns 404', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', folder: [] });
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error('DAV server returned an error: 404')
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'missing.example.com');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Calendars’ name*' }), 'Missing Host');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('This host address could not be reached')).toBeVisible();
+			});
+			expect(createFolderSpy).not.toHaveBeenCalled();
+		});
+
+		test('shows specific error message when TestDataSource returns 401', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', folder: [] });
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error('DAV server returned an error: 401')
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'auth.example.com');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Calendars’ name*' }), 'Auth Host');
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('Authentication required for this host')).toBeVisible();
+			});
+			expect(createFolderSpy).not.toHaveBeenCalled();
+		});
+
+		test('shows specific error message when TestDataSource returns 50x', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', folder: [] });
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error('DAV server returned an error: 503')
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'down.example.com');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				'Server Down Host'
+			);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('Server currently unavailable, please try again')).toBeVisible();
+			});
+			expect(createFolderSpy).not.toHaveBeenCalled();
+		});
+
+		test('shows host unreachable message when TestDataSource error has no status code', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', folder: [] });
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error('test.com')
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'test.com');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				'Code-less Error Host'
+			);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('This host address could not be reached')).toBeVisible();
+			});
+			expect(createFolderSpy).not.toHaveBeenCalled();
+		});
+
+		test('shows host unreachable message when TestDataSource error is wrapped', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', folder: [] });
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error('Error: test.com')
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Host*' }), 'test.com');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				'Wrapped Error Host'
+			);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('This host address could not be reached')).toBeVisible();
+			});
+			expect(createFolderSpy).not.toHaveBeenCalled();
+		});
 	});
 	describe('shared behaviour', () => {
 		test('shows duplicate calendar name error when name already exists', async () => {

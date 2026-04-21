@@ -22,6 +22,25 @@ const throwOnSoapFault = <T extends object>(response: T | ErrorSoapBodyResponse)
 	return response;
 };
 
+const normalizeError = (error: unknown): Error => {
+	if (error instanceof Error) {
+		return error;
+	}
+
+	if (typeof error === 'string') {
+		return new Error(error);
+	}
+
+	if (typeof error === 'object' && error !== null && 'message' in error) {
+		const maybeMessage = (error as { message?: unknown }).message;
+		if (typeof maybeMessage === 'string') {
+			return new Error(maybeMessage);
+		}
+	}
+
+	return new Error(String(error));
+};
+
 export const createCalDavDataSourceRequest = async (
 	params: CalDavDataSourceParams
 ): Promise<CreateCalDavDataSourceResponse> =>
@@ -34,7 +53,7 @@ export const createCalDavDataSourceRequest = async (
 	})
 		.then((response) => throwOnSoapFault(response))
 		.catch((error) => {
-			throw new Error(error);
+			throw normalizeError(error);
 		});
 
 export const testCalDavDataSourceRequest = async (
@@ -56,5 +75,5 @@ export const testCalDavDataSourceRequest = async (
 			return response;
 		})
 		.catch((error) => {
-			throw new Error(error);
+			throw normalizeError(error);
 		});

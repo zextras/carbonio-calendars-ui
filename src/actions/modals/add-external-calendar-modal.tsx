@@ -30,6 +30,62 @@ const CALENDAR_TYPE_CALDAV = 'caldav' as const;
 
 type CalendarType = typeof CALENDAR_TYPE_ICS | typeof CALENDAR_TYPE_CALDAV;
 
+const getCaldavTestErrorMessage = (
+	error: unknown,
+	host: string,
+	t: (key: string, defaultValue: string) => string
+): string => {
+	const errorMessage = error instanceof Error ? error.message : String(error);
+	const normalizedErrorMessage = errorMessage.trim().toLowerCase();
+	const normalizedSanitizedMessage = normalizedErrorMessage
+		.replace(/^(?:\w+\s*)?error:\s*/i, '')
+		.trim();
+	const normalizedHost = host.trim().toLowerCase();
+	const messageForMatching = normalizedSanitizedMessage || normalizedErrorMessage;
+
+	if (/\b404\b/.test(messageForMatching)) {
+		return t(
+			'add_external_calendar.error.caldav_host_unreachable',
+			'This host address could not be reached'
+		);
+	}
+
+	if (/\b401\b/.test(messageForMatching)) {
+		return t(
+			'add_external_calendar.error.caldav_auth_required',
+			'Authentication required for this host'
+		);
+	}
+
+	if (/\b5\d\d\b/.test(messageForMatching)) {
+		return t(
+			'add_external_calendar.error.caldav_server_unavailable',
+			'Server currently unavailable, please try again'
+		);
+	}
+
+	// Some backends return only the host string (for example "test.com") without status code.
+	const hostLikeMatch = messageForMatching.match(
+		/(?:https?:\/\/)?[a-z0-9.-]+(?:\.[a-z0-9.-]+)+(?::\d+)?(?:\/\S*)?/i
+	)?.[0];
+	const normalizedHostLikeMatch = hostLikeMatch?.toLowerCase();
+	const matchesHost =
+		messageForMatching === normalizedHost ||
+		(normalizedHostLikeMatch !== undefined &&
+			(normalizedHostLikeMatch === normalizedHost ||
+				normalizedHost.includes(normalizedHostLikeMatch) ||
+				normalizedHostLikeMatch.includes(normalizedHost)));
+
+	if (matchesHost) {
+		return t(
+			'add_external_calendar.error.caldav_host_unreachable',
+			'This host address could not be reached'
+		);
+	}
+
+	return t('label.error_try_again', 'Something went wrong, please try again');
+};
+
 export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
 	const [t] = useTranslation();
 	const folders = useFoldersMap();
@@ -228,44 +284,55 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 						view: 'appointment',
 						f: '#'
 					})
-				)
-				.then((createFolderResponse) => {
-					const folderId = createFolderResponse.folder[0].id;
+						.then((createFolderResponse) => {
+							const folderId = createFolderResponse.folder[0].id;
 
-					return createCalDavDataSourceRequest({
-						...caldavPayload,
-						pollingInterval: '12h',
-						isEnabled: '1',
-						importOnly: '1',
-						l: folderId
-					});
-				})
-				.then((createDataSourceResponse) => {
-					const dataSourceId = createDataSourceResponse.caldav?.[0]?.id;
-					if (!dataSourceId) {
-						throw new Error('Data source ID not received from server');
-					}
-					return importDataRequest(dataSourceId);
-				})
-				.then(() => {
-					createSnackbar({
-						key: 'caldav-calendar-created',
-						replace: true,
-						severity: 'success',
-						hideButton: true,
-						label: t('message.snackbar.new_calendar_added', 'Calendar added successfully'),
-						autoHideTimeout: 3000
-					});
-					onClose();
-				})
-				.catch(() => {
+							return createCalDavDataSourceRequest({
+								...caldavPayload,
+								pollingInterval: '12h',
+								isEnabled: '1',
+								importOnly: '1',
+								l: folderId
+							});
+						})
+						.then((createDataSourceResponse) => {
+							const dataSourceId = createDataSourceResponse.caldav?.[0]?.id;
+							if (!dataSourceId) {
+								throw new Error('Data source ID not received from server');
+							}
+							return importDataRequest(dataSourceId);
+						})
+						.then(() => {
+							createSnackbar({
+								key: 'caldav-calendar-created',
+								replace: true,
+								severity: 'success',
+								hideButton: true,
+								label: t('message.snackbar.new_calendar_added', 'Calendar added successfully'),
+								autoHideTimeout: 3000
+							});
+							onClose();
+						})
+						.catch(() => {
+							setIsSubmitting(false);
+							createSnackbar({
+								key: 'caldav-calendar-create-error',
+								replace: true,
+								severity: 'error',
+								hideButton: true,
+								label: t('label.error_try_again', 'Something went wrong, please try again'),
+								autoHideTimeout: 3000
+							});
+						})
+				)
+				.catch((error) => {
 					setIsSubmitting(false);
 					createSnackbar({
-						key: 'caldav-calendar-create-error',
+						key: 'caldav-calendar-test-error',
 						replace: true,
 						severity: 'error',
 						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						label: getCaldavTestErrorMessage(error, caldavHost, t),
 						autoHideTimeout: 3000
 					});
 				});
