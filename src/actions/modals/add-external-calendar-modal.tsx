@@ -67,15 +67,18 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		[folders]
 	);
 
-	const duplicateCalendar = useMemo(
-		() =>
-			Object.values(folders).find(
-				(folder) =>
-					folder.view === 'appointment' &&
-					folder.url?.trim().toLowerCase() === calendarUrl.trim().toLowerCase()
-			),
-		[folders, calendarUrl]
-	);
+	const duplicateCalendar = useMemo(() => {
+		const normalizedCalendarUrl = calendarUrl.trim().toLowerCase();
+		if (!normalizedCalendarUrl) {
+			return undefined;
+		}
+
+		return Object.values(folders).find(
+			(folder) =>
+				folder.view === 'appointment' &&
+				folder.url?.trim().toLowerCase() === normalizedCalendarUrl
+		);
+	}, [folders, calendarUrl]);
 
 	const isDuplicateCalendarName = useMemo(
 		() =>

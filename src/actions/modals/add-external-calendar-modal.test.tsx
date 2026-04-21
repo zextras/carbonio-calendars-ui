@@ -40,6 +40,17 @@ describe('AddExternalCalendarModal', () => {
 		expect(screen.getByText('ICS')).toBeVisible();
 	});
 	describe('ICS type', () => {
+		test('does not show duplicate URL warning before user enters a URL', () => {
+			const folderWithEmptyUrl = generateFolder({ view: 'appointment', url: '' });
+			populateFoldersStore({ customFolders: [folderWithEmptyUrl] });
+
+			setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+
+			expect(
+				screen.queryByText('A calendar with the same URL has already been added')
+			).not.toBeInTheDocument();
+		});
+
 		test('enables add button when a valid ics url and calendar name are provided', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
