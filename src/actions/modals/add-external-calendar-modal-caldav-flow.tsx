@@ -44,7 +44,7 @@ export const AddExternalCalendarModalCaldavFlow = ({
 	return (
 		<>
 			<Input
-				label={`${t('add_external_calendar.caldav.host', 'Host')}*`}
+				label={`${t('add_external_calendar.caldav.host', 'Host address (calendar.example.com)')}*`}
 				background={'gray5'}
 				hasError={!!caldavHostError}
 				value={caldavHost}
