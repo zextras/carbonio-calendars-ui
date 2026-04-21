@@ -51,4 +51,3 @@ describe('getImportStatusRequest', () => {
 		await expect(getImportStatusRequest()).rejects.toThrow(faultyResponse.Fault.Reason.Text);
 	});
 });
-

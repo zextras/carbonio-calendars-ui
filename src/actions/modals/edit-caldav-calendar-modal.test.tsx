@@ -9,8 +9,8 @@ import { waitFor } from '@testing-library/react';
 import { useFolder } from '@zextras/carbonio-ui-commons';
 import { Mock } from 'vitest';
 
-import { generateFolder } from "@test-utils/folders/folders-generator";
-import { setupTest, screen } from "@test-setup";
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { setupTest, screen } from '@test-setup';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import * as calendarActions from '../../store/actions/calendar-actions';
 import { EditCaldavCalendarModal } from './edit-caldav-calendar-modal';
@@ -74,9 +74,11 @@ describe('EditCaldavCalendarModal', () => {
 		await user.clear(screen.getByDisplayValue(FOLDER_NAME));
 		await user.type(screen.getByRole('textbox'), 'New Name');
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
-		await waitFor(() => expect(calendarActions.folderAction).toHaveBeenCalledWith(
-			expect.objectContaining({ op: 'rename', name: 'New Name', id: FOLDER_ID })
-		));
+		await waitFor(() =>
+			expect(calendarActions.folderAction).toHaveBeenCalledWith(
+				expect.objectContaining({ op: 'rename', name: 'New Name', id: FOLDER_ID })
+			)
+		);
 		await waitFor(() => expect(screen.getByText('Changes saved')).toBeVisible());
 		await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
 	});
@@ -115,4 +117,3 @@ describe('EditCaldavCalendarModal', () => {
 		expect(onClose).toHaveBeenCalledTimes(1);
 	});
 });
-

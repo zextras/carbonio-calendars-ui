@@ -461,7 +461,9 @@ describe('calendar-actions-fn', () => {
 			await act(async () => syncCaldavCalendarFn());
 
 			// Drain initial importData + first poll
-			await act(async () => { await Promise.resolve(); });
+			await act(async () => {
+				await Promise.resolve();
+			});
 
 			// Advance through 30 poll intervals (MAX_POLLS)
 			for (let i = 0; i < 30; i += 1) {
@@ -499,7 +501,9 @@ describe('calendar-actions-fn', () => {
 			await act(async () => syncCaldavCalendarFn());
 
 			// Flush importDataRequest + immediate status check
-			await act(async () => { await Promise.resolve(); });
+			await act(async () => {
+				await Promise.resolve();
+			});
 
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
@@ -524,7 +528,7 @@ describe('calendar-actions-fn', () => {
 			vi.spyOn(getImportStatusApi, 'getImportStatusRequest')
 				.mockResolvedValueOnce({
 					_jsns: 'urn:zimbraMail',
-					caldav: []  // entry not present yet
+					caldav: [] // entry not present yet
 				})
 				.mockResolvedValueOnce({
 					_jsns: 'urn:zimbraMail',
@@ -535,7 +539,9 @@ describe('calendar-actions-fn', () => {
 			await act(async () => syncCaldavCalendarFn());
 
 			// Flush initial poll (entry missing)
-			await act(async () => { await Promise.resolve(); });
+			await act(async () => {
+				await Promise.resolve();
+			});
 
 			// Advance to next poll
 			await act(async () => {

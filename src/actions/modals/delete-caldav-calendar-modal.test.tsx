@@ -7,16 +7,14 @@ import React from 'react';
 
 import { waitFor } from '@testing-library/react';
 
-import { setupTest, screen } from "@test-setup";
+import { setupTest, screen } from '@test-setup';
 import { DeleteCaldavCalendarModal } from './delete-caldav-calendar-modal';
 
 const folder = { id: '42', name: 'My CalDAV' };
 
 describe('DeleteCaldavCalendarModal', () => {
 	it('renders title and warning text with the folder name', () => {
-		setupTest(
-			<DeleteCaldavCalendarModal folder={folder} onClose={vi.fn()} onConfirm={vi.fn()} />
-		);
+		setupTest(<DeleteCaldavCalendarModal folder={folder} onClose={vi.fn()} onConfirm={vi.fn()} />);
 		expect(screen.getByText("Delete 'My CalDAV' permanently")).toBeVisible();
 		expect(
 			screen.getByText(
@@ -26,9 +24,7 @@ describe('DeleteCaldavCalendarModal', () => {
 	});
 
 	it('renders YES, DELETE button enabled by default', () => {
-		setupTest(
-			<DeleteCaldavCalendarModal folder={folder} onClose={vi.fn()} onConfirm={vi.fn()} />
-		);
+		setupTest(<DeleteCaldavCalendarModal folder={folder} onClose={vi.fn()} onConfirm={vi.fn()} />);
 		expect(screen.getByRole('button', { name: 'YES, DELETE' })).toBeEnabled();
 	});
 

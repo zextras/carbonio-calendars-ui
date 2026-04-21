@@ -402,7 +402,10 @@ export const syncCaldavCalendar =
 								replace: true,
 								severity: 'success',
 								hideButton: true,
-								label: t('message.snackbar.caldav_calendars_synced', 'Calendars synced successfully'),
+								label: t(
+									'message.snackbar.caldav_calendars_synced',
+									'Calendars synced successfully'
+								),
 								autoHideTimeout: 3000
 							});
 						}
