@@ -75,8 +75,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 		return Object.values(folders).find(
 			(folder) =>
-				folder.view === 'appointment' &&
-				folder.url?.trim().toLowerCase() === normalizedCalendarUrl
+				folder.view === 'appointment' && folder.url?.trim().toLowerCase() === normalizedCalendarUrl
 		);
 	}, [folders, calendarUrl]);
 
