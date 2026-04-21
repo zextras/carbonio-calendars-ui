@@ -53,7 +53,7 @@ export const AddExternalCalendarModalCaldavFlow = ({
 					caldavHostError ??
 					t(
 						'add_external_calendar.caldav.host_name_hint',
-						'Refers to the CalDAV server address. Example: calendar.example.com'
+						'Added calendars will be read-only and will sync every 12 hours'
 					)
 				}
 				onChange={(event): void => onCaldavHostChange(event.target.value)}

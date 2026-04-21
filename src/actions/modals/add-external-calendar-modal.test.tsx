@@ -530,7 +530,7 @@ describe('AddExternalCalendarModal', () => {
 				0
 			);
 			expect(
-				screen.queryByText('Refers to the CalDAV server address. Example: calendar.example.com')
+				screen.queryByText('Added calendars will be read-only and will sync every 12 hours')
 			).not.toBeInTheDocument();
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});
@@ -564,7 +564,7 @@ describe('AddExternalCalendarModal', () => {
 			await user.type(hostInput, 'calendar.example.com');
 
 			expect(
-				screen.getByText('Refers to the CalDAV server address. Example: calendar.example.com')
+				screen.getByText('Added calendars will be read-only and will sync every 12 hours')
 			).toBeVisible();
 		});
 
