@@ -52,6 +52,7 @@ export const EditCaldavCalendarModal = ({
 		}
 
 		if (trimmedName === folder.name) {
+			showChangesSavedSnackbar(createSnackbar, 'edit-caldav-calendar-success', t);
 			onClose();
 			return;
 		}

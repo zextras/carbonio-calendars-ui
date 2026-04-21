@@ -90,6 +90,7 @@ export const EditCaldavChildCalendarModal = ({
 		const hasColorChanged = selectedColor !== originalColorIndex;
 
 		if (!hasNameChanged && !hasColorChanged) {
+			showChangesSavedSnackbar(createSnackbar, 'edit-caldav-child-calendar-success', t);
 			onClose();
 			return;
 		}
