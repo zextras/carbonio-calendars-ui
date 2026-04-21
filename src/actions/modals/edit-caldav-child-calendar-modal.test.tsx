@@ -27,7 +27,7 @@ vi.mock('@zextras/carbonio-design-system', async () => {
 
 	return {
 		...actual,
-		Select: ({ label, items, disabled, onChange }: any) => (
+		Select: ({ label, items, disabled, onChange }: any): JSX.Element => (
 			<label>
 				{label}
 				<select
@@ -49,7 +49,9 @@ vi.mock('@zextras/carbonio-design-system', async () => {
 const FOLDER_ID = 'caldav-child-1';
 const FOLDER_NAME = 'Child Calendar';
 
-const buildFolder = (overrides?: Record<string, unknown>) =>
+const buildFolder = (
+	overrides?: Record<string, unknown>
+): ReturnType<typeof generateFolder> =>
 	generateFolder({
 		id: FOLDER_ID,
 		name: FOLDER_NAME,
@@ -80,7 +82,9 @@ describe('EditCaldavChildCalendarModal', () => {
 		const onClose = vi.fn();
 		const folderActionSpy = vi.spyOn(calendarActions, 'folderAction');
 
-		const { user } = setupTest(<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />);
+		const { user } = setupTest(
+			<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />
+		);
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
 
 		expect(folderActionSpy).not.toHaveBeenCalled();
@@ -94,7 +98,9 @@ describe('EditCaldavChildCalendarModal', () => {
 		const onClose = vi.fn();
 		vi.spyOn(calendarActions, 'folderAction').mockResolvedValue({} as never);
 
-		const { user } = setupTest(<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />);
+		const { user } = setupTest(
+			<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />
+		);
 		await user.selectOptions(screen.getByTestId('mock-color-select'), '1');
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
 
@@ -114,7 +120,9 @@ describe('EditCaldavChildCalendarModal', () => {
 		populateFoldersStore({ customFolders: [folder] });
 		vi.spyOn(calendarActions, 'folderAction').mockResolvedValue({} as never);
 
-		const { user } = setupTest(<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={vi.fn()} />);
+		const { user } = setupTest(
+			<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={vi.fn()} />
+		);
 		await user.clear(screen.getByDisplayValue(FOLDER_NAME));
 		await user.type(screen.getByRole('textbox'), 'Renamed Child Calendar');
 		await user.selectOptions(screen.getByTestId('mock-color-select'), '1');
