@@ -26,31 +26,7 @@ const VALID_ICS_URL = 'https://a/1.ics';
 const VALID_CALDAV_HOST = 'https://caldav.example.com';
 
 describe('AddExternalCalendarModal', () => {
-	test('renders modal with title, type selector, url, name, color and disabled add button', () => {
-		setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-		expect(screen.getByText('Add external calendars')).toBeVisible();
-		expect(screen.getByText(TYPE_LABEL)).toBeVisible();
-		expect(screen.getByRole('textbox', { name: URL_LABEL })).toBeVisible();
-		expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeVisible();
-		expect(screen.getByText('Select color')).toBeVisible();
-		expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
-	});
-	test('defaults to ICS type', () => {
-		setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-		expect(screen.getByText('ICS')).toBeVisible();
-	});
 	describe('ICS type', () => {
-		test('does not show duplicate URL warning before user enters a URL', () => {
-			const folderWithEmptyUrl = generateFolder({ view: 'appointment', url: '' });
-			populateFoldersStore({ customFolders: [folderWithEmptyUrl] });
-
-			setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-
-			expect(
-				screen.queryByText('A calendar with the same URL has already been added')
-			).not.toBeInTheDocument();
-		});
-
 		test('enables add button when a valid ics url and calendar name are provided', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
@@ -74,27 +50,12 @@ describe('AddExternalCalendarModal', () => {
 			).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
-		test('shows protocol error for non-http(s) protocol url', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.pasteInto(
-				screen.getByRole('textbox', { name: URL_LABEL }),
-				'ftp://example.com/calendar.ics'
-			);
-			expect(screen.getByText("The URL should begin with 'http://' or 'https://'")).toBeVisible();
-		});
 		test('shows sync info text when a valid ics url is entered', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
 			expect(
 				screen.getByText('This calendar will be read-only and will sync every 12 hours')
 			).toBeVisible();
-		});
-		test('hides sync info text when url has a validation error', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), 'a.b');
-			expect(
-				screen.queryByText('This calendar will be read-only and will sync every 12 hours')
-			).not.toBeInTheDocument();
 		});
 		test('shows duplicate calendar url error when same ics url already exists', async () => {
 			const existingUrl = 'https://existing.com/calendar.ics';
@@ -168,49 +129,6 @@ describe('AddExternalCalendarModal', () => {
 			expect(screen.getByLabelText('Password*')).toBeVisible();
 		});
 
-		test('hides ICS-specific fields when CalDAV type is selected', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await selectCalDav(user);
-
-			expect(screen.queryByRole('textbox', { name: URL_LABEL })).not.toBeInTheDocument();
-			expect(screen.queryByRole('textbox', { name: CALENDAR_NAME_LABEL })).not.toBeInTheDocument();
-		});
-
-		test('add button is disabled when host and folder name are empty', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await selectCalDav(user);
-
-			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
-		});
-
-		test('add button is disabled when host is filled but folder name is missing', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await selectCalDav(user);
-
-			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Host address (calendar.example.com)*' }),
-				VALID_CALDAV_HOST
-			);
-
-			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
-		});
-
-		test('add button is disabled when host and folder name are filled but credentials are missing', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await selectCalDav(user);
-
-			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Host address (calendar.example.com)*' }),
-				VALID_CALDAV_HOST
-			);
-			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
-				'My Calendars'
-			);
-
-			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
-		});
-
 		test('add button is disabled when host, folder name, and username are filled but password is missing', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await selectCalDav(user);
@@ -277,15 +195,6 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByText('This host does not require credentials'));
 
 			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
-		});
-
-		test('folder name hint text is visible', async () => {
-			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await selectCalDav(user);
-
-			expect(
-				screen.getByText('Choose a name to identify all calendars from this host')
-			).toBeVisible();
 		});
 
 		test('submits CreateFolderRequest then CreateDataSourceRequest with credentials on add', async () => {

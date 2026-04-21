@@ -80,7 +80,7 @@ const getCaldavTestErrorMessage = (
 		};
 	}
 
-	// Some backends return only the host string (for example "test.com") without status code.
+	// In some cases backend returns only the host string (for example "test.com") without status code.
 	const hostLikeMatch = /(?:https?:\/\/)?[a-z0-9.-]+(?:\.[a-z0-9.-]+)+(?::\d+)?(?:\/\S*)?/i.exec(
 		messageForMatching
 	)?.[0];
