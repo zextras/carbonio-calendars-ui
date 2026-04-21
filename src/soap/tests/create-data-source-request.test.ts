@@ -6,6 +6,7 @@
 
 import { JSNS } from '@zextras/carbonio-shell-ui';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-ui-soap-lib';
+import * as soapLib from '@zextras/carbonio-ui-soap-lib';
 
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import {
@@ -103,6 +104,12 @@ describe('data source API', () => {
 				faultyResponse.Fault.Reason.Text
 			);
 		});
+
+		it('normalizes string rejections into Error instances', async () => {
+			vi.spyOn(soapLib, 'legacySoapFetch').mockRejectedValueOnce('string rejection');
+
+			await expect(createCalDavDataSourceRequest(params)).rejects.toThrow('string rejection');
+		});
 	});
 
 	describe('testCalDavDataSourceRequest', () => {
@@ -158,6 +165,16 @@ describe('data source API', () => {
 
 			await expect(testCalDavDataSourceRequest(testParams)).rejects.toThrow(
 				'Failed to validate CalDAV data source'
+			);
+		});
+
+		it('normalizes object rejections with message into Error instances', async () => {
+			vi.spyOn(soapLib, 'legacySoapFetch').mockRejectedValueOnce({
+				message: 'object rejection message'
+			});
+
+			await expect(testCalDavDataSourceRequest(testParams)).rejects.toThrow(
+				'object rejection message'
 			);
 		});
 	});

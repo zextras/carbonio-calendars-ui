@@ -23,10 +23,14 @@ import {
 	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
+import { EditCaldavChildCalendarModal } from './modals/edit-caldav-child-calendar-modal';
+import { EditModal } from './modals/edit-modal/edit-modal';
+import { EditExternalCalendarModal } from './modals/edit-external-calendar-modal';
 import mockedData from '../test/generators';
 import * as getImportStatusApi from '../soap/get-import-status-request';
 import { getSetupServer } from '@jest-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import * as utilities from 'commons/utilities';
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 
@@ -110,6 +114,48 @@ describe('calendar-actions-fn', () => {
 		const editCalendarFn = editCalendar({ createModal, closeModal, item });
 		editCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
+	});
+
+	test('edit calendar fn opens EditCaldavChildCalendarModal for CalDAV child folders', () => {
+		vi.spyOn(utilities, 'isCaldavChild').mockReturnValue(true);
+		vi.spyOn(utilities, 'isExternalSyncFolder').mockReturnValue(false);
+
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: 'caldav-child-id' };
+		const editCalendarFn = editCalendar({ createModal, closeModal, item });
+		editCalendarFn();
+
+		const modalConfig = createModal.mock.calls[0][0];
+		expect(modalConfig.children.props.children.type).toBe(EditCaldavChildCalendarModal);
+	});
+
+	test('edit calendar fn opens EditExternalCalendarModal for external folders that are not CalDAV children', () => {
+		vi.spyOn(utilities, 'isCaldavChild').mockReturnValue(false);
+		vi.spyOn(utilities, 'isExternalSyncFolder').mockReturnValue(true);
+
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: 'external-id', f: '#y', url: 'https://example.com/calendar.ics' };
+		const editCalendarFn = editCalendar({ createModal, closeModal, item });
+		editCalendarFn();
+
+		const modalConfig = createModal.mock.calls[0][0];
+		expect(modalConfig.children.props.children.type).toBe(EditExternalCalendarModal);
+	});
+
+	test('edit calendar fn opens EditModal for non-external folders', () => {
+		vi.spyOn(utilities, 'isCaldavChild').mockReturnValue(false);
+		vi.spyOn(utilities, 'isExternalSyncFolder').mockReturnValue(false);
+
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: 'standard-id' };
+		const editCalendarFn = editCalendar({ createModal, closeModal, item });
+		editCalendarFn();
+
+		const modalConfig = createModal.mock.calls[0][0];
+		expect(modalConfig.children.props.children.type).toBe(EditModal);
 	});
 
 	test('delete calendar fn', () => {
