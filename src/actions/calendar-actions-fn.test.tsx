@@ -360,7 +360,7 @@ describe('calendar-actions-fn', () => {
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
 					severity: 'info',
-					label: 'message.snackbar.external_calendar_syncing'
+					label: 'message.snackbar.caldav_calendars_syncing'
 				})
 			);
 
@@ -378,7 +378,7 @@ describe('calendar-actions-fn', () => {
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
 					severity: 'success',
-					label: 'message.snackbar.external_calendar_synced'
+					label: 'message.snackbar.caldav_calendars_synced'
 				})
 			);
 		} finally {
@@ -475,7 +475,7 @@ describe('calendar-actions-fn', () => {
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
 					severity: 'success',
-					label: 'message.snackbar.external_calendar_synced'
+					label: 'message.snackbar.caldav_calendars_synced'
 				})
 			);
 		} finally {
@@ -546,7 +546,7 @@ describe('calendar-actions-fn', () => {
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
 					severity: 'success',
-					label: 'message.snackbar.external_calendar_synced'
+					label: 'message.snackbar.caldav_calendars_synced'
 				})
 			);
 		} finally {

@@ -378,7 +378,7 @@ export const syncCaldavCalendar =
 			replace: true,
 			severity: 'info',
 			hideButton: true,
-			label: t('message.snackbar.external_calendar_syncing', 'Calendar sync has started'),
+			label: t('message.snackbar.caldav_calendars_syncing', 'Calendars sync has started'),
 			autoHideTimeout: 6000
 		});
 
@@ -402,10 +402,7 @@ export const syncCaldavCalendar =
 								replace: true,
 								severity: 'success',
 								hideButton: true,
-								label: t(
-									'message.snackbar.external_calendar_synced',
-									'Calendar synced successfully'
-								),
+								label: t('message.snackbar.caldav_calendars_synced', 'Calendars synced successfully'),
 								autoHideTimeout: 3000
 							});
 						}
@@ -427,7 +424,7 @@ export const syncCaldavCalendar =
 							replace: true,
 							severity: 'success',
 							hideButton: true,
-							label: t('message.snackbar.external_calendar_synced', 'Calendar synced successfully'),
+							label: t('message.snackbar.caldav_calendars_synced', 'Calendars synced successfully'),
 							autoHideTimeout: 3000
 						});
 					}
