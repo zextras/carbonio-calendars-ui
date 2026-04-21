@@ -582,7 +582,7 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
 			await waitFor(() => {
-				expect(screen.getByText('Server currently unavailable, please try again')).toBeVisible();
+				expect(screen.getByText('Server is currently unavailable, please try again')).toBeVisible();
 			});
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});

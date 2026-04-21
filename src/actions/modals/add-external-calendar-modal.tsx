@@ -74,7 +74,7 @@ const getCaldavTestErrorMessage = (
 		return {
 			message: t(
 				'add_external_calendar.error.caldav_server_unavailable',
-				'Server currently unavailable, please try again'
+				'Server is currently unavailable, please try again'
 			),
 			isHostRelated: false
 		};
