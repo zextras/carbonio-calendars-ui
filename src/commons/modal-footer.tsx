@@ -3,13 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useMemo } from 'react';
+import React, { FC, ReactElement, ReactNode, useMemo } from 'react';
 
 import { Button, Container, Divider, Padding, Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { ModalFooterProps } from '@zextras/carbonio-ui-commons';
 
-const ModalFooter: FC<ModalFooterProps> = ({
+type ExtendedModalFooterProps = ModalFooterProps & {
+	leftSideContent?: ReactNode;
+};
+
+const ModalFooter: FC<ExtendedModalFooterProps> = ({
 	mainAlignment = 'center',
 	crossAlignment = 'center',
 	onConfirm,
@@ -29,7 +33,8 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	additionalAction,
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
-	additionalLabel = t('label.cancel', 'cancel')
+	additionalLabel = t('label.cancel', 'cancel'),
+	leftSideContent
 }): ReactElement => {
 	const secondaryButtonTypeAndColor = useMemo(() => {
 		if (secondaryBtnType === 'ghost') {
@@ -72,6 +77,11 @@ const ModalFooter: FC<ModalFooterProps> = ({
 				</Container>
 			)}
 			<Container orientation="horizontal" mainAlignment="space-between">
+				{leftSideContent && (
+					<Container orientation="horizontal" width="fit">
+						{leftSideContent}
+					</Container>
+				)}
 				{additionalAction && (
 					<Container orientation="horizontal" width="fit">
 						<Button

@@ -5,7 +5,14 @@
  */
 import React, { useMemo, useState } from 'react';
 
-import { Container, Padding, Select, useSnackbar } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Icon,
+	Padding,
+	Select,
+	Text,
+	useSnackbar
+} from '@zextras/carbonio-design-system';
 import { FOLDERS, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -133,6 +140,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		'add_external_calendar.error.caldav_host_not_found_description',
 		'Host not found. Make sure the address is correct and try again'
 	);
+	const loadingDescription = t('label.loading_please_wait', 'Loading, please wait...');
 
 	// ── ICS validation ─────────────────────────────────────────────────────────
 	const appointmentFolderNames = useMemo(
@@ -481,7 +489,20 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			)}
 
 			<Padding top="medium" />
-			<ModalFooter onConfirm={onConfirm} label={t('label.add', 'Add')} disabled={isAddDisabled} />
+			<ModalFooter
+				onConfirm={onConfirm}
+				label={t('label.add', 'Add')}
+				disabled={isAddDisabled}
+				leftSideContent={
+					isSubmitting ? (
+						<Container orientation="horizontal" width="fit" mainAlignment="flex-start">
+							<Icon icon="LoaderOutline" />
+							<Padding right="small" />
+							<Text>{loadingDescription}</Text>
+						</Container>
+					) : undefined
+				}
+			/>
 		</Container>
 	);
 };

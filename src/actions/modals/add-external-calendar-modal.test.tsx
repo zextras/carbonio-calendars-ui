@@ -705,6 +705,8 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 			expect(screen.getByRole('textbox', { name: URL_LABEL })).toBeDisabled();
 			expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeDisabled();
+			expect(screen.getByText('Loading, please wait...')).toBeVisible();
+			expect(screen.getByTestId('icon: LoaderOutline')).toBeVisible();
 			resolveRequest?.({ folder: [], _jsns: JSNS.mail });
 		});
 		test('shows success snackbar and closes modal on successful ICS creation', async () => {
