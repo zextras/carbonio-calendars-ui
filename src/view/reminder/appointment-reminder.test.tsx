@@ -312,4 +312,122 @@ describe('appointment reminders', () => {
 		expect(playSpy).not.toHaveBeenCalled();
 		expect(screen.queryByTestId('reminder-modal')).not.toBeInTheDocument();
 	});
+
+	test('does not notify for appointments from caldav child calendars', async () => {
+		const caldavRootId = 'caldav-root-for-reminder';
+		const caldavChildId = 'caldav-child-for-reminder';
+		const notificationSpy = vi.spyOn(notifications, 'showNotification').mockImplementation(vi.fn());
+		const playSpy = vi
+			.spyOn(HTMLMediaElement.prototype, 'play')
+			.mockImplementation(() => Promise.resolve());
+
+		useFolderStore.setState((state) => ({
+			...state,
+			folders: {
+				...state.folders,
+				[caldavRootId]: {
+					id: caldavRootId,
+					name: 'CalDAV Root',
+					dsId: 'caldav-ds-id',
+					dsType: 'caldav',
+					view: 'appointment',
+					uuid: 'caldav-root-uuid',
+					activesyncdisabled: false,
+					recursive: true,
+					deletable: true,
+					isLink: false,
+					depth: 1,
+					children: []
+				},
+				[caldavChildId]: {
+					id: caldavChildId,
+					name: 'CalDAV Child',
+					l: caldavRootId,
+					view: 'appointment',
+					uuid: 'caldav-child-uuid',
+					activesyncdisabled: false,
+					recursive: true,
+					deletable: true,
+					isLink: false,
+					depth: 2,
+					children: []
+				}
+			}
+		}));
+
+		const now = Date.now();
+		const fakeReducers = {
+			appointments: {
+				appointments: {
+					caldavAppt: {
+						id: 'caldavAppt',
+						class: 'PUB',
+						flags: '',
+						alarm: true,
+						alarmData: [
+							{
+								nextAlarm: now - 1000,
+								alarmInstStart: now - 1000,
+								invId: 1,
+								compNum: 0,
+								name: 'CalDAV event',
+								loc: '',
+								alarm: [
+									{
+										action: 'DISPLAY',
+										trigger: [{ rel: [{ neg: 'true', m: 5, related: 'START' }] }],
+										desc: { description: '' }
+									}
+								]
+							}
+						],
+						hasEx: false,
+						fb: EVENT_DISPLAY_STATUS.FREE,
+						fba: EVENT_DISPLAY_STATUS.FREE,
+						fr: '',
+						d: 1234,
+						md: 0,
+						ms: 0,
+						ptst: PARTICIPATION_STATUS.ACCEPTED,
+						rev: 0,
+						status: 'CONF',
+						transp: '',
+						uid: '',
+						compNum: 0,
+						dur: 1800000,
+						allDay: false,
+						inst: [{ recur: false, ridZ: '', s: 0 }],
+						draft: false,
+						inviteId: 'caldav-invite-id',
+						isOrg: false,
+						loc: '',
+						otherAtt: false,
+						recur: false,
+						l: caldavChildId,
+						name: 'CalDAV event',
+						neverSent: false,
+						or: {},
+						s: 0,
+						tags: []
+					} as Appointment
+				}
+			}
+		};
+
+		const emptyStore = mockedData.store.mockReduxStore(fakeReducers);
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<AppointmentReminder />, { store });
+
+		act(() => {
+			vi.advanceTimersByTime(2000);
+		});
+
+		expect(notificationSpy).not.toHaveBeenCalled();
+		expect(playSpy).not.toHaveBeenCalled();
+		expect(screen.queryByTestId('reminder-modal')).not.toBeInTheDocument();
+	});
 });
