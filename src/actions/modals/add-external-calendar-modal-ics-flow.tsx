@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { Input, Padding, Select, Text } from '@zextras/carbonio-design-system';
+import { Input, Padding, Select } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarColorLabelFactory, buildCalendarColorItems } from 'commons/calendar-color-picker';
@@ -47,22 +47,17 @@ export const AddExternalCalendarModalIcsFlow = ({
 				label={`${t('add_ics_from_url.url', 'Calendar URL')}*`}
 				background={'gray5'}
 				hasError={!!urlError || isDuplicateCalendarUrl}
-				description={urlDescription}
+				description={
+					urlDescription ??
+					t(
+						'add_ics_from_url.sync_info',
+						'This calendar will be read-only and will sync every 12 hours'
+					)
+				}
 				value={calendarUrl}
 				disabled={isSubmitting}
 				onChange={(event): void => onCalendarUrlChange(event.target.value)}
 			/>
-			{!urlError && !isDuplicateCalendarUrl && (
-				<>
-					<Padding top="extrasmall" />
-					<Text size="small" color="secondary">
-						{t(
-							'add_ics_from_url.sync_info',
-							'This calendar will be read-only and will sync every 12 hours'
-						)}
-					</Text>
-				</>
-			)}
 			<Padding top="medium" />
 			<Input
 				label={`${t('add_ics_from_url.calendar_name', 'Calendar name')}*`}
