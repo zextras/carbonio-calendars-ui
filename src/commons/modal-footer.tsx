@@ -77,11 +77,6 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 				</Container>
 			)}
 			<Container orientation="horizontal" mainAlignment="space-between">
-				{leftSideContent && (
-					<Container orientation="horizontal" width="fit">
-						{leftSideContent}
-					</Container>
-				)}
 				{additionalAction && (
 					<Container orientation="horizontal" width="fit">
 						<Button
@@ -97,10 +92,18 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 				<Container
 					padding={{ top: 'small', bottom: 'small' }}
 					mainAlignment="flex-end"
-					crossAlignment="flex-start"
+					crossAlignment="center"
 					orientation="horizontal"
 					height="fit"
 				>
+					{leftSideContent && (
+						<>
+							<Container orientation="horizontal" width="fit">
+								{leftSideContent}
+							</Container>
+							<Padding horizontal="small" />
+						</>
+					)}
 					{secondaryAction && (
 						<>
 							<Button
