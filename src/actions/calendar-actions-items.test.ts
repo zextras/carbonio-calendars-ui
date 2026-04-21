@@ -142,7 +142,7 @@ describe('calendar actions items', () => {
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.ADD_ICS_URL,
 					icon: 'Link2',
-					label: t('action.add_external_calendars', 'Add External Calendars'),
+					label: t('action.add_external_calendars', 'Add external calendars'),
 					tooltipLabel: noPermissionLabel,
 					onClick: expect.any(Function),
 					disabled: false
