@@ -11,7 +11,7 @@ import moment from 'moment';
 
 import { ReminderModal } from './reminder-modal';
 import sound from '../../assets/notification.mp3';
-import { getTimeToDisplayData, isExternalSyncFolder } from '../../commons/utilities';
+import { getTimeToDisplayData, isIcsOrCaldavExternalFolder } from '../../commons/utilities';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { normalizeReminderItem } from '../../normalizations/normalize-reminder';
 import { searchAppointments } from '../../store/actions/search-appointments';
@@ -41,7 +41,7 @@ export const AppointmentReminder = (): ReactElement | null => {
 				const cal = isShared
 					? find(calendars, (f) => `${(f as LinkFolder).zid}:${(f as LinkFolder).rid}` === appt.l)
 					: find(calendars, (f) => f.id === appt.l);
-				if (isExternalSyncFolder(cal ?? {})) {
+				if (isIcsOrCaldavExternalFolder(cal ?? {})) {
 					return undefined;
 				}
 				return normalizeReminderItem({ calendar: cal ?? defaultCalendar, appointment: appt });
