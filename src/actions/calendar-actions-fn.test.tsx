@@ -127,12 +127,12 @@ describe('calendar-actions-fn', () => {
 		const editCalendarFn = editCalendar({ createModal, closeModal, item });
 		editCalendarFn();
 
-			const modalConfig = createModal.mock.calls[0][0] as {
-				children: ReactElement<{ children: ReactElement }>;
-			};
-			const { children: providerContent } = modalConfig;
-			const { children: modalContent } = providerContent.props;
-			expect(modalContent.type).toBe(EditCaldavChildCalendarModal);
+		const modalConfig = createModal.mock.calls[0][0] as {
+			children: ReactElement<{ children: ReactElement }>;
+		};
+		const { children: providerContent } = modalConfig;
+		const { children: modalContent } = providerContent.props;
+		expect(modalContent.type).toBe(EditCaldavChildCalendarModal);
 	});
 
 	test('edit calendar fn opens EditExternalCalendarModal for external folders that are not CalDAV children', () => {
@@ -145,12 +145,12 @@ describe('calendar-actions-fn', () => {
 		const editCalendarFn = editCalendar({ createModal, closeModal, item });
 		editCalendarFn();
 
-			const modalConfig = createModal.mock.calls[0][0] as {
-				children: ReactElement<{ children: ReactElement }>;
-			};
-			const { children: providerContent } = modalConfig;
-			const { children: modalContent } = providerContent.props;
-			expect(modalContent.type).toBe(EditExternalCalendarModal);
+		const modalConfig = createModal.mock.calls[0][0] as {
+			children: ReactElement<{ children: ReactElement }>;
+		};
+		const { children: providerContent } = modalConfig;
+		const { children: modalContent } = providerContent.props;
+		expect(modalContent.type).toBe(EditExternalCalendarModal);
 	});
 
 	test('edit calendar fn opens EditModal for non-external folders', () => {
@@ -163,12 +163,12 @@ describe('calendar-actions-fn', () => {
 		const editCalendarFn = editCalendar({ createModal, closeModal, item });
 		editCalendarFn();
 
-			const modalConfig = createModal.mock.calls[0][0] as {
-				children: ReactElement<{ children: ReactElement }>;
-			};
-			const { children: providerContent } = modalConfig;
-			const { children: modalContent } = providerContent.props;
-			expect(modalContent.type).toBe(EditModal);
+		const modalConfig = createModal.mock.calls[0][0] as {
+			children: ReactElement<{ children: ReactElement }>;
+		};
+		const { children: providerContent } = modalConfig;
+		const { children: modalContent } = providerContent.props;
+		expect(modalContent.type).toBe(EditModal);
 	});
 
 	test('delete calendar fn', () => {

@@ -49,9 +49,7 @@ vi.mock('@zextras/carbonio-design-system', async () => {
 const FOLDER_ID = 'caldav-child-1';
 const FOLDER_NAME = 'Child Calendar';
 
-const buildFolder = (
-	overrides?: Record<string, unknown>
-): ReturnType<typeof generateFolder> =>
+const buildFolder = (overrides?: Record<string, unknown>): ReturnType<typeof generateFolder> =>
 	generateFolder({
 		id: FOLDER_ID,
 		name: FOLDER_NAME,
