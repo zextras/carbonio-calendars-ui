@@ -25,7 +25,7 @@ import {
 	syncExternalCalendarItem,
 	sharesInfoItem
 } from 'actions/calendar-actions-items';
-import { isCaldavRootFolder, isExternalSyncFolder } from 'commons/utilities';
+import { isCaldavChild, isCaldavRootFolder, isExternalSyncFolder } from 'commons/utilities';
 import { ActionsClick } from 'types/actions';
 
 type CalendarActionsProps = {
@@ -44,6 +44,7 @@ export const useCalendarActions = (
 
 	if (!item) return [];
 	const isCaldavCalendar = isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType });
+	const isCaldavChildCalendar = isCaldavChild(item as any);
 	const isExternalCalendar = isExternalSyncFolder(item);
 
 	if (isCaldavCalendar) {
@@ -67,6 +68,10 @@ export const useCalendarActions = (
 			],
 			['disabled', false]
 		);
+	}
+
+	if (isCaldavChildCalendar) {
+		return filter([editCalendarItem({ createModal, closeModal, item })], ['disabled', false]);
 	}
 
 	const actions = [

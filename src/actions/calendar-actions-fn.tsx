@@ -16,13 +16,14 @@ import { CreateGroupModal } from './modals/create-group-modal';
 import { DeleteCaldavCalendarModal } from './modals/delete-caldav-calendar-modal';
 import { DeleteModal } from './modals/delete-modal';
 import { EditCaldavCalendarModal } from './modals/edit-caldav-calendar-modal';
+import { EditCaldavChildCalendarModal } from './modals/edit-caldav-child-calendar-modal';
 import { EditModal } from './modals/edit-modal/edit-modal';
 import { EmptyModal } from './modals/empty-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
 import { EditExternalCalendarModal } from 'actions/modals/edit-external-calendar-modal';
-import { isExternalSyncFolder } from 'commons/utilities';
+import { isExternalSyncFolder, isCaldavChild } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { getFolderRequest } from 'soap/get-folder-request';
 import { getImportStatusRequest } from 'soap/get-import-status-request';
@@ -212,23 +213,29 @@ export const editCalendar =
 			e.stopPropagation();
 		}
 		const isExternal = isExternalSyncFolder(item);
+		const isCaldavChildFolder = isCaldavChild(item as any);
 		const modalId = 'edit-calendar';
+
+		let modalContent: React.JSX.Element;
+		if (isCaldavChildFolder) {
+			modalContent = (
+				<EditCaldavChildCalendarModal
+					folderId={item.id}
+					onClose={(): void => closeModal(modalId)}
+				/>
+			);
+		} else if (isExternal) {
+			modalContent = (
+				<EditExternalCalendarModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
+			);
+		} else {
+			modalContent = <EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />;
+		}
 
 		createModal(
 			{
 				id: modalId,
-				children: (
-					<StoreProvider>
-						{isExternal ? (
-							<EditExternalCalendarModal
-								folderId={item.id}
-								onClose={(): void => closeModal(modalId)}
-							/>
-						) : (
-							<EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
-						)}
-					</StoreProvider>
-				),
+				children: <StoreProvider>{modalContent}</StoreProvider>,
 				maxHeight: '90vh',
 				size: 'medium',
 				onClose: () => {

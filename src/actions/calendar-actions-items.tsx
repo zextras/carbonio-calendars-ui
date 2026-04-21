@@ -159,14 +159,19 @@ export const editCalendarItem = ({
 	createModal: CreateModalFn;
 	closeModal: CloseModalFn;
 	item: { id: string; absFolderPath?: string; f?: string; url?: string };
-}): CalendarActionsItems => ({
-	id: FOLDER_ACTIONS.EDIT,
-	icon: 'Edit2Outline',
-	label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
-	tooltipLabel: noPermissionLabel,
-	onClick: editCalendar({ createModal, closeModal, item }),
-	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
-});
+}): CalendarActionsItems => {
+	const isCaldavChildFolder = isCaldavChild(item as any);
+	return {
+		id: FOLDER_ACTIONS.EDIT,
+		icon: 'Edit2Outline',
+		label: isCaldavChildFolder
+			? t('action.edit_calendar', 'Edit calendar')
+			: t('action.edit_and_share_calendar', 'Edit and share calendar'),
+		tooltipLabel: noPermissionLabel,
+		onClick: editCalendar({ createModal, closeModal, item }),
+		disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+	};
+};
 
 export const editExternalCalendarItem = ({
 	createModal,
