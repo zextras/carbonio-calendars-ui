@@ -74,12 +74,13 @@ describe('EditCaldavCalendarModal', () => {
 		expect(screen.getByRole('button', { name: 'Save Changes' })).toBeEnabled();
 	});
 
-	it('calls onClose without folderAction when name is unchanged', async () => {
+	it('shows success snackbar and closes without folderAction when name is unchanged', async () => {
 		const folderActionSpy = vi.spyOn(calendarActions, 'folderAction');
 		const onClose = vi.fn();
 		const { user } = setupTest(<EditCaldavCalendarModal folderId={FOLDER_ID} onClose={onClose} />);
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
 		expect(folderActionSpy).not.toHaveBeenCalled();
+		await waitFor(() => expect(screen.getByText('Changes saved')).toBeVisible());
 		expect(onClose).toHaveBeenCalledTimes(1);
 	});
 
