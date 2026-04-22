@@ -21,6 +21,7 @@ import { AddExternalCalendarModalCaldavFlow } from './add-external-calendar-moda
 import { AddExternalCalendarModalIcsFlow } from './add-external-calendar-modal-ics-flow';
 import ModalFooter from '../../commons/modal-footer';
 import { buildCalendarColorItems } from 'commons/calendar-color-picker';
+import { triggerCaldavSync } from 'commons/caldav-sync';
 import { ModalHeader } from 'commons/modal-header';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
@@ -29,7 +30,6 @@ import {
 	testCalDavDataSourceRequest
 } from 'soap/create-data-source-request';
 import { createFolderRequest } from 'soap/create-folder-request';
-import { importDataRequest } from 'soap/import-data-request';
 import { folderAction } from 'store/actions/calendar-actions';
 
 const CALENDAR_TYPE_ICS = 'ics' as const;
@@ -337,17 +337,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 							if (!dataSourceId) {
 								throw new Error('Data source ID not received from server');
 							}
-							return importDataRequest(dataSourceId);
-						})
-						.then(() => {
-							createSnackbar({
-								key: 'caldav-calendar-created',
-								replace: true,
-								severity: 'success',
-								hideButton: true,
-								label: t('message.snackbar.new_calendar_added', 'Calendar added successfully'),
-								autoHideTimeout: 3000
-							});
+							triggerCaldavSync(dataSourceId, createSnackbar);
 							onClose();
 						})
 						.catch(() => {

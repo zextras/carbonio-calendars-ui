@@ -23,12 +23,11 @@ import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
 import { EditExternalCalendarModal } from 'actions/modals/edit-external-calendar-modal';
+import { triggerCaldavSync } from 'commons/caldav-sync';
 import { isExternalSyncFolder, isCaldavChild } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { getFolderRequest } from 'soap/get-folder-request';
-import { getImportStatusRequest } from 'soap/get-import-status-request';
 import { getShareInfoRequest } from 'soap/get-share-info-request';
-import { importDataRequest } from 'soap/import-data-request';
 import { folderAction } from 'store/actions/calendar-actions';
 import { deleteCalendarAction } from 'store/actions/delete-calendar-action';
 import { StoreProvider } from 'store/redux';
@@ -380,91 +379,7 @@ export const syncCaldavCalendar =
 			return;
 		}
 
-		createSnackbar({
-			key: `caldav-calendar-sync`,
-			replace: true,
-			severity: 'info',
-			hideButton: true,
-			label: t('message.snackbar.caldav_calendars_syncing', 'Calendars sync has started'),
-			autoHideTimeout: 6000
-		});
-
-		const { dsId } = item;
-		const POLL_INTERVAL_MS = 5000;
-		const MAX_POLLS = 30; // up to ~150 seconds
-
-		const pollImportStatus = (attempt: number): void => {
-			getImportStatusRequest()
-				.then((statusResponse) => {
-					const entry = statusResponse.caldav?.find((e) => e.id === dsId);
-
-					if (!entry || entry.isRunning) {
-						// Still in progress – keep polling if within limit
-						if (attempt < MAX_POLLS) {
-							setTimeout(() => pollImportStatus(attempt + 1), POLL_INTERVAL_MS);
-						} else {
-							// Timed out – treat as success (sync continues in background)
-							createSnackbar({
-								key: `caldav-calendar-sync`,
-								replace: true,
-								severity: 'success',
-								hideButton: true,
-								label: t(
-									'message.snackbar.caldav_calendars_synced',
-									'Calendars synced successfully'
-								),
-								autoHideTimeout: 3000
-							});
-						}
-						return;
-					}
-
-					if (entry.success === false) {
-						createSnackbar({
-							key: `caldav-calendar-sync-error`,
-							replace: true,
-							severity: 'error',
-							hideButton: true,
-							label: t('label.error_try_again', 'Something went wrong, please try again'),
-							autoHideTimeout: 3000
-						});
-					} else {
-						createSnackbar({
-							key: `caldav-calendar-sync`,
-							replace: true,
-							severity: 'success',
-							hideButton: true,
-							label: t('message.snackbar.caldav_calendars_synced', 'Calendars synced successfully'),
-							autoHideTimeout: 3000
-						});
-					}
-				})
-				.catch(() => {
-					createSnackbar({
-						key: `caldav-calendar-sync-error`,
-						replace: true,
-						severity: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000
-					});
-				});
-		};
-
-		importDataRequest(dsId)
-			.then(() => {
-				pollImportStatus(0);
-			})
-			.catch(() => {
-				createSnackbar({
-					key: `caldav-calendar-sync-error`,
-					replace: true,
-					severity: 'error',
-					hideButton: true,
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000
-				});
-			});
+		triggerCaldavSync(item.dsId, createSnackbar);
 	};
 
 export const editCaldavCalendar =

@@ -13,6 +13,7 @@ import { FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { AddExternalCalendarModal } from './add-external-calendar-modal';
 import * as createDataSourceApi from '../../soap/create-data-source-request';
 import * as createFolderApi from '../../soap/create-folder-request';
+import * as getImportStatusApi from '../../soap/get-import-status-request';
 import * as importDataApi from '../../soap/import-data-request';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
@@ -114,6 +115,16 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByText('ICS'));
 			await user.click(screen.getByText('CalDAV'));
 		};
+
+		beforeEach(() => {
+			// triggerCaldavSync polls getImportStatus after importData resolves.
+			// Individual tests that don't care about polling behavior mock it with a
+			// never-settling promise so the polling hangs silently without causing
+			// unhandled-rejection noise.
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockReturnValue(
+				new Promise(() => {})
+			);
+		});
 
 		test('shows caldav-specific fields when CalDAV type is selected', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
