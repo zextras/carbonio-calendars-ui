@@ -27,7 +27,7 @@ export const triggerCaldavSync = (dsId: string, createSnackbar: CreateSnackbarFn
 		severity: 'info',
 		hideButton: true,
 		label: t('message.snackbar.caldav_calendars_syncing', 'Calendars sync has started'),
-		disableAutoHide: true
+		autoHideTimeout: 5000
 	});
 
 	const pollImportStatus = (attempt: number): void => {
