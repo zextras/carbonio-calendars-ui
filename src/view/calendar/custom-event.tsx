@@ -24,15 +24,15 @@ import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
 import { CustomEventIcon } from './custom-event-icon';
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
-import { TagIconComponent } from '../../commons/tag-icon-component';
-import { isExternalSyncFolder } from '../../commons/utilities';
-import { CALENDAR_ROUTE } from '../../constants';
-import { EVENT_ACTIONS } from '../../constants/event-actions';
-import { useEventActions } from '../../hooks/use-event-actions';
-import { useNeverSentWarningLabel } from '../../hooks/use-never-sent-warning-label';
-import { StoreProvider } from '../../store/redux';
-import { useAppStatusStore } from '../../store/zustand/store';
-import { EventType } from '../../types/event';
+import { TagIconComponent } from 'commons/tag-icon-component';
+import { isExternalSyncFolder, isIcsOrCaldavExternalFolder } from 'commons/utilities';
+import { CALENDAR_ROUTE } from 'constants/index';
+import { EVENT_ACTIONS } from 'constants/event-actions';
+import { useEventActions } from 'hooks/use-event-actions';
+import { useNeverSentWarningLabel } from 'hooks/use-never-sent-warning-label';
+import { StoreProvider } from 'store/redux';
+import { useAppStatusStore } from 'store/zustand/store';
+import { EventType } from 'types/event';
 
 type CustomEventProps = {
 	event: EventType;
@@ -188,7 +188,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	const folders = useFoldersMap();
 	const folder = folders[event.resource.calendar.id];
-	const eventIsFromExternalCalendar = isExternalSyncFolder(folder ?? {});
+	const eventIsFromExternalCalendar = isIcsOrCaldavExternalFolder(folder ?? {});
+	const eventIsFromIcsCalendar = isExternalSyncFolder(folder ?? {});
 
 	const textOverflow = useMemo(
 		() => (hasTags || event.resource.isRecurrent || event.allDay ? 'ellipsis' : 'visible'),
@@ -304,7 +305,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 														<CustomEventTitle title={title} />
 													</>
 												)}
-												{eventIsFromExternalCalendar && (
+												{eventIsFromIcsCalendar && (
 													<CustomEventIcon
 														iconName={'Link2'}
 														iconColor={'currentColor'}

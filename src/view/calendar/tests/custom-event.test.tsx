@@ -194,6 +194,66 @@ describe('custom-event', () => {
 		expect(screen.queryByTestId('icon: StatusAccept')).not.toBeInTheDocument();
 	});
 
+	test('does not show attendee reply icon for CalDAV child calendar events', async () => {
+		const caldavRootId = 'caldav-root-for-status';
+		const caldavChildId = 'caldav-child-for-status';
+		const event = mockedData.getEvent({
+			resource: {
+				iAmOrganizer: false,
+				iAmAttendee: true,
+				calendar: { id: caldavChildId },
+				participationStatus: 'AC'
+			}
+		});
+
+		useFolderStore.setState((state) => ({
+			...state,
+			folders: {
+				...state.folders,
+				[caldavRootId]: {
+					id: caldavRootId,
+					name: 'CalDAV Root',
+					dsId: 'ds-99',
+					dsType: 'caldav',
+					view: 'appointment' as const,
+					uuid: 'caldav-root-uuid',
+					activesyncdisabled: false,
+					recursive: false,
+					deletable: true,
+					isLink: false,
+					depth: 1,
+					children: []
+				},
+				[caldavChildId]: {
+					id: caldavChildId,
+					name: 'CalDAV Calendar',
+					parent: caldavRootId,
+					l: caldavRootId,
+					view: 'appointment' as const,
+					uuid: 'caldav-child-uuid',
+					activesyncdisabled: false,
+					recursive: false,
+					deletable: true,
+					isLink: false,
+					depth: 2,
+					children: []
+				}
+			}
+		}));
+
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = { invites: { [invite.id]: invite } };
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		expect(screen.queryByTestId('icon: StatusAccept')).not.toBeInTheDocument();
+	});
+
 	test('does not show attendee reply icon for readonly events when external flags are unavailable', async () => {
 		const event = mockedData.getEvent({
 			haveWriteAccess: false,
@@ -220,6 +280,60 @@ describe('custom-event', () => {
 		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
 
 		expect(screen.queryByTestId('icon: StatusMaybe')).not.toBeInTheDocument();
+	});
+
+	test('does not show link icon for CalDAV child calendar events', () => {
+		const caldavRootId = 'caldav-root-for-link';
+		const caldavChildId = 'caldav-child-for-link';
+		const event = mockedData.getEvent({
+			resource: { calendar: { id: caldavChildId } }
+		});
+
+		useFolderStore.setState((state) => ({
+			...state,
+			folders: {
+				...state.folders,
+				[caldavRootId]: {
+					id: caldavRootId,
+					name: 'CalDAV Root',
+					dsId: 'ds-link-99',
+					dsType: 'caldav',
+					view: 'appointment' as const,
+					uuid: 'caldav-root-link-uuid',
+					activesyncdisabled: false,
+					recursive: false,
+					deletable: true,
+					isLink: false,
+					depth: 1,
+					children: []
+				},
+				[caldavChildId]: {
+					id: caldavChildId,
+					name: 'CalDAV Calendar',
+					parent: caldavRootId,
+					l: caldavRootId,
+					view: 'appointment' as const,
+					uuid: 'caldav-child-link-uuid',
+					activesyncdisabled: false,
+					recursive: false,
+					deletable: true,
+					isLink: false,
+					depth: 2,
+					children: []
+				}
+			}
+		}));
+
+		const invite = mockedData.getInvite({ event });
+		const emptyStore = mockedData.store.mockReduxStore({ invites: { [invite.id]: invite } });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		expect(screen.queryByTestId('icon: Link2')).not.toBeInTheDocument();
 	});
 
 	test('uses owner free-busy perspective for external calendars in tooltip', async () => {
