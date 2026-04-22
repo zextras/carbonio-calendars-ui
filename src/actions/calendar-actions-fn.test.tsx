@@ -430,7 +430,7 @@ describe('calendar-actions-fn', () => {
 
 			// Trigger the scheduled poll and flush its promise chain (success=true)
 			await act(async () => {
-				vi.advanceTimersByTime(2000);
+				vi.advanceTimersByTime(5000);
 				await Promise.resolve();
 			});
 
@@ -528,7 +528,7 @@ describe('calendar-actions-fn', () => {
 			for (let i = 0; i < 30; i += 1) {
 				// eslint-disable-next-line no-await-in-loop
 				await act(async () => {
-					vi.advanceTimersByTime(2000);
+					vi.advanceTimersByTime(5000);
 					await Promise.resolve();
 				});
 			}
@@ -604,7 +604,7 @@ describe('calendar-actions-fn', () => {
 
 			// Advance to next poll
 			await act(async () => {
-				vi.advanceTimersByTime(2000);
+				vi.advanceTimersByTime(5000);
 				await Promise.resolve();
 			});
 

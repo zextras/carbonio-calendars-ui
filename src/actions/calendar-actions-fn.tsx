@@ -390,8 +390,8 @@ export const syncCaldavCalendar =
 		});
 
 		const { dsId } = item;
-		const POLL_INTERVAL_MS = 2000;
-		const MAX_POLLS = 30; // up to ~60 seconds
+		const POLL_INTERVAL_MS = 5000;
+		const MAX_POLLS = 30; // up to ~150 seconds
 
 		const pollImportStatus = (attempt: number): void => {
 			getImportStatusRequest()
