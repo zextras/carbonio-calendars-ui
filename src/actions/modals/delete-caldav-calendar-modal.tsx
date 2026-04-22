@@ -5,7 +5,7 @@
  */
 import React, { FC, useState } from 'react';
 
-import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
+import { Container, Icon, Padding, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
@@ -25,6 +25,7 @@ export const DeleteCaldavCalendarModal: FC<DeleteCaldavCalendarModalProps> = ({
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const loadingDescription = t('label.deleting_please_wait', 'Deleting, please wait...');
 
 	const handleConfirm = (): void => {
 		if (isSubmitting) {
@@ -87,6 +88,15 @@ export const DeleteCaldavCalendarModal: FC<DeleteCaldavCalendarModalProps> = ({
 				label={t('label.yes_delete', 'YES, DELETE')}
 				color="error"
 				disabled={isSubmitting}
+				leftSideContent={
+					isSubmitting ? (
+						<Container orientation="horizontal" width="fit" mainAlignment="flex-start">
+							<Icon icon="LoaderOutline" />
+							<Padding right="small" />
+							<Text>{loadingDescription}</Text>
+						</Container>
+					) : undefined
+				}
 			/>
 		</Container>
 	);
