@@ -11,19 +11,37 @@ import { importDataRequest } from 'soap/import-data-request';
 
 const POLL_INTERVAL_MS = 10000;
 
+/** Cancellation tokens keyed by dsId — set by triggerCaldavSync, cleared on cancel or completion. */
+const activeSyncs = new Map<string, { cancelled: boolean }>();
+
+/**
+ * Cancels an in-flight CalDAV sync for the given data-source id.
+ * Safe to call even if no sync is running.
+ */
+export const cancelCaldavSync = (dsId: string): void => {
+	const token = activeSyncs.get(dsId);
+	if (token) {
+		token.cancelled = true;
+		activeSyncs.delete(dsId);
+	}
+};
+
 /**
  * Triggers a CalDAV sync for the given data-source id:
  *  1. Shows a "sync started" snackbar (first-sync variant when isFirstSync=true).
  *  2. Calls importData for the data source.
  *  3. Polls getImportStatus every POLL_INTERVAL_MS until the job finishes
  *     and replaces the snackbar with a success / error message.
- *     Polling stops immediately on any API error.
+ *     Polling stops immediately on any API error or when cancelCaldavSync is called.
  */
 export const triggerCaldavSync = (
 	dsId: string,
 	createSnackbar: CreateSnackbarFn,
 	{ isFirstSync = false }: { isFirstSync?: boolean } = {}
 ): void => {
+	const token = { cancelled: false };
+	activeSyncs.set(dsId, token);
+
 	createSnackbar({
 		key: 'caldav-calendar-sync',
 		replace: true,
@@ -39,8 +57,12 @@ export const triggerCaldavSync = (
 	});
 
 	const pollImportStatus = (attempt: number): void => {
+		if (token.cancelled) return;
+
 		getImportStatusRequest()
 			.then((statusResponse) => {
+				if (token.cancelled) return;
+
 				const entry = statusResponse.caldav?.find((e) => e.id === dsId);
 
 				if (!entry || entry.isRunning) {
@@ -48,6 +70,8 @@ export const triggerCaldavSync = (
 					setTimeout(() => pollImportStatus(attempt + 1), POLL_INTERVAL_MS);
 					return;
 				}
+
+				activeSyncs.delete(dsId);
 
 				if (entry.success === false) {
 					// Sync reported failure – stop polling and notify the user
@@ -71,6 +95,8 @@ export const triggerCaldavSync = (
 				}
 			})
 			.catch(() => {
+				if (token.cancelled) return;
+				activeSyncs.delete(dsId);
 				// API error – stop polling and notify the user
 				createSnackbar({
 					key: 'caldav-calendar-sync-error',
@@ -88,6 +114,8 @@ export const triggerCaldavSync = (
 			pollImportStatus(0);
 		})
 		.catch(() => {
+			if (token.cancelled) return;
+			activeSyncs.delete(dsId);
 			createSnackbar({
 				key: 'caldav-calendar-sync-error',
 				replace: true,

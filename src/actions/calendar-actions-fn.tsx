@@ -30,7 +30,7 @@ import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
 import { EditExternalCalendarModal } from 'actions/modals/edit-external-calendar-modal';
-import { triggerCaldavSync } from 'commons/caldav-sync';
+import { triggerCaldavSync, cancelCaldavSync } from 'commons/caldav-sync';
 import { isExternalSyncFolder, isCaldavChild } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { getFolderRequest } from 'soap/get-folder-request';
@@ -429,7 +429,7 @@ export const deleteCaldavCalendar =
 	}: {
 		createModal: CreateModalFn;
 		closeModal: CloseModalFn;
-		item: { id: string; name: string };
+		item: { id: string; name: string; dsId?: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
@@ -446,6 +446,11 @@ export const deleteCaldavCalendar =
 							folder={item}
 						onConfirm={(): Promise<void> =>
 							deleteCalendarAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then(() => {
+								// Stop any in-flight sync for this data source so polling
+								// doesn't continue after the folder is gone.
+								if (item.dsId) {
+									cancelCaldavSync(item.dsId);
+								}
 								// Immediately remove the folder from the local store so the UI
 								// reflects the deletion without waiting for Zimbra's push
 								// notification, which can be delayed when a CalDAV sync is running.
