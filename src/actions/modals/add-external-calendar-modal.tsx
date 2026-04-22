@@ -440,6 +440,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 				items={calendarTypeItems}
 				defaultSelection={calendarTypeItems[0]}
 				disabled={isSubmitting}
+				showCheckbox={false}
 				onChange={(value): void => {
 					if (value) {
 						setCalendarType(value as CalendarType);
