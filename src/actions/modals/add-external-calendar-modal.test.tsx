@@ -121,9 +121,7 @@ describe('AddExternalCalendarModal', () => {
 			// Individual tests that don't care about polling behavior mock it with a
 			// never-settling promise so the polling hangs silently without causing
 			// unhandled-rejection noise.
-			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockReturnValue(
-				new Promise(() => {})
-			);
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockReturnValue(new Promise(() => {}));
 		});
 
 		test('shows caldav-specific fields when CalDAV type is selected', async () => {
@@ -508,7 +506,9 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
 			await waitFor(() => {
-				expect(screen.getByText('Authentication failed. Please check your username and password')).toBeVisible();
+				expect(
+					screen.getByText('Authentication failed. Please check your username and password')
+				).toBeVisible();
 			});
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});
@@ -623,13 +623,10 @@ describe('AddExternalCalendarModal', () => {
 				'mail.zextras.com'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: "Calendars\u2019 name*" }),
+				screen.getByRole('textbox', { name: 'Calendars\u2019 name*' }),
 				'Illegal Char Host'
 			);
-			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Username*' }),
-				'asdasd asdasdas'
-			);
+			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'asdasd asdasdas');
 			await user.click(screen.getByText('This host does not require credentials'));
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
@@ -641,7 +638,6 @@ describe('AddExternalCalendarModal', () => {
 			).not.toBeInTheDocument();
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});
-
 	});
 	describe('shared behaviour', () => {
 		test('shows duplicate calendar name error when name already exists', async () => {

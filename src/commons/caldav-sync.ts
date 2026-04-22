@@ -100,4 +100,3 @@ export const triggerCaldavSync = (dsId: string, createSnackbar: CreateSnackbarFn
 			});
 		});
 };
-
