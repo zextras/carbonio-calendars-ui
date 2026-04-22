@@ -7,7 +7,14 @@ import React from 'react';
 
 import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbonio-ui-commons';
+import {
+	folderWorker,
+	getRoot,
+	isTrashOrNestedInIt,
+	Folder,
+	ResFolder,
+	useFolderStore
+} from '@zextras/carbonio-ui-commons';
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
@@ -437,11 +444,19 @@ export const deleteCaldavCalendar =
 					<StoreProvider>
 						<DeleteCaldavCalendarModal
 							folder={item}
-							onConfirm={(): Promise<void> =>
-								deleteCalendarAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then(
-									() => undefined
-								)
-							}
+						onConfirm={(): Promise<void> =>
+							deleteCalendarAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then(() => {
+								// Immediately remove the folder from the local store so the UI
+								// reflects the deletion without waiting for Zimbra's push
+								// notification, which can be delayed when a CalDAV sync is running.
+								const { folders } = useFolderStore.getState();
+								folderWorker.postMessage({
+									op: 'notify',
+									notify: { deleted: [item.id] },
+									state: folders
+								});
+							})
+						}
 							onClose={(): void => closeModal(modalId)}
 						/>
 					</StoreProvider>
