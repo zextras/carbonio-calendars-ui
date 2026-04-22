@@ -9,24 +9,32 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { getImportStatusRequest } from 'soap/get-import-status-request';
 import { importDataRequest } from 'soap/import-data-request';
 
-const POLL_INTERVAL_MS = 5000;
-const MAX_POLLS = 30; // up to ~150 seconds
+const POLL_INTERVAL_MS = 10000;
 
 /**
  * Triggers a CalDAV sync for the given data-source id:
- *  1. Shows a persistent "sync started" snackbar.
+ *  1. Shows a "sync started" snackbar (first-sync variant when isFirstSync=true).
  *  2. Calls importData for the data source.
  *  3. Polls getImportStatus every POLL_INTERVAL_MS until the job finishes
- *     (or MAX_POLLS is reached) and replaces the snackbar with a
- *     success / error message.
+ *     and replaces the snackbar with a success / error message.
+ *     Polling stops immediately on any API error.
  */
-export const triggerCaldavSync = (dsId: string, createSnackbar: CreateSnackbarFn): void => {
+export const triggerCaldavSync = (
+	dsId: string,
+	createSnackbar: CreateSnackbarFn,
+	{ isFirstSync = false }: { isFirstSync?: boolean } = {}
+): void => {
 	createSnackbar({
 		key: 'caldav-calendar-sync',
 		replace: true,
 		severity: 'info',
 		hideButton: true,
-		label: t('message.snackbar.caldav_calendars_syncing', 'Calendars sync has started'),
+		label: isFirstSync
+			? t(
+					'message.snackbar.caldav_first_sync_started',
+					"First sync has started and may take a while. You will be notified once it's complete"
+				)
+			: t('message.snackbar.caldav_calendars_syncing', 'Calendars sync has started'),
 		autoHideTimeout: 5000
 	});
 
@@ -36,24 +44,13 @@ export const triggerCaldavSync = (dsId: string, createSnackbar: CreateSnackbarFn
 				const entry = statusResponse.caldav?.find((e) => e.id === dsId);
 
 				if (!entry || entry.isRunning) {
-					// Still in progress – keep polling if within limit
-					if (attempt < MAX_POLLS) {
-						setTimeout(() => pollImportStatus(attempt + 1), POLL_INTERVAL_MS);
-					} else {
-						// Timed out – treat as success (sync continues in background)
-						createSnackbar({
-							key: 'caldav-calendar-sync',
-							replace: true,
-							severity: 'success',
-							hideButton: true,
-							label: t('message.snackbar.caldav_calendars_synced', 'Calendars synced successfully'),
-							autoHideTimeout: 3000
-						});
-					}
+					// Still in progress – keep polling indefinitely until done
+					setTimeout(() => pollImportStatus(attempt + 1), POLL_INTERVAL_MS);
 					return;
 				}
 
 				if (entry.success === false) {
+					// Sync reported failure – stop polling and notify the user
 					createSnackbar({
 						key: 'caldav-calendar-sync-error',
 						replace: true,
@@ -74,6 +71,7 @@ export const triggerCaldavSync = (dsId: string, createSnackbar: CreateSnackbarFn
 				}
 			})
 			.catch(() => {
+				// API error – stop polling and notify the user
 				createSnackbar({
 					key: 'caldav-calendar-sync-error',
 					replace: true,

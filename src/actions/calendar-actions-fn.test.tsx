@@ -430,7 +430,7 @@ describe('calendar-actions-fn', () => {
 
 			// Trigger the scheduled poll and flush its promise chain (success=true)
 			await act(async () => {
-				vi.advanceTimersByTime(5000);
+				vi.advanceTimersByTime(10000);
 				await Promise.resolve();
 			});
 
@@ -502,48 +502,6 @@ describe('calendar-actions-fn', () => {
 		getSetupServer().resetHandlers();
 	});
 
-	test('sync caldav calendar shows success snackbar when polling times out (MAX_POLLS)', async () => {
-		vi.useFakeTimers();
-		try {
-			const createSnackbar = vi.fn();
-			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-timeout' };
-
-			createSoapAPIInterceptor('ImportData', {});
-
-			// Always return isRunning=true so we never finish
-			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockResolvedValue({
-				_jsns: 'urn:zimbraMail',
-				caldav: [{ id: 'ds-timeout', isRunning: true }]
-			});
-
-			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
-			await act(async () => syncCaldavCalendarFn());
-
-			// Drain initial importData + first poll
-			await act(async () => {
-				await Promise.resolve();
-			});
-
-			// Advance through 30 poll intervals (MAX_POLLS)
-			for (let i = 0; i < 30; i += 1) {
-				// eslint-disable-next-line no-await-in-loop
-				await act(async () => {
-					vi.advanceTimersByTime(5000);
-					await Promise.resolve();
-				});
-			}
-
-			expect(createSnackbar).toHaveBeenCalledWith(
-				expect.objectContaining({
-					severity: 'success',
-					label: 'message.snackbar.caldav_calendars_synced'
-				})
-			);
-		} finally {
-			vi.useRealTimers();
-		}
-	});
-
 	test('sync caldav calendar shows error when getImportStatusRequest throws during polling', async () => {
 		vi.useFakeTimers();
 		try {
@@ -604,7 +562,7 @@ describe('calendar-actions-fn', () => {
 
 			// Advance to next poll
 			await act(async () => {
-				vi.advanceTimersByTime(5000);
+				vi.advanceTimersByTime(10000);
 				await Promise.resolve();
 			});
 

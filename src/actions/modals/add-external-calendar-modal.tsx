@@ -337,7 +337,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 							if (!dataSourceId) {
 								throw new Error('Data source ID not received from server');
 							}
-							triggerCaldavSync(dataSourceId, createSnackbar);
+							triggerCaldavSync(dataSourceId, createSnackbar, { isFirstSync: true });
 							onClose();
 						})
 						.catch(() => {
