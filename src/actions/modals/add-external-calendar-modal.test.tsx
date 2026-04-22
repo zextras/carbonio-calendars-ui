@@ -497,7 +497,7 @@ describe('AddExternalCalendarModal', () => {
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 
 			await waitFor(() => {
-				expect(screen.getByText('Authentication required for this host')).toBeVisible();
+				expect(screen.getByText('Authentication failed. Please check your username and password')).toBeVisible();
 			});
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});
@@ -595,6 +595,42 @@ describe('AddExternalCalendarModal', () => {
 			);
 			expect(createFolderSpy).not.toHaveBeenCalled();
 		});
+		test('shows generic error when TestDataSource returns "illegal character in path" error', async () => {
+			const createFolderSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue({ _jsns: 'urn:zimbraMail', folder: [] });
+			vi.spyOn(createDataSourceApi, 'testCalDavDataSourceRequest').mockRejectedValue(
+				new Error(
+					'Illegal character in path at index 52: https://mail.zextras.com:443/principals/users/asdasd asdasdas/'
+				)
+			);
+
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await selectCalDav(user);
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Host address (calendar.example.com)*' }),
+				'mail.zextras.com'
+			);
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: "Calendars\u2019 name*" }),
+				'Illegal Char Host'
+			);
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Username*' }),
+				'asdasd asdasdas'
+			);
+			await user.click(screen.getByText('This host does not require credentials'));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+
+			await waitFor(() => {
+				expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
+			});
+			expect(
+				screen.queryByText('Host not found. Make sure the address is correct and try again')
+			).not.toBeInTheDocument();
+			expect(createFolderSpy).not.toHaveBeenCalled();
+		});
+
 	});
 	describe('shared behaviour', () => {
 		test('shows duplicate calendar name error when name already exists', async () => {

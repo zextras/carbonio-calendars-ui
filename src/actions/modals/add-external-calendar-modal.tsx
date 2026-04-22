@@ -63,8 +63,8 @@ const getCaldavTestErrorMessage = (
 	if (/\b401\b/.test(messageForMatching)) {
 		return {
 			message: t(
-				'add_external_calendar.error.caldav_auth_required',
-				'Authentication required for this host'
+				'add_external_calendar.error.caldav_auth_failed',
+				'Authentication failed. Please check your username and password'
 			),
 			isHostRelated: false
 		};
@@ -81,6 +81,13 @@ const getCaldavTestErrorMessage = (
 	}
 
 	// In some cases backend returns only the host string (for example "test.com") without status code.
+	if (/illegal character/i.test(messageForMatching)) {
+		return {
+			message: t('label.error_try_again', 'Something went wrong, please try again'),
+			isHostRelated: false
+		};
+	}
+
 	const hostLikeMatch = /(?:https?:\/\/)?[a-z0-9.-]+(?:\.[a-z0-9.-]+)+(?::\d+)?(?:\/\S*)?/i.exec(
 		messageForMatching
 	)?.[0];
