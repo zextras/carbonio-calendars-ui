@@ -3,26 +3,26 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { getInvite } from "store/actions/get-invite";
-import { useAppDispatch, useAppSelector } from "store/redux/hooks";
-import { selectInstanceInvite } from "store/selectors/invites";
-import { Invite } from "types/store/invite";
+import { getInvite } from 'store/actions/get-invite';
+import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
+import { selectInstanceInvite } from 'store/selectors/invites';
+import { Invite } from 'types/store/invite';
 
 export const useInvite = (inviteId: string | undefined): Invite | undefined => {
-	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
 	const invite = useAppSelector(selectInstanceInvite(inviteId));
+	// Track which inviteId has already been attempted so we never retry a
+	// failed fetch (e.g. NO_SUCH_ITEM after the parent folder was deleted).
+	const attemptedRef = useRef<string | undefined>(undefined);
 
 	useEffect(() => {
-		if (!invite && !loading && inviteId) {
-			setLoading(true);
-			dispatch(getInvite({ inviteId })).then(() => {
-				setLoading(false);
-			});
+		if (!invite && inviteId && attemptedRef.current !== inviteId) {
+			attemptedRef.current = inviteId;
+			dispatch(getInvite({ inviteId }));
 		}
-	}, [dispatch, inviteId, invite, loading]);
+	}, [dispatch, inviteId, invite]);
 
 	return invite;
 };
