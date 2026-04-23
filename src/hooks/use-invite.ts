@@ -5,10 +5,10 @@
  */
 import { useEffect, useState } from 'react';
 
-import { getInvite } from '../store/actions/get-invite';
-import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
-import { selectInstanceInvite } from '../store/selectors/invites';
-import { Invite } from '../types/store/invite';
+import { getInvite } from "store/actions/get-invite";
+import { useAppDispatch, useAppSelector } from "store/redux/hooks";
+import { selectInstanceInvite } from "store/selectors/invites";
+import { Invite } from "types/store/invite";
 
 export const useInvite = (inviteId: string | undefined): Invite | undefined => {
 	const [loading, setLoading] = useState(false);
