@@ -42,19 +42,30 @@ export const triggerCaldavSync = (
 	const token = { cancelled: false };
 	activeSyncs.set(dsId, token);
 
-	createSnackbar({
-		key: 'caldav-calendar-sync',
-		replace: true,
-		severity: 'info',
-		hideButton: true,
-		label: isFirstSync
-			? t(
-					'message.snackbar.caldav_first_sync_started',
-					"First sync has started and may take a while. You will be notified once it's complete"
-				)
-			: t('message.snackbar.caldav_calendars_syncing', 'Calendars sync has started'),
-		autoHideTimeout: 5000
-	});
+	if (isFirstSync) {
+		const closeSnackbar = createSnackbar({
+			key: 'caldav-calendar-sync',
+			replace: true,
+			severity: 'info',
+			hideButton: false,
+			label: t(
+				'message.snackbar.caldav_first_sync_started',
+				"First sync has started and may take a while. You will be notified once it's complete"
+			),
+			disableAutoHide: true,
+			actionLabel: t('label.ok', 'Ok'),
+			onActionClick: () => closeSnackbar()
+		});
+	} else {
+		createSnackbar({
+			key: 'caldav-calendar-sync',
+			replace: true,
+			severity: 'info',
+			hideButton: true,
+			label: t('message.snackbar.caldav_calendars_syncing', 'Calendars sync has started'),
+			autoHideTimeout: 5000
+		});
+	}
 
 	const pollImportStatus = (attempt: number): void => {
 		if (token.cancelled) return;
