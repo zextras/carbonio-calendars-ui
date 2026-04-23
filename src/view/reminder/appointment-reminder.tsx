@@ -33,6 +33,12 @@ export const AppointmentReminder = (): ReactElement | null => {
 	const calendars = useFoldersMap();
 
 	const alarms = useMemo(() => {
+		// Do not process alarms until the folder store is populated.
+		// If we run before folders are ready, `cal` would be undefined for every
+		// appointment and the CalDAV/ICS guard below would never fire, causing
+		// external-calendar reminders to slip through.
+		if (isEmpty(calendars)) return [];
+
 		const appts = filter(appointments, 'alarmData');
 		return compact(
 			map(appts, (appt) => {
