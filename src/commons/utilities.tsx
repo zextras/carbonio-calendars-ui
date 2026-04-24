@@ -368,11 +368,13 @@ const checkAllChildren = (_folder: Array<Folder>, checked: boolean): Array<strin
 		_folder,
 		(acc, itemToCheck) => {
 			if (itemToCheck.children.length > 0) {
-				return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) || itemToCheck.checked !== checked
+				return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+					(itemToCheck.checked ?? false) !== checked
 					? [...acc, ...checkAllChildren(itemToCheck.children, checked)]
 					: [...acc, itemToCheck.id, ...checkAllChildren(itemToCheck.children, checked)];
 			}
-			return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) || itemToCheck.checked !== checked
+			return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+				(itemToCheck.checked ?? false) !== checked
 				? acc
 				: [...acc, itemToCheck.id];
 		},
@@ -389,14 +391,20 @@ export function recursiveToggleCheck({
 }: RecursiveToggleCheckProps): void {
 	const foldersToToggleIds = checkAllChildren([folder], checked);
 
+	if (foldersToToggleIds.length === 0) return;
+
 	const op = checked ? FOLDER_OPERATIONS.UNCHECK : FOLDER_OPERATIONS.CHECK;
 	const actions = map(foldersToToggleIds, (id) => ({
 		id,
 		op
 	}));
 	folderAction(actions).then((res) => {
-		if (op === FOLDER_OPERATIONS.CHECK && !res.Fault) {
-			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+		if (res?.Fault) return;
+
+		if (op === FOLDER_OPERATIONS.CHECK) {
+			const newFolderParts = map(foldersToToggleIds, (id) => `inid:"${id}"`).join(' OR ');
+			const augmentedQuery = query ? `${query} OR ${newFolderParts}` : newFolderParts;
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query: augmentedQuery }));
 			dispatch(getMiniCal({ start, end })).then((response) => {
 				const updateFolder = getUpdateFolder();
 				// todo: remove ts ignore once getMiniCal is typed
@@ -411,6 +419,19 @@ export function recursiveToggleCheck({
 					});
 				}
 			});
+		} else {
+			const allFolders = getFoldersMap();
+			const uncheckedIdsSet = new Set(foldersToToggleIds);
+			const remainingQuery = Object.values(allFolders)
+				.filter(
+					(f) =>
+						f.checked === true &&
+						!(f as { broken?: boolean }).broken &&
+						!uncheckedIdsSet.has(f.id)
+				)
+				.map((f) => `inid:"${f.id}"`)
+				.join(' OR ');
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query: remainingQuery }));
 		}
 	});
 }
