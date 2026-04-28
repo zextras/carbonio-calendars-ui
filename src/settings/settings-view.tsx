@@ -350,7 +350,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			permissions
 		};
 
-		saveSettings(newValue).then((res) => {
+		return saveSettings(newValue).then((res) => {
 			if ('Fault' in res) {
 				createSnackbar({
 					key: `new`,
