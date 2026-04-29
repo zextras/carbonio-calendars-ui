@@ -1,3 +1,8 @@
+## 1.21.0 (2026-04-29)
+
+* feat(CO-3093): add external calendar using CalDAV (#727) ([fc7c539](https://github.com/zextras/carbonio-calendars-ui/commit/fc7c539)), closes [#727](https://github.com/zextras/carbonio-calendars-ui/issues/727)
+* chore(deps): update dependency @zextras/carbonio-search-ui to v0.0.8 (#743) ([7107a13](https://github.com/zextras/carbonio-calendars-ui/commit/7107a13)), closes [#743](https://github.com/zextras/carbonio-calendars-ui/issues/743)
+
 ## 1.20.0 (2026-04-27)
 
 * build(release): migrate to semantic-release ([f1e0cdc](https://github.com/zextras/carbonio-calendars-ui/commit/f1e0cdc))
