@@ -40,14 +40,15 @@ import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';
-import { useEditModalContext } from '../../../../commons/edit-modal-context';
-import { SHARE_USER_TYPE } from '../../../../constants';
-import { FOLDER_OPERATIONS } from '../../../../constants/api';
-import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
-import { folderAction } from '../../../../store/actions/calendar-actions';
-import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { useAppDispatch } from '../../../../store/redux/hooks';
-import { containPublicShareGrant } from '../../../../utils/calendars-share';
+import { useEditModalContext } from 'commons/edit-modal-context';
+import { isCaldavChild } from 'commons/utilities';
+import { SHARE_USER_TYPE } from 'constants/index';
+import { FOLDER_OPERATIONS } from 'constants/api';
+import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { folderAction } from 'store/actions/calendar-actions';
+import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
+import { useAppDispatch } from 'store/redux/hooks';
+import { containPublicShareGrant } from 'utils/calendars-share';
 
 const Square = styled.div<{ $color: AnyColor }>`
 	width: 1.125rem;
@@ -338,6 +339,68 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
+	const isCaldavChildReadOnly = useMemo(() => {
+		const caldavChild = isCaldavChild(folder);
+		const isReadOnly = folder.perm && !/w/.test(folder.perm);
+		return caldavChild && isReadOnly;
+	}, [folder]);
+
+	let calendarNameInput: React.JSX.Element;
+	if (isCaldavChildReadOnly) {
+		calendarNameInput = (
+			<Tooltip
+				label={t('cannot_edit_caldav_readonly', 'You cannot edit the name of a read-only calendar')}
+				placement="top"
+				maxWidth="fit-content"
+			>
+				<Input
+					label={placeholder}
+					background="gray5"
+					defaultValue={folderName}
+					onChange={(e): void => {
+						setFolderName(e.target.value);
+					}}
+					disabled
+				/>
+			</Tooltip>
+		);
+	} else if (hasId(folder, FOLDERS.CALENDAR)) {
+		calendarNameInput = (
+			<Tooltip
+				label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
+				placement="top"
+				maxWidth="fit-content"
+			>
+				<Input
+					label={placeholder}
+					backgroundColor="gray5"
+					defaultValue={folderName}
+					onChange={(e): void => {
+						setFolderName(e.target.value);
+					}}
+					disabled
+				/>
+			</Tooltip>
+		);
+	} else {
+		calendarNameInput = (
+			<Input
+				label={placeholder}
+				background="gray5"
+				hasError={showDupWarning}
+				description={
+					showDupWarning
+						? t('folder.modal.new.duplicate_warning', 'Calendar with the same name already exists')
+						: undefined
+				}
+				defaultValue={folderName}
+				onChange={(e): void => {
+					setFolderName(e.target.value);
+				}}
+			/>
+		);
+	}
+
 	return (
 		<Container data-testid="MainEditModal" style={{ overflowY: 'auto' }}>
 			<ModalHeader onClose={onClose} title={title} showCloseIcon />
@@ -350,41 +413,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					gap="1rem"
 				>
 					{/* Calendar name */}
-					{hasId(folder, FOLDERS.CALENDAR) ? (
-						<Tooltip
-							label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
-							placement="top"
-							maxWidth="fit-content"
-						>
-							<Input
-								label={placeholder}
-								backgroundColor="gray5"
-								defaultValue={folderName}
-								onChange={(e): void => {
-									setFolderName(e.target.value);
-								}}
-								disabled
-							/>
-						</Tooltip>
-					) : (
-						<Input
-							label={placeholder}
-							background="gray5"
-							hasError={showDupWarning}
-							description={
-								showDupWarning
-									? t(
-											'folder.modal.new.duplicate_warning',
-											'Calendar with the same name already exists'
-										)
-									: undefined
-							}
-							defaultValue={folderName}
-							onChange={(e): void => {
-								setFolderName(e.target.value);
-							}}
-						/>
-					)}
+					{calendarNameInput}
 
 					{/* Type and number of appointments */}
 					<Container
