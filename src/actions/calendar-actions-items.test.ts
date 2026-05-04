@@ -8,8 +8,10 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-ui-commons';
 
 import {
-	addIcsFromUrlItem,
+	addExternalCalendarsItem,
+	deleteCaldavCalendarItem,
 	deleteCalendarItem,
+	editCaldavCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
 	moveToRootItem,
@@ -17,6 +19,7 @@ import {
 	noPermissionLabel,
 	removeFromListItem,
 	shareCalendarItem,
+	syncCaldavCalendarItem,
 	sharesInfoItem,
 	syncExternalCalendarItem
 } from './calendar-actions-items';
@@ -134,12 +137,12 @@ describe('calendar actions items', () => {
 			const createModal = vi.fn();
 			const closeModal = vi.fn();
 
-			const addFromUrl = addIcsFromUrlItem({ createModal, closeModal, item });
+			const addFromUrl = addExternalCalendarsItem({ createModal, closeModal, item });
 			expect(addFromUrl).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.ADD_ICS_URL,
 					icon: 'Link2',
-					label: t('action.add_ics_from_url', 'Add ICS from URL'),
+					label: t('action.add_external_calendars', 'Add external calendars'),
 					tooltipLabel: noPermissionLabel,
 					onClick: expect.any(Function),
 					disabled: false
@@ -168,7 +171,7 @@ describe('calendar actions items', () => {
 			setupFoldersStore();
 			const createModal = vi.fn();
 			const closeModal = vi.fn();
-			const addFromUrl = addIcsFromUrlItem({
+			const addFromUrl = addExternalCalendarsItem({
 				createModal,
 				closeModal,
 				item: item as Folder
@@ -235,6 +238,27 @@ describe('calendar actions items', () => {
 			expect(moveToRoot).toStrictEqual(
 				expect.objectContaining({
 					label: 'action.move_to_root'
+				})
+			);
+		});
+
+		test('return disabled set to true when it is a CalDAV child calendar', () => {
+			const createSnackbar = vi.fn();
+			// CalDAV calendars are children of a datasource root folder
+			const caldavChild = { id: 'caldav-cal', depth: 2, parent: 'caldav-ds-1', l: 'caldav-ds-1' };
+			const caldavRoot = { id: 'caldav-ds-1', dsId: 'caldav-ds-1', dsType: 'caldav' as const };
+
+			useFolderStore.setState(() => ({
+				folders: {
+					'caldav-ds-1': caldavRoot as Folder,
+					'caldav-cal': caldavChild as Folder
+				}
+			}));
+
+			const moveToRoot = moveToRootItem({ createSnackbar, item: caldavChild });
+			expect(moveToRoot).toStrictEqual(
+				expect.objectContaining({
+					disabled: true
 				})
 			);
 		});
@@ -600,6 +624,67 @@ describe('calendar actions items', () => {
 					label: 'label.sync',
 					disabled: false,
 					customComponent: expect.anything()
+				})
+			);
+		});
+	});
+
+	describe('CalDAV dedicated actions', () => {
+		test('syncCaldavCalendarItem is enabled for caldav root folders', () => {
+			const createSnackbar = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '990',
+				dsId: '10',
+				dsType: 'caldav'
+			} as Folder;
+
+			const syncItem = syncCaldavCalendarItem({ item, createSnackbar });
+			expect(syncItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.SYNC,
+					label: 'label.sync',
+					disabled: false
+				})
+			);
+		});
+
+		test('editCaldavCalendarItem has edit-name label', () => {
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '991',
+				dsId: '11',
+				dsType: 'caldav'
+			} as Folder;
+
+			const editItem = editCaldavCalendarItem({ createModal, closeModal, item });
+			expect(editItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.EDIT,
+					label: 'action.edit_name',
+					disabled: false
+				})
+			);
+		});
+
+		test('deleteCaldavCalendarItem has permanent-delete label', () => {
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+			const item = {
+				...mockedData.calendars.getCalendar(),
+				id: '992',
+				dsId: '12',
+				dsType: 'caldav'
+			} as Folder;
+
+			const deleteItem = deleteCaldavCalendarItem({ createModal, closeModal, item });
+			expect(deleteItem).toStrictEqual(
+				expect.objectContaining({
+					id: FOLDER_ACTIONS.DELETE,
+					label: 'label.delete_permanently',
+					disabled: false
 				})
 			);
 		});

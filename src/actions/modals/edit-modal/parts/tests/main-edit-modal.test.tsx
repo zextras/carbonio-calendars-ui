@@ -7,7 +7,7 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { FOLDER_VIEW, Grant } from '@zextras/carbonio-ui-commons';
+import { FOLDER_VIEW, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { generateFolder } from '../../../../../__test__/mocks/folders/folders-generator';
 import { setupTest, screen } from '../../../../../__test__/test-setup';
@@ -98,5 +98,51 @@ describe('MainEditModal', () => {
 		);
 
 		expect(screen.getByText('Public share URLS')).toBeVisible();
+	});
+
+	it('should disable the name input for caldav child with read-only permissions', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+		const parentFolderId = faker.string.uuid();
+		const caldavParentFolder = {
+			...generateFolder({
+				view: FOLDER_VIEW.appointment,
+				id: parentFolderId
+			}),
+			dsId: parentFolderId,
+			dsType: 'caldav' as const
+		};
+		const caldavChildFolder = generateFolder({
+			view: FOLDER_VIEW.appointment,
+			parent: parentFolderId,
+			l: parentFolderId,
+			perm: 'r' // read-only
+		});
+
+		// Setup the folder store with both parent and child
+		useFolderStore.setState(() => ({
+			roots: {},
+			folders: {
+				[parentFolderId]: caldavParentFolder,
+				[caldavChildFolder.id]: caldavChildFolder
+			}
+		}));
+
+		const totalAppointments = faker.number.int({ min: 1, max: 100 });
+		const grant: Array<Grant> = [];
+
+		setupTest(
+			<MainEditModalTestWrapper
+				folder={caldavChildFolder}
+				totalAppointments={totalAppointments}
+				grant={grant}
+			/>,
+			{ store }
+		);
+
+		// Check that the name input is disabled
+		const nameInput = screen.getByDisplayValue(caldavChildFolder.name);
+		expect(nameInput).toBeDisabled();
 	});
 });
