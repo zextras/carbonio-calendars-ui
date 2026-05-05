@@ -1,3 +1,7 @@
+## <small>1.21.1 (2026-05-05)</small>
+
+* fix: return saveSettings promise in settings view to ensure correct execution handling ([1d89fc3](https://github.com/zextras/carbonio-calendars-ui/commit/1d89fc3)), closes [#742](https://github.com/zextras/carbonio-calendars-ui/issues/742)
+
 ## 1.21.0 (2026-04-29)
 
 * feat(CO-3093): add external calendar using CalDAV (#727) ([fc7c539](https://github.com/zextras/carbonio-calendars-ui/commit/fc7c539)), closes [#727](https://github.com/zextras/carbonio-calendars-ui/issues/727)
