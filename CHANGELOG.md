@@ -1,3 +1,7 @@
+## <small>1.21.2 (2026-05-06)</small>
+
+* build(deps): update dependencies (#745) ([c3c63d6](https://github.com/zextras/carbonio-calendars-ui/commit/c3c63d6)), closes [#745](https://github.com/zextras/carbonio-calendars-ui/issues/745)
+
 ## <small>1.21.1 (2026-05-05)</small>
 
 * fix: return saveSettings promise in settings view to ensure correct execution handling ([1d89fc3](https://github.com/zextras/carbonio-calendars-ui/commit/1d89fc3)), closes [#742](https://github.com/zextras/carbonio-calendars-ui/issues/742)
