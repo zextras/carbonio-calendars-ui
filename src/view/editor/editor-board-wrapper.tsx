@@ -20,11 +20,11 @@ const BoardEditPanel = (): ReactElement | null => {
 	const dispatch = useAppDispatch();
 	const isDirty = useAppSelector(selectEditorIsDirty(editorId ?? ''));
 	const isDirtyRef = useRef(isDirty);
-	// Update every render so the onClose closure always reads the latest value
 	isDirtyRef.current = isDirty;
+	const boardTitleRef = useRef(board?.title ?? '');
+	boardTitleRef.current = board?.title ?? '';
 
-	const boardHooks = useBoardHooks();
-	const { updateBoard } = boardHooks;
+	const { updateBoard } = useBoardHooks();
 
 	useEffect(() => {
 		updateBoard({
@@ -33,14 +33,13 @@ const BoardEditPanel = (): ReactElement | null => {
 					dispatch(
 						setPendingCloseConfirmation({
 							editorId,
-							boardTitle: board?.title ?? ''
+							boardTitle: boardTitleRef.current
 						})
 					);
 				}
 			}
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [updateBoard]);
+	}, [dispatch, editorId, updateBoard]);
 
 	if (!editorId) {
 		return null;

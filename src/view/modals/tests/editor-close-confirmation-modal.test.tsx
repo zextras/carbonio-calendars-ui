@@ -205,7 +205,7 @@ describe('EditorCloseConfirmationModal', () => {
 
 			store.dispatch(editEditorTitle({ id: defaultEditor.id, title: defaultEditor.title ?? '' }));
 			store.dispatch(
-				editEditorLocation({ id: defaultEditor.id, location: defaultEditor.location })
+				editEditorLocation({ id: defaultEditor.id, location: defaultEditor.location ?? '' })
 			);
 			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(false);
 		});
