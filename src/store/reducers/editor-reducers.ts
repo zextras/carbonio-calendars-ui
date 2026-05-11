@@ -4,11 +4,49 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { isNil, union } from 'lodash';
+import { isEqual, isNil, omit, union } from 'lodash';
 
 import { CalendarEditor, Resource, Editor, Room, CalendarSender } from '../../types/editor';
 import { EditorChipAttendees, InviteClass, InviteFreeBusy } from '../../types/store/invite';
-import type { EditorSlice } from '../../types/store/store';
+import type { EditorSlice, PendingCloseConfirmation } from '../../types/store/store';
+
+const METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
+	'id',
+	'isDirty',
+	'disabled',
+	'panel',
+	'isNew',
+	'originalStart',
+	'originalEnd',
+	'compNum',
+	'inviteId',
+	'uid',
+	'ridZ',
+	'exceptId',
+	'isSeries',
+	'isInstance',
+	'isException',
+	'searchPanel',
+	'isProposeNewTime',
+	'draft'
+];
+
+const recomputeIsDirty = (
+	editors: EditorSlice['editors'],
+	originalEditors: EditorSlice['originalEditors'],
+	id: string
+): void => {
+	const original = originalEditors[id];
+	if (!original) {
+		editors[id].isDirty = true;
+		return;
+	}
+	// eslint-disable-next-line no-param-reassign
+	editors[id].isDirty = !isEqual(
+		omit(editors[id], METADATA_FIELDS),
+		omit(original, METADATA_FIELDS)
+	);
+};
 
 type SenderPayload = {
 	id: string | undefined;
@@ -82,22 +120,25 @@ type AttachmentFilesPayload = {
 
 export const newEditorReducer = (state: EditorSlice, action: PayloadAction<Editor>): void => {
 	if (action.payload) {
-		state.editors[action.payload.id] = action.payload;
+		const editor = { ...action.payload, isDirty: false };
+		state.editors[action.payload.id] = editor;
+		state.originalEditors[action.payload.id] = editor;
 	}
 };
 
 export const editIsRichTextReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<IsRichTextPayload>
 ): void => {
 	if (payload?.id && !isNil(editors?.[payload?.id]?.isRichText)) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].isRichText = payload.isRichText;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorAttachmentsReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<AttachmentFilesPayload>
 ): void => {
 	if (!payload?.id || !editors?.[payload.id]) return;
@@ -108,60 +149,65 @@ export const editEditorAttachmentsReducer = (
 		aid: (payload.attachmentFiles ?? []).filter((f) => f.aid).map((f) => f.aid) as string[],
 		mp: payload.attach?.mp ?? editor.attach?.mp ?? []
 	};
+	recomputeIsDirty(editors, originalEditors, payload.id);
 };
 
 export const editSenderReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<SenderPayload>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]?.sender && payload?.sender) {
-		const editor = editors[payload.id];
-		editor.sender = payload.sender;
+		editors[payload.id].sender = payload.sender;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editTitleReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<TitlePayload>
 ): void => {
 	if (payload?.id && !isNil(editors?.[payload?.id]?.title) && !isNil(payload?.title)) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].title = payload.title;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editLocationReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<LocationPayload>
 ): void => {
 	if (payload?.id && !isNil(editors?.[payload?.id]?.location) && !isNil(payload?.location)) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].location = payload.location;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorMeetingRoomReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<{ id: string; meetingRoom: Array<Resource> }>
 ): void => {
 	if (payload?.id && !isNil(editors?.[payload?.id])) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].meetingRoom = payload.meetingRoom;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorEquipmentReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<{ id: string; equipment: Array<Resource> }>
 ): void => {
 	if (payload?.id && !isNil(editors?.[payload?.id])) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].equipment = payload.equipment;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorRoomReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<RoomPayload>
 ): void => {
 	const { label, link, attendees } = payload.room;
@@ -177,57 +223,63 @@ export const editEditorRoomReducer = (
 			// eslint-disable-next-line no-param-reassign
 			editors[payload.id].attendees = union(editors[payload.id].attendees, attendees);
 		}
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorAttendeesReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<AttendeePayload>
 ): void => {
 	// eslint-disable-next-line no-param-reassign
 	editors[payload.id].attendees = payload.attendees;
+	recomputeIsDirty(editors, originalEditors, payload.id);
 };
 
 export const editEditorOptionalAttendeesReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<OptionalAttendeePayload>
 ): void => {
 	// eslint-disable-next-line no-param-reassign
 	editors[payload.id].optionalAttendees = payload.optionalAttendees;
+	recomputeIsDirty(editors, originalEditors, payload.id);
 };
 
 export const editEditorDisplayStatusReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<FreeBusyPayload>
 ): void => {
 	if (editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].freeBusy = payload.freeBusy;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorCalendarReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<CalendarPayload>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].calendar = payload.calendar;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorClassReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<ClassPayload>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].class = payload.class;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorDateReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<DateReducer>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
@@ -235,11 +287,12 @@ export const editEditorDateReducer = (
 		editors[payload.id].start = payload.start;
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].end = payload.end;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorTextReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<TextPayload>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
@@ -247,55 +300,76 @@ export const editEditorTextReducer = (
 		editors[payload.id].richText = payload.richText;
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].plainText = payload.plainText;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorAllDayReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<AllDayPayload>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].allDay = payload.allDay;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorTimezoneReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<any>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].timezone = payload.timezone;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorReminderReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<any>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].reminder = payload.reminder;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const editEditorRecurrenceReducer = (
-	{ editors }: EditorSlice,
+	{ editors, originalEditors }: EditorSlice,
 	{ payload }: PayloadAction<any>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].recur = payload.recur;
+		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
 };
 
 export const updateEditorReducer = (
-	editor: EditorSlice,
+	state: EditorSlice,
 	{ payload }: PayloadAction<{ id: string; editor: Editor }>
 ): void => {
-	if (payload?.id && editor?.editors?.[payload?.id]) {
+	if (payload?.id && state?.editors?.[payload?.id]) {
+		const saved = { ...state.editors[payload.id], ...payload.editor, isDirty: false };
 		// eslint-disable-next-line no-param-reassign
-		editor.editors[payload.id] = { ...editor.editors[payload.id], ...payload.editor };
+		state.editors[payload.id] = saved;
+		// eslint-disable-next-line no-param-reassign
+		state.originalEditors[payload.id] = saved;
 	}
+};
+
+export const setPendingCloseConfirmationReducer = (
+	state: EditorSlice,
+	{ payload }: PayloadAction<PendingCloseConfirmation>
+): void => {
+	// eslint-disable-next-line no-param-reassign
+	state.pendingCloseConfirmation = payload;
+};
+
+export const clearPendingCloseConfirmationReducer = (state: EditorSlice): void => {
+	// eslint-disable-next-line no-param-reassign
+	state.pendingCloseConfirmation = null;
 };

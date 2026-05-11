@@ -44,7 +44,14 @@ export type InvitesSlice = {
 	invites: Record<string, Invite>;
 };
 
+export type PendingCloseConfirmation = {
+	editorId: string;
+	boardTitle: string;
+};
+
 export type EditorSlice = {
 	status: string;
 	editors: Record<string, Editor>;
+	originalEditors: Record<string, Editor>;
+	pendingCloseConfirmation: PendingCloseConfirmation | null;
 };

@@ -37,6 +37,7 @@ import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
 import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
+import { EditorCloseConfirmationModal } from './view/modals/editor-close-confirmation-modal';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { InitializeTags } from './view/tags/initialize-tags';
@@ -227,6 +228,7 @@ export default function App(): React.JSX.Element {
 				<InitializeTags />
 				<SyncDataHandler />
 				<Notifications />
+				<EditorCloseConfirmationModal />
 			</StoreProvider>
 		</AuthGuard>
 	);
