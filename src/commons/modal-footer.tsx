@@ -11,6 +11,7 @@ import { ModalFooterProps } from '@zextras/carbonio-ui-commons';
 
 type ExtendedModalFooterProps = ModalFooterProps & {
 	leftSideContent?: ReactNode;
+	loading?: boolean;
 };
 
 const ModalFooter: FC<ExtendedModalFooterProps> = ({
@@ -34,7 +35,8 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
 	additionalLabel = t('label.cancel', 'cancel'),
-	leftSideContent
+	leftSideContent,
+	loading
 }): ReactElement => {
 	const secondaryButtonTypeAndColor = useMemo(() => {
 		if (secondaryBtnType === 'ghost') {
@@ -122,7 +124,8 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 								width="fit"
 								onClick={onConfirm}
 								label={label}
-								disabled={disabled}
+								disabled={disabled || loading}
+								loading={loading}
 								{...primaryButtonTypeAndColor}
 							/>
 						</Tooltip>
@@ -131,7 +134,8 @@ const ModalFooter: FC<ExtendedModalFooterProps> = ({
 							width="fit"
 							onClick={onConfirm}
 							label={label}
-							disabled={disabled}
+							disabled={disabled || loading}
+							loading={loading}
 							{...primaryButtonTypeAndColor}
 						/>
 					)}

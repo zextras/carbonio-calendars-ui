@@ -31,6 +31,11 @@ const METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
 	'draft'
 ];
 
+const ATTENDEE_FIELDS: ReadonlyArray<keyof Editor> = ['attendees', 'optionalAttendees'];
+
+const getAttendeeEmails = (attendees: Editor['attendees']): string[] =>
+	(attendees ?? []).map((a) => a.email.toLowerCase()).sort();
+
 const recomputeIsDirty = (
 	editors: EditorSlice['editors'],
 	originalEditors: EditorSlice['originalEditors'],
@@ -38,14 +43,25 @@ const recomputeIsDirty = (
 ): void => {
 	const original = originalEditors[id];
 	if (!original) {
+		// eslint-disable-next-line no-param-reassign
 		editors[id].isDirty = true;
 		return;
 	}
-	// eslint-disable-next-line no-param-reassign
-	editors[id].isDirty = !isEqual(
-		omit(editors[id], METADATA_FIELDS),
-		omit(original, METADATA_FIELDS)
+	const excludedFields = [...METADATA_FIELDS, ...ATTENDEE_FIELDS];
+	const nonAttendeeChanged = !isEqual(
+		omit(editors[id], excludedFields),
+		omit(original, excludedFields)
 	);
+	const attendeesChanged = !isEqual(
+		getAttendeeEmails(editors[id].attendees),
+		getAttendeeEmails(original.attendees)
+	);
+	const optionalAttendeesChanged = !isEqual(
+		getAttendeeEmails(editors[id].optionalAttendees),
+		getAttendeeEmails(original.optionalAttendees)
+	);
+	// eslint-disable-next-line no-param-reassign
+	editors[id].isDirty = nonAttendeeChanged || attendeesChanged || optionalAttendeesChanged;
 };
 
 type SenderPayload = {

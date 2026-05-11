@@ -6,6 +6,8 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 
+import { isEqual } from 'lodash';
+
 import { CONTACT_TYPES, useContactInput, ContactInputItem } from '@zextras/carbonio-ui-commons';
 
 import { EditorChipAttendees } from '../../../types/store/invite';
@@ -53,11 +55,15 @@ export const AttendeesContactInput = ({
 			setInputState(newInputState);
 			const updatedAttendees = valuesFromInput.map((contact) => {
 				const currentAttendee = attendees.find(
-					(attendee) => attendee.email === contact.value.email
+					(attendee) => attendee.email.toLowerCase() === contact.value.email.toLowerCase()
 				);
 				return currentAttendee || createEditorAttendeeFromContactInput(contact);
 			});
-			onChange(updatedAttendees);
+			const currentEmails = attendees.map((a) => a.email.toLowerCase()).sort();
+			const newEmails = updatedAttendees.map((a) => a.email.toLowerCase()).sort();
+			if (!isEqual(currentEmails, newEmails)) {
+				onChange(updatedAttendees);
+			}
 		},
 		[attendees, onChange]
 	);
