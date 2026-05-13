@@ -1,3 +1,7 @@
+## <small>1.21.4 (2026-05-13)</small>
+
+* fix(CO-3703): update tooltip text for external calendar indicator to specify ICS calendar (#748) ([205b1ac](https://github.com/zextras/carbonio-calendars-ui/commit/205b1ac)), closes [#748](https://github.com/zextras/carbonio-calendars-ui/issues/748)
+
 ## <small>1.21.3 (2026-05-12)</small>
 
 * Merge pull request #747 from zextras/IN-1095-jfrog-cost-optimization-usage-analysis-and-mitigation-s ([57eea29](https://github.com/zextras/carbonio-calendars-ui/commit/57eea29)), closes [#747](https://github.com/zextras/carbonio-calendars-ui/issues/747)
