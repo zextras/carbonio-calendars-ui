@@ -6,9 +6,8 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { isEqual } from 'lodash';
-
 import { CONTACT_TYPES, useContactInput, ContactInputItem } from '@zextras/carbonio-ui-commons';
+import { isEqual } from 'lodash';
 
 import { EditorChipAttendees } from '../../../types/store/invite';
 

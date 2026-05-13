@@ -173,6 +173,7 @@ export const editSenderReducer = (
 	{ payload }: PayloadAction<SenderPayload>
 ): void => {
 	if (payload?.id && editors?.[payload?.id]?.sender && payload?.sender) {
+		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].sender = payload.sender;
 		recomputeIsDirty(editors, originalEditors, payload.id);
 	}
@@ -376,4 +377,3 @@ export const updateEditorReducer = (
 		state.originalEditors[payload.id] = saved;
 	}
 };
-
