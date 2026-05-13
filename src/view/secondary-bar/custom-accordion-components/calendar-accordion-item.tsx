@@ -170,7 +170,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 			return null;
 		}
 
-		const tooltipText = t('tooltip.folder_external_status', 'Added from URL');
+		const tooltipText = t('tooltip.folder_external_status', 'ICS calendar added from URL');
 		return RowWithIcon('Link2', 'gray0', tooltipText, 'external-calendar-indicator');
 	}, [calendar, t]);
 

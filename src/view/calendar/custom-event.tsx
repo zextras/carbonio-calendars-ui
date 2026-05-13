@@ -26,8 +26,8 @@ import { CustomEventIcon } from './custom-event-icon';
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
 import { TagIconComponent } from 'commons/tag-icon-component';
 import { isExternalSyncFolder, isIcsOrCaldavExternalFolder } from 'commons/utilities';
-import { CALENDAR_ROUTE } from 'constants/index';
 import { EVENT_ACTIONS } from 'constants/event-actions';
+import { CALENDAR_ROUTE } from 'constants/index';
 import { useEventActions } from 'hooks/use-event-actions';
 import { useNeverSentWarningLabel } from 'hooks/use-never-sent-warning-label';
 import { StoreProvider } from 'store/redux';
@@ -312,7 +312,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 														isIconVisible
 														tooltipLabel={t(
 															'label.external_calendar_event',
-															'Event from a calendar added from URL'
+															'Event from an ICS calendar added from URL'
 														)}
 													/>
 												)}
