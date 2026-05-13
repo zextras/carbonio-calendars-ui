@@ -16,9 +16,17 @@ import { onSave } from '../../../commons/editor-save-send-fns';
 import { CALENDAR_BOARD_ID } from '../../../constants';
 import { reducers, type RootState } from '../../../store/redux';
 import {
+	editEditorAllDay,
 	editEditorAttendees,
+	editEditorCalendar,
+	editEditorClass,
+	editEditorDisplayStatus,
 	editEditorLocation,
+	editEditorReminder,
+	editEditorText,
+	editEditorTimezone,
 	editEditorTitle,
+	editSender,
 	updateEditor
 } from '../../../store/slices/editor-slice';
 import { defaultEditor } from '../../editor/tests/common';
@@ -144,6 +152,22 @@ describe('EditorCloseConfirmationModal', () => {
 			expect(shell.addBoard).not.toHaveBeenCalled();
 		});
 
+		it('does nothing when editor is not found in store', async () => {
+			const emptyStore = createTestStore();
+			const mockOnClose = vi.fn();
+			const { user } = setupTest(
+				<EditorCloseConfirmationModal
+					editorId="non-existent"
+					boardTitle="Test"
+					onClose={mockOnClose}
+				/>,
+				{ store: emptyStore }
+			);
+			await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+			expect(onSave).not.toHaveBeenCalled();
+			expect(mockOnClose).not.toHaveBeenCalled();
+		});
+
 		describe('on save success', () => {
 			beforeEach(() => {
 				(onSave as Mock).mockResolvedValue({ response: true });
@@ -170,7 +194,7 @@ describe('EditorCloseConfirmationModal', () => {
 				const { user } = renderModal(store);
 				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
 				await waitFor(() => {
-					expect(screen.getByRole('button', { name: SAVE_CLOSE_BTN })).not.toBeDisabled();
+					expect(screen.getByRole('button', { name: SAVE_CLOSE_BTN })).toBeEnabled();
 				});
 			});
 		});
@@ -219,6 +243,47 @@ describe('EditorCloseConfirmationModal', () => {
 			expect(shell.addBoard).toHaveBeenCalledWith(
 				expect.objectContaining({ boardViewId: CALENDAR_BOARD_ID })
 			);
+		});
+
+		it('falls back to editor title when boardTitle is empty', async () => {
+			const { user } = renderModal(store, vi.fn(), '');
+			await user.click(screen.getByRole('button', { name: KEEP_EDITING_BTN }));
+			expect(shell.addBoard).toHaveBeenCalledWith(
+				expect.objectContaining({ title: defaultEditor.title })
+			);
+		});
+
+		it('falls back to empty string when boardTitle and editor title are both empty', async () => {
+			const emptyTitleStore = createTestStore();
+			generateEditor({
+				context: { folders: {}, dispatch: emptyTitleStore.dispatch, ...defaultEditor, title: '' }
+			});
+			const { user } = setupTest(
+				<EditorCloseConfirmationModal
+					editorId={defaultEditor.id}
+					boardTitle=""
+					onClose={vi.fn()}
+				/>,
+				{ store: emptyTitleStore }
+			);
+			await user.click(screen.getByRole('button', { name: KEEP_EDITING_BTN }));
+			expect(shell.addBoard).toHaveBeenCalledWith(expect.objectContaining({ title: '' }));
+		});
+
+		it('calls onClose but not addBoard when editor is not found in store', async () => {
+			const emptyStore = createTestStore();
+			const mockOnClose = vi.fn();
+			const { user } = setupTest(
+				<EditorCloseConfirmationModal
+					editorId="non-existent"
+					boardTitle="Test"
+					onClose={mockOnClose}
+				/>,
+				{ store: emptyStore }
+			);
+			await user.click(screen.getByRole('button', { name: KEEP_EDITING_BTN }));
+			expect(shell.addBoard).not.toHaveBeenCalled();
+			expect(mockOnClose).toHaveBeenCalled();
 		});
 	});
 
@@ -315,7 +380,12 @@ describe('EditorCloseConfirmationModal', () => {
 					}
 				];
 				generateEditor({
-					context: { folders: {}, dispatch: store.dispatch, ...defaultEditor, attendees: fullAttendees }
+					context: {
+						folders: {},
+						dispatch: store.dispatch,
+						...defaultEditor,
+						attendees: fullAttendees
+					}
 				});
 
 				// Simulate ContactInput's onChange returning stripped-down attendee objects
@@ -397,6 +467,68 @@ describe('EditorCloseConfirmationModal', () => {
 
 				expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
 			});
+		});
+
+		it('becomes true when allDay is toggled', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(editEditorAllDay({ id: defaultEditor.id, allDay: !defaultEditor.allDay }));
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
+		});
+
+		it('becomes true when timezone is changed', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(editEditorTimezone({ id: defaultEditor.id, timezone: 'America/New_York' }));
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
+		});
+
+		it('becomes true when reminder is changed', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(editEditorReminder({ id: defaultEditor.id, reminder: '10' }));
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
+		});
+
+		it('becomes true when freeBusy status is changed', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(editEditorDisplayStatus({ id: defaultEditor.id, freeBusy: 'F' }));
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
+		});
+
+		it('becomes true when calendar is changed', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(
+				editEditorCalendar({ id: defaultEditor.id, calendar: { id: '99', name: 'Other' } })
+			);
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
+		});
+
+		it('becomes true when class is changed', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(editEditorClass({ id: defaultEditor.id, class: 'PRI' }));
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
+		});
+
+		it('becomes true when rich text is changed', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(
+				editEditorText({ id: defaultEditor.id, richText: '<p>new</p>', plainText: 'new' })
+			);
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
+		});
+
+		it('becomes true when sender is changed', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			generateEditor({ context: { folders: {}, dispatch: store.dispatch, ...defaultEditor } });
+			store.dispatch(
+				editSender({ id: defaultEditor.id, sender: { email: 'new@test.com', fullName: 'New' } })
+			);
+			expect(store.getState().editor.editors[defaultEditor.id]?.isDirty).toBe(true);
 		});
 
 		it('uses the saved state as the new baseline after updateEditor', () => {

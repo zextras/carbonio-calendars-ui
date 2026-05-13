@@ -112,6 +112,28 @@ describe('Editor board wrapper', () => {
 			);
 		});
 
+		it('calls closeModal when the modal outer onClose is triggered', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const mockBoardHooks = shell.useBoardHooks();
+
+			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
+			generateEditor({
+				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
+			});
+			store.dispatch(editEditorTitle({ id: defaultEditor.id, title: 'Changed title' }));
+
+			setupTest(<BoardEditPanel />, { store });
+
+			const updateBoardCalls = mockBoardHooks.updateBoard.mock.calls;
+			const { onClose } = updateBoardCalls[updateBoardCalls.length - 1][0];
+			onClose();
+
+			const modalArgs = mockCreateModal.mock.calls[0][0];
+			modalArgs.onClose();
+
+			expect(mockCloseModal).toHaveBeenCalledWith('editor-close-confirmation');
+		});
+
 		it('does not open close confirmation modal when onClose fires with clean editor', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const mockBoardHooks = shell.useBoardHooks();

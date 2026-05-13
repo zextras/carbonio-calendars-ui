@@ -58,8 +58,12 @@ export const AttendeesContactInput = ({
 				);
 				return currentAttendee || createEditorAttendeeFromContactInput(contact);
 			});
-			const currentEmails = attendees.map((a) => a.email.toLowerCase()).sort();
-			const newEmails = updatedAttendees.map((a) => a.email.toLowerCase()).sort();
+			const currentEmails = attendees
+				.map((a) => a.email.toLowerCase())
+				.sort((a, b) => a.localeCompare(b));
+			const newEmails = updatedAttendees
+				.map((a) => a.email.toLowerCase())
+				.sort((a, b) => a.localeCompare(b));
 			if (!isEqual(currentEmails, newEmails)) {
 				onChange(updatedAttendees);
 			}

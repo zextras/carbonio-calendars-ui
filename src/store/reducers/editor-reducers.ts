@@ -34,7 +34,7 @@ const METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
 const ATTENDEE_FIELDS: ReadonlyArray<keyof Editor> = ['attendees', 'optionalAttendees'];
 
 const getAttendeeEmails = (attendees: Editor['attendees']): string[] =>
-	(attendees ?? []).map((a) => a.email.toLowerCase()).sort();
+	(attendees ?? []).map((a) => a.email.toLowerCase()).sort((a, b) => a.localeCompare(b));
 
 const recomputeIsDirty = (
 	editors: EditorSlice['editors'],
