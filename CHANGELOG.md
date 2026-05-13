@@ -1,3 +1,9 @@
+## <small>1.21.3 (2026-05-12)</small>
+
+* Merge pull request #747 from zextras/IN-1095-jfrog-cost-optimization-usage-analysis-and-mitigation-s ([57eea29](https://github.com/zextras/carbonio-calendars-ui/commit/57eea29)), closes [#747](https://github.com/zextras/carbonio-calendars-ui/issues/747)
+* build(release): update jenkins-lib-ui to 1.0.13 ([7daddff](https://github.com/zextras/carbonio-calendars-ui/commit/7daddff))
+* chore(deps): update semantic-release monorepo (#744) ([29fd6f3](https://github.com/zextras/carbonio-calendars-ui/commit/29fd6f3)), closes [#744](https://github.com/zextras/carbonio-calendars-ui/issues/744)
+
 ## <small>1.21.2 (2026-05-06)</small>
 
 * build(deps): update dependencies (#745) ([c3c63d6](https://github.com/zextras/carbonio-calendars-ui/commit/c3c63d6)), closes [#745](https://github.com/zextras/carbonio-calendars-ui/issues/745)
