@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Editor } from '../../types/editor';
-import type { PendingCloseConfirmation } from '../../types/store/store';
 import type { RootState } from '../redux';
 
 export const selectEditor =
@@ -236,6 +235,3 @@ export const selectEditorIsDirty =
 	(id: string) =>
 	(state: RootState): boolean =>
 		state?.editor?.editors?.[id]?.isDirty ?? false;
-
-export const selectPendingCloseConfirmation = (state: RootState): PendingCloseConfirmation | null =>
-	state?.editor?.pendingCloseConfirmation ?? null;

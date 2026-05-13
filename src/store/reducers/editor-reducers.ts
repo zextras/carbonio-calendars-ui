@@ -8,7 +8,7 @@ import { isEqual, isNil, omit, union } from 'lodash';
 
 import { CalendarEditor, Resource, Editor, Room, CalendarSender } from '../../types/editor';
 import { EditorChipAttendees, InviteClass, InviteFreeBusy } from '../../types/store/invite';
-import type { EditorSlice, PendingCloseConfirmation } from '../../types/store/store';
+import type { EditorSlice } from '../../types/store/store';
 
 const METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
 	'id',
@@ -377,15 +377,3 @@ export const updateEditorReducer = (
 	}
 };
 
-export const setPendingCloseConfirmationReducer = (
-	state: EditorSlice,
-	{ payload }: PayloadAction<PendingCloseConfirmation>
-): void => {
-	// eslint-disable-next-line no-param-reassign
-	state.pendingCloseConfirmation = payload;
-};
-
-export const clearPendingCloseConfirmationReducer = (state: EditorSlice): void => {
-	// eslint-disable-next-line no-param-reassign
-	state.pendingCloseConfirmation = null;
-};

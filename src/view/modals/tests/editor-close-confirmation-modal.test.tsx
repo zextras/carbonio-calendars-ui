@@ -19,7 +19,6 @@ import {
 	editEditorAttendees,
 	editEditorLocation,
 	editEditorTitle,
-	setPendingCloseConfirmation,
 	updateEditor
 } from '../../../store/slices/editor-slice';
 import { defaultEditor } from '../../editor/tests/common';
@@ -31,21 +30,26 @@ vi.mock('../../../commons/editor-save-send-fns', () => ({ onSave: vi.fn() }));
 const SAVE_CLOSE_BTN = 'label.save_and_close';
 const KEEP_EDITING_BTN = 'label.keep_editing';
 const CLOSE_ICON = 'icon: CloseOutline';
-const CLEARS_PENDING = 'clears the pending close confirmation from state';
 
 describe('EditorCloseConfirmationModal', () => {
-	describe('when there is no pending close confirmation', () => {
-		it('does not render any modal content', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<EditorCloseConfirmationModal />, { store });
-			expect(screen.queryByText('label.close_appointment_editor')).not.toBeInTheDocument();
-		});
-	});
-
 	const createTestStore = (): EnhancedStore<RootState> =>
 		configureStore({ reducer: combineReducers(reducers) });
 
-	describe('when there is a pending close confirmation', () => {
+	const renderModal = (
+		store: EnhancedStore<RootState>,
+		onClose = vi.fn(),
+		boardTitle = 'Test appointment'
+	): ReturnType<typeof setupTest> =>
+		setupTest(
+			<EditorCloseConfirmationModal
+				editorId={defaultEditor.id}
+				boardTitle={boardTitle}
+				onClose={onClose}
+			/>,
+			{ store }
+		);
+
+	describe('rendering', () => {
 		let store: EnhancedStore<RootState>;
 
 		beforeEach(() => {
@@ -53,40 +57,37 @@ describe('EditorCloseConfirmationModal', () => {
 			generateEditor({
 				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
 			});
-			store.dispatch(
-				setPendingCloseConfirmation({ editorId: defaultEditor.id, boardTitle: 'Test appointment' })
-			);
 			(onSave as Mock).mockResolvedValue({ response: true });
 		});
 
 		it('renders the modal title', () => {
-			setupTest(<EditorCloseConfirmationModal />, { store });
+			renderModal(store);
 			expect(screen.getByText('label.close_appointment_editor')).toBeInTheDocument();
 		});
 
 		it('renders the confirmation message', () => {
-			setupTest(<EditorCloseConfirmationModal />, { store });
+			renderModal(store);
 			expect(screen.getByText('message.close_appointment_editor_confirmation')).toBeInTheDocument();
 		});
 
 		it('renders the "Save & close" button', () => {
-			setupTest(<EditorCloseConfirmationModal />, { store });
+			renderModal(store);
 			expect(screen.getByRole('button', { name: SAVE_CLOSE_BTN })).toBeInTheDocument();
 		});
 
 		it('renders the "Keep editing" button', () => {
-			setupTest(<EditorCloseConfirmationModal />, { store });
+			renderModal(store);
 			expect(screen.getByRole('button', { name: KEEP_EDITING_BTN })).toBeInTheDocument();
 		});
 
 		it('renders the close icon button in the header', () => {
-			setupTest(<EditorCloseConfirmationModal />, { store });
+			renderModal(store);
 			expect(screen.getByTestId(CLOSE_ICON)).toBeInTheDocument();
 		});
 
 		describe('"Save & close" button styling', () => {
 			it('has primary background color', () => {
-				setupTest(<EditorCloseConfirmationModal />, { store });
+				renderModal(store);
 				const { result } = setupHook(useTheme);
 				expect(screen.getByRole('button', { name: SAVE_CLOSE_BTN })).toHaveStyle(
 					`background-color: ${result.current.palette.primary.regular}`
@@ -94,7 +95,7 @@ describe('EditorCloseConfirmationModal', () => {
 			});
 
 			it('has white (gray6) label color', () => {
-				setupTest(<EditorCloseConfirmationModal />, { store });
+				renderModal(store);
 				const { result } = setupHook(useTheme);
 				expect(screen.getByRole('button', { name: SAVE_CLOSE_BTN })).toHaveStyle(
 					`color: ${result.current.palette.gray6.regular}`
@@ -104,120 +105,144 @@ describe('EditorCloseConfirmationModal', () => {
 
 		describe('"Keep editing" button styling', () => {
 			it('has primary label color', () => {
-				setupTest(<EditorCloseConfirmationModal />, { store });
+				renderModal(store);
 				const { result } = setupHook(useTheme);
 				expect(screen.getByRole('button', { name: KEEP_EDITING_BTN })).toHaveStyle(
 					`color: ${result.current.palette.primary.regular}`
 				);
 			});
 		});
+	});
 
-		describe('clicking "Save & close"', () => {
-			it('calls onSave with the editor', async () => {
-				const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
-				await waitFor(() => {
-					expect(onSave).toHaveBeenCalledWith(
-						expect.objectContaining({
-							editor: expect.objectContaining({ id: defaultEditor.id })
-						})
-					);
-				});
+	describe('clicking "Save & close"', () => {
+		let store: EnhancedStore<RootState>;
+
+		beforeEach(() => {
+			store = createTestStore();
+			generateEditor({
+				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
 			});
-
-			it('does not call addBoard', async () => {
-				const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
-				await waitFor(() => expect(onSave).toHaveBeenCalled());
-				expect(shell.addBoard).not.toHaveBeenCalled();
-			});
-
-			describe('on save success', () => {
-				beforeEach(() => {
-					(onSave as Mock).mockResolvedValue({ response: true });
-				});
-
-				it(CLEARS_PENDING, async () => {
-					const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-					await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
-					await waitFor(() => {
-						expect(store.getState().editor.pendingCloseConfirmation).toBeNull();
-					});
-				});
-
-				it('shows success snackbar', async () => {
-					const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-					await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
-					expect(
-						await screen.findByText('message.snackbar.calendar_edits_saved')
-					).toBeInTheDocument();
-				});
-
-				it('button is not in loading state when modal reopens after a successful save', async () => {
-					const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-					await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
-					await waitFor(() => {
-						expect(store.getState().editor.pendingCloseConfirmation).toBeNull();
-					});
-
-					// Simulate the modal being triggered again
-					store.dispatch(
-						setPendingCloseConfirmation({ editorId: defaultEditor.id, boardTitle: 'Test appointment' })
-					);
-					await waitFor(() => {
-						expect(screen.getByRole('button', { name: SAVE_CLOSE_BTN })).not.toBeDisabled();
-					});
-				});
-			});
-
-			describe('on save failure', () => {
-				beforeEach(() => {
-					(onSave as Mock).mockResolvedValue({ response: null });
-				});
-
-				it('keeps the modal open', async () => {
-					const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-					await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
-					await waitFor(() => expect(onSave).toHaveBeenCalled());
-					expect(store.getState().editor.pendingCloseConfirmation).not.toBeNull();
-				});
-
-				it('shows error snackbar', async () => {
-					const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-					await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
-					expect(await screen.findByText('label.error_try_again')).toBeInTheDocument();
-				});
-			});
+			(onSave as Mock).mockResolvedValue({ response: true });
 		});
 
-		describe('clicking "Keep editing"', () => {
-			it(CLEARS_PENDING, async () => {
-				const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-				await user.click(screen.getByRole('button', { name: KEEP_EDITING_BTN }));
-				expect(store.getState().editor.pendingCloseConfirmation).toBeNull();
-			});
-
-			it('calls addBoard to reopen the board', async () => {
-				const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-				await user.click(screen.getByRole('button', { name: KEEP_EDITING_BTN }));
-				expect(shell.addBoard).toHaveBeenCalledWith(
-					expect.objectContaining({ boardViewId: CALENDAR_BOARD_ID })
+		it('calls onSave with the editor', async () => {
+			const { user } = renderModal(store);
+			await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(
+					expect.objectContaining({
+						editor: expect.objectContaining({ id: defaultEditor.id })
+					})
 				);
 			});
 		});
 
-		describe('clicking the close icon (X) in header', () => {
-			it(CLEARS_PENDING, async () => {
-				const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-				await user.click(screen.getByTestId(CLOSE_ICON));
-				expect(store.getState().editor.pendingCloseConfirmation).toBeNull();
+		it('does not call addBoard', async () => {
+			const { user } = renderModal(store);
+			await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+			await waitFor(() => expect(onSave).toHaveBeenCalled());
+			expect(shell.addBoard).not.toHaveBeenCalled();
+		});
+
+		describe('on save success', () => {
+			beforeEach(() => {
+				(onSave as Mock).mockResolvedValue({ response: true });
 			});
 
-			it('does not call addBoard', async () => {
-				const { user } = setupTest(<EditorCloseConfirmationModal />, { store });
-				await user.click(screen.getByTestId(CLOSE_ICON));
-				expect(shell.addBoard).not.toHaveBeenCalled();
+			it('calls onClose', async () => {
+				const mockOnClose = vi.fn();
+				const { user } = renderModal(store, mockOnClose);
+				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+				await waitFor(() => {
+					expect(mockOnClose).toHaveBeenCalled();
+				});
 			});
+
+			it('shows success snackbar', async () => {
+				const { user } = renderModal(store);
+				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+				expect(
+					await screen.findByText('message.snackbar.calendar_edits_saved')
+				).toBeInTheDocument();
+			});
+
+			it('button is not in loading state after a successful save', async () => {
+				const { user } = renderModal(store);
+				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+				await waitFor(() => {
+					expect(screen.getByRole('button', { name: SAVE_CLOSE_BTN })).not.toBeDisabled();
+				});
+			});
+		});
+
+		describe('on save failure', () => {
+			beforeEach(() => {
+				(onSave as Mock).mockResolvedValue({ response: null });
+			});
+
+			it('does not call onClose', async () => {
+				const mockOnClose = vi.fn();
+				const { user } = renderModal(store, mockOnClose);
+				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+				await waitFor(() => expect(onSave).toHaveBeenCalled());
+				expect(mockOnClose).not.toHaveBeenCalled();
+			});
+
+			it('shows error snackbar', async () => {
+				const { user } = renderModal(store);
+				await user.click(screen.getByRole('button', { name: SAVE_CLOSE_BTN }));
+				expect(await screen.findByText('label.error_try_again')).toBeInTheDocument();
+			});
+		});
+	});
+
+	describe('clicking "Keep editing"', () => {
+		let store: EnhancedStore<RootState>;
+
+		beforeEach(() => {
+			store = createTestStore();
+			generateEditor({
+				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
+			});
+		});
+
+		it('calls onClose', async () => {
+			const mockOnClose = vi.fn();
+			const { user } = renderModal(store, mockOnClose);
+			await user.click(screen.getByRole('button', { name: KEEP_EDITING_BTN }));
+			expect(mockOnClose).toHaveBeenCalled();
+		});
+
+		it('calls addBoard to reopen the board', async () => {
+			const { user } = renderModal(store);
+			await user.click(screen.getByRole('button', { name: KEEP_EDITING_BTN }));
+			expect(shell.addBoard).toHaveBeenCalledWith(
+				expect.objectContaining({ boardViewId: CALENDAR_BOARD_ID })
+			);
+		});
+	});
+
+	describe('clicking the close icon (X) in header', () => {
+		let store: EnhancedStore<RootState>;
+
+		beforeEach(() => {
+			store = createTestStore();
+			generateEditor({
+				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
+			});
+		});
+
+		it('calls onClose', async () => {
+			const mockOnClose = vi.fn();
+			const { user } = renderModal(store, mockOnClose);
+			await user.click(screen.getByTestId(CLOSE_ICON));
+			expect(mockOnClose).toHaveBeenCalled();
+		});
+
+		it('does not call addBoard', async () => {
+			const { user } = renderModal(store);
+			await user.click(screen.getByTestId(CLOSE_ICON));
+			expect(shell.addBoard).not.toHaveBeenCalled();
 		});
 	});
 

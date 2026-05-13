@@ -5,7 +5,7 @@
  */
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { Container, CustomModal, Text, useSnackbar } from '@zextras/carbonio-design-system';
+import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard, t } from '@zextras/carbonio-shell-ui';
 
 import { onSave } from '../../commons/editor-save-send-fns';
@@ -13,12 +13,20 @@ import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { CALENDAR_BOARD_ID } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectEditor, selectPendingCloseConfirmation } from '../../store/selectors/editor';
-import { clearPendingCloseConfirmation } from '../../store/slices/editor-slice';
+import { selectEditor } from '../../store/selectors/editor';
 
-export const EditorCloseConfirmationModal = (): React.JSX.Element => {
-	const pendingConfirmation = useAppSelector(selectPendingCloseConfirmation);
-	const editor = useAppSelector(selectEditor(pendingConfirmation?.editorId ?? ''));
+type EditorCloseConfirmationModalProps = {
+	editorId: string;
+	boardTitle: string;
+	onClose: () => void;
+};
+
+export const EditorCloseConfirmationModal = ({
+	editorId,
+	boardTitle,
+	onClose
+}: EditorCloseConfirmationModalProps): React.JSX.Element => {
+	const editor = useAppSelector(selectEditor(editorId));
 	const dispatch = useAppDispatch();
 	const createSnackbar = useSnackbar();
 	const [isSaving, setIsSaving] = useState(false);
@@ -37,22 +45,18 @@ export const EditorCloseConfirmationModal = (): React.JSX.Element => {
 	const saveAndCloseLabel = useMemo(() => t('label.save_and_close', 'Save and close'), []);
 	const keepEditingLabel = useMemo(() => t('label.keep_editing', 'Keep editing'), []);
 
-	const onDismiss = useCallback(() => {
-		dispatch(clearPendingCloseConfirmation());
-	}, [dispatch]);
-
 	const onKeepEditing = useCallback(() => {
-		if (pendingConfirmation && editor) {
+		if (editor) {
 			addBoard({
 				boardViewId: CALENDAR_BOARD_ID,
-				title: pendingConfirmation.boardTitle || editor.title || '',
+				title: boardTitle || editor.title || '',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				editor
 			});
 		}
-		dispatch(clearPendingCloseConfirmation());
-	}, [dispatch, editor, pendingConfirmation]);
+		onClose();
+	}, [boardTitle, editor, onClose]);
 
 	const onSaveAndClose = useCallback(() => {
 		if (!editor) return;
@@ -75,35 +79,33 @@ export const EditorCloseConfirmationModal = (): React.JSX.Element => {
 			});
 			setIsSaving(false);
 			if (response) {
-				dispatch(clearPendingCloseConfirmation());
+				onClose();
 			}
 		});
-	}, [createSnackbar, dispatch, editor]);
+	}, [createSnackbar, dispatch, editor, onClose]);
 
 	return (
-		<CustomModal open={!!pendingConfirmation} size="small" onClose={onDismiss}>
-			<Container
-				padding={{ all: 'large' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				<ModalHeader title={title} onClose={onDismiss} />
-				<Container padding={{ top: 'large', bottom: 'large' }} crossAlignment="flex-start">
-					<Text overflow="break-word">{message}</Text>
-				</Container>
-				<ModalFooter
-					onConfirm={onSaveAndClose}
-					label={saveAndCloseLabel}
-					secondaryAction={onKeepEditing}
-					secondaryLabel={keepEditingLabel}
-					secondaryBtnType="outlined"
-					secondaryColor="primary"
-					color="primary"
-					loading={isSaving}
-					disabled={isSaving}
-				/>
+		<Container
+			padding={{ all: 'large' }}
+			mainAlignment="center"
+			crossAlignment="flex-start"
+			height="fit"
+		>
+			<ModalHeader title={title} onClose={onClose} />
+			<Container padding={{ top: 'large', bottom: 'large' }} crossAlignment="flex-start">
+				<Text overflow="break-word">{message}</Text>
 			</Container>
-		</CustomModal>
+			<ModalFooter
+				onConfirm={onSaveAndClose}
+				label={saveAndCloseLabel}
+				secondaryAction={onKeepEditing}
+				secondaryLabel={keepEditingLabel}
+				secondaryBtnType="outlined"
+				secondaryColor="primary"
+				color="primary"
+				loading={isSaving}
+				disabled={isSaving}
+			/>
+		</Container>
 	);
 };

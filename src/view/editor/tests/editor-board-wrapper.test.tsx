@@ -19,6 +19,13 @@ import { Editor } from '../../../types/editor';
 import BoardEditPanel from '../editor-board-wrapper';
 import { setupTest } from '@test-setup';
 
+const mockCreateModal = vi.fn();
+const mockCloseModal = vi.fn();
+
+vi.mock('../../global-modal-manager', () => ({
+	useGlobalModal: vi.fn(() => ({ createModal: mockCreateModal, closeModal: mockCloseModal }))
+}));
+
 const initBoard = ({
 	editorId,
 	isNew
@@ -79,7 +86,7 @@ describe('Editor board wrapper', () => {
 			);
 		});
 
-		it('dispatches setPendingCloseConfirmation when onClose fires with dirty editor', () => {
+		it('opens close confirmation modal when onClose fires with dirty editor', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const mockBoardHooks = shell.useBoardHooks();
 
@@ -99,13 +106,13 @@ describe('Editor board wrapper', () => {
 			const { onClose } = lastCall[0];
 			onClose();
 
-			expect(store.getState().editor.pendingCloseConfirmation).toEqual({
-				editorId: defaultEditor.id,
-				boardTitle: 'Nuovo appuntamento'
-			});
+			expect(mockCreateModal).toHaveBeenCalledWith(
+				expect.objectContaining({ id: 'editor-close-confirmation' }),
+				true
+			);
 		});
 
-		it('does not dispatch setPendingCloseConfirmation when onClose fires with clean editor', () => {
+		it('does not open close confirmation modal when onClose fires with clean editor', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const mockBoardHooks = shell.useBoardHooks();
 
@@ -122,10 +129,10 @@ describe('Editor board wrapper', () => {
 			const { onClose } = lastCall[0];
 			onClose();
 
-			expect(store.getState().editor.pendingCloseConfirmation).toBeNull();
+			expect(mockCreateModal).not.toHaveBeenCalled();
 		});
 
-		it('does not dispatch setPendingCloseConfirmation when onClose fires after a successful save', () => {
+		it('does not open close confirmation modal when onClose fires after a successful save', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const mockBoardHooks = shell.useBoardHooks();
 
@@ -147,7 +154,7 @@ describe('Editor board wrapper', () => {
 			const { onClose } = lastCall[0];
 			onClose();
 
-			expect(store.getState().editor.pendingCloseConfirmation).toBeNull();
+			expect(mockCreateModal).not.toHaveBeenCalled();
 		});
 	});
 });

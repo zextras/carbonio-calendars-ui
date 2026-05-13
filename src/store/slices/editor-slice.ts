@@ -27,16 +27,13 @@ import {
 	newEditorReducer,
 	editSenderReducer,
 	editEditorMeetingRoomReducer,
-	editEditorEquipmentReducer,
-	setPendingCloseConfirmationReducer,
-	clearPendingCloseConfirmationReducer
+	editEditorEquipmentReducer
 } from '../reducers/editor-reducers';
 
 const initialState: EditorSlice = {
 	status: 'idle',
 	editors: {},
-	originalEditors: {},
-	pendingCloseConfirmation: null
+	originalEditors: {}
 };
 
 export const editorSlice = createSlice({
@@ -63,9 +60,7 @@ export const editorSlice = createSlice({
 		editEditorTimezone: editEditorTimezoneReducer,
 		editEditorReminder: editEditorReminderReducer,
 		editEditorRecurrence: editEditorRecurrenceReducer,
-		updateEditor: updateEditorReducer,
-		setPendingCloseConfirmation: setPendingCloseConfirmationReducer,
-		clearPendingCloseConfirmation: clearPendingCloseConfirmationReducer
+		updateEditor: updateEditorReducer
 	}
 });
 
@@ -90,9 +85,7 @@ export const {
 	editEditorTimezone,
 	editEditorReminder,
 	editEditorRecurrence,
-	updateEditor,
-	setPendingCloseConfirmation,
-	clearPendingCloseConfirmation
+	updateEditor
 } = editorSlice.actions;
 
 export default editorSlice.reducer;
