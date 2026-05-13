@@ -6,10 +6,13 @@
 import { act, waitFor } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
+import { ReactElement } from 'react';
 
 import {
 	addIcsFromUrl,
+	deleteCaldavCalendar,
 	deleteCalendar,
+	editCaldavCalendar,
 	editCalendar,
 	emptyTrash,
 	findShares,
@@ -17,11 +20,18 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
+	syncCaldavCalendar,
 	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
+import { EditCaldavChildCalendarModal } from './modals/edit-caldav-child-calendar-modal';
+import { EditModal } from './modals/edit-modal/edit-modal';
+import { EditExternalCalendarModal } from './modals/edit-external-calendar-modal';
 import mockedData from '../test/generators';
+import * as getImportStatusApi from '../soap/get-import-status-request';
 import { getSetupServer } from '@jest-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import * as utilities from 'commons/utilities';
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 
@@ -74,6 +84,7 @@ describe('calendar-actions-fn', () => {
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
 					severity: 'error',
+					// eslint-disable-next-line
 					label: 'label.error_try_again'
 				})
 			);
@@ -104,6 +115,60 @@ describe('calendar-actions-fn', () => {
 		const editCalendarFn = editCalendar({ createModal, closeModal, item });
 		editCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
+	});
+
+	test('edit calendar fn opens EditCaldavChildCalendarModal for CalDAV child folders', () => {
+		vi.spyOn(utilities, 'isCaldavChild').mockReturnValue(true);
+		vi.spyOn(utilities, 'isExternalSyncFolder').mockReturnValue(false);
+
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: 'caldav-child-id' };
+		const editCalendarFn = editCalendar({ createModal, closeModal, item });
+		editCalendarFn();
+
+		const modalConfig = createModal.mock.calls[0][0] as {
+			children: ReactElement<{ children: ReactElement }>;
+		};
+		const { children: providerContent } = modalConfig;
+		const { children: modalContent } = providerContent.props;
+		expect(modalContent.type).toBe(EditCaldavChildCalendarModal);
+	});
+
+	test('edit calendar fn opens EditExternalCalendarModal for external folders that are not CalDAV children', () => {
+		vi.spyOn(utilities, 'isCaldavChild').mockReturnValue(false);
+		vi.spyOn(utilities, 'isExternalSyncFolder').mockReturnValue(true);
+
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: 'external-id', f: '#y', url: 'https://example.com/calendar.ics' };
+		const editCalendarFn = editCalendar({ createModal, closeModal, item });
+		editCalendarFn();
+
+		const modalConfig = createModal.mock.calls[0][0] as {
+			children: ReactElement<{ children: ReactElement }>;
+		};
+		const { children: providerContent } = modalConfig;
+		const { children: modalContent } = providerContent.props;
+		expect(modalContent.type).toBe(EditExternalCalendarModal);
+	});
+
+	test('edit calendar fn opens EditModal for non-external folders', () => {
+		vi.spyOn(utilities, 'isCaldavChild').mockReturnValue(false);
+		vi.spyOn(utilities, 'isExternalSyncFolder').mockReturnValue(false);
+
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: 'standard-id' };
+		const editCalendarFn = editCalendar({ createModal, closeModal, item });
+		editCalendarFn();
+
+		const modalConfig = createModal.mock.calls[0][0] as {
+			children: ReactElement<{ children: ReactElement }>;
+		};
+		const { children: providerContent } = modalConfig;
+		const { children: modalContent } = providerContent.props;
+		expect(modalContent.type).toBe(EditModal);
 	});
 
 	test('delete calendar fn', () => {
@@ -313,5 +378,220 @@ describe('calendar-actions-fn', () => {
 		);
 
 		getSetupServer().resetHandlers();
+	});
+
+	test('sync caldav calendar shows error when datasource id is missing', async () => {
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR };
+		const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+
+		await act(async () => syncCaldavCalendarFn());
+
+		expect(createSnackbar).toHaveBeenCalledWith(
+			expect.objectContaining({
+				severity: 'error',
+				label: 'label.error_try_again'
+			})
+		);
+	});
+
+	test('sync caldav calendar shows success snackbar after polling completes', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-10' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest')
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: [{ id: 'ds-10', isRunning: true }]
+				})
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: [{ id: 'ds-10', isRunning: false, success: true }]
+				});
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'info',
+					label: 'message.snackbar.caldav_calendars_syncing'
+				})
+			);
+
+			// Flush importDataRequest + first immediate GetImportStatus call (running=true)
+			await act(async () => {
+				await Promise.resolve();
+			});
+
+			// Trigger the scheduled poll and flush its promise chain (success=true)
+			await act(async () => {
+				vi.advanceTimersByTime(10000);
+				await Promise.resolve();
+			});
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'success',
+					label: 'message.snackbar.caldav_calendars_synced'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('sync caldav calendar shows error snackbar when import status reports failure', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-10' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockResolvedValue({
+				_jsns: 'urn:zimbraMail',
+				caldav: [{ id: 'ds-10', isRunning: false, success: false }]
+			});
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			// Flush importDataRequest + immediate GetImportStatus call (success=false)
+			await act(async () => {
+				await Promise.resolve();
+			});
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('sync caldav calendar shows error snackbar when importDataRequest fails', async () => {
+		const createSnackbar = vi.fn();
+		const item = { id: FOLDERS.CALENDAR, dsId: 'ds-10' };
+
+		getSetupServer().use(
+			http.post('/service/soap/ImportDataRequest', async () =>
+				HttpResponse.json({ Body: { Fault: { Reason: { Text: 'import failed' } } } })
+			)
+		);
+
+		const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+		await act(async () => syncCaldavCalendarFn());
+
+		await waitFor(() => {
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		});
+
+		getSetupServer().resetHandlers();
+	});
+
+	test('sync caldav calendar shows error when getImportStatusRequest throws during polling', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-err' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockRejectedValue(
+				new Error('status error')
+			);
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			// Flush importDataRequest + immediate status check
+			await act(async () => {
+				await Promise.resolve();
+			});
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'error',
+					label: 'label.error_try_again'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('sync caldav calendar shows success when entry is not found in status response', async () => {
+		vi.useFakeTimers();
+		try {
+			const createSnackbar = vi.fn();
+			const item = { id: FOLDERS.CALENDAR, dsId: 'ds-missing' };
+
+			createSoapAPIInterceptor('ImportData', {});
+
+			// Return a response that doesn't contain our dsId, and subsequent call returns it done
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest')
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: [] // entry not present yet
+				})
+				.mockResolvedValueOnce({
+					_jsns: 'urn:zimbraMail',
+					caldav: [{ id: 'ds-missing', isRunning: false, success: true }]
+				});
+
+			const syncCaldavCalendarFn = syncCaldavCalendar({ createSnackbar, item });
+			await act(async () => syncCaldavCalendarFn());
+
+			// Flush initial poll (entry missing)
+			await act(async () => {
+				await Promise.resolve();
+			});
+
+			// Advance to next poll
+			await act(async () => {
+				vi.advanceTimersByTime(10000);
+				await Promise.resolve();
+			});
+
+			expect(createSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({
+					severity: 'success',
+					label: 'message.snackbar.caldav_calendars_synced'
+				})
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	test('edit caldav calendar fn on click create modal is called once', () => {
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: '99', dsId: '10' };
+		const editCaldavCalendarFn = editCaldavCalendar({ createModal, closeModal, item });
+		editCaldavCalendarFn();
+		expect(createModal).toHaveBeenCalledTimes(1);
+	});
+
+	test('delete caldav calendar fn on click create modal is called once', () => {
+		const createModal = vi.fn();
+		const closeModal = vi.fn();
+		const item = { id: '99', name: 'My CalDAV', dsId: '10' };
+		const deleteCaldavCalendarFn = deleteCaldavCalendar({ createModal, closeModal, item });
+		deleteCaldavCalendarFn();
+		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 });

@@ -27,7 +27,9 @@ import { isNil } from 'lodash';
 
 import {
 	addIcsFromUrl,
+	deleteCaldavCalendar,
 	deleteCalendar,
+	editCaldavCalendar,
 	editCalendar,
 	emptyTrash,
 	exportCalendarICSFn,
@@ -36,10 +38,17 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
+	syncCaldavCalendar,
 	syncExternalCalendar,
 	sharesInfo
 } from './calendar-actions-fn';
-import { isExternalSyncFolder, isLinkChild, isMainRootChild } from 'commons/utilities';
+import {
+	isCaldavChild,
+	isCaldavRootFolder,
+	isExternalSyncFolder,
+	isLinkChild,
+	isMainRootChild
+} from 'commons/utilities';
 import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from 'constants/sidebar';
 
 export type CalendarActionsItems = {
@@ -93,7 +102,7 @@ export const moveToRootItem = ({
 	item
 }: {
 	createSnackbar: CreateSnackbarFn;
-	item: { id: string; absFolderPath?: string; depth: number };
+	item: { id: string; absFolderPath?: string; depth: number; parent?: string; l?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 	icon: 'MoveOutline',
@@ -106,7 +115,8 @@ export const moveToRootItem = ({
 		hasId(item, FOLDERS.CALENDAR) ||
 		item.depth < 2 ||
 		isLinkChild(item) ||
-		!!(item as LinkFolder)?.owner,
+		!!(item as LinkFolder)?.owner ||
+		isCaldavChild(item),
 	tooltipLabel: noPermissionLabel,
 	onClick: moveToRoot({ createSnackbar, item })
 });
@@ -149,14 +159,19 @@ export const editCalendarItem = ({
 	createModal: CreateModalFn;
 	closeModal: CloseModalFn;
 	item: { id: string; absFolderPath?: string; f?: string; url?: string };
-}): CalendarActionsItems => ({
-	id: FOLDER_ACTIONS.EDIT,
-	icon: 'Edit2Outline',
-	label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
-	tooltipLabel: noPermissionLabel,
-	onClick: editCalendar({ createModal, closeModal, item }),
-	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
-});
+}): CalendarActionsItems => {
+	const isCaldavChildFolder = isCaldavChild(item as any);
+	return {
+		id: FOLDER_ACTIONS.EDIT,
+		icon: 'Edit2Outline',
+		label: isCaldavChildFolder
+			? t('action.edit_calendar', 'Edit calendar')
+			: t('action.edit_and_share_calendar', 'Edit and share calendar'),
+		tooltipLabel: noPermissionLabel,
+		onClick: editCalendar({ createModal, closeModal, item }),
+		disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+	};
+};
 
 export const editExternalCalendarItem = ({
 	createModal,
@@ -297,7 +312,7 @@ const isIcsImportActionDisabled = (item: Folder): boolean =>
 	(item as LinkFolder).isLink ||
 	isLinkChild(item);
 
-export const addIcsFromUrlItem = ({
+export const addExternalCalendarsItem = ({
 	createModal,
 	closeModal,
 	item
@@ -308,7 +323,7 @@ export const addIcsFromUrlItem = ({
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.ADD_ICS_URL,
 	icon: 'Link2',
-	label: t('action.add_ics_from_url', 'Add ICS from URL'),
+	label: t('action.add_external_calendars', 'Add external calendars'),
 	tooltipLabel: noPermissionLabel,
 	onClick: addIcsFromUrl({ createModal, closeModal }),
 	disabled: isIcsImportActionDisabled(item)
@@ -344,6 +359,77 @@ export const syncExternalCalendarItem = ({
 	tooltipLabel: noPermissionLabel,
 	onClick: syncExternalCalendar({ item, createSnackbar }),
 	disabled: !isExternalSyncFolder(item) || isTrashOrNestedInIt(item)
+});
+
+export const syncCaldavCalendarItem = ({
+	item,
+	createSnackbar
+}: {
+	item: Folder;
+	createSnackbar: CreateSnackbarFn;
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.SYNC,
+	icon: 'SyncOutline',
+	label: t('label.sync', 'Sync'),
+	customComponent: (
+		<Container orientation="horizontal" width="fit" mainAlignment="space-between">
+			<Container orientation="horizontal" mainAlignment="flex-start">
+				<Icon icon={'SyncOutline'} />
+				<Padding left="small" />
+				<Text>{t('label.sync', 'Sync')}</Text>
+			</Container>
+			{item?.lsd ? (
+				<>
+					<Padding left={'12px'} />
+					<Text size="extrasmall" color="gray0" weight={'light'} style={{ overflow: 'visible' }}>
+						{t('label.last_sync', 'Last sync')}: {formatLsd(item?.lsd)}
+					</Text>
+				</>
+			) : null}
+		</Container>
+	),
+	tooltipLabel: noPermissionLabel,
+	onClick: syncCaldavCalendar({ item, createSnackbar }),
+	disabled:
+		!isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType }) || isTrashOrNestedInIt(item)
+});
+
+export const editCaldavCalendarItem = ({
+	createModal,
+	closeModal,
+	item
+}: {
+	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
+	item: Folder;
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.EDIT,
+	icon: 'Edit2Outline',
+	label: t('action.edit_name', 'Edit name'),
+	tooltipLabel: noPermissionLabel,
+	onClick: editCaldavCalendar({ createModal, closeModal, item }),
+	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+});
+
+export const deleteCaldavCalendarItem = ({
+	createModal,
+	closeModal,
+	item
+}: {
+	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
+	item: Folder;
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.DELETE,
+	icon: 'DeletePermanentlyOutline',
+	label: t('label.delete_permanently', 'Delete permanently'),
+	tooltipLabel: noPermissionLabel,
+	onClick: deleteCaldavCalendar({ createModal, closeModal, item }),
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		hasId(item, FOLDERS.CALENDAR) ||
+		hasId(item, FOLDERS.TRASH) ||
+		!isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })
 });
 
 export const importCalendarICSItem = (

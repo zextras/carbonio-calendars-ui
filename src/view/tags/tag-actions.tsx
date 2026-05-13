@@ -29,6 +29,7 @@ import {
 import { differenceBy, includes, noop, reduce } from 'lodash';
 
 import CreateUpdateTagModal from './create-update-tag-modal';
+import { getDisabledActionTooltip } from '../../actions/appointment-actions-items';
 import { EVENT_ACTIONS, EventActionsId } from '../../constants/event-actions';
 import { itemActionRequest } from '../../soap/item-action-request';
 import { StoreProvider } from '../../store/redux';
@@ -319,7 +320,7 @@ export const applyTag = ({
 				id: EVENT_ACTIONS.APPLY_TAG,
 				items: [],
 				onClick: noop,
-				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+				tooltipLabel: getDisabledActionTooltip(context, event),
 				label: labelTag,
 				icon: 'TagsMoreOutline',
 				disabled: true

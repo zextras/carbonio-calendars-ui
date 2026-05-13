@@ -13,8 +13,8 @@ import { http, HttpResponse } from 'msw';
 
 import { CalendarAccordionItem } from './calendar-accordion-item';
 import * as utilities from '../../../commons/utilities';
-import { TEST_SELECTORS } from '../../../constants/test-utils';
-import { reducers } from '../../../store/redux';
+import { TEST_SELECTORS } from 'constants/test-utils';
+import { reducers } from 'store/redux';
 import { getSetupServer } from '@jest-setup';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
@@ -76,6 +76,63 @@ describe('CalendarAccordionItem', () => {
 			setupCalendarAccordionItem(item, [customFolder]);
 
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
+		});
+
+		it('renders group selected icon for checked datasource root folders', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '3345',
+				name: 'DatasourceRootChecked',
+				checked: true
+			});
+			customFolder.dsId = '700';
+			customFolder.dsType = 'caldav';
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendarGroup)).toBeVisible();
+		});
+
+		it('renders existing unselected calendar icon for unchecked non-CalDAV datasource roots', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '4345',
+				name: 'DatasourceRootUnchecked',
+				checked: false
+			});
+			customFolder.dsId = '701';
+			customFolder.dsType = 'cal';
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedCalendar)).toBeVisible();
+		});
+
+		it('renders existing calendar icon for datasource child folders', () => {
+			const childFolder = generateFolder({
+				view: 'appointment',
+				id: '5346',
+				name: 'DatasourceChild',
+				checked: true,
+				absFolderPath: '/DatasourceRootChecked/DatasourceChild',
+				l: '5345'
+			});
+			const datasourceRoot = generateFolder({
+				view: 'appointment',
+				id: '5345',
+				name: 'DatasourceRootChecked',
+				checked: true,
+				children: [childFolder]
+			});
+			datasourceRoot.dsId = '702';
+			datasourceRoot.dsType = 'caldav';
+			const item = { id: childFolder.id };
+
+			setupCalendarAccordionItem(item, [datasourceRoot]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
 		});
 	});
 
