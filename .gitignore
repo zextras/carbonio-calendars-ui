@@ -15,3 +15,4 @@
 .tool-versions
 *.tgz
 todo.md
+.worktrees/
