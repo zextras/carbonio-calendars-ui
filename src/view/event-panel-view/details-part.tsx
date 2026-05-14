@@ -169,7 +169,7 @@ export const DetailsPart = ({
 							<CustomIconInfo
 								tooltipLabel={t(
 									'label.external_calendar_event',
-									'Event from a calendar added from URL'
+									'Event from an ICS calendar added from URL'
 								)}
 								color={'gray0'}
 								icon={'Link2'}
