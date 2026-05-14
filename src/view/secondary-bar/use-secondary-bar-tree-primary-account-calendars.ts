@@ -7,23 +7,28 @@
 import { useMemo } from 'react';
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
+import { getUserSettings } from '@zextras/carbonio-shell-ui';
 
 import { FindSharesAccordionItem } from './custom-accordion-components/find-shares-accordion-item';
 import { useSecondaryBarTreeCalendars } from './use-secondary-bar-tree-calendars';
 
 export const useSecondaryBarTreePrimaryCalendars = (rootId: string): Array<AccordionItemType> => {
 	const calendarsItems = useSecondaryBarTreeCalendars(rootId);
+	const { zimbraFeatureSharingEnabled } = getUserSettings().attrs;
 
 	return useMemo<Array<AccordionItemType>>(
-		() => [
-			...calendarsItems,
-			// Append "find shares" button item
-			{
-				id: 'find-shares',
-				disableHover: true,
-				CustomComponent: FindSharesAccordionItem
-			}
-		],
+		() =>
+			zimbraFeatureSharingEnabled == 'TRUE'
+				? [
+						...calendarsItems,
+						// Append "find shares" button item
+						{
+							id: 'find-shares',
+							disableHover: true,
+							CustomComponent: FindSharesAccordionItem
+						}
+					]
+				: calendarsItems,
 		[calendarsItems]
 	);
 };
