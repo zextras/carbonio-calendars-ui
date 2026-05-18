@@ -1,3 +1,7 @@
+## 1.23.0 (2026-05-18)
+
+* feat: update quota data on quota impacting actions ([6e82f1b](https://github.com/zextras/carbonio-calendars-ui/commit/6e82f1b))
+
 ## 1.22.0 (2026-05-14)
 
 * feat: add close confirmation modal when editor has unsaved changes (#746) ([a6f6e7b](https://github.com/zextras/carbonio-calendars-ui/commit/a6f6e7b)), closes [#746](https://github.com/zextras/carbonio-calendars-ui/issues/746)
