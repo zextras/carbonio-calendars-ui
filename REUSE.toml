@@ -15,6 +15,12 @@ SPDX-FileCopyrightText = "2023 Zextras <https://www.zextras.com>"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
+path = ["CLAUDE.md", "docs/claude/**", "docs/plans/**", ".claude/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Zextras <https://www.zextras.com>"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
 path = "src/assets/**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2021 Zextras <https://www.zextras.com>"
