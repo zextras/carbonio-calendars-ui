@@ -6,12 +6,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
+import { publishQuotaChangedEvent } from '../../event-bus/quota-changed';
 import {
 	findAttachments,
 	retrieveAttachmentsType
 } from '../../normalizations/normalizations-utils';
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
 import { Editor } from '../../types/editor';
+import { getEditorAttachmentsSize } from '../../utils/attachments-size';
 import { getInstanceExceptionId } from '../../utils/event';
 
 export type ModifyAppointmentReturnType = { res: { calItemId: string; echo: any }; editor: Editor };
@@ -52,6 +54,7 @@ export const modifyAppointment = createAsyncThunk<
 					isNew: false,
 					inviteId: response.invId
 				};
+				publishQuotaChangedEvent(getEditorAttachmentsSize(editor));
 				return { response, editor: updatedEditor };
 			}
 			const body = normalizeSoapMessageFromEditor({ ...editor, draft });
@@ -81,6 +84,7 @@ export const modifyAppointment = createAsyncThunk<
 				attach,
 				attachmentFiles
 			};
+			publishQuotaChangedEvent(getEditorAttachmentsSize(editor));
 			return { response: res, editor: updatedEditor };
 		}
 		return undefined;
