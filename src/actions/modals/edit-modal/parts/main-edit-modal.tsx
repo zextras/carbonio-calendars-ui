@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import {
@@ -42,9 +42,9 @@ import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';
 import { useEditModalContext } from 'commons/edit-modal-context';
 import { isCaldavChild } from 'commons/utilities';
-import { SHARE_USER_TYPE } from 'constants/index';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { SHARE_USER_TYPE } from 'constants/index';
 import { folderAction } from 'store/actions/calendar-actions';
 import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
 import { useAppDispatch } from 'store/redux/hooks';
@@ -337,13 +337,21 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const title = useMemo(() => t('action.edit_and_share_calendar', 'Edit and share calendar'), [t]);
 
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
 
 	const isCaldavChildReadOnly = useMemo(() => {
 		const caldavChild = isCaldavChild(folder);
 		const isReadOnly = folder.perm && !/w/.test(folder.perm);
 		return caldavChild && isReadOnly;
 	}, [folder]);
+
+	const calendarNameInputRef = useRef<HTMLInputElement>(null);
+	const isCalendarNameEditable = !isCaldavChildReadOnly && !hasId(folder, FOLDERS.CALENDAR);
+	useEffect(() => {
+		if (isCalendarNameEditable) {
+			calendarNameInputRef.current?.focus();
+		}
+	}, [isCalendarNameEditable]);
 
 	let calendarNameInput: React.JSX.Element;
 	if (isCaldavChildReadOnly) {
@@ -373,7 +381,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			>
 				<Input
 					label={placeholder}
-					backgroundColor="gray5"
+					background="gray5"
 					defaultValue={folderName}
 					onChange={(e): void => {
 						setFolderName(e.target.value);
@@ -397,6 +405,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				onChange={(e): void => {
 					setFolderName(e.target.value);
 				}}
+				inputRef={calendarNameInputRef}
 			/>
 		);
 	}

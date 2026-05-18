@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { RefObject } from 'react';
 
 import { Input, Padding, Select } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +23,7 @@ type AddExternalCalendarModalIcsFlowProps = {
 	onCalendarUrlChange: (value: string) => void;
 	onCalendarNameChange: (value: string) => void;
 	onSelectedColorChange: (value: string) => void;
+	calendarUrlInputRef?: RefObject<HTMLInputElement>;
 };
 
 export const AddExternalCalendarModalIcsFlow = ({
@@ -37,7 +38,8 @@ export const AddExternalCalendarModalIcsFlow = ({
 	colorItems,
 	onCalendarUrlChange,
 	onCalendarNameChange,
-	onSelectedColorChange
+	onSelectedColorChange,
+	calendarUrlInputRef
 }: AddExternalCalendarModalIcsFlowProps): JSX.Element => {
 	const [t] = useTranslation();
 
@@ -57,6 +59,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 				value={calendarUrl}
 				disabled={isSubmitting}
 				onChange={(event): void => onCalendarUrlChange(event.target.value)}
+				inputRef={calendarUrlInputRef}
 			/>
 			<Padding top="medium" />
 			<Input

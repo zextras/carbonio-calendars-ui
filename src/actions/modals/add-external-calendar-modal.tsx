@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Container,
@@ -20,8 +20,8 @@ import { useTranslation } from 'react-i18next';
 import { AddExternalCalendarModalCaldavFlow } from './add-external-calendar-modal-caldav-flow';
 import { AddExternalCalendarModalIcsFlow } from './add-external-calendar-modal-ics-flow';
 import ModalFooter from '../../commons/modal-footer';
-import { buildCalendarColorItems } from 'commons/calendar-color-picker';
 import { triggerCaldavSync } from 'commons/caldav-sync';
+import { buildCalendarColorItems } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
@@ -130,6 +130,11 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 	const [calendarType, setCalendarType] = useState<CalendarType>(CALENDAR_TYPE_ICS);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const calendarUrlInputRef = useRef<HTMLInputElement>(null);
+	useEffect(() => {
+		calendarUrlInputRef.current?.focus();
+	}, []);
 
 	// ── ICS state ──────────────────────────────────────────────────────────────
 	const [calendarUrl, setCalendarUrl] = useState('');
@@ -436,7 +441,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 			/>
 			<Padding top="medium" />
 			<Select
-				label={`${t('label.type', 'Type')}*`}
+				label={t('label.type', 'Type')}
 				items={calendarTypeItems}
 				defaultSelection={calendarTypeItems[0]}
 				disabled={isSubmitting}
@@ -464,6 +469,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 					onCalendarUrlChange={setCalendarUrl}
 					onCalendarNameChange={setCalendarName}
 					onSelectedColorChange={setSelectedColor}
+					calendarUrlInputRef={calendarUrlInputRef}
 				/>
 			) : (
 				<AddExternalCalendarModalCaldavFlow
