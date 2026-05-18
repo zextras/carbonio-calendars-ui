@@ -1,3 +1,12 @@
+## 1.22.0 (2026-05-14)
+
+* feat: add close confirmation modal when editor has unsaved changes (#746) ([a6f6e7b](https://github.com/zextras/carbonio-calendars-ui/commit/a6f6e7b)), closes [#746](https://github.com/zextras/carbonio-calendars-ui/issues/746)
+
+## <small>1.21.5 (2026-05-14)</small>
+
+* fix(ci): migrate Jenkinsfile to jenkins-lib-common ([e730781](https://github.com/zextras/carbonio-calendars-ui/commit/e730781))
+* chore: add .worktrees to .gitignore ([aa1dae2](https://github.com/zextras/carbonio-calendars-ui/commit/aa1dae2))
+
 ## <small>1.21.4 (2026-05-13)</small>
 
 * fix(CO-3703): update tooltip text for external calendar indicator to specify ICS calendar (#748) ([205b1ac](https://github.com/zextras/carbonio-calendars-ui/commit/205b1ac)), closes [#748](https://github.com/zextras/carbonio-calendars-ui/issues/748)

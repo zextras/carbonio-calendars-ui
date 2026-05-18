@@ -47,4 +47,5 @@ export type InvitesSlice = {
 export type EditorSlice = {
 	status: string;
 	editors: Record<string, Editor>;
+	originalEditors: Record<string, Editor>;
 };

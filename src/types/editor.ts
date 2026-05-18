@@ -145,4 +145,5 @@ export type Editor = {
 	attach?: any;
 	isProposeNewTime?: boolean;
 	compNum: number;
+	isDirty?: boolean;
 };

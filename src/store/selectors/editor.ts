@@ -230,3 +230,8 @@ export const selectIsException =
 	(id: string) =>
 	(state: RootState): Editor['isException'] =>
 		state?.editor?.editors?.[id]?.isException;
+
+export const selectEditorIsDirty =
+	(id: string) =>
+	(state: RootState): boolean =>
+		state?.editor?.editors?.[id]?.isDirty ?? false;
