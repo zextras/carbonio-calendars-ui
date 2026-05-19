@@ -218,6 +218,15 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							});
 						}
 					});
+			} else {
+				createSnackbar({
+					key: `folder-action-failed`,
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
 			}
 		});
 		closeFn && closeFn();
@@ -433,7 +442,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			</Container>
 			<ModalFooter
 				onConfirm={onConfirm}
-				label={t('label.confirm', 'Confirm')}
+				label={t('label.add_and_close', 'Add and close')}
 				disabled={disabled}
 				secondaryAction={onGoBack}
 				secondaryLabel={secondaryLabel}

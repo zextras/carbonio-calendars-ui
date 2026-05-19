@@ -406,7 +406,7 @@ describe('Shared Calendar modal', () => {
 				store
 			});
 
-			const confirmButton = screen.getByText(/Confirm/i);
+			const confirmButton = screen.getByText(/Add and close/i);
 
 			expect(confirmButton).toBeEnabled();
 		});
@@ -427,7 +427,7 @@ describe('Shared Calendar modal', () => {
 			const chipInput = screen.getByRole('textbox', {
 				name: /Recipients e-mail addresses/i
 			});
-			const confirmButton = screen.getByText(/Confirm/i);
+			const confirmButton = screen.getByText(/Add and close/i);
 
 			await user.type(chipInput, 'ale@test.com');
 			await user.tab();
@@ -461,7 +461,7 @@ describe('Shared Calendar modal', () => {
 				await user.type(chipInput, 'user1@email.it');
 				await user.tab();
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByText(/Add and close/i);
 
 				expect(confirmButton).toBeEnabled();
 
@@ -499,7 +499,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(privateCheckbox);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByText(/Add and close/i);
 
 				await user.click(confirmButton);
 
@@ -536,7 +536,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(noPermissionRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByText(/Add and close/i);
 
 				await user.click(confirmButton);
 
@@ -573,7 +573,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(viewerRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByText(/Add and close/i);
 
 				await user.click(confirmButton);
 
@@ -610,7 +610,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(adminRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByText(/Add and close/i);
 
 				await user.click(confirmButton);
 
@@ -647,7 +647,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(managerRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByText(/Add and close/i);
 
 				await user.click(confirmButton);
 
@@ -657,6 +657,60 @@ describe('Shared Calendar modal', () => {
 						grant: [expect.objectContaining({ perm: 'rwidx' })]
 					})
 				);
+			});
+			describe('snackbar feedback', () => {
+				test('shows a success snackbar when the folder action succeeds', async () => {
+					vi.spyOn(FolderAction, 'folderActionRequest').mockResolvedValue({});
+					const closeFn = vi.fn();
+					const grant: Grant[] | undefined = [];
+
+					const { user } = setupTest(
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
+						{ store }
+					);
+
+					const chipInput = screen.getByRole('textbox', {
+						name: /Recipients e-mail addresses/i
+					});
+					await user.type(chipInput, 'user1@email.it');
+					await user.tab();
+
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
+					await act(async () => {
+						await user.click(confirmButton);
+					});
+
+					await waitFor(() => {
+						expect(screen.getByText('Calendar shared successfully')).toBeVisible();
+					});
+				});
+				test('shows an error snackbar when the folder action fails', async () => {
+					vi.spyOn(FolderAction, 'folderActionRequest').mockResolvedValue({
+						Fault: { Detail: { Error: { Code: 'service.FAILURE' } } }
+					});
+					const closeFn = vi.fn();
+					const grant: Grant[] | undefined = [];
+
+					const { user } = setupTest(
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
+						{ store }
+					);
+
+					const chipInput = screen.getByRole('textbox', {
+						name: /Recipients e-mail addresses/i
+					});
+					await user.type(chipInput, 'user1@email.it');
+					await user.tab();
+
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
+					await act(async () => {
+						await user.click(confirmButton);
+					});
+
+					await waitFor(() => {
+						expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
+					});
+				});
 			});
 			describe('if send notification about this share is checked', () => {
 				test('it will send a share notification to recipients', async () => {
@@ -674,7 +728,7 @@ describe('Shared Calendar modal', () => {
 					await user.type(chipInput, 'user1@email.it');
 					await user.tab();
 
-					const confirmButton = screen.getByRole('button', { name: /Confirm/i });
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 					await user.click(confirmButton);
 
 					await waitFor(() => {
@@ -702,7 +756,7 @@ describe('Shared Calendar modal', () => {
 					});
 					const customMessage = 'custom Message';
 					await user.type(standardMessage, customMessage);
-					const confirmButton = screen.getByRole('button', { name: /Confirm/i });
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 					expect(confirmButton).toBeEnabled();
 					await user.click(confirmButton);
 

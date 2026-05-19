@@ -512,7 +512,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									label={t('label.add_share', 'Add share')}
 									icon="Plus"
 									onClick={onShare}
-									size="small"
+									size="medium"
 								/>
 							</Container>
 
