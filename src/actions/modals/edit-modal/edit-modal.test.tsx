@@ -624,9 +624,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 				});
 				test('if the user changes all of the above it will trigger all the operations in a batch', async () => {
-					// disable console.warn raised by soapFetch
-					vi.spyOn(console, 'warn').mockImplementation(vi.fn());
-					const spy = vi.spyOn(BatchAction, 'batchRequest');
+					const spy = vi.spyOn(BatchAction, 'batchRequest').mockResolvedValue({});
 
 					const closeFn = vi.fn();
 
@@ -642,7 +640,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 
 					await user.clear(title);
-					await user.type(title, newCalendarName);
+					await user.pasteInto(title, newCalendarName);
 
 					await user.click(screen.getByText(/black/i));
 					await user.click(within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i));
