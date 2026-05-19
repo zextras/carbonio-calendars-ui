@@ -59,6 +59,7 @@ export const newCalendar =
 		createModal(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<NewModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
@@ -566,6 +567,7 @@ export const findShares =
 				createModal(
 					{
 						id: modalId,
+						focusModalContent: false,
 						children: (
 							<StoreProvider>
 								<SharesModal calendars={resCalendars} onClose={(): void => closeModal(modalId)} />
