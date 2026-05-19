@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import {
@@ -89,6 +89,7 @@ export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = 
 	calendars,
 	onClose
 }) => {
+	const nameInputRef = useRef<HTMLInputElement>(null);
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState<any>();
 	const dispatch = useAppDispatch();
@@ -203,6 +204,10 @@ export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = 
 		[filteredFolders]
 	);
 
+	useEffect(() => {
+		nameInputRef.current?.focus();
+	}, []);
+
 	return isEmpty(nestedData) ? (
 		<>No shared folders to show at the moment</>
 	) : (
@@ -215,12 +220,13 @@ export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = 
 			</Row>
 			<Row padding={{ top: 'small', bottom: 'large' }} width="fill">
 				<Input
-					label={t('label.filter_sharer_user', 'Foder owner')}
-					backgroundColor="gray5"
+					label={t('label.filter_sharer_user', 'Folder owner')}
+					background="gray5"
 					CustomIcon={({ hasFocus }): ReactElement => (
 						<Icon icon="FunnelOutline" size="large" color={hasFocus ? 'primary' : 'text'} />
 					)}
 					onChange={filterResults}
+					inputRef={nameInputRef}
 				/>
 			</Row>
 			<ContainerEl orientation="vertical" mainAlignment="flex-start" maxHeight="40vh">

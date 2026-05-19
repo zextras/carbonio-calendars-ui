@@ -59,6 +59,7 @@ export const newCalendar =
 		createModal(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<NewModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
@@ -89,6 +90,7 @@ export const createGroup =
 			{
 				id: modalId,
 				maxHeight: '90vh',
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<CreateGroupModal onClose={(): void => closeModal(modalId)} />
@@ -191,6 +193,7 @@ export const addIcsFromUrl =
 		createModal(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<AddExternalCalendarModal onClose={(): void => closeModal(modalId)} />
@@ -244,6 +247,7 @@ export const editCalendar =
 				children: <StoreProvider>{modalContent}</StoreProvider>,
 				maxHeight: '90vh',
 				size: 'medium',
+				focusModalContent: false,
 				onClose: () => {
 					closeModal(modalId);
 				}
@@ -535,6 +539,7 @@ export const shareCalendar =
 					</StoreProvider>
 				),
 				maxHeight: '70vh',
+				focusModalContent: false,
 				onClose: () => {
 					closeModal(modalId);
 				}
@@ -562,6 +567,7 @@ export const findShares =
 				createModal(
 					{
 						id: modalId,
+						focusModalContent: false,
 						children: (
 							<StoreProvider>
 								<SharesModal calendars={resCalendars} onClose={(): void => closeModal(modalId)} />
