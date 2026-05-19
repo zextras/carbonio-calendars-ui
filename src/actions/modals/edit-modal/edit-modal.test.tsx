@@ -273,7 +273,7 @@ describe('the edit calendar modal is composed by', () => {
 					store
 				});
 
-				expect(screen.getByTestId('icon: Square')).toBeVisible();
+				expect(screen.getAllByTestId('icon: Square')[0]).toBeVisible();
 			});
 			test(' an informative string to explain the checkbox meaning', async () => {
 				const closeFn = vi.fn();
@@ -312,7 +312,7 @@ describe('the edit calendar modal is composed by', () => {
 					store
 				});
 
-				const sharingSection = screen.getByText(`Sharing of this folder`);
+				const sharingSection = screen.getByText('Internal sharing');
 				expect(sharingSection).toBeVisible();
 			});
 			test('it shows a list of all users this folder has been shared to and their relative roles', async () => {
@@ -340,7 +340,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 
 					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-					expect(screen.getByText(/public - viewer/i)).toBeVisible();
+					expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
 				});
 				test('public user has only the revoke action available', async () => {
 					const closeFn = vi.fn();
@@ -353,7 +353,8 @@ describe('the edit calendar modal is composed by', () => {
 
 					expect(screen.queryByRole('button', { name: /resend/i })).not.toBeInTheDocument();
 					expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
-					expect(screen.getByRole('button', { name: /revoke/i })).toBeInTheDocument();
+					expect(screen.queryByRole('button', { name: /revoke/i })).not.toBeInTheDocument();
+					expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
 				});
 			});
 			describe('normal users have 3 buttons', () => {
@@ -550,7 +551,9 @@ describe('the edit calendar modal is composed by', () => {
 							store
 						});
 						await user.click(screen.getByText(/black/i));
-						await user.click(screen.getByText(/red/i));
+						await user.click(
+							within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i)
+						);
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).toHaveBeenCalledTimes(1);
@@ -616,7 +619,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 
 						await user.click(screen.getByTestId('icon: CheckmarkSquare'));
-						await user.click(screen.getByTestId('icon: Square'));
+						await user.click(screen.getAllByTestId('icon: Square')[0]);
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).not.toHaveBeenCalled();
@@ -644,9 +647,11 @@ describe('the edit calendar modal is composed by', () => {
 					await user.type(title, newCalendarName);
 
 					await user.click(screen.getByText(/black/i));
-					await user.click(screen.getByText(/red/i));
+					await user.click(
+						within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i)
+					);
 
-					await user.click(screen.getByTestId('icon: Square'));
+					await user.click(screen.getAllByTestId('icon: Square')[0]);
 					await user.click(screen.getByText('OK'));
 
 					expect(spy).toHaveBeenCalledTimes(1);

@@ -590,7 +590,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 								)}
 							/>
 
-							{isSharedWithPublic && <ShareCalendarUrls calendarName={folder.name} />}
+							{defaultSharedWithPublic && <ShareCalendarUrls calendarName={folder.name} />}
 						</Container>
 					)}
 				</Container>

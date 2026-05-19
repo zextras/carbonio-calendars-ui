@@ -56,7 +56,6 @@ describe('Shared Calendar modal', () => {
 			];
 			const { user } = setupTest(
 				<ShareCalendarModal
-					folderName={'testName'}
 					folderId={'testId1'}
 					closeFn={closeFn}
 					grant={grant}
@@ -87,7 +86,6 @@ describe('Shared Calendar modal', () => {
 
 			setupTest(
 				<ShareCalendarModal
-					folderName={'testName'}
 					folderId={'testId1'}
 					closeFn={closeFn}
 					grant={grant}
@@ -126,7 +124,6 @@ describe('Shared Calendar modal', () => {
 
 			setupTest(
 				<ShareCalendarModal
-					folderName={'testName'}
 					folderId={'testId1'}
 					closeFn={closeFn}
 					grant={grant}
@@ -152,7 +149,6 @@ describe('Shared Calendar modal', () => {
 
 				setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -178,7 +174,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -210,7 +205,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -241,7 +235,6 @@ describe('Shared Calendar modal', () => {
 
 				setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -262,7 +255,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -310,7 +302,6 @@ describe('Shared Calendar modal', () => {
 
 				setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -336,7 +327,6 @@ describe('Shared Calendar modal', () => {
 
 				setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -369,7 +359,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -404,7 +393,6 @@ describe('Shared Calendar modal', () => {
 
 				setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -430,7 +418,6 @@ describe('Shared Calendar modal', () => {
 
 				setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -457,7 +444,6 @@ describe('Shared Calendar modal', () => {
 
 			setupTest(
 				<ShareCalendarModal
-					folderName={'testName'}
 					folderId={'testId1'}
 					closeFn={closeFn}
 					grant={grant}
@@ -483,7 +469,6 @@ describe('Shared Calendar modal', () => {
 
 			setupTest(
 				<ShareCalendarModal
-					folderName={'testName'}
 					folderId={'testId1'}
 					closeFn={closeFn}
 					grant={grant}
@@ -507,7 +492,6 @@ describe('Shared Calendar modal', () => {
 
 			const { user } = setupTest(
 				<ShareCalendarModal
-					folderName={'testName'}
 					folderId={'testId1'}
 					closeFn={closeFn}
 					grant={grant}
@@ -541,7 +525,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -579,7 +562,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -617,7 +599,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -659,7 +640,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -701,7 +681,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -743,7 +722,6 @@ describe('Shared Calendar modal', () => {
 
 				const { user } = setupTest(
 					<ShareCalendarModal
-						folderName={'testName'}
 						folderId={'testId1'}
 						closeFn={closeFn}
 						grant={grant}
@@ -786,7 +764,6 @@ describe('Shared Calendar modal', () => {
 
 					const { user } = setupTest(
 						<ShareCalendarModal
-							folderName={'testName'}
 							folderId={'testId1'}
 							closeFn={closeFn}
 							grant={grant}
@@ -816,7 +793,6 @@ describe('Shared Calendar modal', () => {
 
 					const { user } = setupTest(
 						<ShareCalendarModal
-							folderName={'testName'}
 							folderId={'testId1'}
 							closeFn={closeFn}
 							grant={grant}

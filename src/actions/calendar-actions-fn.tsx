@@ -527,7 +527,6 @@ export const shareCalendar =
 				children: (
 					<StoreProvider>
 						<ShareCalendarModal
-							folderName={item.name}
 							folderId={item.id}
 							closeFn={(): void => closeModal(modalId)}
 							grant={item?.acl?.grant ?? []}

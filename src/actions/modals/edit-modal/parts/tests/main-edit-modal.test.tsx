@@ -14,7 +14,9 @@ import { generateFolder } from '../../../../../__test__/mocks/folders/folders-ge
 import defaultSettings from '../../../../../__test__/mocks/settings/default-settings';
 import { setupTest, screen } from '../../../../../__test__/test-setup';
 import { EditModalContext, EditModalContextType } from '../../../../../commons/edit-modal-context';
-import { SHARE_USER_TYPE } from '../../../../../constants';
+import { FOLDER_OPERATIONS } from '../../../../../constants/api';
+import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../../../../constants';
+import * as FolderAction from '../../../../../soap/folder-action-request';
 import { reducers } from '../../../../../store/redux';
 import { MainEditModal, MainEditModalProps } from '../main-edit-modal';
 
@@ -346,6 +348,73 @@ describe('MainEditModal', () => {
 				);
 
 				expect(screen.queryByText(/share with public/i)).not.toBeInTheDocument();
+			});
+		});
+
+		describe('on OK click', () => {
+			it('should send a GRANT action when checkbox is toggled on for a not-yet-shared calendar', async () => {
+				const spy = vi
+					.spyOn(FolderAction, 'folderActionRequest')
+					.mockResolvedValue({});
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [];
+
+				const { user } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				await user.click(screen.getByText(/share with public/i));
+				await user.click(screen.getByText('OK'));
+
+				expect(spy).toHaveBeenCalledWith(
+					expect.objectContaining({
+						op: FOLDER_OPERATIONS.GRANT,
+						id: folder.id,
+						grant: [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r', pw: '' }]
+					})
+				);
+			});
+
+			it('should send a REVOKE_GRANT action when checkbox is toggled off for an already-shared calendar', async () => {
+				const spy = vi
+					.spyOn(FolderAction, 'folderActionRequest')
+					.mockResolvedValue({});
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
+
+				const { user } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				await user.click(screen.getByText(/share with public/i));
+				await user.click(screen.getByText('OK'));
+
+				expect(spy).toHaveBeenCalledWith(
+					expect.objectContaining({
+						op: FOLDER_OPERATIONS.REVOKE_GRANT,
+						id: folder.id,
+						zid: PUBLIC_SHARE_ZID
+					})
+				);
+			});
+
+			it('should not send any public sharing action when checkbox state is unchanged', async () => {
+				const spy = vi
+					.spyOn(FolderAction, 'folderActionRequest')
+					.mockResolvedValue({});
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [];
+
+				const { user } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				await user.click(screen.getByText('OK'));
+
+				expect(spy).not.toHaveBeenCalled();
 			});
 		});
 	});
