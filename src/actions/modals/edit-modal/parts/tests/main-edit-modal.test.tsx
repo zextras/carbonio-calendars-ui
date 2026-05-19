@@ -7,15 +7,15 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { FOLDER_VIEW, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
 import * as shell from '@zextras/carbonio-shell-ui';
+import { FOLDER_VIEW, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { generateFolder } from '../../../../../__test__/mocks/folders/folders-generator';
 import defaultSettings from '../../../../../__test__/mocks/settings/default-settings';
 import { setupTest, screen } from '../../../../../__test__/test-setup';
 import { EditModalContext, EditModalContextType } from '../../../../../commons/edit-modal-context';
-import { FOLDER_OPERATIONS } from '../../../../../constants/api';
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../../../../constants';
+import { FOLDER_OPERATIONS } from '../../../../../constants/api';
 import * as FolderAction from '../../../../../soap/folder-action-request';
 import { reducers } from '../../../../../store/redux';
 import { MainEditModal, MainEditModalProps } from '../main-edit-modal';
@@ -62,7 +62,7 @@ describe('MainEditModal', () => {
 		expect(screen.getByText('Edit and share calendar')).toBeVisible();
 	});
 
-	it('should not render the public share urls buttons if there is no public access', () => {
+	it('should not render the URL buttons if there is no public access', () => {
 		const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 		const totalAppointments = faker.number.int({ min: 1, max: 100 });
 		const grant: Array<Grant> = [];
@@ -76,18 +76,15 @@ describe('MainEditModal', () => {
 			{ store }
 		);
 
-		expect(screen.queryByText('Public share URLS')).not.toBeInTheDocument();
+		expect(screen.queryByRole('button', { name: /ICS URL/i })).not.toBeInTheDocument();
+		expect(screen.queryByRole('button', { name: /WebCAL URL/i })).not.toBeInTheDocument();
+		expect(screen.queryByRole('button', { name: /CalDAV URL/i })).not.toBeInTheDocument();
 	});
 
-	it('should render the public share urls buttons if there is a public access', () => {
+	it('should render all three URL buttons and the note text when there is a public access', () => {
 		const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 		const totalAppointments = faker.number.int({ min: 1, max: 100 });
-		const grant: Array<Grant> = [
-			{
-				gt: SHARE_USER_TYPE.PUBLIC,
-				perm: 'r'
-			}
-		];
+		const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
 
 		setupTest(
 			<MainEditModalTestWrapper
@@ -98,7 +95,21 @@ describe('MainEditModal', () => {
 			{ store }
 		);
 
-		expect(screen.getByText('Public share URLS')).toBeVisible();
+		expect(screen.getByRole('button', { name: /ICS URL/i })).toBeVisible();
+		expect(screen.getByRole('button', { name: /WebCAL URL/i })).toBeVisible();
+		expect(screen.getByRole('button', { name: /CalDAV URL/i })).toBeVisible();
+		expect(screen.getByText('Anyone with these links can view your calendar.')).toBeVisible();
+	});
+
+	it('should not render the old "Public share URLS" heading within the public sharing section', () => {
+		const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+		const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
+
+		setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+			store
+		});
+
+		expect(screen.queryByText('Public share URLS')).not.toBeInTheDocument();
 	});
 
 	it('should disable the name input for caldav child with read-only permissions', () => {
@@ -352,7 +363,7 @@ describe('MainEditModal', () => {
 		});
 
 		describe('Public share URLs', () => {
-			it('should show URLs immediately when checkbox is checked, before saving', async () => {
+			it('should show all URL buttons and note text immediately when checkbox is checked, before saving', async () => {
 				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 				const grant: Array<Grant> = [];
 
@@ -361,14 +372,17 @@ describe('MainEditModal', () => {
 					{ store }
 				);
 
-				expect(screen.queryByText('Public share URLS')).not.toBeInTheDocument();
+				expect(screen.queryByRole('button', { name: /ICS URL/i })).not.toBeInTheDocument();
 
 				await user.click(screen.getByText(/share with public/i));
 
-				expect(screen.getByText('Public share URLS')).toBeVisible();
+				expect(screen.getByRole('button', { name: /ICS URL/i })).toBeVisible();
+				expect(screen.getByRole('button', { name: /WebCAL URL/i })).toBeVisible();
+				expect(screen.getByRole('button', { name: /CalDAV URL/i })).toBeVisible();
+				expect(screen.getByText('Anyone with these links can view your calendar.')).toBeVisible();
 			});
 
-			it('should hide URLs when checkbox is unchecked', async () => {
+			it('should hide all URL buttons when checkbox is unchecked', async () => {
 				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 				const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
 
@@ -377,11 +391,13 @@ describe('MainEditModal', () => {
 					{ store }
 				);
 
-				expect(screen.getByText('Public share URLS')).toBeVisible();
+				expect(screen.getByRole('button', { name: /ICS URL/i })).toBeVisible();
 
 				await user.click(screen.getByText(/share with public/i));
 
-				expect(screen.queryByText('Public share URLS')).not.toBeInTheDocument();
+				expect(screen.queryByRole('button', { name: /ICS URL/i })).not.toBeInTheDocument();
+				expect(screen.queryByRole('button', { name: /WebCAL URL/i })).not.toBeInTheDocument();
+				expect(screen.queryByRole('button', { name: /CalDAV URL/i })).not.toBeInTheDocument();
 			});
 		});
 
@@ -442,9 +458,7 @@ describe('MainEditModal', () => {
 
 		describe('on OK click', () => {
 			it('should send a GRANT action when checkbox is toggled on for a not-yet-shared calendar', async () => {
-				const spy = vi
-					.spyOn(FolderAction, 'folderActionRequest')
-					.mockResolvedValue({});
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest').mockResolvedValue({});
 				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 				const grant: Array<Grant> = [];
 
@@ -466,9 +480,7 @@ describe('MainEditModal', () => {
 			});
 
 			it('should send a REVOKE_GRANT action when checkbox is toggled off for an already-shared calendar', async () => {
-				const spy = vi
-					.spyOn(FolderAction, 'folderActionRequest')
-					.mockResolvedValue({});
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest').mockResolvedValue({});
 				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 				const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
 
@@ -490,9 +502,7 @@ describe('MainEditModal', () => {
 			});
 
 			it('should not send any public sharing action when checkbox state is unchanged', async () => {
-				const spy = vi
-					.spyOn(FolderAction, 'folderActionRequest')
-					.mockResolvedValue({});
+				const spy = vi.spyOn(FolderAction, 'folderActionRequest').mockResolvedValue({});
 				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 				const grant: Array<Grant> = [];
 

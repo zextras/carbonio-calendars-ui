@@ -551,9 +551,7 @@ describe('the edit calendar modal is composed by', () => {
 							store
 						});
 						await user.click(screen.getByText(/black/i));
-						await user.click(
-							within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i)
-						);
+						await user.click(within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i));
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).toHaveBeenCalledTimes(1);
@@ -647,9 +645,7 @@ describe('the edit calendar modal is composed by', () => {
 					await user.type(title, newCalendarName);
 
 					await user.click(screen.getByText(/black/i));
-					await user.click(
-						within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i)
-					);
+					await user.click(within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i));
 
 					await user.click(screen.getAllByTestId('icon: Square')[0]);
 					await user.click(screen.getByText('OK'));
