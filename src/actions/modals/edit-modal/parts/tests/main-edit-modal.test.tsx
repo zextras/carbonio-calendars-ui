@@ -12,7 +12,7 @@ import { FOLDER_VIEW, Grant, useFolderStore } from '@zextras/carbonio-ui-commons
 
 import { generateFolder } from '../../../../../__test__/mocks/folders/folders-generator';
 import defaultSettings from '../../../../../__test__/mocks/settings/default-settings';
-import { setupTest, screen } from '../../../../../__test__/test-setup';
+import { setupTest, screen, within } from '../../../../../__test__/test-setup';
 import { EditModalContext, EditModalContextType } from '../../../../../commons/edit-modal-context';
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../../constants/api';
@@ -242,7 +242,7 @@ describe('MainEditModal', () => {
 			expect(screen.queryByRole('button', { name: /resend/i })).not.toBeInTheDocument();
 		});
 
-		it('should not render "Add share" in the modal footer', () => {
+		it('should render the "Add share" button inside the internal sharing header', () => {
 			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 			const grant: Array<Grant> = [];
 
@@ -250,11 +250,9 @@ describe('MainEditModal', () => {
 				store
 			});
 
-			const footerButtons = screen.getAllByRole('button');
-			const addShareFooterButton = footerButtons.find(
-				(btn) => btn.textContent === 'Add share' && btn.closest('[data-testid="modal-footer"]')
-			);
-			expect(addShareFooterButton).toBeUndefined();
+			expect(
+				within(screen.getByTestId('internalSharingHeader')).getByRole('button', { name: 'Add share' })
+			).toBeVisible();
 		});
 	});
 

@@ -510,6 +510,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 							<Divider />
 
 							<Container
+								data-testid="internalSharingHeader"
 								orientation="horizontal"
 								mainAlignment="space-between"
 								crossAlignment="center"
