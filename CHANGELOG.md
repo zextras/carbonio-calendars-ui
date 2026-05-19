@@ -1,3 +1,7 @@
+## 1.25.0 (2026-05-19)
+
+* feat: redesign sharing sections in edit calendar modal (#752) ([bc0c26a](https://github.com/zextras/carbonio-calendars-ui/commit/bc0c26a)), closes [#752](https://github.com/zextras/carbonio-calendars-ui/issues/752)
+
 ## 1.24.0 (2026-05-19)
 
 * feat: add input focus management and required field indicators in modals (#751) ([0891045](https://github.com/zextras/carbonio-calendars-ui/commit/0891045)), closes [#751](https://github.com/zextras/carbonio-calendars-ui/issues/751)
