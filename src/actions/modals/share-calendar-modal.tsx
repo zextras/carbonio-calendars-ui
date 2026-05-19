@@ -442,9 +442,9 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			</Container>
 			<Container
 				data-testid="addAndCloseInfoContainer"
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
+				padding={{ bottom: 'small' }}
+				mainAlignment="flex-start"
+				crossAlignment="center"
 				height="fit"
 				orientation="horizontal"
 				gap="0.25rem"
@@ -464,6 +464,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				secondaryAction={onGoBack}
 				secondaryLabel={secondaryLabel}
 				tooltip={confirmTooltip}
+				paddingTop="0"
 			/>
 		</Container>
 	);
