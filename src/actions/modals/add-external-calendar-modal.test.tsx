@@ -121,7 +121,10 @@ describe('AddExternalCalendarModal', () => {
 			// Individual tests that don't care about polling behavior mock it with a
 			// never-settling promise so the polling hangs silently without causing
 			// unhandled-rejection noise.
-			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockReturnValue(new Promise(() => {}));
+			vi.spyOn(getImportStatusApi, 'getImportStatusRequest').mockReturnValue(
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				new Promise(() => {})
+			);
 		});
 
 		test('shows caldav-specific fields when CalDAV type is selected', async () => {

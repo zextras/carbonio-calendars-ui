@@ -30,7 +30,7 @@ describe('Shared Calendar modal', () => {
 	const store = configureStore({ reducer: combineReducers(reducers) });
 
 	describe('Modal header', () => {
-		it('should display the title "Share" followed by the calendar name', () => {
+		it('should display the title "Add internal share"', () => {
 			const closeFn = vi.fn();
 			const grant = [
 				{
@@ -40,17 +40,10 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			const title = 'testName';
-			setupTest(
-				<ShareCalendarModal
-					folderName={title}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
-			expect(screen.getByText(`Share ${title}`)).toBeVisible();
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
+			expect(screen.getByText('Add internal share')).toBeVisible();
 		});
 		it('should display the close button and on click will call the modal onclose', async () => {
 			const closeFn = vi.fn();
@@ -62,12 +55,7 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 			const { user } = setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
+				<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 				{ store }
 			);
 			const closeBtn = within(screen.getByTestId('ShareCalendarModal')).getByTestId('icon: Close');
@@ -78,104 +66,9 @@ describe('Shared Calendar modal', () => {
 		});
 	});
 	describe('Modal body', () => {
-		describe('the field to enable user to share to public', () => {
-			it('is checked by default if user shared already the calendar to public', () => {
-				const closeFn = vi.fn();
-				const grant = [
-					{
-						gt: SHARE_USER_TYPE.PUBLIC,
-						inh: '1',
-						perm: 'r',
-						pw: ''
-					} as const
-				];
-
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const checkedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId(checkedIcon);
-
-				expect(checkedPublicShare).toBeVisible();
-			});
-			it('is not checked by default if the calendar is not shared with public', () => {
-				const closeFn = vi.fn();
-				const grant = [
-					{
-						zid: '1',
-						gt: 'usr',
-						perm: 'r'
-					} as const
-				];
-
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const uncheckedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId('icon: Square');
-
-				expect(uncheckedPublicShare).toBeVisible();
-			});
-			test('checked on click', async () => {
-				const closeFn = vi.fn();
-				const grant = [
-					{
-						zid: '1',
-						gt: 'usr',
-						perm: 'r'
-					} as const
-				];
-
-				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const uncheckedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId('icon: Square');
-
-				await user.click(uncheckedPublicShare);
-
-				const checkedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId(checkedIcon);
-
-				expect(checkedPublicShare).toBeVisible();
-			});
-		});
-		test('when zimbraPublicSharingEnabled is FALSE the option "public" is not displayed', async () => {
-			vi.spyOn(shell, 'useUserSettings').mockReturnValue({
-				...defaultSettings,
-				attrs: { zimbraPublicSharingEnabled: 'FALSE' }
-			});
-
-			setupTest(<ShareCalendarModal folderName={'testName'} folderId={'testId1'} />, { store });
-
-			const publicShareSection = screen.queryByTestId('publicShareCheckboxContainer');
-
-			expect(publicShareSection).not.toBeInTheDocument();
+		it('should not render the public share section', () => {
+			setupTest(<ShareCalendarModal folderId={'testId1'} />, { store });
+			expect(screen.queryByTestId('publicShareCheckboxContainer')).not.toBeInTheDocument();
 		});
 		it('should render every component', async () => {
 			const closeFn = vi.fn();
@@ -187,15 +80,9 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 
 			const chipInput = screen.getByRole('textbox', {
 				name: /Recipients e-mail addresses/i
@@ -226,15 +113,9 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 			const chipInput = screen.getByRole('textbox', {
 				name: /Recipients e-mail addresses/i
 			});
@@ -252,15 +133,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const uncheckedPrivate = within(screen.getByTestId('privateCheckboxContainer')).getByTestId(
 					'icon: Square'
@@ -279,12 +154,7 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -311,15 +181,12 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
-				const infoPrivateCheckbox = screen.getByTestId('icon: InfoOutline');
+				const infoPrivateCheckbox = within(
+					screen.getByTestId('privateCheckboxContainer')
+				).getByTestId('icon: InfoOutline');
 
 				expect(infoPrivateCheckbox).toBeVisible();
 
@@ -341,15 +208,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 				expect(screen.getByText(/viewer/i)).toBeVisible();
 			});
 			test('the select has 4 options', async () => {
@@ -363,12 +224,7 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -410,15 +266,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const sendNotificationCheckbox = within(
 					screen.getByTestId('sendNotificationCheckboxContainer')
@@ -436,15 +286,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const sendNotificationCheckbox = within(
 					screen.getByTestId('sendNotificationCheckboxContainer')
@@ -470,12 +314,7 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -504,15 +343,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const standardMessage = screen.getByRole('textbox', {
 					name: /Add a note to standard message/i
@@ -530,15 +363,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const standardMessage = screen.getByRole('textbox', {
 					name: /Add a note to standard message/i
@@ -557,15 +384,9 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 
 			const shareNotes = screen.getByText(/note:/i);
 
@@ -573,36 +394,6 @@ describe('Shared Calendar modal', () => {
 		});
 	});
 	describe('Modal footer', () => {
-		it('should have the confirm button enabled when share publicly checkbox is clicked', async () => {
-			const closeFn = vi.fn();
-			const grant = [
-				{
-					zid: '1',
-					gt: 'usr',
-					perm: 'r'
-				} as const
-			];
-
-			const { user } = setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
-
-			const uncheckedPublicShare = within(
-				screen.getByTestId('publicShareCheckboxContainer')
-			).getByTestId('icon: Square');
-
-			await user.click(uncheckedPublicShare);
-
-			const confirmButton = screen.getByText(/Confirm/i);
-
-			expect(confirmButton).toBeEnabled();
-		});
 		it('should have the confirm button disabled when the user did not interact with the modal', async () => {
 			const closeFn = vi.fn();
 			const grant = [
@@ -613,19 +404,13 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 
-			const confirmButton = screen.getByText(/Confirm/i);
+			const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
-			expect(confirmButton).toBeEnabled();
+			expect(confirmButton).toBeDisabled();
 		});
 		it('should have the confirm button enabled when at least a chip is inserted without errors', async () => {
 			const closeFn = vi.fn();
@@ -638,24 +423,18 @@ describe('Shared Calendar modal', () => {
 			];
 
 			const { user } = setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
+				<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 				{ store }
 			);
 			const chipInput = screen.getByRole('textbox', {
 				name: /Recipients e-mail addresses/i
 			});
-			const confirmButton = screen.getByText(/Confirm/i);
 
 			await user.type(chipInput, 'ale@test.com');
 			await user.tab();
 
 			expect(screen.getByText('ale@test.com')).toBeInTheDocument();
-			expect(confirmButton).toBeEnabled();
+			expect(screen.getByRole('button', { name: /Add and close/i })).toBeEnabled();
 		});
 		// this corner case is currently not testable as integration components can't be tested and the fallback component does not cover this case
 		test.todo('when at least a chip inside chipInput has errors, the confirm button is disabled');
@@ -666,51 +445,13 @@ describe('Shared Calendar modal', () => {
 					await vi.advanceTimersToNextTimerAsync();
 				});
 			});
-			test('when public is checked it will trigger a grant operation with grant type public', async () => {
-				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = vi.fn();
-				const grant: Grant[] | undefined = [];
-
-				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const uncheckedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId('icon: Square');
-
-				await user.click(uncheckedPublicShare);
-
-				const confirmButton = screen.getByText(/Confirm/i);
-
-				await user.click(confirmButton);
-
-				expect(spy).toHaveBeenCalledTimes(1);
-				expect(spy).toHaveBeenCalledWith(
-					expect.objectContaining({
-						grant: [expect.objectContaining({ gt: SHARE_USER_TYPE.PUBLIC })],
-						op: FOLDER_OPERATIONS.GRANT
-					})
-				);
-			});
 			test('when a chip is added it will trigger a grant operation with grant type user', async () => {
 				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = vi.fn();
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -721,7 +462,7 @@ describe('Shared Calendar modal', () => {
 				await user.type(chipInput, 'user1@email.it');
 				await user.tab();
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				expect(confirmButton).toBeEnabled();
 
@@ -743,12 +484,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -764,7 +500,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(privateCheckbox);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -781,12 +517,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -806,7 +537,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(noPermissionRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -823,12 +554,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -848,7 +574,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(viewerRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -865,12 +591,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -890,7 +611,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(adminRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -907,12 +628,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -932,7 +648,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(managerRoleOption);
 
-				const confirmButton = screen.getByText(/Confirm/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -943,6 +659,60 @@ describe('Shared Calendar modal', () => {
 					})
 				);
 			});
+			describe('snackbar feedback', () => {
+				test('shows a success snackbar when the folder action succeeds', async () => {
+					vi.spyOn(FolderAction, 'folderActionRequest').mockResolvedValue({});
+					const closeFn = vi.fn();
+					const grant: Grant[] | undefined = [];
+
+					const { user } = setupTest(
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
+						{ store }
+					);
+
+					const chipInput = screen.getByRole('textbox', {
+						name: /Recipients e-mail addresses/i
+					});
+					await user.type(chipInput, 'user1@email.it');
+					await user.tab();
+
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
+					await act(async () => {
+						await user.click(confirmButton);
+					});
+
+					await waitFor(() => {
+						expect(screen.getByText('Calendar shared successfully')).toBeVisible();
+					});
+				});
+				test('shows an error snackbar when the folder action fails', async () => {
+					vi.spyOn(FolderAction, 'folderActionRequest').mockResolvedValue({
+						Fault: { Detail: { Error: { Code: 'service.FAILURE' } } }
+					});
+					const closeFn = vi.fn();
+					const grant: Grant[] | undefined = [];
+
+					const { user } = setupTest(
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
+						{ store }
+					);
+
+					const chipInput = screen.getByRole('textbox', {
+						name: /Recipients e-mail addresses/i
+					});
+					await user.type(chipInput, 'user1@email.it');
+					await user.tab();
+
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
+					await act(async () => {
+						await user.click(confirmButton);
+					});
+
+					await waitFor(() => {
+						expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
+					});
+				});
+			});
 			describe('if send notification about this share is checked', () => {
 				test('it will send a share notification to recipients', async () => {
 					const sendSpy = vi.spyOn(SendShare, 'sendShareCalendarNotification');
@@ -950,12 +720,7 @@ describe('Shared Calendar modal', () => {
 					const grant: Grant[] | undefined = [];
 
 					const { user } = setupTest(
-						<ShareCalendarModal
-							folderName={'testName'}
-							folderId={'testId1'}
-							closeFn={closeFn}
-							grant={grant}
-						/>,
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 						{ store }
 					);
 					const chipInput = screen.getByRole('textbox', {
@@ -964,7 +729,7 @@ describe('Shared Calendar modal', () => {
 					await user.type(chipInput, 'user1@email.it');
 					await user.tab();
 
-					const confirmButton = screen.getByRole('button', { name: /Confirm/i });
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 					await user.click(confirmButton);
 
 					await waitFor(() => {
@@ -980,12 +745,7 @@ describe('Shared Calendar modal', () => {
 					const grant: Grant[] | undefined = [];
 
 					const { user } = setupTest(
-						<ShareCalendarModal
-							folderName={'testName'}
-							folderId={'testId1'}
-							closeFn={closeFn}
-							grant={grant}
-						/>,
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 						{ store }
 					);
 					const chipInput = screen.getByRole('textbox', {
@@ -997,7 +757,7 @@ describe('Shared Calendar modal', () => {
 					});
 					const customMessage = 'custom Message';
 					await user.type(standardMessage, customMessage);
-					const confirmButton = screen.getByRole('button', { name: /Confirm/i });
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 					expect(confirmButton).toBeEnabled();
 					await user.click(confirmButton);
 
