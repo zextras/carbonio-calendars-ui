@@ -251,7 +251,9 @@ describe('MainEditModal', () => {
 			});
 
 			expect(
-				within(screen.getByTestId('internalSharingHeader')).getByRole('button', { name: 'Add share' })
+				within(screen.getByTestId('internalSharingHeader')).getByRole('button', {
+					name: 'Add share'
+				})
 			).toBeVisible();
 		});
 	});
