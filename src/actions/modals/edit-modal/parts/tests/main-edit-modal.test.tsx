@@ -351,6 +351,95 @@ describe('MainEditModal', () => {
 			});
 		});
 
+		describe('Public share URLs', () => {
+			it('should show URLs immediately when checkbox is checked, before saving', async () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [];
+
+				const { user } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				expect(screen.queryByText('Public share URLS')).not.toBeInTheDocument();
+
+				await user.click(screen.getByText(/share with public/i));
+
+				expect(screen.getByText('Public share URLS')).toBeVisible();
+			});
+
+			it('should hide URLs when checkbox is unchecked', async () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
+
+				const { user } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				expect(screen.getByText('Public share URLS')).toBeVisible();
+
+				await user.click(screen.getByText(/share with public/i));
+
+				expect(screen.queryByText('Public share URLS')).not.toBeInTheDocument();
+			});
+		});
+
+		describe('State resync when grant prop changes', () => {
+			it('should sync checkbox to checked when grant prop adds a public grant and user has not interacted', () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+
+				const { rerender } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={[]} />,
+					{ store }
+				);
+
+				expect(screen.getAllByTestId('icon: Square').length).toBeGreaterThan(0);
+
+				rerender(
+					<MainEditModalTestWrapper
+						folder={folder}
+						totalAppointments={0}
+						grant={[{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }]}
+					/>
+				);
+
+				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
+			});
+
+			it('should sync checkbox to unchecked when grant prop removes the public grant and user has not interacted', () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const publicGrant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
+
+				const { rerender } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={publicGrant} />,
+					{ store }
+				);
+
+				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
+
+				rerender(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={[]} />);
+
+				expect(screen.getAllByTestId('icon: Square').length).toBeGreaterThan(0);
+			});
+
+			it('should not sync when user has already interacted with the checkbox', async () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+
+				const { user, rerender } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={[]} />,
+					{ store }
+				);
+
+				await user.click(screen.getByText(/share with public/i));
+				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
+
+				rerender(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={[]} />);
+
+				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
+			});
+		});
+
 		describe('on OK click', () => {
 			it('should send a GRANT action when checkbox is toggled on for a not-yet-shared calendar', async () => {
 				const spy = vi

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import {
@@ -183,9 +183,16 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		[grant]
 	);
 
+	const hasUserToggledPublicRef = useRef(false);
 	const [folderName, setFolderName] = useState(defaultFolderName);
 	const [freeBusy, setFreeBusy] = useState(defaultFreeBusy);
 	const [isSharedWithPublic, setIsSharedWithPublic] = useState(defaultSharedWithPublic);
+
+	useEffect(() => {
+		if (!hasUserToggledPublicRef.current) {
+			setIsSharedWithPublic(defaultSharedWithPublic);
+		}
+	}, [defaultSharedWithPublic]);
 
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 
@@ -583,14 +590,17 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 							<Checkbox
 								value={isSharedWithPublic}
 								defaultChecked={isSharedWithPublic}
-								onClick={(): void => setIsSharedWithPublic((prev) => !prev)}
+								onClick={(): void => {
+									hasUserToggledPublicRef.current = true;
+									setIsSharedWithPublic((prev) => !prev);
+								}}
 								label={t(
 									'share.options.share_calendar_with.public',
 									'Share with public (view only, no password required)'
 								)}
 							/>
 
-							{defaultSharedWithPublic && <ShareCalendarUrls calendarName={folder.name} />}
+							{isSharedWithPublic && <ShareCalendarUrls calendarName={folder.name} />}
 						</Container>
 					)}
 				</Container>
