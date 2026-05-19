@@ -1,3 +1,7 @@
+## 1.24.0 (2026-05-19)
+
+* feat: add input focus management and required field indicators in modals (#751) ([0891045](https://github.com/zextras/carbonio-calendars-ui/commit/0891045)), closes [#751](https://github.com/zextras/carbonio-calendars-ui/issues/751)
+
 ## 1.23.0 (2026-05-18)
 
 * feat: update quota data on quota impacting actions ([6e82f1b](https://github.com/zextras/carbonio-calendars-ui/commit/6e82f1b))

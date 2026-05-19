@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Checkbox,
@@ -106,6 +106,10 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const createSnackbar = useSnackbar();
 
 	const ContactInput = useContactInput();
+	const recipientsInputRef = useRef<HTMLInputElement>(null);
+	useEffect(() => {
+		recipientsInputRef.current?.focus();
+	}, []);
 
 	const [shareWithUserRole, setShareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
@@ -346,7 +350,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				height="fit"
 			>
 				<ContactInput
-					placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
+					placeholder={`${t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}*`}
 					onChange={onContactInputChange}
 					background={'gray5'}
 					defaultValue={contacts}
@@ -359,6 +363,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							: undefined
 					}
 					hasError={contactInputHasError}
+					inputRef={recipientsInputRef}
 				/>
 				<Padding top="extrasmall" />
 				<Text size="extrasmall" color="secondary">

@@ -364,13 +364,21 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const title = useMemo(() => t('action.edit_and_share_calendar', 'Edit and share calendar'), [t]);
 
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
 
 	const isCaldavChildReadOnly = useMemo(() => {
 		const caldavChild = isCaldavChild(folder);
 		const isReadOnly = folder.perm && !/w/.test(folder.perm);
 		return caldavChild && isReadOnly;
 	}, [folder]);
+
+	const calendarNameInputRef = useRef<HTMLInputElement>(null);
+	const isCalendarNameEditable = !isCaldavChildReadOnly && !hasId(folder, FOLDERS.CALENDAR);
+	useEffect(() => {
+		if (isCalendarNameEditable) {
+			calendarNameInputRef.current?.focus();
+		}
+	}, [isCalendarNameEditable]);
 
 	let calendarNameInput: React.JSX.Element;
 	if (isCaldavChildReadOnly) {
@@ -400,7 +408,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			>
 				<Input
 					label={placeholder}
-					backgroundColor="gray5"
+					background="gray5"
 					defaultValue={folderName}
 					onChange={(e): void => {
 						setFolderName(e.target.value);
@@ -424,6 +432,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				onChange={(e): void => {
 					setFolderName(e.target.value);
 				}}
+				inputRef={calendarNameInputRef}
 			/>
 		);
 	}

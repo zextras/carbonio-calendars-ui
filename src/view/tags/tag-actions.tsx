@@ -73,6 +73,7 @@ export const createTag = ({ createModal, closeModal }: ActionParams): ActionDesc
 		createModal?.(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<CreateUpdateTagModal onClose={(): void => closeModal?.(modalId)} />
@@ -106,6 +107,7 @@ export const createAndApplyTag = ({
 		context.createModal(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<CreateUpdateTagModal onClose={(): void => context.closeModal(modalId)} event={event} />
@@ -131,6 +133,7 @@ export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionD
 		createModal?.(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<CreateUpdateTagModal onClose={(): void => closeModal?.(modalId)} tag={tag} editMode />
