@@ -51,12 +51,7 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 	);
 
 	return (
-		<Container
-			mainAlignment="flex-start"
-			crossAlignment="flex-start"
-			orientation="vertical"
-			gap="0.5rem"
-		>
+		<>
 			<Container orientation="horizontal" mainAlignment="flex-start" gap={'0.5rem'}>
 				<Tooltip label={t('tooltip.copy_ics_url', 'Copy ICS url')} placement="top">
 					<Button
@@ -92,6 +87,6 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 			<Text overflow="break-word" color="secondary">
 				{t('label.share_note', 'Anyone with these links can view your calendar.')}
 			</Text>
-		</Container>
+		</>
 	);
 };
