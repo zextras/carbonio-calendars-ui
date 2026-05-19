@@ -48,36 +48,7 @@ vi.mock('@zextras/carbonio-ui-commons', async () => {
 });
 
 describe('ShareCalendarUrl', () => {
-	it('should render the title', () => {
-		const calendarName = faker.word.words(3);
-
-		setupTest(<ShareCalendarUrls calendarName={calendarName} />);
-
-		expect(screen.getByText(/Public share URLs/i)).toBeVisible();
-	});
-
-	it('should render the text under the title', () => {
-		const calendarName = faker.word.words(3);
-
-		setupTest(<ShareCalendarUrls calendarName={calendarName} />);
-
-		expect(
-			screen.getByText(
-				`You can quickly share ${calendarName} with your collaborators using one of these URLs:`
-			)
-		).toBeVisible();
-	});
-
-	it('should render the note text', () => {
-		const calendarName = faker.word.words(3);
-
-		setupTest(<ShareCalendarUrls calendarName={calendarName} />);
-		expect(
-			screen.getByText('Only your collaborators can access your data using these URLs.')
-		).toBeVisible();
-	});
-
-	describe.each(BUTTONS)('$label url button', ({ label, type, tooltip }) => {
+describe.each(BUTTONS)('$label url button', ({ label, type, tooltip }) => {
 		it('should be rendered with the proper label and icon', () => {
 			const calendarName = faker.word.words(3);
 

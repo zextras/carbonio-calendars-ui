@@ -8,7 +8,8 @@ import { i18n, WithT, TFunction } from 'i18next';
 export type Namespace = string | string[];
 
 export interface TransProps<E extends Element = HTMLDivElement>
-	extends React.HTMLProps<E>, Partial<WithT> {
+	extends React.HTMLProps<E>,
+		Partial<WithT> {
 	children?: React.ReactNode;
 	components?: readonly React.ReactNode[] | { [tagName: string]: React.ReactNode };
 	count?: number;

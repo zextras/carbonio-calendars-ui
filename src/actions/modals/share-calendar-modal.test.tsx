@@ -55,11 +55,7 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 			const { user } = setupTest(
-				<ShareCalendarModal
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
+				<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 				{ store }
 			);
 			const closeBtn = within(screen.getByTestId('ShareCalendarModal')).getByTestId('icon: Close');
@@ -84,14 +80,9 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 
 			const chipInput = screen.getByRole('textbox', {
 				name: /Recipients e-mail addresses/i
@@ -122,14 +113,9 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 			const chipInput = screen.getByRole('textbox', {
 				name: /Recipients e-mail addresses/i
 			});
@@ -147,14 +133,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const uncheckedPrivate = within(screen.getByTestId('privateCheckboxContainer')).getByTestId(
 					'icon: Square'
@@ -173,11 +154,7 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -204,11 +181,7 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 				const infoPrivateCheckbox = screen.getByTestId('icon: InfoOutline');
@@ -233,14 +206,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 				expect(screen.getByText(/viewer/i)).toBeVisible();
 			});
 			test('the select has 4 options', async () => {
@@ -254,11 +222,7 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -300,14 +264,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const sendNotificationCheckbox = within(
 					screen.getByTestId('sendNotificationCheckboxContainer')
@@ -325,14 +284,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const sendNotificationCheckbox = within(
 					screen.getByTestId('sendNotificationCheckboxContainer')
@@ -358,11 +312,7 @@ describe('Shared Calendar modal', () => {
 				];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -391,14 +341,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const standardMessage = screen.getByRole('textbox', {
 					name: /Add a note to standard message/i
@@ -416,14 +361,9 @@ describe('Shared Calendar modal', () => {
 					} as const
 				];
 
-				setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
+				setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+					store
+				});
 
 				const standardMessage = screen.getByRole('textbox', {
 					name: /Add a note to standard message/i
@@ -442,14 +382,9 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 
 			const shareNotes = screen.getByText(/note:/i);
 
@@ -467,14 +402,9 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			setupTest(
-				<ShareCalendarModal
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
 
 			const confirmButton = screen.getByText(/Confirm/i);
 
@@ -491,11 +421,7 @@ describe('Shared Calendar modal', () => {
 			];
 
 			const { user } = setupTest(
-				<ShareCalendarModal
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
+				<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 				{ store }
 			);
 			const chipInput = screen.getByRole('textbox', {
@@ -524,11 +450,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -561,11 +483,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -598,11 +516,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -639,11 +553,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -680,11 +590,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -721,11 +627,7 @@ describe('Shared Calendar modal', () => {
 				const grant: Grant[] | undefined = [];
 
 				const { user } = setupTest(
-					<ShareCalendarModal
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
+					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
 
@@ -763,11 +665,7 @@ describe('Shared Calendar modal', () => {
 					const grant: Grant[] | undefined = [];
 
 					const { user } = setupTest(
-						<ShareCalendarModal
-							folderId={'testId1'}
-							closeFn={closeFn}
-							grant={grant}
-						/>,
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 						{ store }
 					);
 					const chipInput = screen.getByRole('textbox', {
@@ -792,11 +690,7 @@ describe('Shared Calendar modal', () => {
 					const grant: Grant[] | undefined = [];
 
 					const { user } = setupTest(
-						<ShareCalendarModal
-							folderId={'testId1'}
-							closeFn={closeFn}
-							grant={grant}
-						/>,
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 						{ store }
 					);
 					const chipInput = screen.getByRole('textbox', {

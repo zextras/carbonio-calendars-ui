@@ -508,8 +508,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 							>
 								<Text weight="bold">{t('share.label.internal_sharing', 'Internal sharing')}</Text>
 								<Button
-									type="outlined"
-									label={t('label.add_share', 'Add share')}
+									type="ghost"
+									label={t('label.add_share', 'Add share +')}
 									onClick={onShare}
 									size="small"
 								/>
