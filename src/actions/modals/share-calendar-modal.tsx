@@ -440,6 +440,23 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					</Text>
 				</Row>
 			</Container>
+			<Container
+				data-testid="addAndCloseInfoContainer"
+				padding={{ top: 'small', bottom: 'small' }}
+				mainAlignment="center"
+				crossAlignment="flex-start"
+				height="fit"
+				orientation="horizontal"
+				gap="0.25rem"
+			>
+				<Icon icon="InfoOutline" size="medium" color="secondary" />
+				<Text overflow="break-word" size="small" color="secondary">
+					{t(
+						'share.note.add_and_close_info',
+						'By clicking on "Add and close", you\'ll return to the calendar view.'
+					)}
+				</Text>
+			</Container>
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('label.add_and_close', 'Add and close')}

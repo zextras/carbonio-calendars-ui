@@ -184,7 +184,9 @@ describe('Shared Calendar modal', () => {
 					<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
 					{ store }
 				);
-				const infoPrivateCheckbox = screen.getByTestId('icon: InfoOutline');
+				const infoPrivateCheckbox = within(
+					screen.getByTestId('privateCheckboxContainer')
+				).getByTestId('icon: InfoOutline');
 
 				expect(infoPrivateCheckbox).toBeVisible();
 
@@ -390,6 +392,28 @@ describe('Shared Calendar modal', () => {
 
 			expect(shareNotes).toBeVisible();
 		});
+		test('shows the "add and close" info sentence with an icon', () => {
+			const closeFn = vi.fn();
+			const grant = [
+				{
+					zid: '1',
+					gt: 'usr',
+					perm: 'r'
+				} as const
+			];
+
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
+
+			const infoContainer = screen.getByTestId('addAndCloseInfoContainer');
+			expect(
+				within(infoContainer).getByText(
+					/By clicking on "Add and close", you'll return to the calendar view\./i
+				)
+			).toBeVisible();
+			expect(within(infoContainer).getByTestId('icon: InfoOutline')).toBeVisible();
+		});
 	});
 	describe('Modal footer', () => {
 		it('should have the confirm button disabled when the user did not interact with the modal', async () => {
@@ -406,9 +430,9 @@ describe('Shared Calendar modal', () => {
 				store
 			});
 
-			const confirmButton = screen.getByText(/Add and close/i);
+			const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
-			expect(confirmButton).toBeEnabled();
+			expect(confirmButton).toBeDisabled();
 		});
 		it('should have the confirm button enabled when at least a chip is inserted without errors', async () => {
 			const closeFn = vi.fn();
@@ -427,13 +451,12 @@ describe('Shared Calendar modal', () => {
 			const chipInput = screen.getByRole('textbox', {
 				name: /Recipients e-mail addresses/i
 			});
-			const confirmButton = screen.getByText(/Add and close/i);
 
 			await user.type(chipInput, 'ale@test.com');
 			await user.tab();
 
 			expect(screen.getByText('ale@test.com')).toBeInTheDocument();
-			expect(confirmButton).toBeEnabled();
+			expect(screen.getByRole('button', { name: /Add and close/i })).toBeEnabled();
 		});
 		// this corner case is currently not testable as integration components can't be tested and the fallback component does not cover this case
 		test.todo('when at least a chip inside chipInput has errors, the confirm button is disabled');
@@ -461,7 +484,7 @@ describe('Shared Calendar modal', () => {
 				await user.type(chipInput, 'user1@email.it');
 				await user.tab();
 
-				const confirmButton = screen.getByText(/Add and close/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				expect(confirmButton).toBeEnabled();
 
@@ -499,7 +522,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(privateCheckbox);
 
-				const confirmButton = screen.getByText(/Add and close/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -536,7 +559,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(noPermissionRoleOption);
 
-				const confirmButton = screen.getByText(/Add and close/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -573,7 +596,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(viewerRoleOption);
 
-				const confirmButton = screen.getByText(/Add and close/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -610,7 +633,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(adminRoleOption);
 
-				const confirmButton = screen.getByText(/Add and close/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
@@ -647,7 +670,7 @@ describe('Shared Calendar modal', () => {
 
 				await user.click(managerRoleOption);
 
-				const confirmButton = screen.getByText(/Add and close/i);
+				const confirmButton = screen.getByRole('button', { name: /Add and close/i });
 
 				await user.click(confirmButton);
 
