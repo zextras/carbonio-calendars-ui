@@ -184,7 +184,7 @@ describe('MainEditModal', () => {
 			expect(screen.queryByText('Internal sharing')).not.toBeInTheDocument();
 		});
 
-		it('should render the "Add share +" button next to the "Internal sharing" header', () => {
+		it('should render the "Add share" button next to the "Internal sharing" header', () => {
 			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 			const grant: Array<Grant> = [];
 
@@ -192,10 +192,10 @@ describe('MainEditModal', () => {
 				store
 			});
 
-			expect(screen.getByRole('button', { name: 'Add share +' })).toBeVisible();
+			expect(screen.getByRole('button', { name: 'Add share' })).toBeVisible();
 		});
 
-		it('should call setModal("share") when the "Add share +" button is clicked', async () => {
+		it('should call setModal("share") when the "Add share" button is clicked', async () => {
 			const setModal = vi.fn();
 			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 			const grant: Array<Grant> = [];
@@ -214,7 +214,7 @@ describe('MainEditModal', () => {
 				{ store }
 			);
 
-			await user.click(screen.getByRole('button', { name: 'Add share +' }));
+			await user.click(screen.getByRole('button', { name: 'Add share' }));
 
 			expect(setModal).toHaveBeenCalledWith('share');
 		});
@@ -242,7 +242,7 @@ describe('MainEditModal', () => {
 			expect(screen.queryByRole('button', { name: /resend/i })).not.toBeInTheDocument();
 		});
 
-		it('should not render "Add share +" in the modal footer', () => {
+		it('should not render "Add share" in the modal footer', () => {
 			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 			const grant: Array<Grant> = [];
 
@@ -252,7 +252,7 @@ describe('MainEditModal', () => {
 
 			const footerButtons = screen.getAllByRole('button');
 			const addShareFooterButton = footerButtons.find(
-				(btn) => btn.textContent === 'Add share +' && btn.closest('[data-testid="modal-footer"]')
+				(btn) => btn.textContent === 'Add share' && btn.closest('[data-testid="modal-footer"]')
 			);
 			expect(addShareFooterButton).toBeUndefined();
 		});
