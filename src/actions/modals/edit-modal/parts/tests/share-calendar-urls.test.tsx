@@ -48,7 +48,7 @@ vi.mock('@zextras/carbonio-ui-commons', async () => {
 });
 
 describe('ShareCalendarUrl', () => {
-describe.each(BUTTONS)('$label url button', ({ label, type, tooltip }) => {
+	describe.each(BUTTONS)('$label url button', ({ label, type, tooltip }) => {
 		it('should be rendered with the proper label and icon', () => {
 			const calendarName = faker.word.words(3);
 
