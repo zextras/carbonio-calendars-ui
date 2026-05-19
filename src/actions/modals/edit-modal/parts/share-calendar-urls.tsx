@@ -90,7 +90,7 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 			</Container>
 
 			<Text overflow="break-word" color="secondary">
-				{t('message.share_calendar_url_note', 'Anyone with these links can view your calendar.')}
+				{t('label.share_note', 'Anyone with these links can view your calendar.')}
 			</Text>
 		</Container>
 	);
