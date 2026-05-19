@@ -42,13 +42,13 @@ import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';
 import { useEditModalContext } from 'commons/edit-modal-context';
 import { isCaldavChild } from 'commons/utilities';
-import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from 'constants/index';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from 'constants/index';
 import { folderAction } from 'store/actions/calendar-actions';
-import { FolderAction } from 'types/soap/soap-actions';
 import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
 import { useAppDispatch } from 'store/redux/hooks';
+import { FolderAction } from 'types/soap/soap-actions';
 import { containPublicShareGrant } from 'utils/calendars-share';
 
 const Square = styled.div<{ $color: AnyColor }>`
@@ -509,7 +509,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 								<Text weight="bold">{t('share.label.internal_sharing', 'Internal sharing')}</Text>
 								<Button
 									type="ghost"
-									label={t('label.add_share', 'Add share +')}
+									label={t('label.add_share', 'Add share')}
+									icon="Plus"
 									onClick={onShare}
 									size="small"
 								/>
