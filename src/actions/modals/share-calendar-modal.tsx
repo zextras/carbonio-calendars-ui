@@ -440,14 +440,13 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					</Text>
 				</Row>
 			</Container>
-<ModalFooter
+			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('label.add_and_close', 'Add and close')}
 				disabled={disabled}
 				secondaryAction={onGoBack}
 				secondaryLabel={secondaryLabel}
 				tooltip={confirmTooltip}
-				paddingTop="0"
 			/>
 		</Container>
 	);
