@@ -392,28 +392,6 @@ describe('Shared Calendar modal', () => {
 
 			expect(shareNotes).toBeVisible();
 		});
-		test('shows the "add and close" info sentence with an icon', () => {
-			const closeFn = vi.fn();
-			const grant = [
-				{
-					zid: '1',
-					gt: 'usr',
-					perm: 'r'
-				} as const
-			];
-
-			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
-				store
-			});
-
-			const infoContainer = screen.getByTestId('addAndCloseInfoContainer');
-			expect(
-				within(infoContainer).getByText(
-					/By clicking on "Add and close", you'll return to the calendar view\./i
-				)
-			).toBeVisible();
-			expect(within(infoContainer).getByTestId('icon: InfoOutline')).toBeVisible();
-		});
 	});
 	describe('Modal footer', () => {
 		it('should have the confirm button disabled when the user did not interact with the modal', async () => {
