@@ -30,7 +30,7 @@ describe('Shared Calendar modal', () => {
 	const store = configureStore({ reducer: combineReducers(reducers) });
 
 	describe('Modal header', () => {
-		it('should display the title "Share" followed by the calendar name', () => {
+		it('should display the title "Add internal share"', () => {
 			const closeFn = vi.fn();
 			const grant = [
 				{
@@ -40,17 +40,10 @@ describe('Shared Calendar modal', () => {
 				} as const
 			];
 
-			const title = 'testName';
-			setupTest(
-				<ShareCalendarModal
-					folderName={title}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
-			expect(screen.getByText(`Share ${title}`)).toBeVisible();
+			setupTest(<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />, {
+				store
+			});
+			expect(screen.getByText('Add internal share')).toBeVisible();
 		});
 		it('should display the close button and on click will call the modal onclose', async () => {
 			const closeFn = vi.fn();
@@ -78,104 +71,9 @@ describe('Shared Calendar modal', () => {
 		});
 	});
 	describe('Modal body', () => {
-		describe('the field to enable user to share to public', () => {
-			it('is checked by default if user shared already the calendar to public', () => {
-				const closeFn = vi.fn();
-				const grant = [
-					{
-						gt: SHARE_USER_TYPE.PUBLIC,
-						inh: '1',
-						perm: 'r',
-						pw: ''
-					} as const
-				];
-
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const checkedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId(checkedIcon);
-
-				expect(checkedPublicShare).toBeVisible();
-			});
-			it('is not checked by default if the calendar is not shared with public', () => {
-				const closeFn = vi.fn();
-				const grant = [
-					{
-						zid: '1',
-						gt: 'usr',
-						perm: 'r'
-					} as const
-				];
-
-				setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const uncheckedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId('icon: Square');
-
-				expect(uncheckedPublicShare).toBeVisible();
-			});
-			test('checked on click', async () => {
-				const closeFn = vi.fn();
-				const grant = [
-					{
-						zid: '1',
-						gt: 'usr',
-						perm: 'r'
-					} as const
-				];
-
-				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const uncheckedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId('icon: Square');
-
-				await user.click(uncheckedPublicShare);
-
-				const checkedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId(checkedIcon);
-
-				expect(checkedPublicShare).toBeVisible();
-			});
-		});
-		test('when zimbraPublicSharingEnabled is FALSE the option "public" is not displayed', async () => {
-			vi.spyOn(shell, 'useUserSettings').mockReturnValue({
-				...defaultSettings,
-				attrs: { zimbraPublicSharingEnabled: 'FALSE' }
-			});
-
-			setupTest(<ShareCalendarModal folderName={'testName'} folderId={'testId1'} />, { store });
-
-			const publicShareSection = screen.queryByTestId('publicShareCheckboxContainer');
-
-			expect(publicShareSection).not.toBeInTheDocument();
+		it('should not render the public share section', () => {
+			setupTest(<ShareCalendarModal folderId={'testId1'} />, { store });
+			expect(screen.queryByTestId('publicShareCheckboxContainer')).not.toBeInTheDocument();
 		});
 		it('should render every component', async () => {
 			const closeFn = vi.fn();
@@ -573,36 +471,6 @@ describe('Shared Calendar modal', () => {
 		});
 	});
 	describe('Modal footer', () => {
-		it('should have the confirm button enabled when share publicly checkbox is clicked', async () => {
-			const closeFn = vi.fn();
-			const grant = [
-				{
-					zid: '1',
-					gt: 'usr',
-					perm: 'r'
-				} as const
-			];
-
-			const { user } = setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
-
-			const uncheckedPublicShare = within(
-				screen.getByTestId('publicShareCheckboxContainer')
-			).getByTestId('icon: Square');
-
-			await user.click(uncheckedPublicShare);
-
-			const confirmButton = screen.getByText(/Confirm/i);
-
-			expect(confirmButton).toBeEnabled();
-		});
 		it('should have the confirm button disabled when the user did not interact with the modal', async () => {
 			const closeFn = vi.fn();
 			const grant = [
@@ -665,39 +533,6 @@ describe('Shared Calendar modal', () => {
 				await act(async () => {
 					await vi.advanceTimersToNextTimerAsync();
 				});
-			});
-			test('when public is checked it will trigger a grant operation with grant type public', async () => {
-				const spy = vi.spyOn(FolderAction, 'folderActionRequest');
-				const closeFn = vi.fn();
-				const grant: Grant[] | undefined = [];
-
-				const { user } = setupTest(
-					<ShareCalendarModal
-						folderName={'testName'}
-						folderId={'testId1'}
-						closeFn={closeFn}
-						grant={grant}
-					/>,
-					{ store }
-				);
-
-				const uncheckedPublicShare = within(
-					screen.getByTestId('publicShareCheckboxContainer')
-				).getByTestId('icon: Square');
-
-				await user.click(uncheckedPublicShare);
-
-				const confirmButton = screen.getByText(/Confirm/i);
-
-				await user.click(confirmButton);
-
-				expect(spy).toHaveBeenCalledTimes(1);
-				expect(spy).toHaveBeenCalledWith(
-					expect.objectContaining({
-						grant: [expect.objectContaining({ gt: SHARE_USER_TYPE.PUBLIC })],
-						op: FOLDER_OPERATIONS.GRANT
-					})
-				);
 			});
 			test('when a chip is added it will trigger a grant operation with grant type user', async () => {
 				const spy = vi.spyOn(FolderAction, 'folderActionRequest');

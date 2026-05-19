@@ -6,7 +6,7 @@
 import { Grant } from '@zextras/carbonio-ui-commons';
 
 export type ShareCalendarModalProps = {
-	folderName: string;
+	folderName?: string;
 	folderId: string;
 	closeFn?: () => void;
 	onGoBack?: () => void;

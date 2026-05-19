@@ -8,8 +8,10 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { FOLDER_VIEW, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
+import * as shell from '@zextras/carbonio-shell-ui';
 
 import { generateFolder } from '../../../../../__test__/mocks/folders/folders-generator';
+import defaultSettings from '../../../../../__test__/mocks/settings/default-settings';
 import { setupTest, screen } from '../../../../../__test__/test-setup';
 import { EditModalContext, EditModalContextType } from '../../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../../constants';
@@ -36,10 +38,13 @@ const MainEditModalTestWrapper = (props: MainEditModalProps): React.JSX.Element 
 };
 
 describe('MainEditModal', () => {
+	beforeEach(() => {
+		vi.spyOn(shell, 'useUserSettings').mockReturnValue(defaultSettings);
+	});
+
+	const store = configureStore({ reducer: combineReducers(reducers) });
+
 	it('should render the title', () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
 		const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 		const totalAppointments = faker.number.int({ min: 1, max: 100 });
 		const grant: Array<Grant> = [];
@@ -56,9 +61,6 @@ describe('MainEditModal', () => {
 	});
 
 	it('should not render the public share urls buttons if there is no public access', () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
 		const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 		const totalAppointments = faker.number.int({ min: 1, max: 100 });
 		const grant: Array<Grant> = [];
@@ -76,9 +78,6 @@ describe('MainEditModal', () => {
 	});
 
 	it('should render the public share urls buttons if there is a public access', () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
 		const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 		const totalAppointments = faker.number.int({ min: 1, max: 100 });
 		const grant: Array<Grant> = [
@@ -101,9 +100,6 @@ describe('MainEditModal', () => {
 	});
 
 	it('should disable the name input for caldav child with read-only permissions', () => {
-		const store = configureStore({
-			reducer: combineReducers(reducers)
-		});
 		const parentFolderId = faker.string.uuid();
 		const caldavParentFolder = {
 			...generateFolder({
@@ -144,5 +140,213 @@ describe('MainEditModal', () => {
 		// Check that the name input is disabled
 		const nameInput = screen.getByDisplayValue(caldavChildFolder.name);
 		expect(nameInput).toBeDisabled();
+	});
+
+	describe('Internal sharing section', () => {
+		it('should render the "Internal sharing" header for non-linked folders', () => {
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.getByText('Internal sharing')).toBeVisible();
+		});
+
+		it('should not render the "Internal sharing" section for linked folders', () => {
+			const folder = {
+				...generateFolder({ view: FOLDER_VIEW.appointment }),
+				isLink: true as const,
+				owner: 'someone@example.com',
+				reminder: false,
+				broken: false
+			};
+			const grant: Array<Grant> = [];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.queryByText('Internal sharing')).not.toBeInTheDocument();
+		});
+
+		it('should render the "Add share" button next to the "Internal sharing" header', () => {
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.getByRole('button', { name: /add share/i })).toBeVisible();
+		});
+
+		it('should call setModal("share") when the "Add share" button is clicked', async () => {
+			const setModal = vi.fn();
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [];
+
+			const context = {
+				setModal,
+				onClose: vi.fn(),
+				roleOptions: [],
+				setActiveGrant: vi.fn()
+			} satisfies EditModalContextType;
+
+			const { user } = setupTest(
+				<EditModalContext.Provider value={context}>
+					<MainEditModal folder={folder} totalAppointments={0} grant={grant} />
+				</EditModalContext.Provider>,
+				{ store }
+			);
+
+			await user.click(screen.getByRole('button', { name: /add share/i }));
+
+			expect(setModal).toHaveBeenCalledWith('share');
+		});
+
+		it('should render internal grants in the "Internal sharing" list', () => {
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.USER, perm: 'r', d: 'user@example.com' }];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.getByText(/user@example\.com/)).toBeVisible();
+		});
+
+		it('should not render a public grant chip in the "Internal sharing" list', () => {
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			// The internal grants list should have no rows (public grant is filtered out)
+			expect(screen.queryByRole('button', { name: /resend/i })).not.toBeInTheDocument();
+		});
+
+		it('should not render "Add share" in the modal footer', () => {
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			const footerButtons = screen.getAllByRole('button');
+			const addShareFooterButton = footerButtons.find(
+				(btn) => btn.textContent === 'Add share' && btn.closest('[data-testid="modal-footer"]')
+			);
+			expect(addShareFooterButton).toBeUndefined();
+		});
+	});
+
+	describe('Public sharing section', () => {
+		it('should render when zimbraPublicSharingEnabled is TRUE', () => {
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.getByText('Public sharing')).toBeVisible();
+		});
+
+		it('should not render when zimbraPublicSharingEnabled is FALSE', () => {
+			vi.spyOn(shell, 'useUserSettings').mockReturnValue({
+				...defaultSettings,
+				attrs: { ...defaultSettings.attrs, zimbraPublicSharingEnabled: 'FALSE' }
+			});
+
+			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+			const grant: Array<Grant> = [];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.queryByText('Public sharing')).not.toBeInTheDocument();
+		});
+
+		it('should not render for linked folders', () => {
+			const folder = {
+				...generateFolder({ view: FOLDER_VIEW.appointment }),
+				isLink: true as const,
+				owner: 'someone@example.com',
+				reminder: false,
+				broken: false
+			};
+			const grant: Array<Grant> = [];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.queryByText('Public sharing')).not.toBeInTheDocument();
+		});
+
+		describe('Public sharing checkbox', () => {
+			it('should be checked when calendar is already publicly shared', () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r' }];
+
+				setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
+			});
+
+			it('should be unchecked when calendar is not publicly shared', () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [];
+
+				setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				const checkboxes = screen.getAllByTestId('icon: Square');
+				expect(checkboxes.length).toBeGreaterThan(0);
+			});
+
+			it('should toggle to checked on click', async () => {
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [];
+
+				const { user } = setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				const publicCheckboxLabel = screen.getByText(/share with public/i);
+				await user.click(publicCheckboxLabel);
+
+				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
+			});
+
+			it('should be hidden when zimbraPublicSharingEnabled is FALSE', () => {
+				vi.spyOn(shell, 'useUserSettings').mockReturnValue({
+					...defaultSettings,
+					attrs: { ...defaultSettings.attrs, zimbraPublicSharingEnabled: 'FALSE' }
+				});
+
+				const folder = generateFolder({ view: FOLDER_VIEW.appointment });
+				const grant: Array<Grant> = [];
+
+				setupTest(
+					<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />,
+					{ store }
+				);
+
+				expect(screen.queryByText(/share with public/i)).not.toBeInTheDocument();
+			});
+		});
 	});
 });
