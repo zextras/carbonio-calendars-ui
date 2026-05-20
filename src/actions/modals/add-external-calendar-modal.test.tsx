@@ -40,17 +40,17 @@ describe('AddExternalCalendarModal', () => {
 			expect(screen.getByText("The URL should begin with 'http://' or 'https://'")).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
-		test('shows invalid ics link error when url does not end with .ics', async () => {
+		test('accepts a valid https url that does not end with .ics', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.pasteInto(
 				screen.getByRole('textbox', { name: URL_LABEL }),
 				'https://example.com/calendar'
 			);
 			expect(
-				screen.getByText('Invalid URL. Make sure it links directly to an .ics calendar file')
-			).toBeVisible();
-			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+				screen.queryByText('Invalid URL. Make sure it links directly to an .ics calendar file')
+			).not.toBeInTheDocument();
 		});
+
 		test('shows sync info text when a valid ics url is entered', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);

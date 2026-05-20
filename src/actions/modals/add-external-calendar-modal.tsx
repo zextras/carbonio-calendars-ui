@@ -221,13 +221,6 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 					"The URL should begin with 'http://' or 'https://'"
 				);
 			}
-
-			if (!/\.ics$/i.test(parsedUrl.pathname)) {
-				return t(
-					'add_ics_from_url.error.invalid_ics_link',
-					'Invalid URL. Make sure it links directly to an .ics calendar file'
-				);
-			}
 		} catch {
 			return t(
 				'add_external_calendar.error.invalid_url',

@@ -1,3 +1,9 @@
+## 1.26.0 (2026-05-20)
+
+* feat(CO-3721): update external calendar modal to accept valid https URLs without .ics extension (#75 ([8a47258](https://github.com/zextras/carbonio-calendars-ui/commit/8a47258)), closes [#753](https://github.com/zextras/carbonio-calendars-ui/issues/753)
+* chore(deps): lock file maintenance (#735) ([b4eeaf6](https://github.com/zextras/carbonio-calendars-ui/commit/b4eeaf6)), closes [#735](https://github.com/zextras/carbonio-calendars-ui/issues/735)
+* chore(deps): update dependency zextras/jenkins-lib-common to v2.7.0 (#750) ([d8eb882](https://github.com/zextras/carbonio-calendars-ui/commit/d8eb882)), closes [#750](https://github.com/zextras/carbonio-calendars-ui/issues/750)
+
 ## 1.25.0 (2026-05-19)
 
 * feat: redesign sharing sections in edit calendar modal (#752) ([bc0c26a](https://github.com/zextras/carbonio-calendars-ui/commit/bc0c26a)), closes [#752](https://github.com/zextras/carbonio-calendars-ui/issues/752)
