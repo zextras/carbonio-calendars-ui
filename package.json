@@ -76,7 +76,7 @@
 		"jsdom": "27.4.0",
 		"msw": "2.12.14",
 		"pinst": "3.0.0",
-		"sonarqube-scanner": "4.3.5",
+		"sonarqube-scanner": "4.3.6",
 		"ts-node": "10.9.2",
 		"typescript": "5.7.3",
 		"vitest": "4.1.2",
