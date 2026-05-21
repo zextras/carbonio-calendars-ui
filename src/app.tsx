@@ -26,6 +26,8 @@ import { useTranslation } from 'react-i18next';
 
 import { AuthGuard } from './auth-guard';
 import { CenteredSpinner } from './components/CenteredSpinner';
+import { SyncDataHandler } from './components/sync-data-handler';
+import { QuotaRefreshHandler } from './components/quota-refresh-handler';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -36,9 +38,9 @@ import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
 import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
+import { GlobalModalManager } from './view/global-modal-manager';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
-import { SyncDataHandler } from './components/sync-data-handler';
 import { InitializeTags } from './view/tags/initialize-tags';
 
 const LazyCalendarView = lazy(
@@ -220,13 +222,14 @@ export default function App(): React.JSX.Element {
 	return (
 		<AuthGuard>
 			<StoreProvider>
-				<ModalManager>
+				<GlobalModalManager>
 					<AppRegistrations />
-				</ModalManager>
+				</GlobalModalManager>
 				<AppointmentReminder />
 				<InitializeTags />
 				<SyncDataHandler />
 				<Notifications />
+				<QuotaRefreshHandler />
 			</StoreProvider>
 		</AuthGuard>
 	);

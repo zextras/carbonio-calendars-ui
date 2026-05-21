@@ -1,3 +1,81 @@
+## 1.26.0 (2026-05-20)
+
+* feat(CO-3721): update external calendar modal to accept valid https URLs without .ics extension (#75 ([8a47258](https://github.com/zextras/carbonio-calendars-ui/commit/8a47258)), closes [#753](https://github.com/zextras/carbonio-calendars-ui/issues/753)
+* chore(deps): lock file maintenance (#735) ([b4eeaf6](https://github.com/zextras/carbonio-calendars-ui/commit/b4eeaf6)), closes [#735](https://github.com/zextras/carbonio-calendars-ui/issues/735)
+* chore(deps): update dependency zextras/jenkins-lib-common to v2.7.0 (#750) ([d8eb882](https://github.com/zextras/carbonio-calendars-ui/commit/d8eb882)), closes [#750](https://github.com/zextras/carbonio-calendars-ui/issues/750)
+
+## 1.25.0 (2026-05-19)
+
+* feat: redesign sharing sections in edit calendar modal (#752) ([bc0c26a](https://github.com/zextras/carbonio-calendars-ui/commit/bc0c26a)), closes [#752](https://github.com/zextras/carbonio-calendars-ui/issues/752)
+
+## 1.24.0 (2026-05-19)
+
+* feat: add input focus management and required field indicators in modals (#751) ([0891045](https://github.com/zextras/carbonio-calendars-ui/commit/0891045)), closes [#751](https://github.com/zextras/carbonio-calendars-ui/issues/751)
+
+## 1.23.0 (2026-05-18)
+
+* feat: update quota data on quota impacting actions ([6e82f1b](https://github.com/zextras/carbonio-calendars-ui/commit/6e82f1b))
+
+## 1.22.0 (2026-05-14)
+
+* feat: add close confirmation modal when editor has unsaved changes (#746) ([a6f6e7b](https://github.com/zextras/carbonio-calendars-ui/commit/a6f6e7b)), closes [#746](https://github.com/zextras/carbonio-calendars-ui/issues/746)
+
+## <small>1.21.5 (2026-05-14)</small>
+
+* fix(ci): migrate Jenkinsfile to jenkins-lib-common ([e730781](https://github.com/zextras/carbonio-calendars-ui/commit/e730781))
+* chore: add .worktrees to .gitignore ([aa1dae2](https://github.com/zextras/carbonio-calendars-ui/commit/aa1dae2))
+
+## <small>1.21.4 (2026-05-13)</small>
+
+* fix(CO-3703): update tooltip text for external calendar indicator to specify ICS calendar (#748) ([205b1ac](https://github.com/zextras/carbonio-calendars-ui/commit/205b1ac)), closes [#748](https://github.com/zextras/carbonio-calendars-ui/issues/748)
+
+## <small>1.21.3 (2026-05-12)</small>
+
+* Merge pull request #747 from zextras/IN-1095-jfrog-cost-optimization-usage-analysis-and-mitigation-s ([57eea29](https://github.com/zextras/carbonio-calendars-ui/commit/57eea29)), closes [#747](https://github.com/zextras/carbonio-calendars-ui/issues/747)
+* build(release): update jenkins-lib-ui to 1.0.13 ([7daddff](https://github.com/zextras/carbonio-calendars-ui/commit/7daddff))
+* chore(deps): update semantic-release monorepo (#744) ([29fd6f3](https://github.com/zextras/carbonio-calendars-ui/commit/29fd6f3)), closes [#744](https://github.com/zextras/carbonio-calendars-ui/issues/744)
+
+## <small>1.21.2 (2026-05-06)</small>
+
+* build(deps): update dependencies (#745) ([c3c63d6](https://github.com/zextras/carbonio-calendars-ui/commit/c3c63d6)), closes [#745](https://github.com/zextras/carbonio-calendars-ui/issues/745)
+
+## <small>1.21.1 (2026-05-05)</small>
+
+* fix: return saveSettings promise in settings view to ensure correct execution handling ([1d89fc3](https://github.com/zextras/carbonio-calendars-ui/commit/1d89fc3)), closes [#742](https://github.com/zextras/carbonio-calendars-ui/issues/742)
+
+## 1.21.0 (2026-04-29)
+
+* feat(CO-3093): add external calendar using CalDAV (#727) ([fc7c539](https://github.com/zextras/carbonio-calendars-ui/commit/fc7c539)), closes [#727](https://github.com/zextras/carbonio-calendars-ui/issues/727)
+* chore(deps): update dependency @zextras/carbonio-search-ui to v0.0.8 (#743) ([7107a13](https://github.com/zextras/carbonio-calendars-ui/commit/7107a13)), closes [#743](https://github.com/zextras/carbonio-calendars-ui/issues/743)
+
+## 1.20.0 (2026-04-27)
+
+* build(release): migrate to semantic-release ([f1e0cdc](https://github.com/zextras/carbonio-calendars-ui/commit/f1e0cdc))
+* fix: eslint ide plugin not working (#738) ([dee829c](https://github.com/zextras/carbonio-calendars-ui/commit/dee829c)), closes [#738](https://github.com/zextras/carbonio-calendars-ui/issues/738)
+* fix: removed List option ([84e8e29](https://github.com/zextras/carbonio-calendars-ui/commit/84e8e29))
+* Merge branch 'devel' into co-3446-remove-list-option ([b901755](https://github.com/zextras/carbonio-calendars-ui/commit/b901755))
+* Merge pull request #731 from zextras/co-3446-remove-list-option ([b02f87f](https://github.com/zextras/carbonio-calendars-ui/commit/b02f87f)), closes [#731](https://github.com/zextras/carbonio-calendars-ui/issues/731)
+* Merge remote-tracking branch 'origin/devel' into version-bumper/v1.19.2-1 ([63add69](https://github.com/zextras/carbonio-calendars-ui/commit/63add69))
+* chore: version bumper v1.19.3 (#724) ([0221ab2](https://github.com/zextras/carbonio-calendars-ui/commit/0221ab2)), closes [#724](https://github.com/zextras/carbonio-calendars-ui/issues/724)
+* chore: Version bumper/v1.19.2 1 ([71c4ad9](https://github.com/zextras/carbonio-calendars-ui/commit/71c4ad9))
+* chore(deps): lock file maintenance (#694) ([f04c46e](https://github.com/zextras/carbonio-calendars-ui/commit/f04c46e)), closes [#694](https://github.com/zextras/carbonio-calendars-ui/issues/694)
+* chore(deps): lock file maintenance (#730) ([4c66bda](https://github.com/zextras/carbonio-calendars-ui/commit/4c66bda)), closes [#730](https://github.com/zextras/carbonio-calendars-ui/issues/730)
+* chore(deps): update @zextras/carbonio-ui-sdk to version 2.2.1-devel.11 (#725) ([1c228ac](https://github.com/zextras/carbonio-calendars-ui/commit/1c228ac)), closes [#725](https://github.com/zextras/carbonio-calendars-ui/issues/725)
+* chore(deps): update dependencies for carbonio packages and remove outdated tsconfig-paths (#726) ([de9e687](https://github.com/zextras/carbonio-calendars-ui/commit/de9e687)), closes [#726](https://github.com/zextras/carbonio-calendars-ui/issues/726)
+* chore(deps): update dependency @babel/preset-env to ^7.29.2 (#718) ([dfac14e](https://github.com/zextras/carbonio-calendars-ui/commit/dfac14e)), closes [#718](https://github.com/zextras/carbonio-calendars-ui/issues/718)
+* chore(deps): update dependency @types/lodash to ^4.17.24 (#713) ([f3e63bd](https://github.com/zextras/carbonio-calendars-ui/commit/f3e63bd)), closes [#713](https://github.com/zextras/carbonio-calendars-ui/issues/713)
+* chore(deps): update dependency @types/react to ^18.3.28 (#696) ([c04b07a](https://github.com/zextras/carbonio-calendars-ui/commit/c04b07a)), closes [#696](https://github.com/zextras/carbonio-calendars-ui/issues/696)
+* chore(deps): update dependency @vitejs/plugin-react to ^5.2.0 (#697) ([fb11517](https://github.com/zextras/carbonio-calendars-ui/commit/fb11517)), closes [#697](https://github.com/zextras/carbonio-calendars-ui/issues/697)
+* chore(deps): update dependency eslint-plugin-vitest-globals to ^1.6.1 (#721) ([7b6e9e2](https://github.com/zextras/carbonio-calendars-ui/commit/7b6e9e2)), closes [#721](https://github.com/zextras/carbonio-calendars-ui/issues/721)
+* chore(deps): update dependency msw to ^2.12.14 (#699) ([8a7e049](https://github.com/zextras/carbonio-calendars-ui/commit/8a7e049)), closes [#699](https://github.com/zextras/carbonio-calendars-ui/issues/699)
+* chore(deps): update dependency sonarqube-scanner to ^4.3.5 (#700) ([5008624](https://github.com/zextras/carbonio-calendars-ui/commit/5008624)), closes [#700](https://github.com/zextras/carbonio-calendars-ui/issues/700)
+* chore(deps): update dependency zextras/jenkins-lib-ui to v1.0.10 (#719) ([07f68d6](https://github.com/zextras/carbonio-calendars-ui/commit/07f68d6)), closes [#719](https://github.com/zextras/carbonio-calendars-ui/issues/719)
+* chore(deps): update testing library (#703) ([296e8b1](https://github.com/zextras/carbonio-calendars-ui/commit/296e8b1)), closes [#703](https://github.com/zextras/carbonio-calendars-ui/issues/703)
+* chore(deps): update vitest to ^4.1.2 (#722) ([8652a48](https://github.com/zextras/carbonio-calendars-ui/commit/8652a48)), closes [#722](https://github.com/zextras/carbonio-calendars-ui/issues/722)
+* chore(release): Version bumper/v1.19.1 1 ([e757a14](https://github.com/zextras/carbonio-calendars-ui/commit/e757a14))
+* refactor: migrate from npm to pnpm (#729) ([1e89c9d](https://github.com/zextras/carbonio-calendars-ui/commit/1e89c9d)), closes [#729](https://github.com/zextras/carbonio-calendars-ui/issues/729)
+* feat(CO-2747): Implement option to add external calendar via ics URL with sync (#717) ([cde4499](https://github.com/zextras/carbonio-calendars-ui/commit/cde4499)), closes [#717](https://github.com/zextras/carbonio-calendars-ui/issues/717)
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { t, useUserSettings } from '@zextras/carbonio-shell-ui';
@@ -126,6 +126,7 @@ const HtmlComposer = ({ editorId }: { editorId: string }): React.JSX.Element => 
 	const dispatch = useAppDispatch();
 
 	const [richTextValue, setRichTextValue] = useState(richText ?? '');
+	const hasTinyMCEFiredInit = useRef(false);
 
 	const debounceInput = useMemo(
 		() =>
@@ -144,6 +145,11 @@ const HtmlComposer = ({ editorId }: { editorId: string }): React.JSX.Element => 
 
 	const onRichTextChange = useCallback(
 		(e: Array<string>) => {
+			// TinyMCE fires onEditorChange once on init before loading content — skip it
+			if (!hasTinyMCEFiredInit.current) {
+				hasTinyMCEFiredInit.current = true;
+				return;
+			}
 			setRichTextValue(e[1]);
 			debounceInput(e);
 		},

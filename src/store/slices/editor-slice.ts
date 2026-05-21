@@ -32,7 +32,8 @@ import {
 
 const initialState: EditorSlice = {
 	status: 'idle',
-	editors: {}
+	editors: {},
+	originalEditors: {}
 };
 
 export const editorSlice = createSlice({

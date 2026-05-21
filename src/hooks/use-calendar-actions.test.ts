@@ -760,6 +760,36 @@ describe('use calendar actions', () => {
 		]);
 	});
 
+	test('caldav root folder has sync, edit name and delete permanently actions', () => {
+		const caldavRootItem: Folder = {
+			name: 'CalDAV Root',
+			id: '995',
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			dsId: '100',
+			dsType: 'caldav',
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: true,
+			isLink: false,
+			depth: 1
+		};
+		setupFoldersStore(caldavRootItem as Folder);
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [caldavRootItem]
+		});
+
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.SYNC }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
+		]);
+	});
+
 	test('external calendar in trash shows restore action', () => {
 		const trashedExternalCalendarItem = {
 			name: 'External calendar in trash',

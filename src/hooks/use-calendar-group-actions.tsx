@@ -55,6 +55,7 @@ const useCalendarGroupEditActionFn = (calendarGroupId: string): (() => void) => 
 				{
 					id: GROUP_ACTIONS.EDIT,
 					maxHeight: '90vh',
+					focusModalContent: false,
 					children: (
 						<EditGroupModal
 							onClose={(): void => closeModal(GROUP_ACTIONS.EDIT)}

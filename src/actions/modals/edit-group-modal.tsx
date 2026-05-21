@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useState, FC, useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState, FC, useEffect } from 'react';
 
 import {
 	Container,
@@ -78,6 +78,11 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 		() => `${t('label.type_group_name_here', 'Group Name')}*`,
 		[t]
 	);
+
+	const groupNameInputRef = useRef<HTMLInputElement>(null);
+	useEffect(() => {
+		groupNameInputRef.current?.focus();
+	}, []);
 
 	const groupNameDescription = useMemo(() => {
 		if (isDirty) {
@@ -190,6 +195,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 					}}
 					hasError={!isGroupNameValid}
 					description={groupNameDescription}
+					inputRef={groupNameInputRef}
 				/>
 				<Padding vertical="small" />
 				<Divider />

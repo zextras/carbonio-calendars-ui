@@ -152,8 +152,7 @@ export const DefaultViewOptions = (): SelectItem[] => [
 	{ label: t('settings.options.default_view.month', 'Month View'), value: 'month' },
 	{ label: t('settings.options.default_view.week', 'Week View'), value: 'week' },
 	{ label: t('settings.options.default_view.day', 'Day View'), value: 'day' },
-	{ label: t('settings.options.default_view.work_week', 'Work Week View'), value: 'workWeek' },
-	{ label: t('settings.options.default_view.list', 'List View'), value: 'list' }
+	{ label: t('settings.options.default_view.work_week', 'Work Week View'), value: 'workWeek' }
 ];
 export const DefaultCalendarOptions = (): SelectItem[] => [
 	{ label: t('label.calendar', 'Calendar'), value: 'calendar' }

@@ -25,13 +25,6 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 
 	const user = useMemo(() => accounts[0].name, [accounts]);
 	const domain = useMemo(() => getCarbonioDomain(), []);
-	const title = useMemo(
-		() =>
-			t('label.public_share_urls', {
-				defaultValue: 'Public share URLS'
-			}),
-		[t]
-	);
 	const icsLinkLabel = useMemo(() => t('label.ics_url', 'ICS URL'), [t]);
 	const webcalLinkLabel = useMemo(() => t('label.webcal_url', 'WebCAL URL'), [t]);
 	const caldavLinkLabel = useMemo(() => t('label.caldav_url', 'CalDAV URL'), [t]);
@@ -58,61 +51,42 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 	);
 
 	return (
-		<Container
-			mainAlignment="flex-start"
-			crossAlignment="flex-start"
-			orientation="vertical"
-			gap="0.5rem"
-		>
-			<Text weight="bold">{title}</Text>
+		<>
+			<Container orientation="horizontal" mainAlignment="flex-start" gap={'0.5rem'}>
+				<Tooltip label={t('tooltip.copy_ics_url', 'Copy ICS url')} placement="top">
+					<Button
+						label={icsLinkLabel}
+						icon="Copy"
+						size="small"
+						type="outlined"
+						onClick={createLinkClickHandler(icsLinkLabel, CALENDARS_SHARE_LINK_TYPES.ics)}
+					/>
+				</Tooltip>
 
-			<Container gap="1rem" mainAlignment="flex-start" crossAlignment="flex-start">
-				<Text overflow="break-word">
-					{t('message.share_calendar_url_msg', {
-						title: calendarName,
-						defaultValue:
-							'You can quickly share {{title}} with your collaborators using one of these URLs:'
-					})}
-				</Text>
-				<Container orientation="horizontal" mainAlignment="flex-start" gap={'0.5rem'}>
-					<Tooltip label={t('tooltip.copy_ics_url', 'Copy ICS url')} placement="top">
-						<Button
-							label={icsLinkLabel}
-							icon="Copy"
-							size="small"
-							type="outlined"
-							onClick={createLinkClickHandler(icsLinkLabel, CALENDARS_SHARE_LINK_TYPES.ics)}
-						/>
-					</Tooltip>
+				<Tooltip label={t('tooltip.copy_webcal_url', 'Copy WebCAL url')} placement="top">
+					<Button
+						label={webcalLinkLabel}
+						icon="Copy"
+						size="small"
+						type="outlined"
+						onClick={createLinkClickHandler(webcalLinkLabel, CALENDARS_SHARE_LINK_TYPES.webcal)}
+					/>
+				</Tooltip>
 
-					<Tooltip label={t('tooltip.copy_webcal_url', 'Copy WebCAL url')} placement="top">
-						<Button
-							label={webcalLinkLabel}
-							icon="Copy"
-							size="small"
-							type="outlined"
-							onClick={createLinkClickHandler(webcalLinkLabel, CALENDARS_SHARE_LINK_TYPES.webcal)}
-						/>
-					</Tooltip>
-
-					<Tooltip label={t('tooltip.copy_caldav_url', 'Copy CalDAV url')} placement="top">
-						<Button
-							label={caldavLinkLabel}
-							icon="Copy"
-							size="small"
-							type="outlined"
-							onClick={createLinkClickHandler(caldavLinkLabel, CALENDARS_SHARE_LINK_TYPES.caldav)}
-						/>
-					</Tooltip>
-				</Container>
-
-				<Text overflow="break-word" color="secondary">
-					{t(
-						'message.share_calendar_url_note',
-						'Only your collaborators can access your data using these URLs.'
-					)}
-				</Text>
+				<Tooltip label={t('tooltip.copy_caldav_url', 'Copy CalDAV url')} placement="top">
+					<Button
+						label={caldavLinkLabel}
+						icon="Copy"
+						size="small"
+						type="outlined"
+						onClick={createLinkClickHandler(caldavLinkLabel, CALENDARS_SHARE_LINK_TYPES.caldav)}
+					/>
+				</Tooltip>
 			</Container>
-		</Container>
+
+			<Text overflow="break-word" color="secondary">
+				{t('label.share_note', 'Anyone with these links can view your calendar.')}
+			</Text>
+		</>
 	);
 };
