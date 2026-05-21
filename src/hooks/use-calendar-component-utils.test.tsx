@@ -331,7 +331,7 @@ describe('useCalendarComponentUtils', () => {
 		});
 
 		const shiftEvent = (
-			result: ReturnType<typeof setupHook<typeof useCalendarComponentUtils>>['result'],
+			result: { current: ReturnType<typeof useCalendarComponentUtils> },
 			event: ReturnType<typeof mockedData.getEvent>
 		): void => {
 			result.current.onEventDropOrResize({

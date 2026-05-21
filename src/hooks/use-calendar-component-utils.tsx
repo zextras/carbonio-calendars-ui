@@ -35,8 +35,9 @@ export const useCalendarComponentUtils = (): {
 		end: string | Date;
 		event: EventType;
 		isAllDay?: boolean;
+		resourceId?: string | number;
 	}) => void;
-	handleSelect: (e: { start: Date; end: Date }) => void;
+	handleSelect: (e: { start: Date; end: Date; resourceId?: string | number }) => void;
 	onRangeChange: (a: { end: Date; start: Date } | Array<Date>) => void;
 	onNavigate: (a: Date) => void;
 	date: Date;
@@ -253,9 +254,11 @@ export const useCalendarComponentUtils = (): {
 			end: string | Date;
 			event: EventType;
 			isAllDay?: boolean;
-			resourceId?: string;
+			resourceId?: string | number;
 		}) => {
-			const isDefaultCalendar = resourceId ? resourceId === zimbraPrefDefaultCalendarId : true;
+			const isDefaultCalendar = resourceId
+				? String(resourceId) === zimbraPrefDefaultCalendarId
+				: true;
 			if (!isDefaultCalendar) {
 				return;
 			}
@@ -317,8 +320,10 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const handleSelect = useCallback(
-		(e: { resourceId?: string; end: Date; start: Date }) => {
-			const isDefaultCalendar = e.resourceId ? e.resourceId === zimbraPrefDefaultCalendarId : true;
+		(e: { resourceId?: string | number; end: Date; start: Date }) => {
+			const isDefaultCalendar = e.resourceId
+				? String(e.resourceId) === zimbraPrefDefaultCalendarId
+				: true;
 
 			if (!summaryViewOpen && !action && isDefaultCalendar) {
 				const isAllDay =
