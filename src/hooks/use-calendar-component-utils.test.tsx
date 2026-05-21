@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React from 'react';
-
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, waitFor } from '@testing-library/react';
 import { addBoard } from '@zextras/carbonio-shell-ui';
@@ -20,10 +18,10 @@ import { reducers } from '../store/redux';
 import { useAppStatusStore } from '../store/zustand/store';
 import mockedData from '../test/generators';
 import { singleGetMsgResponse } from '../test/mocks/network/msw/handle-get-invite';
+import { getSetupServer } from '@jest-setup';
+import { setupHook, screen } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '@test-utils/store/folders';
-import { setupHook, screen } from '@test-setup';
-import { getSetupServer } from '@jest-setup';
 
 vi.mock('../commons/editor-save-send-fns', () => ({ onSave: vi.fn() }));
 
@@ -33,6 +31,12 @@ vi.mock('@zextras/carbonio-ui-commons', async () => ({
 }));
 
 const { DEFAULT_CALENDAR_ID } = PREFS_DEFAULTS;
+
+const RANGE_START = '2024-01-01';
+const RANGE_END = '2024-01-07';
+const ACTION_PATH = '/calendars/:action';
+const SELECT_START = '2024-01-15T10:00:00';
+const SELECT_END = '2024-01-15T11:00:00';
 
 const buildStore = (): ReturnType<typeof configureStore> =>
 	configureStore({ reducer: combineReducers(reducers) });
@@ -67,8 +71,8 @@ describe('useCalendarComponentUtils', () => {
 			const setRange = vi.fn();
 			useAppStatusStore.setState({ setRange });
 			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
-			const start = new Date('2024-01-01');
-			const end = new Date('2024-01-07');
+			const start = new Date(RANGE_START);
+			const end = new Date(RANGE_END);
 
 			act(() => {
 				result.current.onRangeChange({ start, end });
@@ -86,8 +90,8 @@ describe('useCalendarComponentUtils', () => {
 			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 			const dates = [
 				new Date('2024-01-03'),
-				new Date('2024-01-01'),
-				new Date('2024-01-07'),
+				new Date(RANGE_START),
+				new Date(RANGE_END),
 				new Date('2024-01-05')
 			];
 
@@ -96,8 +100,8 @@ describe('useCalendarComponentUtils', () => {
 			});
 
 			expect(setRange).toHaveBeenCalledWith({
-				start: moment(new Date('2024-01-01')).startOf('day').valueOf(),
-				end: moment(new Date('2024-01-07')).endOf('day').valueOf()
+				start: moment(new Date(RANGE_START)).startOf('day').valueOf(),
+				end: moment(new Date(RANGE_END)).endOf('day').valueOf()
 			});
 		});
 
@@ -122,7 +126,7 @@ describe('useCalendarComponentUtils', () => {
 			setupHook(useCalendarComponentUtils, {
 				store: buildStore(),
 				initialEntries: ['/calendars/edit'],
-				path: '/calendars/:action'
+				path: ACTION_PATH
 			});
 
 			expect(replaceHistory).toHaveBeenCalledWith(`/${CALENDAR_ROUTE}`);
@@ -135,7 +139,7 @@ describe('useCalendarComponentUtils', () => {
 			setupHook(useCalendarComponentUtils, {
 				store: buildStore(),
 				initialEntries: [`/calendars/${EVENT_ACTIONS.EXPAND}`],
-				path: '/calendars/:action'
+				path: ACTION_PATH
 			});
 
 			expect(replaceHistory).not.toHaveBeenCalled();
@@ -161,8 +165,8 @@ describe('useCalendarComponentUtils', () => {
 
 			act(() => {
 				result.current.handleSelect({
-					start: new Date('2024-01-15T10:00:00'),
-					end: new Date('2024-01-15T11:00:00')
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END)
 				});
 			});
 
@@ -177,8 +181,8 @@ describe('useCalendarComponentUtils', () => {
 
 			act(() => {
 				result.current.handleSelect({
-					start: new Date('2024-01-15T10:00:00'),
-					end: new Date('2024-01-15T11:00:00')
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END)
 				});
 			});
 
@@ -189,13 +193,13 @@ describe('useCalendarComponentUtils', () => {
 			const { result } = setupHook(useCalendarComponentUtils, {
 				store: buildStore(),
 				initialEntries: [`/calendars/${EVENT_ACTIONS.EXPAND}`],
-				path: '/calendars/:action'
+				path: ACTION_PATH
 			});
 
 			act(() => {
 				result.current.handleSelect({
-					start: new Date('2024-01-15T10:00:00'),
-					end: new Date('2024-01-15T11:00:00')
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END)
 				});
 			});
 
@@ -207,8 +211,8 @@ describe('useCalendarComponentUtils', () => {
 
 			act(() => {
 				result.current.handleSelect({
-					start: new Date('2024-01-15T10:00:00'),
-					end: new Date('2024-01-15T11:00:00'),
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END),
 					resourceId: 'other-calendar'
 				});
 			});
@@ -221,8 +225,8 @@ describe('useCalendarComponentUtils', () => {
 
 			act(() => {
 				result.current.handleSelect({
-					start: new Date('2024-01-15T10:00:00'),
-					end: new Date('2024-01-15T11:00:00'),
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END),
 					resourceId: DEFAULT_CALENDAR_ID
 				});
 			});
