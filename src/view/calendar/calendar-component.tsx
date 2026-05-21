@@ -90,7 +90,7 @@ export default function CalendarComponent(): React.JSX.Element {
 		useCalendarComponentUtils();
 
 	if (prefs.zimbraPrefLocale) {
-		moment.updateLocale(prefs.zimbraPrefLocale as string, {
+		moment.updateLocale(prefs.zimbraPrefLocale, {
 			week: {
 				dow: firstDayOfWeek
 			}
@@ -98,7 +98,7 @@ export default function CalendarComponent(): React.JSX.Element {
 	}
 
 	const workingSchedule = useMemo<WorkWeekDay[]>(
-		() => workWeek(prefs.zimbraPrefCalendarWorkingHours as string),
+		() => workWeek(String(prefs.zimbraPrefCalendarWorkingHours ?? '')),
 		[prefs?.zimbraPrefCalendarWorkingHours]
 	);
 
