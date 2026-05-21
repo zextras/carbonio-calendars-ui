@@ -304,6 +304,7 @@ describe('useCalendarComponentUtils', () => {
 			});
 
 			await waitFor(() => expect(onSave).toHaveBeenCalled());
+			expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true, isNew: false }));
 		});
 
 		it('shows the recurrent appointment type modal when a recurring event is moved', async () => {
@@ -378,7 +379,7 @@ describe('useCalendarComponentUtils', () => {
 
 			act(() => shiftEvent(result, event));
 
-			await screen.findByText('Something went wrong, please try again');
+			expect(await screen.findByText('Something went wrong, please try again')).toBeInTheDocument();
 		});
 
 		it('opens the modify message modal when the invite has participants and the organizer makes changes', async () => {
