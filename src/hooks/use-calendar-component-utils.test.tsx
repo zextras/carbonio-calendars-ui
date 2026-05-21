@@ -11,7 +11,6 @@ import { act, waitFor } from '@testing-library/react';
 import { addBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import moment from 'moment';
-import type { Mock } from 'vitest';
 
 import { useCalendarComponentUtils } from './use-calendar-component-utils';
 import { onSave } from '../commons/editor-save-send-fns';
@@ -64,14 +63,9 @@ describe('useCalendarComponentUtils', () => {
 	});
 
 	describe('onRangeChange', () => {
-		let mockSetRange: Mock;
-
-		beforeEach(() => {
-			mockSetRange = vi.fn();
-			useAppStatusStore.setState({ setRange: mockSetRange });
-		});
-
 		it('calls setRange with startOf(day)/endOf(day) when given a {start, end} object', () => {
+			const setRange = vi.fn();
+			useAppStatusStore.setState({ setRange });
 			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 			const start = new Date('2024-01-01');
 			const end = new Date('2024-01-07');
@@ -80,13 +74,15 @@ describe('useCalendarComponentUtils', () => {
 				result.current.onRangeChange({ start, end });
 			});
 
-			expect(mockSetRange).toHaveBeenCalledWith({
+			expect(setRange).toHaveBeenCalledWith({
 				start: moment(start).startOf('day').valueOf(),
 				end: moment(end).endOf('day').valueOf()
 			});
 		});
 
 		it('calls setRange with min startOf(day) and max endOf(day) when given an array of dates', () => {
+			const setRange = vi.fn();
+			useAppStatusStore.setState({ setRange });
 			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 			const dates = [
 				new Date('2024-01-03'),
@@ -99,20 +95,22 @@ describe('useCalendarComponentUtils', () => {
 				result.current.onRangeChange(dates);
 			});
 
-			expect(mockSetRange).toHaveBeenCalledWith({
+			expect(setRange).toHaveBeenCalledWith({
 				start: moment(new Date('2024-01-01')).startOf('day').valueOf(),
 				end: moment(new Date('2024-01-07')).endOf('day').valueOf()
 			});
 		});
 
 		it('does not call setRange when given an empty array', () => {
+			const setRange = vi.fn();
+			useAppStatusStore.setState({ setRange });
 			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.onRangeChange([]);
 			});
 
-			expect(mockSetRange).not.toHaveBeenCalled();
+			expect(setRange).not.toHaveBeenCalled();
 		});
 	});
 
