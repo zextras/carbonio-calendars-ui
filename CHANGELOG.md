@@ -1,3 +1,7 @@
+## <small>1.26.2 (2026-05-21)</small>
+
+* refactor: convert react big calendar to typescript (#732) ([2264c8e](https://github.com/zextras/carbonio-calendars-ui/commit/2264c8e)), closes [#732](https://github.com/zextras/carbonio-calendars-ui/issues/732)
+
 ## <small>1.26.1 (2026-05-21)</small>
 
 * fix(deps): update dependency lodash to v4.18.1 [security] (#728) ([baf6dbc](https://github.com/zextras/carbonio-calendars-ui/commit/baf6dbc)), closes [#728](https://github.com/zextras/carbonio-calendars-ui/issues/728)
