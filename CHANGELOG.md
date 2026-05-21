@@ -1,3 +1,10 @@
+## <small>1.26.1 (2026-05-21)</small>
+
+* fix(deps): update dependency lodash to v4.18.1 [security] (#728) ([baf6dbc](https://github.com/zextras/carbonio-calendars-ui/commit/baf6dbc)), closes [#728](https://github.com/zextras/carbonio-calendars-ui/issues/728)
+* chore(deps): update dependency @zextras/carbonio-ui-sdk to v2.3.5 (#736) ([0e849a8](https://github.com/zextras/carbonio-calendars-ui/commit/0e849a8)), closes [#736](https://github.com/zextras/carbonio-calendars-ui/issues/736)
+* chore(deps): update dependency sonarqube-scanner to v4.3.6 (#737) ([e77bbcc](https://github.com/zextras/carbonio-calendars-ui/commit/e77bbcc)), closes [#737](https://github.com/zextras/carbonio-calendars-ui/issues/737)
+* chore(deps): update vitest to v4.1.6 (#740) ([765c414](https://github.com/zextras/carbonio-calendars-ui/commit/765c414)), closes [#740](https://github.com/zextras/carbonio-calendars-ui/issues/740)
+
 ## 1.26.0 (2026-05-20)
 
 * feat(CO-3721): update external calendar modal to accept valid https URLs without .ics extension (#75 ([8a47258](https://github.com/zextras/carbonio-calendars-ui/commit/8a47258)), closes [#753](https://github.com/zextras/carbonio-calendars-ui/issues/753)
