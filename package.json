@@ -61,7 +61,7 @@
 		"@vitest/coverage-v8": "4.1.6",
 		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#v0.0.8",
 		"@zextras/carbonio-ui-configs": "2.1.0",
-		"@zextras/carbonio-ui-sdk": "2.2.3",
+		"@zextras/carbonio-ui-sdk": "2.3.5",
 		"babel-plugin-transform-import-meta": "2.3.3",
 		"eslint": "8.57.1",
 		"eslint-plugin-jest": "27.9.0",
