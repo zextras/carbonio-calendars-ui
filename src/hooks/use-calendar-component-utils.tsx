@@ -161,19 +161,19 @@ export const useCalendarComponentUtils = (): {
 					});
 
 					const handleSaveResponse = (res: Awaited<ReturnType<typeof onSave>>): void => {
-						if (res?.response) {
-							const success = res.response;
-							createSnackbar({
-								key: `calendar-moved-root`,
-								replace: true,
-								severity: success ? 'info' : 'warning',
-								hideButton: true,
-								label: !success
-									? t('label.error_try_again', 'Something went wrong, please try again')
-									: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-								autoHideTimeout: 3000
-							});
+						if (res?.response === undefined) {
+							return;
 						}
+						createSnackbar({
+							key: `calendar-moved-root`,
+							replace: true,
+							severity: res.response ? 'info' : 'warning',
+							hideButton: true,
+							label: res.response
+								? t('message.snackbar.calendar_edits_saved', 'Edits saved correctly')
+								: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
 					};
 
 					const onConfirm = (draft: boolean, context?: { text: Array<string> }): void => {

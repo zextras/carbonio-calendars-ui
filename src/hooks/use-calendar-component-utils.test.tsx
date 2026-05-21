@@ -37,6 +37,7 @@ const RANGE_END = '2024-01-07';
 const ACTION_PATH = '/calendars/:action';
 const SELECT_START = '2024-01-15T10:00:00';
 const SELECT_END = '2024-01-15T11:00:00';
+const ONE_HOUR_MS = 3_600_000;
 
 const buildStore = (): ReturnType<typeof configureStore> =>
 	configureStore({ reducer: combineReducers(reducers) });
@@ -289,6 +290,22 @@ describe('useCalendarComponentUtils', () => {
 			expect(onSave).not.toHaveBeenCalled();
 		});
 
+		it('triggers a move when the allDay status changes on a same-day event', async () => {
+			const event = mockedData.getEvent({ allDay: false, resource: { isRecurrent: false } });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.onEventDropOrResize({
+					start: event.start,
+					end: event.end,
+					event,
+					isAllDay: true
+				});
+			});
+
+			await waitFor(() => expect(onSave).toHaveBeenCalled());
+		});
+
 		it('shows the recurrent appointment type modal when a recurring event is moved', async () => {
 			const event = mockedData.getEvent({
 				resource: { isRecurrent: true, isException: false }
@@ -317,8 +334,8 @@ describe('useCalendarComponentUtils', () => {
 			event: ReturnType<typeof mockedData.getEvent>
 		): void => {
 			result.current.onEventDropOrResize({
-				start: new Date(event.start.valueOf() + 3600000),
-				end: new Date(event.end.valueOf() + 3600000),
+				start: new Date(event.start.valueOf() + ONE_HOUR_MS),
+				end: new Date(event.end.valueOf() + ONE_HOUR_MS),
 				event
 			});
 		};
@@ -342,7 +359,7 @@ describe('useCalendarComponentUtils', () => {
 			await screen.findByText('Edits saved correctly');
 		});
 
-		it('does not show a snackbar when the save response is falsy', async () => {
+		it('does not show a snackbar when the save response is undefined', async () => {
 			vi.mocked(onSave).mockResolvedValue({ response: undefined });
 			const event = mockedData.getEvent({ resource: { isRecurrent: false } });
 			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
@@ -352,6 +369,16 @@ describe('useCalendarComponentUtils', () => {
 			await waitFor(() => expect(onSave).toHaveBeenCalled());
 			expect(screen.queryByText('Edits saved correctly')).not.toBeInTheDocument();
 			expect(screen.queryByText('Something went wrong, please try again')).not.toBeInTheDocument();
+		});
+
+		it('shows a warning snackbar when the save response is false', async () => {
+			vi.mocked(onSave).mockResolvedValue({ response: false });
+			const event = mockedData.getEvent({ resource: { isRecurrent: false } });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => shiftEvent(result, event));
+
+			await screen.findByText('Something went wrong, please try again');
 		});
 
 		it('opens the modify message modal when the invite has participants and the organizer makes changes', async () => {
@@ -391,14 +418,11 @@ describe('useCalendarComponentUtils', () => {
 			const event = mockedData.getEvent({
 				resource: { isRecurrent: true, isException: false }
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+			const { result, user } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
-			const singleInstanceBtn = await screen.findByRole('button', {
-				name: 'label.single_instance'
-			});
-			singleInstanceBtn.click();
+			await user.click(await screen.findByRole('button', { name: 'label.single_instance' }));
 
 			await waitFor(() => expect(onSave).toHaveBeenCalled());
 			expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true, isNew: false }));
@@ -408,14 +432,11 @@ describe('useCalendarComponentUtils', () => {
 			const event = mockedData.getEvent({
 				resource: { isRecurrent: true, isException: false }
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+			const { result, user } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
-			const entireSeriesBtn = await screen.findByRole('button', {
-				name: 'label.entire_serires'
-			});
-			entireSeriesBtn.click();
+			await user.click(await screen.findByRole('button', { name: 'label.entire_serires' }));
 
 			await waitFor(() => expect(onSave).toHaveBeenCalled());
 			expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true, isNew: false }));
