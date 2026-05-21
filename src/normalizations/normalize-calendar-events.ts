@@ -151,20 +151,23 @@ export const normalizeCalendarEvent = ({
 
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
-	calendars: Folders
-): Array<EventType> =>
-	!isEmpty(appts)
+	calendars: Array<Folder> | Folders
+): Array<EventType> => {
+	const foldersArray: Array<Folder> = Array.isArray(calendars)
+		? calendars
+		: Object.values(calendars);
+	return !isEmpty(appts)
 		? reduce(
 				appts,
 				(acc, appt) => {
 					const isShared = appt?.l?.includes(':');
 					const cal = isShared
 						? find(
-								calendars,
+								foldersArray,
 								(f) =>
 									`${(f as LinkFolder).zid}:${(f as LinkFolder).rid}` === appt.l || f.id === appt.l
 							)
-						: find(calendars, (f) => f.id === appt.l);
+						: find(foldersArray, (f) => f.id === appt.l);
 					return cal
 						? [
 								...acc,
@@ -181,3 +184,4 @@ export const normalizeCalendarEvents = (
 				[] as Array<EventType>
 			)
 		: [];
+};

@@ -7,7 +7,9 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act } from '@testing-library/react';
+import moment from 'moment-timezone';
 import type { ToolbarProps, View } from 'react-big-calendar';
+import { momentLocalizer } from 'react-big-calendar';
 
 import { useLocalStorage } from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import { reducers } from '../../../store/redux';
@@ -19,7 +21,7 @@ import { setupTest, screen } from '@test-setup';
 const defaultToolbarProps: Pick<ToolbarProps<EventType, object>, 'date' | 'views' | 'localizer'> = {
 	date: new Date('2024-01-15'),
 	views: ['month', 'week', 'day', 'work_week'],
-	localizer: { messages: {} }
+	localizer: momentLocalizer(moment)
 };
 
 describe('calendar toolbar', () => {

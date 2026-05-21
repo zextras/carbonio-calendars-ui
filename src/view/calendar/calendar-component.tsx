@@ -6,7 +6,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { Popover, useTheme } from '@zextras/carbonio-design-system';
-import { usePrefs, isTrashOrNestedInIt, Folders } from '@zextras/carbonio-ui-commons';
+import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, type Components, momentLocalizer } from 'react-big-calendar';
@@ -108,7 +108,7 @@ export default function CalendarComponent(): React.JSX.Element {
 	 * @description List of normalized calendar events, with declined meetings removed if preference is set to FALSE.
 	 */
 	const events = useMemo<Array<EventType>>(() => {
-		const eventsList = normalizeCalendarEvents(appointments, calendars as unknown as Folders);
+		const eventsList = normalizeCalendarEvents(appointments, calendars);
 		if (prefs.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE') return eventsList;
 		return filter(
 			eventsList,
