@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { combineReducers, configureStore, EnhancedStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, waitFor } from '@testing-library/react';
 import { addBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
@@ -35,15 +35,13 @@ vi.mock('@zextras/carbonio-ui-commons', async () => ({
 
 const { DEFAULT_CALENDAR_ID } = PREFS_DEFAULTS;
 
-describe('useCalendarComponentUtils', () => {
-	let store: EnhancedStore;
-	let mockReplaceHistory: Mock;
+const buildStore = (): ReturnType<typeof configureStore> =>
+	configureStore({ reducer: combineReducers(reducers) });
 
+describe('useCalendarComponentUtils', () => {
 	beforeEach(() => {
-		store = configureStore({ reducer: combineReducers(reducers) });
-		mockReplaceHistory = vi.fn();
 		vi.mocked(useHistoryNavigation).mockReturnValue({
-			replaceHistory: mockReplaceHistory,
+			replaceHistory: vi.fn(),
 			pushHistory: vi.fn()
 		});
 		vi.mocked(onSave).mockResolvedValue({ response: true });
@@ -53,7 +51,7 @@ describe('useCalendarComponentUtils', () => {
 
 	describe('onNavigate', () => {
 		it('updates the store date and local state to the given date', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 			const newDate = new Date('2024-03-01');
 
 			act(() => {
@@ -74,7 +72,7 @@ describe('useCalendarComponentUtils', () => {
 		});
 
 		it('calls setRange with startOf(day)/endOf(day) when given a {start, end} object', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 			const start = new Date('2024-01-01');
 			const end = new Date('2024-01-07');
 
@@ -89,7 +87,7 @@ describe('useCalendarComponentUtils', () => {
 		});
 
 		it('calls setRange with min startOf(day) and max endOf(day) when given an array of dates', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 			const dates = [
 				new Date('2024-01-03'),
 				new Date('2024-01-01'),
@@ -108,7 +106,7 @@ describe('useCalendarComponentUtils', () => {
 		});
 
 		it('does not call setRange when given an empty array', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.onRangeChange([]);
@@ -120,39 +118,48 @@ describe('useCalendarComponentUtils', () => {
 
 	describe('useEffect — action redirect', () => {
 		it('replaces history when action param is not "expand"', () => {
+			const replaceHistory = vi.fn();
+			vi.mocked(useHistoryNavigation).mockReturnValue({ replaceHistory, pushHistory: vi.fn() });
+
 			setupHook(useCalendarComponentUtils, {
-				store,
+				store: buildStore(),
 				initialEntries: ['/calendars/edit'],
 				path: '/calendars/:action'
 			});
 
-			expect(mockReplaceHistory).toHaveBeenCalledWith(`/${CALENDAR_ROUTE}`);
+			expect(replaceHistory).toHaveBeenCalledWith(`/${CALENDAR_ROUTE}`);
 		});
 
 		it('does not replace history when action is "expand"', () => {
+			const replaceHistory = vi.fn();
+			vi.mocked(useHistoryNavigation).mockReturnValue({ replaceHistory, pushHistory: vi.fn() });
+
 			setupHook(useCalendarComponentUtils, {
-				store,
+				store: buildStore(),
 				initialEntries: [`/calendars/${EVENT_ACTIONS.EXPAND}`],
 				path: '/calendars/:action'
 			});
 
-			expect(mockReplaceHistory).not.toHaveBeenCalled();
+			expect(replaceHistory).not.toHaveBeenCalled();
 		});
 
 		it('does not replace history when there is no action param', () => {
+			const replaceHistory = vi.fn();
+			vi.mocked(useHistoryNavigation).mockReturnValue({ replaceHistory, pushHistory: vi.fn() });
+
 			setupHook(useCalendarComponentUtils, {
-				store,
+				store: buildStore(),
 				initialEntries: ['/calendars'],
 				path: '/calendars'
 			});
 
-			expect(mockReplaceHistory).not.toHaveBeenCalled();
+			expect(replaceHistory).not.toHaveBeenCalled();
 		});
 	});
 
 	describe('handleSelect', () => {
 		it('opens a board when summary view is closed and no action is active', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.handleSelect({
@@ -168,7 +175,7 @@ describe('useCalendarComponentUtils', () => {
 
 		it('does not open a board when the summary view is open', () => {
 			useAppStatusStore.setState({ summaryViewId: 'some-view' });
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.handleSelect({
@@ -182,7 +189,7 @@ describe('useCalendarComponentUtils', () => {
 
 		it('does not open a board when an action param is active', () => {
 			const { result } = setupHook(useCalendarComponentUtils, {
-				store,
+				store: buildStore(),
 				initialEntries: [`/calendars/${EVENT_ACTIONS.EXPAND}`],
 				path: '/calendars/:action'
 			});
@@ -198,7 +205,7 @@ describe('useCalendarComponentUtils', () => {
 		});
 
 		it('does not open a board when the resource does not belong to the default calendar', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.handleSelect({
@@ -212,7 +219,7 @@ describe('useCalendarComponentUtils', () => {
 		});
 
 		it('opens a board when the resourceId matches the default calendar', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.handleSelect({
@@ -230,7 +237,7 @@ describe('useCalendarComponentUtils', () => {
 
 	describe('onEventDropOrResize', () => {
 		it('does nothing when the resource belongs to a non-default calendar', () => {
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 			const event = mockedData.getEvent({ resource: { isRecurrent: false } });
 
 			act(() => {
@@ -250,7 +257,7 @@ describe('useCalendarComponentUtils', () => {
 				allDay: false,
 				resource: { isRecurrent: true, isException: false }
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.onEventDropOrResize({
@@ -266,7 +273,7 @@ describe('useCalendarComponentUtils', () => {
 
 		it('does nothing when the event position has not changed', () => {
 			const event = mockedData.getEvent({ resource: { isRecurrent: false } });
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.onEventDropOrResize({
@@ -284,7 +291,7 @@ describe('useCalendarComponentUtils', () => {
 			const event = mockedData.getEvent({
 				resource: { isRecurrent: true, isException: false }
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
 				result.current.onEventDropOrResize({
@@ -316,7 +323,7 @@ describe('useCalendarComponentUtils', () => {
 
 		it('calls onSave when the invite has no participants', async () => {
 			const event = mockedData.getEvent({ resource: { isRecurrent: false } });
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
@@ -326,7 +333,7 @@ describe('useCalendarComponentUtils', () => {
 
 		it('shows an info snackbar after a successful save', async () => {
 			const event = mockedData.getEvent({ resource: { isRecurrent: false } });
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
@@ -336,7 +343,7 @@ describe('useCalendarComponentUtils', () => {
 		it('does not show a snackbar when the save response is falsy', async () => {
 			vi.mocked(onSave).mockResolvedValue({ response: undefined });
 			const event = mockedData.getEvent({ resource: { isRecurrent: false } });
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
@@ -354,7 +361,7 @@ describe('useCalendarComponentUtils', () => {
 					inviteNeverSent: false
 				}
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
@@ -370,7 +377,7 @@ describe('useCalendarComponentUtils', () => {
 					inviteNeverSent: true
 				}
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
@@ -382,7 +389,7 @@ describe('useCalendarComponentUtils', () => {
 			const event = mockedData.getEvent({
 				resource: { isRecurrent: true, isException: false }
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
@@ -399,7 +406,7 @@ describe('useCalendarComponentUtils', () => {
 			const event = mockedData.getEvent({
 				resource: { isRecurrent: true, isException: false }
 			});
-			const { result } = setupHook(useCalendarComponentUtils, { store });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => shiftEvent(result, event));
 
