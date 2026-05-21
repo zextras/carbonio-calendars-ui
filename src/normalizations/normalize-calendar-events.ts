@@ -151,33 +151,35 @@ export const normalizeCalendarEvent = ({
 
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
-	calendars: Folders
-): Array<EventType> =>
-	!isEmpty(appts)
-		? reduce(
-				appts,
-				(acc, appt) => {
-					const isShared = appt?.l?.includes(':');
-					const cal = isShared
-						? find(
-								calendars,
-								(f) =>
-									`${(f as LinkFolder).zid}:${(f as LinkFolder).rid}` === appt.l || f.id === appt.l
-							)
-						: find(calendars, (f) => f.id === appt.l);
-					return cal
-						? [
-								...acc,
-								...map(appt.inst, (inst) =>
-									normalizeCalendarEvent({
-										calendar: cal,
-										appointment: appt,
-										instance: inst
-									})
-								)
-							]
-						: acc;
-				},
-				[] as Array<EventType>
-			)
-		: [];
+	calendars: Array<Folder> | Folders
+): Array<EventType> => {
+	const foldersArray: Array<Folder> = Array.isArray(calendars)
+		? calendars
+		: Object.values(calendars);
+	if (isEmpty(appts)) return [];
+	return reduce(
+		appts,
+		(acc, appt) => {
+			const isShared = appt?.l?.includes(':');
+			const cal = isShared
+				? find(
+						foldersArray,
+						(f) => `${(f as LinkFolder).zid}:${(f as LinkFolder).rid}` === appt.l || f.id === appt.l
+					)
+				: find(foldersArray, (f) => f.id === appt.l);
+			return cal
+				? [
+						...acc,
+						...map(appt.inst, (inst) =>
+							normalizeCalendarEvent({
+								calendar: cal,
+								appointment: appt,
+								instance: inst
+							})
+						)
+					]
+				: acc;
+		},
+		[] as Array<EventType>
+	);
+};

@@ -9,11 +9,11 @@ import { Popover, useTheme } from '@zextras/carbonio-design-system';
 import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, type Components, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
 
-import { CalendarResourceHeader } from './calendar-resource-header';
+import { CalendarResource, CalendarResourceHeader } from './calendar-resource-header';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
 import { CustomShowMoreButton } from './custom-show-more-button';
@@ -37,18 +37,23 @@ import {
 	useRangeStart
 } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
+import { EventType } from '../../types/event';
 import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
-import { workWeek } from '../../utils/work-week';
+import { WorkWeekDay, workWeek } from '../../utils/work-week';
 import EventPanelView from '../event-panel-view/event-panel-view';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 
-const BigCalendar = withDragAndDrop(Calendar);
+const _BigCalendar = withDragAndDrop<EventType, CalendarResource>(Calendar);
+// `workingSchedule` is a custom prop consumed by the WorkView component, not part of the library's types
+const BigCalendar = _BigCalendar as React.ComponentType<
+	React.ComponentProps<typeof _BigCalendar> & { workingSchedule?: WorkWeekDay[] }
+>;
 
 const views = { month: true, week: true, day: true, work_week: WorkView };
 
 const MULTI_CALENDARS_COLUMN_MIN_WIDTH = '16.75rem';
 
-const CalendarSyncWithRange = () => {
+const CalendarSyncWithRange = (): null => {
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
@@ -60,14 +65,14 @@ const CalendarSyncWithRange = () => {
 	return null;
 };
 
-const customComponents = {
+const customComponents: Components<EventType, CalendarResource> | undefined = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
 	resourceHeader: CalendarResourceHeader,
 	showMore: CustomShowMoreButton
 };
 
-export default function CalendarComponent() {
+export default function CalendarComponent(): React.JSX.Element {
 	const appointments = useAppSelector(selectAppointmentsArray);
 	const calendars = useCheckedFolders();
 	const theme = useTheme();
@@ -75,7 +80,7 @@ export default function CalendarComponent() {
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const anchorElement = useSummaryViewRef();
-	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
+	const firstDayOfWeek = (prefs.zimbraPrefCalendarFirstDayOfWeek as unknown as number) ?? 0;
 	const localizer = momentLocalizer(moment);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
@@ -92,18 +97,17 @@ export default function CalendarComponent() {
 		});
 	}
 
-	const workingSchedule = useMemo(
-		() => workWeek(prefs.zimbraPrefCalendarWorkingHours),
+	const workingSchedule = useMemo<WorkWeekDay[]>(
+		() => workWeek(String(prefs.zimbraPrefCalendarWorkingHours ?? '')),
 		[prefs?.zimbraPrefCalendarWorkingHours]
 	);
 
 	/**
 	 * Memoized list of calendar events, filtered by declined meetings preference.
 	 *
-	 * @type {Array<Object>}
 	 * @description List of normalized calendar events, with declined meetings removed if preference is set to FALSE.
 	 */
-	const events = useMemo(() => {
+	const events = useMemo<Array<EventType>>(() => {
 		const eventsList = normalizeCalendarEvents(appointments, calendars);
 		if (prefs.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE') return eventsList;
 		return filter(
@@ -112,7 +116,7 @@ export default function CalendarComponent() {
 		);
 	}, [appointments, calendars, prefs.zimbraPrefCalendarShowDeclinedMeetings]);
 
-	const startHour = useMemo(
+	const startHour = useMemo<number>(
 		() =>
 			Number(
 				minBy(workingSchedule, (w) => w?.start)
@@ -124,7 +128,7 @@ export default function CalendarComponent() {
 	);
 
 	const selectSlotBgColor = useCallback(
-		(newDate) => {
+		(newDate: Date): string => {
 			const dayOfTheWeek = newDate.getDay();
 			const hourSlot =
 				String(newDate.getHours()).padStart(2, '0') + String(newDate.getMinutes()).padStart(2, '0');
@@ -144,7 +148,7 @@ export default function CalendarComponent() {
 	);
 
 	const slotDayBorderColor = useCallback(
-		(newDate) => {
+		(newDate: Date): string => {
 			const dayOfTheWeek = newDate.getDay();
 
 			if (workingSchedule?.[dayOfTheWeek]?.working) {
@@ -156,7 +160,7 @@ export default function CalendarComponent() {
 	);
 
 	const slotPropGetter = useCallback(
-		(newDate) => ({
+		(newDate: Date): { style: React.CSSProperties } => ({
 			style: {
 				backgroundColor: selectSlotBgColor(newDate),
 				borderColor: `${theme.palette.gray3.regular}`,
@@ -166,7 +170,7 @@ export default function CalendarComponent() {
 		[selectSlotBgColor, theme?.palette?.gray3?.regular]
 	);
 
-	const columnMinWidth = useMemo(() => {
+	const columnMinWidth = useMemo<string | undefined>(() => {
 		if (calendarView === 'day' && isSplitLayoutEnabled) {
 			return MULTI_CALENDARS_COLUMN_MIN_WIDTH;
 		}
@@ -174,7 +178,7 @@ export default function CalendarComponent() {
 	}, [calendarView, isSplitLayoutEnabled]);
 
 	const dayPropGetter = useCallback(
-		(newDate) => {
+		(newDate: Date): { style: React.CSSProperties } => {
 			const isToday =
 				newDate.getDate() === new Date().getDate() &&
 				newDate.getMonth() === new Date().getMonth() &&
@@ -221,7 +225,7 @@ export default function CalendarComponent() {
 	}, [calendarView, prefs?.zimbraPrefCalendarInitialView]);
 
 	const draggableAccessor = useCallback(
-		(calendarEvent) => {
+		(calendarEvent: EventType): boolean => {
 			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
 
 			if (!isSameDay) {
@@ -241,7 +245,7 @@ export default function CalendarComponent() {
 	);
 
 	const resizableAccessor = useCallback(
-		(calendarEvent) => {
+		(calendarEvent: EventType): boolean => {
 			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
 
 			if (!isSameDay) {
@@ -267,14 +271,14 @@ export default function CalendarComponent() {
 		[calendars]
 	);
 
-	const allDayAccessor = useCallback((calendarEvent) => {
+	const allDayAccessor = useCallback((calendarEvent: EventType): boolean => {
 		const diffInDays = moment(calendarEvent.end).diff(calendarEvent.start, 'days');
 
 		return diffInDays > 0 || calendarEvent.allDay;
 	}, []);
 
 	const onSelecting = useCallback(
-		(calendarSlot) => {
+		(calendarSlot: { resourceId?: string; start: Date; end: Date }): boolean => {
 			if (!calendarSlot.resourceId) return true;
 			const resCalendar = find(calendars, ['id', calendarSlot.resourceId]);
 			const absFolderPath = resCalendar?.absFolderPath;
@@ -285,8 +289,12 @@ export default function CalendarComponent() {
 		[action, calendars, prefs.zimbraPrefDefaultCalendarId, summaryViewOpen]
 	);
 
-	const scrollToTime = useMemo(() => new Date().setHours(startHour), [startHour]);
-	const resources = useMemo(() => {
+	const scrollToTime = useMemo<Date>(
+		() => new Date(new Date().setHours(startHour, 0, 0, 0)),
+		[startHour]
+	);
+
+	const resources = useMemo<Array<CalendarResource> | undefined>(() => {
 		if (calendarView === 'day' && isSplitLayoutEnabled) {
 			return map(calendars, (calendar) => ({
 				id: calendar.id,
@@ -301,25 +309,25 @@ export default function CalendarComponent() {
 		<>
 			{!isEmpty(calendars) && <CalendarSyncWithRange />}
 			<CalendarStyle
-				primaryCalendar={primaryCalendar}
-				summaryViewOpen={summaryViewOpen}
-				action={action}
+				$primaryCalendar={primaryCalendar as { color?: { background?: string; color?: string } }}
+				$summaryViewOpen={summaryViewOpen}
+				$action={action}
 				$headerMinWidth={columnMinWidth}
 			/>
 			{anchorElement && (
 				<Popover
-					onClick={(e) => {
+					onClick={(e): void => {
 						e.stopPropagation();
 					}}
 					anchorEl={anchorElement}
 					open={summaryViewOpen}
 					styleAsModal
 					placement="left"
-					onClose={() => useAppStatusStore.setState({ summaryViewId: undefined })}
+					onClose={(): void => useAppStatusStore.setState({ summaryViewId: undefined })}
 				>
 					<MemoEventSummaryView
 						events={events}
-						onClose={() => {
+						onClose={(): void => {
 							useAppStatusStore.setState({ summaryViewId: undefined });
 						}}
 					/>
@@ -350,7 +358,7 @@ export default function CalendarComponent() {
 				onEventDrop={onEventDropOrResize}
 				allDayMaxRows={3}
 				onEventResize={onEventDropOrResize}
-				formats={{ eventTimeRangeFormat: () => '' }}
+				formats={{ eventTimeRangeFormat: (): string => '' }}
 				resizable
 				showMultiDayTimes
 				resizableAccessor={resizableAccessor}
