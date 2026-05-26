@@ -1,3 +1,7 @@
+## <small>1.26.3 (2026-05-26)</small>
+
+* refactor(ci): migrate to jenkins-lib-common v2.8.5 ([533824b](https://github.com/zextras/carbonio-calendars-ui/commit/533824b))
+
 ## <small>1.26.2 (2026-05-21)</small>
 
 * refactor: convert react big calendar to typescript (#732) ([2264c8e](https://github.com/zextras/carbonio-calendars-ui/commit/2264c8e)), closes [#732](https://github.com/zextras/carbonio-calendars-ui/issues/732)
