@@ -1,3 +1,7 @@
+## <small>1.26.4 (2026-05-27)</small>
+
+* fix: update the text composer to use latest languages configuration ([4c1a526](https://github.com/zextras/carbonio-calendars-ui/commit/4c1a526))
+
 ## <small>1.26.3 (2026-05-26)</small>
 
 * refactor(ci): migrate to jenkins-lib-common v2.8.5 ([533824b](https://github.com/zextras/carbonio-calendars-ui/commit/533824b))
