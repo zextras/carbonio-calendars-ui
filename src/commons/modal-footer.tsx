@@ -3,13 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useMemo } from 'react';
+import React, { FC, ReactElement, ReactNode, useMemo } from 'react';
 
 import { Button, Container, Divider, Padding, Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { ModalFooterProps } from '@zextras/carbonio-ui-commons';
 
-const ModalFooter: FC<ModalFooterProps> = ({
+type ExtendedModalFooterProps = ModalFooterProps & {
+	leftSideContent?: ReactNode;
+	loading?: boolean;
+};
+
+const ModalFooter: FC<ExtendedModalFooterProps> = ({
 	mainAlignment = 'center',
 	crossAlignment = 'center',
 	onConfirm,
@@ -29,7 +34,9 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	additionalAction,
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
-	additionalLabel = t('label.cancel', 'cancel')
+	additionalLabel = t('label.cancel', 'cancel'),
+	leftSideContent,
+	loading
 }): ReactElement => {
 	const secondaryButtonTypeAndColor = useMemo(() => {
 		if (secondaryBtnType === 'ghost') {
@@ -87,10 +94,18 @@ const ModalFooter: FC<ModalFooterProps> = ({
 				<Container
 					padding={{ top: 'small', bottom: 'small' }}
 					mainAlignment="flex-end"
-					crossAlignment="flex-start"
+					crossAlignment="center"
 					orientation="horizontal"
 					height="fit"
 				>
+					{leftSideContent && (
+						<>
+							<Container orientation="horizontal" width="fit">
+								{leftSideContent}
+							</Container>
+							<Padding horizontal="small" />
+						</>
+					)}
 					{secondaryAction && (
 						<>
 							<Button
@@ -109,7 +124,8 @@ const ModalFooter: FC<ModalFooterProps> = ({
 								width="fit"
 								onClick={onConfirm}
 								label={label}
-								disabled={disabled}
+								disabled={disabled || loading}
+								loading={loading}
 								{...primaryButtonTypeAndColor}
 							/>
 						</Tooltip>
@@ -118,7 +134,8 @@ const ModalFooter: FC<ModalFooterProps> = ({
 							width="fit"
 							onClick={onConfirm}
 							label={label}
-							disabled={disabled}
+							disabled={disabled || loading}
+							loading={loading}
 							{...primaryButtonTypeAndColor}
 						/>
 					)}

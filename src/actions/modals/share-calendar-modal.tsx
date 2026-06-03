@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Checkbox,
@@ -21,7 +21,7 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useUserAccounts, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import {
 	ContactInputItem,
 	Grant,
@@ -31,7 +31,7 @@ import {
 import { filter, find, map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../constants';
+import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { findLabel, ShareCalendarRoleOptions } from '../../settings/components/utils';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -86,7 +86,6 @@ export const SharePrivateCheckbox: FC<SharePrivateCheckboxProps> = ({
 };
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
-	folderName,
 	folderId,
 	closeFn,
 	onGoBack,
@@ -94,13 +93,8 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	grant
 }): ReactElement => {
 	const [t] = useTranslation();
-	const userSettings = useUserSettings();
-	const defaultSharedWithPublic = useMemo(() => grant?.find((gr) => gr.gt === 'pub'), [grant]);
-	const [isSharedWithPublic, setIsSharedWithPublic] = useState(!!defaultSharedWithPublic);
-
-	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
+	const title = t('label.add_internal_share', 'Add internal share');
 	const internalShareLabel = t('share.label.internal_sharing', 'Internal sharing');
-	const publicShareLabel = t('share.label.public_sharing', 'Public sharing');
 	const recipientsAddressDescriptionLabel = t(
 		'share.description.recipients_address',
 		'Enter internal addresses only. External recipients won’t be able to access the calendar.'
@@ -112,6 +106,10 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const createSnackbar = useSnackbar();
 
 	const ContactInput = useContactInput();
+	const recipientsInputRef = useRef<HTMLInputElement>(null);
+	useEffect(() => {
+		recipientsInputRef.current?.focus();
+	}, []);
 
 	const [shareWithUserRole, setShareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
@@ -119,11 +117,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [contacts, setContacts] = useState<ContactInputItem[]>([]);
 
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
-
-	const isShareWithPublicOptionsChanged = useMemo(
-		() => !!defaultSharedWithPublic !== isSharedWithPublic,
-		[defaultSharedWithPublic, isSharedWithPublic]
-	);
 
 	const shareCalendarRoleOptions = useMemo(
 		() => ShareCalendarRoleOptions(grant?.[0]?.perm?.includes('p')),
@@ -180,39 +173,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		setShareWithUserRole(shareRole);
 	}, []);
 
-	const publicShareAction = useMemo((): Array<{
-		id: string;
-		zid?: string;
-		op: string;
-		grant?: Grant[];
-	}> => {
-		if (isShareWithPublicOptionsChanged) {
-			if (defaultSharedWithPublic) {
-				return [
-					{
-						id: folderId,
-						zid: PUBLIC_SHARE_ZID,
-						op: FOLDER_OPERATIONS.REVOKE_GRANT
-					}
-				];
-			}
-			return [
-				{
-					id: folderId,
-					op: FOLDER_OPERATIONS.GRANT,
-					grant: [
-						{
-							gt: SHARE_USER_TYPE.PUBLIC,
-							perm: 'r',
-							pw: ''
-						}
-					]
-				}
-			];
-		}
-		return [];
-	}, [defaultSharedWithPublic, folderId, isShareWithPublicOptionsChanged]);
-
 	const onConfirm = useCallback((): void => {
 		const grantUsersAction: FolderAction[] = map(contacts, (contactInputItem) => ({
 			id: folderId,
@@ -228,9 +188,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			]
 		}));
 
-		const folderActions = grantUsersAction.concat(publicShareAction);
-
-		const folderActionToSend = folderActions.length > 1 ? folderActions : folderActions[0];
+		const folderActionToSend = grantUsersAction.length > 1 ? grantUsersAction : grantUsersAction[0];
 
 		folderAction(folderActionToSend).then((res) => {
 			if (!res.Fault) {
@@ -264,6 +222,15 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							});
 						}
 					});
+			} else {
+				createSnackbar({
+					key: `folder-action-failed`,
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
 			}
 		});
 		closeFn && closeFn();
@@ -275,7 +242,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		createSnackbar,
 		dispatch,
 		folderId,
-		publicShareAction,
 		sendNotification,
 		shareWithUserRole,
 		standardMessage,
@@ -283,11 +249,8 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	]);
 
 	const disabled = useMemo(
-		() =>
-			(!contacts.length && !isShareWithPublicOptionsChanged) ||
-			some(contacts, 'error') ||
-			contactInputHasError,
-		[contactInputHasError, contacts, isShareWithPublicOptionsChanged]
+		() => !contacts.length || some(contacts, 'error') || contactInputHasError,
+		[contactInputHasError, contacts]
 	);
 
 	const confirmTooltip = useMemo(() => {
@@ -302,8 +265,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		}
 		return undefined;
 	}, [contactInputHasError, disabled, t]);
-
-	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
 
 	useEffect(() => {
 		const changesToAdd: ContactInputItem[] = [];
@@ -379,31 +340,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			<Divider />
 			<Container crossAlignment="flex-start" padding={{ top: 'large' }}>
 				<Text size="medium" weight="bold" color="gray0">
-					{publicShareLabel}
-				</Text>
-			</Container>
-			{isPublicShareEnabled && (
-				<Container
-					padding={{ vertical: 'large' }}
-					mainAlignment="center"
-					crossAlignment="flex-start"
-					height="fit"
-					data-testid={'publicShareCheckboxContainer'}
-				>
-					<Checkbox
-						value={isSharedWithPublic}
-						defaultChecked={isSharedWithPublic}
-						onClick={(): void => setIsSharedWithPublic((prevValue) => !prevValue)}
-						label={t(
-							'share.options.share_calendar_with.public',
-							'Share with public (view only, no password required)'
-						)}
-					/>
-				</Container>
-			)}
-			<Divider />
-			<Container crossAlignment="flex-start" padding={{ top: 'large' }}>
-				<Text size="medium" weight="bold" color="gray0">
 					{internalShareLabel}
 				</Text>
 			</Container>
@@ -414,7 +350,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				height="fit"
 			>
 				<ContactInput
-					placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
+					placeholder={`${t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}*`}
 					onChange={onContactInputChange}
 					background={'gray5'}
 					defaultValue={contacts}
@@ -427,6 +363,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							: undefined
 					}
 					hasError={contactInputHasError}
+					inputRef={recipientsInputRef}
 				/>
 				<Padding top="extrasmall" />
 				<Text size="extrasmall" color="secondary">
@@ -510,7 +447,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			</Container>
 			<ModalFooter
 				onConfirm={onConfirm}
-				label={t('label.confirm', 'Confirm')}
+				label={t('label.add_and_close', 'Add and close')}
 				disabled={disabled}
 				secondaryAction={onGoBack}
 				secondaryLabel={secondaryLabel}

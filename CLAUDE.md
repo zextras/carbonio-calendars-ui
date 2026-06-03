@@ -2,89 +2,57 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## What this is
+
+`carbonio-calendars-ui` is the Calendars module for Zextras Carbonio, shipped as a micro-frontend loaded at runtime by `@zextras/carbonio-shell-ui`. It is not a standalone SPA: it registers routes, a settings view, a board view, a secondary bar, a search view, and integration functions into the shell (see `src/app.tsx`). Build output is consumed as a static bundle served from `/static/iris/<package>/<commitHash>/`.
+
+Package manager is **pnpm** (v10, enforced by `engines`). Node **v22** (`.nvmrc`). Build/watch are driven by `@zextras/carbonio-ui-sdk` (webpack-based) — `vite`/`vitest` are used only for tests.
+
 ## Commands
 
 ```bash
-# Build
-pnpm run build          # Production build
-pnpm run build:dev      # Development build with timestamp
-pnpm run start          # Watch mode dev server
+pnpm install                    # install deps
+pnpm run sdk-install            # initial SDK setup (required once after clone)
+pnpm run start -- -h <host>     # dev watch; -h is a Carbonio host to proxy against (required)
+pnpm run build                  # production build (sdk build → dist/)
+pnpm run build:dev              # dev build with timestamped pkgRel
 
-# Type checking
-pnpm run type-check
-pnpm run type-check:watch
+pnpm run type-check             # tsc --noEmit
+pnpm run lint                   # eslint (warnings + errors)
+pnpm run lint-errors            # eslint, errors only (--quiet)
+pnpm run lint-fix               # eslint --fix
+pnpm run lint-check             # lint-errors + type-check (CI gate)
 
-# Linting
-pnpm run lint           # Run ESLint
-pnpm run lint-fix       # Auto-fix lint issues
-pnpm run lint-check     # Run lint + type-check together
+pnpm run test                   # vitest run (single pass)
+pnpm run test:watch             # vitest watch
+pnpm run coverage               # vitest with v8 coverage → coverage/
 
-# Testing
-pnpm run test           # Run all tests once (Vitest)
-pnpm run test:watch     # Run tests in watch mode
-pnpm run coverage       # Generate coverage report
+# run a single test file / filter by name
+pnpm vitest run src/hooks/use-event-actions.test.tsx
+pnpm vitest run -t "pattern in describe/it name"
 ```
 
-**Run a single test file:**
-```bash
-pnpm exec vitest run src/path/to/file.test.tsx
-```
+Commits are validated by commitlint (`@commitlint/config-conventional`) via a Husky hook. Use conventional commit prefixes (`feat:`, `fix:`, `chore:`, `refactor:`, `test:`, `docs:`).
 
-**Run tests matching a pattern:**
-```bash
-pnpm exec vitest run --reporter=verbose -t "test name pattern"
-```
+## Architecture at a glance
 
-Node v22 and pnpm >=10 are required.
+- **Entry**: `src/app.tsx` registers everything with `carbonio-shell-ui` (`addRoute`, `addBoardView`, `addSettingsView`, `registerActions`, `registerFunctions`, `registerComponents`). All top-level views are lazy-loaded and wrapped in `StoreProvider` + `ModalManager` + `AuthGuard`.
+- **Dual state**: Redux Toolkit holds appointment/invite/editor domain state (`src/store/redux`, slices under `src/store/slices`, reducers under `src/store/reducers`). Zustand holds lighter UI/app state and calendar groups (`src/store/zustand`). Choose Redux for editor/appointment/invite data; Zustand for view-local or cross-cutting UI state.
+- **SOAP layer**: `src/soap/*-request.ts` files each wrap one Zimbra SOAP call via `@zextras/carbonio-ui-soap-lib`. Responses are transformed into app models by `src/normalizations/*`. Never call SOAP from components — go through a soap module, normalize, then dispatch/update store.
+- **Views** (`src/view/`): `calendar` (react-big-calendar wrapper), `editor` (appointment compose board), `event-panel-view`, `event-summary-view`, `reminder`, `search`, `secondary-bar`, `tags`, `modals`, `notifications`. The secondary bar is the left-hand calendar tree shown by the shell.
+- **Folder/tag data** comes from `@zextras/carbonio-ui-commons` (`useFoldersMap`, `useInitializeFolders`) — do not re-implement folder fetching.
+- **BASE_PATH** is a build-time global: webpack injects the hashed static path; `vitest.config.ts` injects `/calendars`. Don't hardcode paths.
 
-## Architecture
+For deeper detail see:
+- [docs/claude/architecture.md](docs/claude/architecture.md) — store layout, SOAP/normalization flow, editor lifecycle, shell integration
+- [docs/claude/testing.md](docs/claude/testing.md) — vitest setup, MSW handlers, `setupTest`/`setupHook`, path aliases, timezone pinning
+- [docs/claude/conventions.md](docs/claude/conventions.md) — SPDX header, import ordering, ESLint quirks, path aliases, i18n
 
-This is a **Zextras Carbonio** calendar module — a React app that runs as a plugin inside the Carbonio Shell UI host application. It is not a standalone app; it registers itself into the shell at runtime via `src/app.tsx`.
+## Non-obvious gotchas
 
-### Module Integration
-
-The app integrates with the Carbonio ecosystem via `@zextras/carbonio-shell-ui`, calling functions like `addRoute`, `addSettingsView`, `addBoardView` at startup. The main entry is `src/app.tsx`. The base URL path is `/calendars`.
-
-### State Management
-
-Two stores run in parallel:
-
-1. **Redux** (`src/store/redux/`) — primary store for appointments, editor state, and invites.
-   - Slices: `src/store/slices/` (appointments, editor, invites)
-   - Async thunks: `src/store/actions/` (SOAP calls for create/modify/delete/search)
-   - Selectors: `src/store/selectors/`
-
-2. **Zustand** (`src/store/zustand/`) — used for calendar groups configuration.
-
-### Backend Communication
-
-All backend calls go through SOAP requests (not REST). Request definitions live in `src/soap/` (25+ files). The main shell provides the SOAP transport via `@zextras/carbonio-shell-ui`. Data normalization from SOAP responses happens in `src/normalizations/`.
-
-### Main Views
-
-- `src/view/calendar/` — main calendar interface wrapping `react-big-calendar`; includes custom toolbar and event rendering
-- `src/view/editor/` — appointment editor board (modal-style board panel)
-- `src/view/event-panel-view/` — read-only event detail panel
-- `src/view/secondary-bar/` — left sidebar with calendar list and navigation
-- `src/view/modals/` — confirmation/action dialogs
-- `src/view/reminder/` — appointment reminder notifications
-- `src/view/search/` — search results integration
-- `src/settings/` — settings views (general, permissions, schedules)
-
-### Testing Setup
-
-- Framework: **Vitest** with jsdom environment
-- Network mocking: **MSW** (Mock Service Worker) — handlers in `src/__test__/mocks/network/msw/`
-- Setup files: `src/__test__/vitest-setup.tsx`, `src/__test__/worker-setup.ts`, `src/__test__/setup-browser-env.ts`
-- Test utilities and fixtures in `src/__test__/mocks/`
-- Path aliases for tests: `@test-mocks/*` → `__mocks__/*`, `@test-utils/*` → `__test__/mocks/*`
-
-### Key Libraries
-
-- `react-big-calendar` — calendar grid component
-- `@emotion/react` + `@emotion/styled` — CSS-in-JS styling
-- `@zextras/carbonio-design-system` — shared UI component library
-- `@zextras/carbonio-ui-commons` — shared utilities across Carbonio modules
-- `date-fns` — date/time handling (moment and moment-timezone have been removed)
-- `src/commons/date-fns-react-widgets-localizer.ts` — locale-aware localizer for react-widgets date pickers; call `dateFnsLocalizer()` once at module level where needed, use `getDateFnsLocale()` to pass the current locale to `DateTimePicker`
-- `i18next` + `react-i18next` — internationalization
+- Tests pin timezone via `VITEST_DEFAULT_TIMEZONE` (`src/constants/test-environment.ts`) — `process.env.TZ` is set in `vitest.config.ts` before any test loads. Don't use raw `new Date()` literals in assertions; rely on `date-fns-tz`.
+- `vi.mock('@zextras/carbonio-shell-ui')` and `@zextras/carbonio-ui-soap-lib` are auto-mocked for every test via `src/__test__/vitest-setup.tsx`; the real mocks live in `__mocks__/@zextras/`.
+- `useFakeTimers({ shouldAdvanceTime: true })` is active in every test `beforeEach`. When using `userEvent`, always set it up with `advanceTimers: vi.advanceTimersByTime` (the `setupTest` helper does this).
+- Every source file must start with the SPDX notice (`src/notice.template.ts`); ESLint `notice/notice` will fail otherwise.
+- `@types/webpack` is a runtime dep because `carbonio.webpack.js` customizes the SDK's webpack config (aliases `app-entrypoint`, copies text-composer assets, injects `BASE_PATH`).
+- `date-fns` replaces `moment`/`moment-timezone` for all date operations. Use `src/commons/date-fns-react-widgets-localizer.ts` for react-widgets date pickers.

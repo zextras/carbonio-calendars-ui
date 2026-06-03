@@ -102,7 +102,8 @@ describe('normalizeEditor', () => {
 			start: event.start.valueOf(),
 			timezone: emptyEditor.timezone,
 			title: event.title,
-			uid: ''
+			uid: '',
+			isDirty: false
 		};
 
 		expect(result).toStrictEqual(expectedResult);

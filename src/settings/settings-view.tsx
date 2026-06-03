@@ -284,7 +284,9 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			!isValidEmail(forwardInvitesEmail)
 		) {
 			setIsEmailNotValid(!isEmailNotValid);
-			return;
+			return Promise.resolve([
+				{ status: 'rejected' as const, reason: 'Invalid email' }
+			] as PromiseSettledResult<unknown>[]);
 		}
 		let newFreeBusy = null;
 		let newInviteRight = null;
@@ -350,7 +352,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			permissions
 		};
 
-		saveSettings(newValue).then((res) => {
+		return saveSettings(newValue).then((res) => {
 			if ('Fault' in res) {
 				createSnackbar({
 					key: `new`,
@@ -360,25 +362,26 @@ export default function CalendarSettingsView(): React.JSX.Element {
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
-			} else {
-				createSnackbar({
-					key: `new`,
-					replace: true,
-					severity: 'success',
-					label: t('label.settings_saved', 'Settings saved'),
-					autoHideTimeout: 3000,
-					hideButton: true
-				});
-				if (currentFreeBusy !== activeFreeBusyOptn) {
-					setCurrentFreeBusy(activeFreeBusyOptn);
-				}
-				if (currentInvite !== activeInviteOptn) {
-					setCurrentInvite(activeInviteOptn);
-				}
-				if (settingsToUpdate.zimbraPrefCalendarWorkingHours) {
-					setOpen(false);
-				}
+				return [{ status: 'rejected' as const, reason: res }] as PromiseSettledResult<unknown>[];
 			}
+			createSnackbar({
+				key: `new`,
+				replace: true,
+				severity: 'success',
+				label: t('label.settings_saved', 'Settings saved'),
+				autoHideTimeout: 3000,
+				hideButton: true
+			});
+			if (currentFreeBusy !== activeFreeBusyOptn) {
+				setCurrentFreeBusy(activeFreeBusyOptn);
+			}
+			if (currentInvite !== activeInviteOptn) {
+				setCurrentInvite(activeInviteOptn);
+			}
+			if (settingsToUpdate.zimbraPrefCalendarWorkingHours) {
+				setOpen(false);
+			}
+			return [{ status: 'fulfilled' as const, value: res }] as PromiseSettledResult<unknown>[];
 		});
 	}, [
 		domain,

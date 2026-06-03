@@ -6,24 +6,25 @@
 import React from 'react';
 
 import { Row, Text } from '@zextras/carbonio-design-system';
+import type { ResourceHeaderProps } from 'react-big-calendar';
 
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 
-export type CalendarResourceHeaderProps = {
+export type CalendarResource = {
 	id: string;
-	label: string;
-	resource: {
-		color: number;
-	};
+	title: string;
+	color: number | undefined;
 };
 
-export const CalendarResourceHeader = (props: CalendarResourceHeaderProps): React.JSX.Element => {
+export const CalendarResourceHeader = (
+	props: ResourceHeaderProps<CalendarResource>
+): React.JSX.Element => {
 	const backgroundColor = setCalendarColor({
 		color: props.resource.color
 	});
 	return (
 		<Row
-			key={props.id}
+			key={props.resource.id}
 			background={backgroundColor.background}
 			borderColor={backgroundColor.color}
 			height="2.25rem"

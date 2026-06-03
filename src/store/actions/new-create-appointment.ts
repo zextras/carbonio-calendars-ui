@@ -6,7 +6,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
+import { publishQuotaChangedEvent } from '../../event-bus/quota-changed';
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
+import { getEditorAttachmentsSize } from '../../utils/attachments-size';
 
 // todo: this thunk is not using redux! convert to regular async function
 export const createAppointment = createAsyncThunk(
@@ -24,6 +26,7 @@ export const createAppointment = createAsyncThunk(
 			if (response?.error) {
 				return rejectWithValue(response);
 			}
+			publishQuotaChangedEvent(getEditorAttachmentsSize(editor));
 			return {
 				response: res,
 				editor: {

@@ -7,24 +7,36 @@ import React from 'react';
 
 import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbonio-ui-commons';
+import {
+	folderWorker,
+	getRoot,
+	isTrashOrNestedInIt,
+	Folder,
+	ResFolder,
+	useFolderStore
+} from '@zextras/carbonio-ui-commons';
 import { format } from 'date-fns';
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 
-import { AddIcsFromUrlModal } from './modals/add-ics-from-url-modal';
+import { AddExternalCalendarModal } from './modals/add-external-calendar-modal';
 import { CreateGroupModal } from './modals/create-group-modal';
+import { DeleteCaldavCalendarModal } from './modals/delete-caldav-calendar-modal';
 import { DeleteModal } from './modals/delete-modal';
+import { EditCaldavCalendarModal } from './modals/edit-caldav-calendar-modal';
+import { EditCaldavChildCalendarModal } from './modals/edit-caldav-child-calendar-modal';
 import { EditModal } from './modals/edit-modal/edit-modal';
 import { EmptyModal } from './modals/empty-modal';
 import { ShareCalendarModal } from './modals/share-calendar-modal';
 import { SharesInfoModal } from './modals/shares-info-modal';
 import { SharesModal } from './modals/shares-modal';
 import { EditExternalCalendarModal } from 'actions/modals/edit-external-calendar-modal';
-import { isExternalSyncFolder } from 'commons/utilities';
+import { triggerCaldavSync, cancelCaldavSync } from 'commons/caldav-sync';
+import { isExternalSyncFolder, isCaldavChild } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { getFolderRequest } from 'soap/get-folder-request';
 import { getShareInfoRequest } from 'soap/get-share-info-request';
 import { folderAction } from 'store/actions/calendar-actions';
+import { deleteCalendarAction } from 'store/actions/delete-calendar-action';
 import { StoreProvider } from 'store/redux';
 import { ActionsClick } from 'types/actions';
 import { NewModal } from 'view/move/new-calendar-modal';
@@ -47,6 +59,7 @@ export const newCalendar =
 		createModal(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<NewModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
@@ -77,6 +90,7 @@ export const createGroup =
 			{
 				id: modalId,
 				maxHeight: '90vh',
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
 						<CreateGroupModal onClose={(): void => closeModal(modalId)} />
@@ -175,13 +189,14 @@ export const addIcsFromUrl =
 			e.stopPropagation();
 		}
 
-		const modalId = 'add-ics-from-url';
+		const modalId = 'add-external-calendar';
 		createModal(
 			{
 				id: modalId,
+				focusModalContent: false,
 				children: (
 					<StoreProvider>
-						<AddIcsFromUrlModal onClose={(): void => closeModal(modalId)} />
+						<AddExternalCalendarModal onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				),
 				onClose: () => {
@@ -207,25 +222,32 @@ export const editCalendar =
 			e.stopPropagation();
 		}
 		const isExternal = isExternalSyncFolder(item);
+		const isCaldavChildFolder = isCaldavChild(item as any);
 		const modalId = 'edit-calendar';
+
+		let modalContent: React.JSX.Element;
+		if (isCaldavChildFolder) {
+			modalContent = (
+				<EditCaldavChildCalendarModal
+					folderId={item.id}
+					onClose={(): void => closeModal(modalId)}
+				/>
+			);
+		} else if (isExternal) {
+			modalContent = (
+				<EditExternalCalendarModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
+			);
+		} else {
+			modalContent = <EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />;
+		}
 
 		createModal(
 			{
 				id: modalId,
-				children: (
-					<StoreProvider>
-						{isExternal ? (
-							<EditExternalCalendarModal
-								folderId={item.id}
-								onClose={(): void => closeModal(modalId)}
-							/>
-						) : (
-							<EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
-						)}
-					</StoreProvider>
-				),
+				children: <StoreProvider>{modalContent}</StoreProvider>,
 				maxHeight: '90vh',
 				size: 'medium',
+				focusModalContent: false,
 				onClose: () => {
 					closeModal(modalId);
 				}
@@ -343,6 +365,119 @@ export const syncExternalCalendar =
 		});
 	};
 
+export const syncCaldavCalendar =
+	({
+		item,
+		createSnackbar
+	}: {
+		item: { id?: string; dsId?: string };
+		createSnackbar: CreateSnackbarFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		if (!item.dsId) {
+			createSnackbar({
+				key: `caldav-calendar-sync-error`,
+				replace: true,
+				severity: 'error',
+				hideButton: true,
+				label: t('label.error_try_again', 'Something went wrong, please try again'),
+				autoHideTimeout: 3000
+			});
+			return;
+		}
+
+		triggerCaldavSync(item.dsId, createSnackbar);
+	};
+
+export const editCaldavCalendar =
+	({
+		createModal,
+		closeModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+		item: { id: string };
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		const modalId = 'edit-caldav-calendar';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<EditCaldavCalendarModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
+			},
+			true
+		);
+	};
+
+export const deleteCaldavCalendar =
+	({
+		createModal,
+		closeModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+		item: { id: string; name: string; dsId?: string };
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+
+		const modalId = 'delete-caldav-calendar';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<DeleteCaldavCalendarModal
+							folder={item}
+							onConfirm={(): Promise<void> =>
+								deleteCalendarAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then(() => {
+									// Stop any in-flight sync for this data source so polling
+									// doesn't continue after the folder is gone.
+									if (item.dsId) {
+										cancelCaldavSync(item.dsId);
+									}
+									// Immediately remove the folder from the local store so the UI
+									// reflects the deletion without waiting for Zimbra's push
+									// notification, which can be delayed when a CalDAV sync is running.
+									const { folders } = useFolderStore.getState();
+									folderWorker.postMessage({
+										op: 'notify',
+										notify: { deleted: [item.id] },
+										state: folders
+									});
+								})
+							}
+							onClose={(): void => closeModal(modalId)}
+						/>
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal(modalId);
+				}
+			},
+			true
+		);
+	};
+
 export const sharesInfo =
 	({
 		item,
@@ -396,7 +531,6 @@ export const shareCalendar =
 				children: (
 					<StoreProvider>
 						<ShareCalendarModal
-							folderName={item.name}
 							folderId={item.id}
 							closeFn={(): void => closeModal(modalId)}
 							grant={item?.acl?.grant ?? []}
@@ -404,6 +538,7 @@ export const shareCalendar =
 					</StoreProvider>
 				),
 				maxHeight: '70vh',
+				focusModalContent: false,
 				onClose: () => {
 					closeModal(modalId);
 				}
@@ -431,6 +566,7 @@ export const findShares =
 				createModal(
 					{
 						id: modalId,
+						focusModalContent: false,
 						children: (
 							<StoreProvider>
 								<SharesModal calendars={resCalendars} onClose={(): void => closeModal(modalId)} />

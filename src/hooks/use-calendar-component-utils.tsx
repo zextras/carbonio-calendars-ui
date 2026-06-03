@@ -31,12 +31,13 @@ import { ModifyStandardMessageModal } from '../view/modals/modify-standard-messa
 
 export const useCalendarComponentUtils = (): {
 	onEventDropOrResize: (a: {
-		start: Date;
-		end: Date;
+		start: string | Date;
+		end: string | Date;
 		event: EventType;
 		isAllDay?: boolean;
+		resourceId?: string | number;
 	}) => void;
-	handleSelect: (e: { start: Date; end: Date }) => void;
+	handleSelect: (e: { start: Date; end: Date; resourceId?: string | number }) => void;
 	onRangeChange: (a: { end: Date; start: Date } | Array<Date>) => void;
 	onNavigate: (a: Date) => void;
 	date: Date;
@@ -126,12 +127,12 @@ export const useCalendarComponentUtils = (): {
 			isAllDay,
 			isSeries
 		}: {
-			start: Date;
-			end: Date;
+			start: string | Date;
+			end: string | Date;
 			event: EventType;
 			isAllDay?: boolean;
 			isSeries?: boolean;
-		}) => {
+		}): void => {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
@@ -160,6 +161,22 @@ export const useCalendarComponentUtils = (): {
 						eventAllDay
 					});
 
+					const handleSaveResponse = (res: Awaited<ReturnType<typeof onSave>>): void => {
+						if (res?.response === undefined) {
+							return;
+						}
+						createSnackbar({
+							key: `calendar-moved-root`,
+							replace: true,
+							severity: res.response ? 'info' : 'warning',
+							hideButton: true,
+							label: res.response
+								? t('message.snackbar.calendar_edits_saved', 'Edits saved correctly')
+								: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
+					};
+
 					const onConfirm = (draft: boolean, context?: { text: Array<string> }): void => {
 						const contextObj = {
 							dispatch,
@@ -183,21 +200,7 @@ export const useCalendarComponentUtils = (): {
 								)
 							}
 						});
-						onSave({ draft, editor, isNew: false, dispatch }).then((res) => {
-							if (res?.response) {
-								const success = res?.response;
-								createSnackbar({
-									key: `calendar-moved-root`,
-									replace: true,
-									severity: success ? 'info' : 'warning',
-									hideButton: true,
-									label: !success
-										? t('label.error_try_again', 'Something went wrong, please try again')
-										: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-									autoHideTimeout: 3000
-								});
-							}
-						});
+						onSave({ draft, editor, isNew: false, dispatch }).then(handleSaveResponse);
 					};
 					if (
 						size(invite.participants) > 0 &&
@@ -247,13 +250,15 @@ export const useCalendarComponentUtils = (): {
 			isAllDay,
 			resourceId
 		}: {
-			start: Date;
-			end: Date;
+			start: string | Date;
+			end: string | Date;
 			event: EventType;
 			isAllDay?: boolean;
-			resourceId?: string;
+			resourceId?: string | number;
 		}) => {
-			const isDefaultCalendar = resourceId ? resourceId === zimbraPrefDefaultCalendarId : true;
+			const isDefaultCalendar = resourceId
+				? String(resourceId) === zimbraPrefDefaultCalendarId
+				: true;
 			if (!isDefaultCalendar) {
 				return;
 			}
@@ -315,8 +320,10 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const handleSelect = useCallback(
-		(e: { resourceId?: string; end: Date; start: Date }) => {
-			const isDefaultCalendar = e.resourceId ? e.resourceId === zimbraPrefDefaultCalendarId : true;
+		(e: { resourceId?: string | number; end: Date; start: Date }) => {
+			const isDefaultCalendar = e.resourceId
+				? String(e.resourceId) === zimbraPrefDefaultCalendarId
+				: true;
 
 			if (!summaryViewOpen && !action && isDefaultCalendar) {
 				const isAllDay =

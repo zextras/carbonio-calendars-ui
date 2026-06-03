@@ -95,7 +95,6 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 
 			{(modal === 'share' && folder && (
 				<ShareCalendarModal
-					folderName={folder.name}
 					folderId={folderId}
 					closeFn={onClose}
 					onGoBack={onGoBack}

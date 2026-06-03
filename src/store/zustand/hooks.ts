@@ -6,9 +6,11 @@
 
 import { MutableRefObject } from 'react';
 
-import { AppState, CalendarView, SetRange, useAppStatusStore } from './store';
+import type { View } from 'react-big-calendar';
 
-export const useCalendarView = (): CalendarView | undefined =>
+import { AppState, SetRange, useAppStatusStore } from './store';
+
+export const useCalendarView = (): View | undefined =>
 	useAppStatusStore((s: AppState) => s.calendarView);
 export const useCalendarDate = (): Date => useAppStatusStore((s: AppState) => s.date);
 export const useSummaryView = (): string | undefined =>

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Container,
@@ -54,6 +54,7 @@ export const NewModal = ({
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
+	const nameInputRef = useRef<HTMLInputElement>(null);
 
 	const folders = useFoldersMapByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
@@ -123,7 +124,11 @@ export const NewModal = ({
 		onClose();
 	}, [onClose]);
 
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
+
+	useEffect(() => {
+		nameInputRef.current?.focus();
+	}, []);
 
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	return (
@@ -144,6 +149,7 @@ export const NewModal = ({
 				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 					setInputValue(e.target.value);
 				}}
+				inputRef={nameInputRef}
 			/>
 			{showDupWarning && (
 				<Padding all="small">

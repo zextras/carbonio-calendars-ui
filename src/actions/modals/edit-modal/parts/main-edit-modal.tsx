@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import {
@@ -26,7 +26,7 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { useUserAccounts, useUserSettings } from '@zextras/carbonio-shell-ui';
 import {
 	FOLDER_VIEW,
 	FOLDERS,
@@ -35,19 +35,21 @@ import {
 	Grant,
 	hasId
 } from '@zextras/carbonio-ui-commons';
-import { compact, find, includes, isEmpty, map } from 'lodash';
+import { compact, find, includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';
-import { useEditModalContext } from '../../../../commons/edit-modal-context';
-import { SHARE_USER_TYPE } from '../../../../constants';
-import { FOLDER_OPERATIONS } from '../../../../constants/api';
-import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
-import { folderAction } from '../../../../store/actions/calendar-actions';
-import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { useAppDispatch } from '../../../../store/redux/hooks';
-import { containPublicShareGrant } from '../../../../utils/calendars-share';
+import { useEditModalContext } from 'commons/edit-modal-context';
+import { isCaldavChild } from 'commons/utilities';
+import { FOLDER_OPERATIONS } from 'constants/api';
+import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from 'constants/index';
+import { folderAction } from 'store/actions/calendar-actions';
+import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
+import { useAppDispatch } from 'store/redux/hooks';
+import { FolderAction } from 'types/soap/soap-actions';
+import { containPublicShareGrant } from 'utils/calendars-share';
 
 const Square = styled.div<{ $color: AnyColor }>`
 	width: 1.125rem;
@@ -158,6 +160,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const [t] = useTranslation();
 	const accounts = useUserAccounts();
+	const userSettings = useUserSettings();
 	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
 	const { setModal, onClose, setActiveGrant } = useEditModalContext();
@@ -173,10 +176,23 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		[colors, folder.color]
 	);
 
-	const isCalendarPubliclyShared = useMemo(() => containPublicShareGrant(grant), [grant]);
+	const defaultSharedWithPublic = useMemo(() => containPublicShareGrant(grant), [grant]);
+	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
+	const internalGrants = useMemo(
+		() => grant.filter((g) => g.gt !== SHARE_USER_TYPE.PUBLIC),
+		[grant]
+	);
 
+	const hasUserToggledPublicRef = useRef(false);
 	const [folderName, setFolderName] = useState(defaultFolderName);
 	const [freeBusy, setFreeBusy] = useState(defaultFreeBusy);
+	const [isSharedWithPublic, setIsSharedWithPublic] = useState(defaultSharedWithPublic);
+
+	useEffect(() => {
+		if (!hasUserToggledPublicRef.current) {
+			setIsSharedWithPublic(defaultSharedWithPublic);
+		}
+	}, [defaultSharedWithPublic]);
 
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 
@@ -240,7 +256,17 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						id: folder.id
 					}
 				: undefined;
-		const actionsArray = compact([actionRename, actionColor, actionFreeBusy]);
+		let actionPublicShare: FolderAction | undefined;
+		if (isSharedWithPublic !== defaultSharedWithPublic) {
+			actionPublicShare = defaultSharedWithPublic
+				? { id: folder.id, zid: PUBLIC_SHARE_ZID, op: FOLDER_OPERATIONS.REVOKE_GRANT }
+				: {
+						id: folder.id,
+						op: FOLDER_OPERATIONS.GRANT,
+						grant: [{ gt: SHARE_USER_TYPE.PUBLIC, perm: 'r', pw: '' }]
+					};
+		}
+		const actionsArray = compact([actionRename, actionColor, actionFreeBusy, actionPublicShare]);
 		if (actionsArray.length) {
 			const actions = actionsArray.length > 1 ? actionsArray : actionsArray[0];
 			folderAction(actions).then((res: { Fault?: string }) => {
@@ -276,6 +302,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		defaultColor?.value,
 		freeBusy,
 		defaultFreeBusy,
+		isSharedWithPublic,
+		defaultSharedWithPublic,
 		onClose,
 		createSnackbar,
 		t
@@ -336,7 +364,78 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const title = useMemo(() => t('action.edit_and_share_calendar', 'Edit and share calendar'), [t]);
 
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
+
+	const isCaldavChildReadOnly = useMemo(() => {
+		const caldavChild = isCaldavChild(folder);
+		const isReadOnly = folder.perm && !/w/.test(folder.perm);
+		return caldavChild && isReadOnly;
+	}, [folder]);
+
+	const calendarNameInputRef = useRef<HTMLInputElement>(null);
+	const isCalendarNameEditable = !isCaldavChildReadOnly && !hasId(folder, FOLDERS.CALENDAR);
+	useEffect(() => {
+		if (isCalendarNameEditable) {
+			calendarNameInputRef.current?.focus();
+		}
+	}, [isCalendarNameEditable]);
+
+	let calendarNameInput: React.JSX.Element;
+	if (isCaldavChildReadOnly) {
+		calendarNameInput = (
+			<Tooltip
+				label={t('cannot_edit_caldav_readonly', 'You cannot edit the name of a read-only calendar')}
+				placement="top"
+				maxWidth="fit-content"
+			>
+				<Input
+					label={placeholder}
+					background="gray5"
+					defaultValue={folderName}
+					onChange={(e): void => {
+						setFolderName(e.target.value);
+					}}
+					disabled
+				/>
+			</Tooltip>
+		);
+	} else if (hasId(folder, FOLDERS.CALENDAR)) {
+		calendarNameInput = (
+			<Tooltip
+				label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
+				placement="top"
+				maxWidth="fit-content"
+			>
+				<Input
+					label={placeholder}
+					background="gray5"
+					defaultValue={folderName}
+					onChange={(e): void => {
+						setFolderName(e.target.value);
+					}}
+					disabled
+				/>
+			</Tooltip>
+		);
+	} else {
+		calendarNameInput = (
+			<Input
+				label={placeholder}
+				background="gray5"
+				hasError={showDupWarning}
+				description={
+					showDupWarning
+						? t('folder.modal.new.duplicate_warning', 'Calendar with the same name already exists')
+						: undefined
+				}
+				defaultValue={folderName}
+				onChange={(e): void => {
+					setFolderName(e.target.value);
+				}}
+				inputRef={calendarNameInputRef}
+			/>
+		);
+	}
 
 	return (
 		<Container data-testid="MainEditModal" style={{ overflowY: 'auto' }}>
@@ -350,41 +449,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					gap="1rem"
 				>
 					{/* Calendar name */}
-					{hasId(folder, FOLDERS.CALENDAR) ? (
-						<Tooltip
-							label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
-							placement="top"
-							maxWidth="fit-content"
-						>
-							<Input
-								label={placeholder}
-								backgroundColor="gray5"
-								defaultValue={folderName}
-								onChange={(e): void => {
-									setFolderName(e.target.value);
-								}}
-								disabled
-							/>
-						</Tooltip>
-					) : (
-						<Input
-							label={placeholder}
-							background="gray5"
-							hasError={showDupWarning}
-							description={
-								showDupWarning
-									? t(
-											'folder.modal.new.duplicate_warning',
-											'Calendar with the same name already exists'
-										)
-									: undefined
-							}
-							defaultValue={folderName}
-							onChange={(e): void => {
-								setFolderName(e.target.value);
-							}}
-						/>
-					)}
+					{calendarNameInput}
 
 					{/* Type and number of appointments */}
 					<Container
@@ -434,8 +499,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						)}
 					/>
 
-					{/* Calendar sharing */}
-					{!isEmpty(folder?.acl) && !(folder.isLink && folder.owner) && (
+					{/* Internal sharing */}
+					{!(folder.isLink && folder.owner) && (
 						<Container
 							mainAlignment="flex-start"
 							crossAlignment="flex-start"
@@ -444,43 +509,49 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						>
 							<Divider />
 
-							<Text weight="bold">
-								{t('label.sharing_of_this_folder', 'Sharing of this folder')}
-							</Text>
+							<Container
+								data-testid="internalSharingHeader"
+								orientation="horizontal"
+								mainAlignment="space-between"
+								crossAlignment="center"
+								height="fit"
+							>
+								<Text weight="bold">{t('share.label.internal_sharing', 'Internal sharing')}</Text>
+								<Button
+									type="ghost"
+									label={t('label.add_share', 'Add share')}
+									icon="Plus"
+									onClick={onShare}
+									size="small"
+								/>
+							</Container>
 
-							{grant && grant.length > 0 && (
+							{internalGrants.length > 0 && (
 								<Container
 									style={{ overflowY: 'auto' }}
 									mainAlignment="flex-start"
-									height={grant.length === 1 ? '1.375rem' : '3.25rem'}
+									height={internalGrants.length === 1 ? '1.375rem' : '3.25rem'}
 									maxHeight={'3.25rem'}
 									padding={{ right: 'small' }}
 									gap="0.5rem"
 								>
-									{map(grant, (item, index) => (
+									{map(internalGrants, (item, index) => (
 										<Container orientation="horizontal" mainAlignment="flex-end" key={index}>
 											<StyledContainer crossAlignment="flex-start">
 												<GranteeChip grant={item} />
 											</StyledContainer>
 											<Container orientation="horizontal" mainAlignment="flex-end" width={'fit'}>
-												{item.gt !== SHARE_USER_TYPE.PUBLIC && (
-													<>
-														<Tooltip
-															label={t('tooltip.edit', 'Edit share properties')}
-															placement="top"
-														>
-															<Button
-																type="outlined"
-																label={t('label.edit', 'Edit')}
-																onClick={(): void => {
-																	onEdit(item);
-																}}
-																size="small"
-															/>
-														</Tooltip>
-														<Padding horizontal="extrasmall" />
-													</>
-												)}
+												<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
+													<Button
+														type="outlined"
+														label={t('label.edit', 'Edit')}
+														onClick={(): void => {
+															onEdit(item);
+														}}
+														size="small"
+													/>
+												</Tooltip>
+												<Padding horizontal="extrasmall" />
 												<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
 													<Button
 														type="outlined"
@@ -492,25 +563,21 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 														size="small"
 													/>
 												</Tooltip>
-												{item.gt !== SHARE_USER_TYPE.PUBLIC && (
-													<>
-														<Padding horizontal="extrasmall" />
-														<Tooltip
-															label={t('tooltip.resend', 'Send mail notification about this share')}
-															placement="top"
-															maxWidth="18.75rem"
-														>
-															<Button
-																type="outlined"
-																label={t('label.resend', 'Resend')}
-																onClick={(): void => {
-																	onResend(item);
-																}}
-																size="small"
-															/>
-														</Tooltip>
-													</>
-												)}
+												<Padding horizontal="extrasmall" />
+												<Tooltip
+													label={t('tooltip.resend', 'Send mail notification about this share')}
+													placement="top"
+													maxWidth="18.75rem"
+												>
+													<Button
+														type="outlined"
+														label={t('label.resend', 'Resend')}
+														onClick={(): void => {
+															onResend(item);
+														}}
+														size="small"
+													/>
+												</Tooltip>
 											</Container>
 										</Container>
 									))}
@@ -519,8 +586,34 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						</Container>
 					)}
 
-					{/* Shared access links */}
-					{isCalendarPubliclyShared && <ShareCalendarUrls calendarName={folder.name} />}
+					{/* Public sharing */}
+					{isPublicShareEnabled && !(folder.isLink && folder.owner) && (
+						<Container
+							mainAlignment="flex-start"
+							crossAlignment="flex-start"
+							orientation="vertical"
+							gap="1rem"
+						>
+							<Divider />
+
+							<Text weight="bold">{t('share.label.public_sharing', 'Public sharing')}</Text>
+
+							<Checkbox
+								value={isSharedWithPublic}
+								defaultChecked={isSharedWithPublic}
+								onClick={(): void => {
+									hasUserToggledPublicRef.current = true;
+									setIsSharedWithPublic((prev) => !prev);
+								}}
+								label={t(
+									'share.options.share_calendar_with.public',
+									'Share with public (view only, no password required)'
+								)}
+							/>
+
+							{isSharedWithPublic && <ShareCalendarUrls calendarName={folder.name} />}
+						</Container>
+					)}
 				</Container>
 			</ModalBody>
 			<Divider />
@@ -528,8 +621,6 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				onConfirm={onConfirm}
 				confirmLabel={t('label.ok', 'OK')}
 				confirmDisabled={disabled}
-				onSecondaryAction={onShare}
-				secondaryActionLabel={t('label.add_share', 'Add share')}
 			/>
 		</Container>
 	);
