@@ -249,7 +249,7 @@ describe('editIsRichTextReducer', () => {
 
 	it('is a no-op when payload id is undefined', () => {
 		const state = makeState(makeEditor({ isRichText: true }));
-		editIsRichTextReducer(state, act({ id: undefined, isRichText: false }));
+		editIsRichTextReducer(state, act({ id: undefined as unknown as string, isRichText: false }));
 		expect(state.editors[EDITOR_ID].isRichText).toBe(true);
 	});
 
