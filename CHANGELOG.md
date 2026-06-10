@@ -1,3 +1,11 @@
+## <small>1.26.5 (2026-06-08)</small>
+
+* fix(ci): update to 2.10.0 lib-common ([b8d4de9](https://github.com/zextras/carbonio-calendars-ui/commit/b8d4de9))
+* fix(ci): use fully-qualified image name in Dockerfile ([a3d5555](https://github.com/zextras/carbonio-calendars-ui/commit/a3d5555))
+* chore(deps): lock file maintenance ([3f7643b](https://github.com/zextras/carbonio-calendars-ui/commit/3f7643b))
+* chore(deps): lock file maintenance (#758) ([60ef86c](https://github.com/zextras/carbonio-calendars-ui/commit/60ef86c)), closes [#758](https://github.com/zextras/carbonio-calendars-ui/issues/758)
+* chore(deps): update dependency zextras/jenkins-lib-common to v2.8.8 ([8d02377](https://github.com/zextras/carbonio-calendars-ui/commit/8d02377))
+
 ## <small>1.26.4 (2026-05-27)</small>
 
 * fix: update the text composer to use latest languages configuration ([4c1a526](https://github.com/zextras/carbonio-calendars-ui/commit/4c1a526))
