@@ -36,13 +36,13 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	const allDay = invite.allDay ?? false;
 
 	const localStartTime = useMemo(
-		() => moment(invite.start?.d ?? invite.start.u).valueOf(),
-		[invite.start?.d, invite.start.u]
+		() => invite.start?.u ?? moment(invite.start?.d).valueOf(),
+		[invite.start?.d, invite.start?.u]
 	);
 
 	const localEndTime = useMemo(
-		() => moment(invite.end?.d ?? invite.end.u).valueOf(),
-		[invite.end?.d, invite.end.u]
+		() => invite.end?.u ?? moment(invite.end?.d).valueOf(),
+		[invite.end?.d, invite.end?.u]
 	);
 
 	const originalDate = useGetDateRangeConvertedToTimezone(localStartTime ?? 0, localEndTime ?? 0, {
@@ -105,7 +105,7 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 				)}
 				{method !== MESSAGE_METHOD.COUNTER && (
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{originalDate}
+						{convertedDate}
 					</Text>
 				)}
 
