@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import moment from 'moment';
+import { addDays, differenceInDays, subDays } from 'date-fns';
 import type { View } from 'react-big-calendar';
 import { create } from 'zustand';
 
@@ -30,16 +30,16 @@ export const useAppStatusStore = create<AppState>((set) => ({
 	summaryViewId: undefined,
 	summaryViewRef: React.createRef(),
 	range: {
-		start: moment().subtract('7', 'days').valueOf(),
-		end: moment().add('15', 'days').valueOf()
+		start: subDays(new Date(), 7).getTime(),
+		end: addDays(new Date(), 15).getTime()
 	},
 	setRange: ({ start, end }: { start: number; end: number }): void => {
 		set(({ range }) => {
 			if (start < range.start) {
-				if (moment(range.end).diff(moment(start), 'days') >= 400) {
+				if (differenceInDays(new Date(range.end), new Date(start)) >= 400) {
 					return {
 						range: {
-							end: moment(start).add('399', 'days').valueOf(),
+							end: addDays(new Date(start), 399).getTime(),
 							start
 						}
 					};
@@ -47,9 +47,9 @@ export const useAppStatusStore = create<AppState>((set) => ({
 				return { range: { ...range, start } };
 			}
 			if (range.end < end) {
-				if (moment(end).diff(moment(range.start), 'days') >= 400) {
+				if (differenceInDays(new Date(end), new Date(range.start)) >= 400) {
 					return {
-						range: { start: moment(end).subtract('399', 'days').valueOf(), end }
+						range: { start: subDays(new Date(end), 399).getTime(), end }
 					};
 				}
 				return { range: { ...range, end } };

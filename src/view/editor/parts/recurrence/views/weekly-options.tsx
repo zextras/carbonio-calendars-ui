@@ -7,7 +7,7 @@ import React, { ReactElement, useCallback, useContext, useEffect, useRef, useSta
 
 import { Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import moment from 'moment';
+import { getDay } from 'date-fns';
 
 import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
 import { RecurrenceContext } from 'commons/recurrence-context';
@@ -31,7 +31,7 @@ const defaultState = {
 };
 
 const getDayCodeFromDate = (date: number): string => {
-	const dayOfWeek = moment(date).day();
+	const dayOfWeek = getDay(new Date(date));
 	const dayMap = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 	return dayMap[dayOfWeek];
 };

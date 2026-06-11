@@ -8,6 +8,8 @@ import React, { FC, ReactElement } from 'react';
 import { Container, DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
+
 type ComponentProps = {
 	fromDate: Date | null;
 	setFromDate: (arg: Date | null) => void;
@@ -36,7 +38,8 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 					label={t('search.from_date', 'From Date')}
 					enableChips
 					chipProps={{ avatarBackground: 'gray1', avatarIcon: 'CalendarOutline' }}
-					dateFormat="dd/MM/yyyy"
+					dateFormat="P"
+					locale={getDateFnsLocale()}
 					showTimeSelect={false}
 					defaultValue={fromDate}
 					onChange={onFromDateChange}
@@ -48,7 +51,8 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 					label={t('search.to_date', 'To Date')}
 					enableChips
 					chipProps={{ avatarBackground: 'gray1', avatarIcon: 'CalendarOutline' }}
-					dateFormat="dd/MM/yyyy"
+					dateFormat="P"
+					locale={getDateFnsLocale()}
 					showTimeSelect={false}
 					defaultValue={toDate}
 					onChange={onToDateChange}

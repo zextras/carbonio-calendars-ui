@@ -8,7 +8,7 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useTheme } from '@zextras/carbonio-design-system';
-import moment from 'moment-timezone';
+import { addHours, format as dateFnsFormat, subHours } from 'date-fns';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { reducers } from '../../store/redux';
@@ -53,7 +53,7 @@ describe('Appointment Reminder Item', () => {
 	it('should render the appointment time', () => {
 		const reminderItem = generateReminderItem();
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const timeText = `${moment(reminderItem.start).format('HH:mm')} - ${moment(reminderItem.end).format('HH:mm')}`;
+		const timeText = `${dateFnsFormat(new Date(reminderItem.start), 'HH:mm')} - ${dateFnsFormat(new Date(reminderItem.end), 'HH:mm')}`;
 
 		setupTest(
 			<AppointmentReminderItem
@@ -70,11 +70,11 @@ describe('Appointment Reminder Item', () => {
 
 	it('should render a button to snooze the reminder if the appointment is not started yet and user is not organizer', async () => {
 		const reminderItem = generateReminderItem({
-			start: moment().add(1, 'hour').toDate(),
+			start: addHours(new Date(), 1),
 			isOrg: false,
 			alarmData: [
 				{
-					alarmInstStart: moment().add(1, 'hour').valueOf(),
+					alarmInstStart: addHours(new Date(), 1).getTime(),
 					alarm: [
 						{
 							action: 'DISPLAY',
@@ -118,11 +118,11 @@ describe('Appointment Reminder Item', () => {
 
 	it('should render a button to set a new time for the appointment if the appointment is started and user is organizer', async () => {
 		const reminderItem = generateReminderItem({
-			start: moment().subtract(1, 'hour').toDate(),
+			start: subHours(new Date(), 1),
 			isOrg: true,
 			alarmData: [
 				{
-					alarmInstStart: moment().add(1, 'hour').valueOf(),
+					alarmInstStart: addHours(new Date(), 1).getTime(),
 					alarm: [
 						{
 							action: 'DISPLAY',
@@ -186,11 +186,11 @@ describe('Appointment Reminder Item', () => {
 		const setActiveReminder = vi.fn();
 		const toggleModal = vi.fn();
 		const reminderItem = generateReminderItem({
-			start: moment().subtract(1, 'hour').toDate(),
+			start: subHours(new Date(), 1),
 			isOrg: true,
 			alarmData: [
 				{
-					alarmInstStart: moment().add(1, 'hour').valueOf(),
+					alarmInstStart: addHours(new Date(), 1).getTime(),
 					alarm: [
 						{
 							action: 'DISPLAY',

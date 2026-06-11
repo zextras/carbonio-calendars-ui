@@ -8,6 +8,8 @@ import React, { useCallback, useMemo } from 'react';
 import { DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
+
 export default function StartDatePicker({ start, allDay, diff, onChange }) {
 	const onStartChange = useCallback(
 		(d) => {
@@ -34,7 +36,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			}`,
 		[allDay]
 	);
-	const dateFormat = useMemo(() => (allDay ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH:mm'), [allDay]);
+	const dateFormat = useMemo(() => (allDay ? 'P' : 'Pp'), [allDay]);
 
 	return (
 		<DateTimePicker
@@ -43,6 +45,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			defaultValue={start}
 			onChange={onStartChange}
 			dateFormat={dateFormat}
+			locale={getDateFnsLocale()}
 			includeTime={!allDay}
 		/>
 	);

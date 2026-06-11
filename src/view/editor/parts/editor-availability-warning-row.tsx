@@ -6,8 +6,8 @@
 import React, { useMemo } from 'react';
 
 import { ChipItem, Row, Text } from '@zextras/carbonio-design-system';
+import { addDays, differenceInDays, format, startOfDay } from 'date-fns';
 import { find, intersectionBy, isNil, startsWith } from 'lodash';
-import moment from 'moment';
 
 import {
 	AttendeesAvailabilityListType,
@@ -29,27 +29,27 @@ export const getIsBusyAtTimeOfTheEvent = (
 	isAllDay: Editor['allDay']
 ): boolean => {
 	if (start && end && attendeesAvailabilityList && !isNil(isAllDay)) {
-		const startDate = moment(start);
-		const endDate = moment(end);
+		const startDate = new Date(start);
+		const endDate = new Date(end);
 
-		const startDay = startDate.format('DDMMYYYY');
-		const endDay = endDate.format('DDMMYYYY');
-		const diffInDays = endDate.diff(startDate, 'days');
-		const startHour = startDate.format('HHmm');
-		const endHour = endDate.format('HHmm');
+		const startDay = format(startDate, 'ddMMyyyy');
+		const endDay = format(endDate, 'ddMMyyyy');
+		const diffInDays = differenceInDays(endDate, startDate);
+		const startHour = format(startDate, 'HHmm');
+		const endHour = format(endDate, 'HHmm');
 
 		if (isAllDay) {
-			const diffInDaysAllDay = endDate
-				.add(1, 'day')
-				.startOf('day')
-				.diff(startDate.startOf('day'), 'days');
+			const diffInDaysAllDay = differenceInDays(
+				startOfDay(addDays(endDate, 1)),
+				startOfDay(startDate)
+			);
 			return diffInDaysAllDay > 1
 				? false
 				: !!find(
 						(item.t ?? []).concat(item.b ?? []),
 						(slot) =>
-							moment(slot.s).format('DD') === startDate.format('DD') ||
-							moment(slot.e).format('DD') === startDate.format('DD')
+							format(new Date(slot.s), 'dd') === format(startDate, 'dd') ||
+							format(new Date(slot.e), 'dd') === format(startDate, 'dd')
 					);
 		}
 

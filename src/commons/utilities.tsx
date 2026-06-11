@@ -14,9 +14,10 @@ import {
 	getUpdateFolder,
 	hasId
 } from '@zextras/carbonio-ui-commons';
+import { addSeconds, differenceInSeconds, formatDistanceToNow } from 'date-fns';
 import { find, forEach, isNil, map, reduce, some } from 'lodash';
-import moment from 'moment';
 
+import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
@@ -329,7 +330,7 @@ export const getTimeToDisplayData = (
 	text: string;
 } => {
 	const { start, end, alarmData } = reminder;
-	const difference = moment(end).diff(moment(start), 'seconds');
+	const difference = differenceInSeconds(end, start);
 	if (start.valueOf() < currentTime && end.valueOf() > currentTime) {
 		return {
 			color: 'info',
@@ -345,13 +346,13 @@ export const getTimeToDisplayData = (
 	if (start.valueOf() < currentTime) {
 		return {
 			color: 'error',
-			text: moment(start).from(moment())
+			text: formatDistanceToNow(start, { addSuffix: true, locale: getDateFnsLocale() })
 		};
 	}
 	if (alarmData && alarmData?.[0] && alarmData?.[0]?.alarmInstStart) {
 		if (
 			alarmData[0].alarmInstStart < currentTime &&
-			moment(alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() > currentTime
+			addSeconds(new Date(alarmData[0].alarmInstStart), difference).getTime() > currentTime
 		) {
 			return {
 				color: 'info',
@@ -361,13 +362,19 @@ export const getTimeToDisplayData = (
 		if (alarmData[0].alarmInstStart < currentTime) {
 			return {
 				color: 'error',
-				text: moment(alarmData[0].alarmInstStart).fromNow()
+				text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), {
+					addSuffix: true,
+					locale: getDateFnsLocale()
+				})
 			};
 		}
 	}
 	return {
 		color: 'info',
-		text: moment(alarmData[0].alarmInstStart).fromNow()
+		text: formatDistanceToNow(new Date(alarmData[0].alarmInstStart), {
+			addSuffix: true,
+			locale: getDateFnsLocale()
+		})
 	};
 };
 

@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { formatInTimeZone } from 'date-fns-tz';
 import { filter, isNil, map, omitBy, reduce } from 'lodash';
-import moment from 'moment';
 
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 
@@ -109,7 +109,7 @@ export const normalizeAppointmentFromCreation = (appt: any, editor: any, id?: st
 	inst: [
 		{
 			recur: appt.recur ?? false,
-			ridZ: moment(editor.start).format('YYYYMMDD[T]HHmmss[Z]'),
+			ridZ: formatInTimeZone(new Date(editor.start ?? 0), 'UTC', "yyyyMMdd'T'HHmmss'Z'"),
 			s: editor.start
 		}
 	],
