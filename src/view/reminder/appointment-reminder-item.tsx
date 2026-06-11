@@ -18,8 +18,8 @@ import {
 	Tooltip,
 	TextProps
 } from '@zextras/carbonio-design-system';
+import { addMinutes, format, getHours, getMinutes, set, subMinutes } from 'date-fns';
 import { noop } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
@@ -53,7 +53,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	} = reminderItem;
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
-	const [now, setNow] = useState(moment().valueOf());
+	const [now, setNow] = useState(Date.now());
 	const [isDetailsExpanded, setDetailsExpanded] = useState(false);
 
 	const rescheduleLabel = t('label.reschedule_appointment', 'Reschedule appointment');
@@ -68,10 +68,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	);
 
 	const isSetNewTimeAllowed = useMemo(
-		() =>
-			(moment(start).valueOf() < moment().valueOf() ||
-				moment(alarmData[0].alarmInstStart).valueOf() < moment().valueOf()) &&
-			isOrganizer,
+		() => (start.getTime() < Date.now() || alarmData[0].alarmInstStart < Date.now()) && isOrganizer,
 		[alarmData, isOrganizer, start]
 	);
 
@@ -94,18 +91,15 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const snoozeReminder = useCallback(
 		(time: number, isBefore = true) => {
 			const untilForBefore = isRecurrent
-				? moment()
-						.set({
-							hour: moment(start).hour(),
-							minute: moment(start).minute()
-						})
-						.subtract(time, 'minutes')
-						.valueOf()
-				: moment(start).subtract(time, 'minutes').valueOf();
+				? subMinutes(
+						set(new Date(), { hours: getHours(start), minutes: getMinutes(start) }),
+						time
+					).getTime()
+				: subMinutes(start, time).getTime();
 			dispatch(
 				snoozeApptReminder({
 					id,
-					until: isBefore ? untilForBefore : moment().add(time, 'minutes').valueOf()
+					until: isBefore ? untilForBefore : addMinutes(new Date(), time).getTime()
 				})
 			);
 			removeReminder(key);
@@ -125,7 +119,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	}, [now, reminderItem]);
 
 	useEffect(() => {
-		const interval = setInterval(() => setNow(moment().valueOf()), 30000);
+		const interval = setInterval(() => setNow(Date.now()), 30000);
 		return () => clearInterval(interval);
 	}, []);
 
@@ -172,7 +166,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 			<Row width="fill" padding={{ left: '2.5rem', bottom: 'small' }} mainAlignment="space-between">
 				<Row mainAlignment="flex-start">
 					<Text size={DEFAULT_FONT_SIZE}>
-						{moment(start).format('HH:mm')} - {moment(end).format('HH:mm')}
+						{format(start, 'HH:mm')} - {format(end, 'HH:mm')}
 					</Text>
 					<Padding left="small">{timeToDisplay}</Padding>
 				</Row>

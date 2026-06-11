@@ -6,8 +6,8 @@
 import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 
 import { FOLDERS, useFoldersMap, LinkFolder } from '@zextras/carbonio-ui-commons';
+import { addDays, differenceInSeconds, subDays } from 'date-fns';
 import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
-import moment from 'moment';
 
 import { ReminderModal } from './reminder-modal';
 import sound from '../../assets/notification.mp3';
@@ -20,6 +20,18 @@ import { selectAppointmentsArray, selectApptStatus } from '../../store/selectors
 import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { showNotification } from '../notifications';
+
+function isReminderCandidate(appt: ReminderItem, rangeStart: number, rangeEnd: number): boolean {
+	if (!appt?.alarmData?.length) return false;
+	const nextAlarm = appt?.alarmData?.[0]?.nextAlarm;
+	if (!nextAlarm) return false;
+	return (
+		nextAlarm >= rangeStart &&
+		nextAlarm <= rangeEnd &&
+		!includes(appt?.inviteId, ':') &&
+		appt?.calendar?.id !== FOLDERS.TRASH
+	);
+}
 
 export const AppointmentReminder = (): ReactElement | null => {
 	const [reminders, setReminders] = useState<Reminders>({});
@@ -59,26 +71,18 @@ export const AppointmentReminder = (): ReactElement | null => {
 
 	const reminderRange = useMemo(
 		() => ({
-			start: moment().subtract('7', 'days').valueOf(),
-			end: moment().add('15', 'days').valueOf()
+			start: subDays(new Date(), 7).getTime(),
+			end: addDays(new Date(), 15).getTime()
 		}),
 		[]
 	);
 
 	const appointmentsToRemind = useMemo(
 		() =>
-			filter(
-				alarms ?? [],
-				(appt) =>
-					appt?.alarmData?.length &&
-					appt?.alarmData?.[0]?.nextAlarm &&
-					appt?.alarmData?.[0]?.nextAlarm > reminderRange?.start &&
-					moment(appt?.alarmData?.[0]?.nextAlarm).isSameOrAfter(moment(reminderRange?.start)) &&
-					moment(appt?.alarmData?.[0]?.nextAlarm).isSameOrBefore(moment(reminderRange?.end)) &&
-					!includes(appt?.inviteId, ':') &&
-					appt?.calendar?.id !== FOLDERS.TRASH
-			) as ReminderItem[],
-		[alarms, reminderRange?.end, reminderRange?.start]
+			filter(alarms ?? [], (appt) =>
+				isReminderCandidate(appt, reminderRange.start, reminderRange.end)
+			),
+		[alarms, reminderRange.end, reminderRange.start]
 	);
 
 	useEffect(() => {
@@ -93,10 +97,9 @@ export const AppointmentReminder = (): ReactElement | null => {
 			const newValue = reduce(
 				appointmentsToRemind,
 				(acc, reminder) => {
-					const difference = moment(reminder?.alarmData?.[0]?.nextAlarm).diff(
-						moment(),
-						'seconds',
-						true
+					const difference = differenceInSeconds(
+						new Date(reminder?.alarmData?.[0]?.nextAlarm ?? 0),
+						new Date()
 					);
 					if (difference <= 0) {
 						const isAlreadyAdded = find(reminders, {
@@ -117,7 +120,7 @@ export const AppointmentReminder = (): ReactElement | null => {
 			if (remindersToNotify?.length > 0) {
 				notificationAudio.play();
 				forEach(remindersToNotify, (rem) => {
-					const { text } = getTimeToDisplayData(rem, moment().valueOf());
+					const { text } = getTimeToDisplayData(rem, Date.now());
 					showNotification(rem?.name, text);
 				});
 			}

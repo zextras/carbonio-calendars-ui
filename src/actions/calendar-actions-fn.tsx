@@ -15,8 +15,8 @@ import {
 	ResFolder,
 	useFolderStore
 } from '@zextras/carbonio-ui-commons';
+import { format } from 'date-fns';
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
-import moment from 'moment';
 
 import { AddExternalCalendarModal } from './modals/add-external-calendar-modal';
 import { CreateGroupModal } from './modals/create-group-modal';
@@ -593,7 +593,7 @@ export const exportCalendarICSFn =
 			link.click();
 			document.body.removeChild(link);
 		};
-		const dateFormat = moment().format('YYYY-MM-DD');
+		const dateFormat = format(new Date(), 'yyyy-MM-dd');
 		downloadICS(
 			`${lowerCase(item?.name)}-${dateFormat}.ics`,
 			`/service/home/~/?auth=co&id=${item.id}&mime=text/plain&noAttach=1&icalAttach=none`

@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import moment from 'moment';
+import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import { DATE_FORMAT } from '../constants';
 import { EventType } from '../types/event';
@@ -29,12 +30,12 @@ export const getInstanceExceptionId = ({
 }): InstanceExceptionId =>
 	allDay
 		? {
-				d: moment(start).format(DATE_FORMAT.ALL_DAY),
+				d: format(new Date(start ?? 0), DATE_FORMAT.ALL_DAY),
 				tz
 			}
 		: {
 				d: tz
-					? moment(start).tz(tz).format(DATE_FORMAT.LOCAL)
-					: moment(start).utc().format(DATE_FORMAT.UTC),
+					? formatInTimeZone(new Date(start ?? 0), tz, DATE_FORMAT.LOCAL)
+					: formatInTimeZone(new Date(start ?? 0), 'UTC', DATE_FORMAT.UTC),
 				tz
 			};

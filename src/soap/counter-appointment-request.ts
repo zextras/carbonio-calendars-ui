@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
-import moment from 'moment';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import { HTML_OPENING_TAG } from '../constants';
 import { generateParticipantInformation } from '../normalizations/normalize-soap-message-from-editor';
@@ -29,6 +29,10 @@ export const counterAppointmentRequest = async ({
 }: {
 	appt: Editor;
 }): Promise<CounterAppointmentReturnType> => {
+	const tz = appt.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+	const startDate = new Date(appt.start ?? 0);
+	const endDate = new Date(appt.end ?? 0);
+	const formatICS = (date: Date): string => formatInTimeZone(date, tz, "yyyyMMdd'T'HHmm'00'");
 	const res: CounterAppointmentReturnType = await legacySoapFetch('CounterAppointment', {
 		_jsns: 'urn:zimbraMail',
 		comp: appt.compNum ?? 0,
@@ -43,14 +47,14 @@ export const counterAppointmentRequest = async ({
 						seq: 1,
 						allDay: appt.allDay ? '1' : '0',
 						e: {
-							tz: appt?.timezone,
-							d: moment(moment(appt.end)).format('YYYYMMDDTHHmm00')
+							tz,
+							d: formatICS(endDate)
 						},
 						exceptId: appt.exceptId,
 						or: { a: appt.organizer?.email },
 						s: {
-							tz: appt?.timezone,
-							d: moment(moment(appt.start)).format('YYYYMMDDTHHmm00')
+							tz,
+							d: formatICS(startDate)
 						}
 					}
 				]
@@ -65,25 +69,14 @@ export const counterAppointmentRequest = async ({
 								<tr height="1.5rem"><td>New Time Proposed</td></tr>
 								<tr height="1.5rem"><td>Subject: ${appt.title}</td></tr>
 								<tr height="1.5rem" style="color:#2b73d2;font-weight:bold">
-									<td>Time: ${moment(appt.start).format('dddd, D MMMM, YYYY, HH:mm:ss')} - ${moment(appt.end).format(
-										'HH:mm:ss'
-									)} GMT ${moment(appt.start)
-										.tz(moment.tz.guess())
-										.format('Z')} ${moment.tz.guess()} [MODIFIED]</td>
+									<td>Time: ${formatInTimeZone(startDate, tz, 'EEEE, d MMMM, yyyy, HH:mm:ss')} - ${formatInTimeZone(endDate, tz, 'HH:mm:ss')} GMT ${formatInTimeZone(startDate, tz, 'xxx')} ${tz} [MODIFIED]</td>
 								</tr>
 							</table>\n<div>*~*~*~*~*~*~*~*~*~*</div><br>
 							${appt?.richText}
 						`
 					},
 					{
-						content: `New Time Proposed\n\nSubject: ${appt.title} \n\nTime: ${moment(
-							appt.start
-						).format('dddd, D MMMM, YYYY, HH:mm:ss')} - ${moment(appt.end).format('HH:mm:ss')} GMT
-							${moment(appt.start)
-								.tz(moment.tz.guess())
-								.format('Z')} ${moment.tz.guess()} [MODIFIED]\n\n*~*~*~*~*~*~*~*~*~*\n\n${
-								appt.plainText
-							}`,
+						content: `New Time Proposed\n\nSubject: ${appt.title} \n\nTime: ${formatInTimeZone(startDate, tz, 'EEEE, d MMMM, yyyy, HH:mm:ss')} - ${formatInTimeZone(endDate, tz, 'HH:mm:ss')} GMT ${formatInTimeZone(startDate, tz, 'xxx')} ${tz} [MODIFIED]\n\n*~*~*~*~*~*~*~*~*~*\n\n${appt.plainText}`,
 						ct: 'text/plain'
 					}
 				]

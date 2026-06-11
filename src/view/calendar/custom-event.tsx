@@ -15,8 +15,8 @@ import {
 	Padding
 } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, useFoldersMap } from '@zextras/carbonio-ui-commons';
+import { differenceInMinutes, format, isSameDay, isSameMonth, isSameYear } from 'date-fns';
 import { isNil } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -64,24 +64,24 @@ const CustomDate = ({
 	end
 }: {
 	textOverflow: string;
-	start: moment.Moment;
-	end: moment.Moment;
+	start: Date;
+	end: Date;
 }): React.JSX.Element => {
 	const timeToDisplay = useMemo(() => {
-		const isSameDay = moment(start).isSame(moment(end), 'day');
-		const isSameMonth = moment(start).isSame(moment(end), 'month');
-		const isSameYear = moment(start).isSame(moment(end), 'year');
+		const sameDay = isSameDay(start, end);
+		const sameMonth = isSameMonth(start, end);
+		const sameYear = isSameYear(start, end);
 
-		if (!isSameYear) {
-			return `${start.format('Y/MM/DD, LT')} - ${end.format('Y/MM/DD, LT')}`;
+		if (!sameYear) {
+			return `${format(start, 'yyyy/MM/dd, p')} - ${format(end, 'yyyy/MM/dd, p')}`;
 		}
-		if (!isSameMonth) {
-			return `${start.format('ddd MM/DD, LT')} - ${end.format('ddd MM/DD, LT')}`;
+		if (!sameMonth) {
+			return `${format(start, 'EEE MM/dd, p')} - ${format(end, 'EEE MM/dd, p')}`;
 		}
-		if (!isSameDay) {
-			return `${start.format('ddd DD, LT')} - ${end.format('ddd DD, LT')}`;
+		if (!sameDay) {
+			return `${format(start, 'EEE dd, p')} - ${format(end, 'EEE dd, p')}`;
 		}
-		return `${start.format('LT')} - ${end.format('LT')}`;
+		return `${format(start, 'p')} - ${format(end, 'p')}`;
 	}, [end, start]);
 
 	return (
@@ -108,7 +108,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { replaceHistory } = useHistoryNavigation();
 
 	const eventDiff = useMemo(
-		() => moment(event.end).diff(event.start, 'minutes'),
+		() => differenceInMinutes(event.end, event.start),
 		[event.start, event.end]
 	);
 
@@ -287,8 +287,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												wrap="nowrap"
 											>
 												<CustomDate
-													start={moment(event.start)}
-													end={moment(event.end)}
+													start={event.start}
+													end={event.end}
 													textOverflow={textOverflow}
 												/>
 												<Padding left="small" />

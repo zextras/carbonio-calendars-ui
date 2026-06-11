@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { faker } from '@faker-js/faker';
-import moment from 'moment';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import {
 	EVENT_DISPLAY_STATUS,
@@ -66,7 +66,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 		textDescription: [{ _content: '' }], // event doesn't have this
 		htmlDescription: [{ _content: '' }], // event doesn't have this
 		end: {
-			d: moment(event?.end).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+			d: formatInTimeZone(new Date(event?.end ?? 0), 'UTC', "yyyyMMdd'T'HHmmss'Z'"),
 			u: event?.end?.valueOf() ?? 1667382630000
 		},
 		freeBusy: event?.resource?.freeBusy ?? EVENT_DISPLAY_STATUS.BUSY,
@@ -84,7 +84,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 		recurrenceRule: undefined,
 		isRespRequested: false,
 		start: {
-			d: moment(event?.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+			d: formatInTimeZone(new Date(event?.start ?? 0), 'UTC', "yyyyMMdd'T'HHmmss'Z'"),
 			u: event?.start?.valueOf() ?? 1667382630000
 		},
 		sequenceNumber: 123456789,

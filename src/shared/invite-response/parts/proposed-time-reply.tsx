@@ -9,7 +9,6 @@ import { Container, Padding, Button, Divider, useSnackbar } from '@zextras/carbo
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { find, map } from 'lodash';
-import moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 
 import { generateEditor } from '../../../commons/editor-generator';
@@ -21,6 +20,17 @@ import { modifyAppointment } from '../../../store/actions/new-modify-appointment
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { updateEditor } from '../../../store/slices/editor-slice';
 import { ProposedTimeReplyArguments } from '../../../types/integrations';
+import { parseDateFromICS } from '../../../utils/dates';
+
+function resolveCompTimestamp(
+	comp: { u?: number; d?: string } | undefined,
+	fallback: number
+): number {
+	if (comp === undefined) return fallback;
+	if (comp.u !== undefined) return comp.u;
+	if (comp.d) return parseDateFromICS(comp.d).getTime();
+	return fallback;
+}
 
 const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	id,
@@ -66,16 +76,16 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 						const invite = normalizeInvite(res2?.payload.m[0]);
 						const appointment = normalizeFromGetAppointment(appointmentToNormalize);
 						const event = normalizeCalendarEvent({ appointment, invite, calendar });
+						const startComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0];
+						const endComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0];
 						const editor = generateEditor({
 							event,
 							invite,
 							context: {
 								attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
 								isInstance: !!ridZ,
-								originalStart:
-									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d).valueOf() ?? start,
-								originalEnd:
-									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d).valueOf() ?? end,
+								originalStart: resolveCompTimestamp(startComp, start),
+								originalEnd: resolveCompTimestamp(endComp, end),
 								exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
 								start,
 								end,

@@ -5,8 +5,8 @@
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { getRoot, Folder, Folders, LinkFolder } from '@zextras/carbonio-ui-commons';
+import { addDays, endOfDay, startOfDay } from 'date-fns';
 import { find, reduce, map, isEmpty } from 'lodash';
-import moment from 'moment';
 
 import { setCalendarColor } from './normalizations-utils';
 import { PARTICIPATION_STATUS } from '../constants/api';
@@ -122,14 +122,9 @@ export const normalizeCalendarEvent = ({
 	const user = getUserAccount();
 
 	return {
-		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
+		start: allDay ? startOfDay(new Date(start)) : new Date(start),
 		end: allDay
-			? new Date(
-					moment(start)
-						.add(getDaysFromMillis(dur) - 1, 'days')
-						.endOf('day')
-						.valueOf()
-				)
+			? endOfDay(addDays(new Date(start), getDaysFromMillis(dur) - 1))
 			: new Date(start + dur),
 		resourceId: calendar.id,
 		resource: normalizeEventResource({

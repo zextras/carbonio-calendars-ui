@@ -7,7 +7,6 @@ import React, { ReactElement, useEffect, useMemo } from 'react';
 
 import { Container, Divider } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
-import moment from 'moment';
 
 import { ActionsButtonsRow } from './actions-buttons-row';
 import { CalendarInfoRow } from './calendar-info-row';
@@ -42,7 +41,7 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 			allDay: event?.allDay,
 			start: event?.start?.getTime(),
 			end: event?.end?.getTime(),
-			timezone: invite?.tz ?? moment.tz.guess()
+			timezone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
 		}),
 		[event?.allDay, event?.end, event?.start, invite?.tz]
 	);

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { act, waitFor } from '@testing-library/react';
+import { endOfDay, startOfDay } from 'date-fns';
 import { map } from 'lodash';
-import moment from 'moment';
 
 import { useAttendeesAvailability } from './use-attendees-availability';
 import * as handler from '../soap/get-free-busy-request';
@@ -18,7 +18,7 @@ describe('use attendees availability', () => {
 			const spy = vi.spyOn(handler, 'getFreeBusyRequest');
 
 			setupHook(useAttendeesAvailability, {
-				initialProps: [moment().valueOf(), []]
+				initialProps: [Date.now(), []]
 			});
 
 			expect(spy).not.toHaveBeenCalled();
@@ -31,8 +31,8 @@ describe('use attendees availability', () => {
 
 			const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-			const rangeStart = moment().startOf('day').valueOf();
-			const rangeEnd = moment().endOf('day').valueOf();
+			const rangeStart = startOfDay(new Date()).getTime();
+			const rangeEnd = endOfDay(new Date()).getTime();
 
 			await waitFor(() => {
 				setupHook(useAttendeesAvailability, {
@@ -54,8 +54,8 @@ describe('use attendees availability', () => {
 
 			const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-			const rangeStart = moment().startOf('day').valueOf();
-			const rangeEnd = moment().endOf('day').valueOf();
+			const rangeStart = startOfDay(new Date()).getTime();
+			const rangeEnd = endOfDay(new Date()).getTime();
 
 			await waitFor(() => {
 				setupHook(useAttendeesAvailability, {
@@ -75,8 +75,8 @@ describe('use attendees availability', () => {
 
 			const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-			const rangeStart = moment().startOf('day').valueOf();
-			const rangeEnd = moment().endOf('day').valueOf();
+			const rangeStart = startOfDay(new Date()).getTime();
+			const rangeEnd = endOfDay(new Date()).getTime();
 
 			const { rerender } = setupHook(useAttendeesAvailability, {
 				initialProps: [rangeStart, attendees]
@@ -100,8 +100,8 @@ describe('use attendees availability', () => {
 					Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
 				);
 
-			const rangeStart = moment().startOf('day').valueOf();
-			const rangeEnd = moment().endOf('day').valueOf();
+			const rangeStart = startOfDay(new Date()).getTime();
+			const rangeEnd = endOfDay(new Date()).getTime();
 
 			const { rerender } = setupHook(useAttendeesAvailability, {
 				initialProps: [rangeStart, attendees]
@@ -130,8 +130,8 @@ describe('use attendees availability', () => {
 					Promise.resolve({ usr: [{ id: attendees[0].email }, { id: attendees[1].email }] })
 				);
 
-			const rangeStart = moment().startOf('day').valueOf();
-			const rangeEnd = moment().endOf('day').valueOf();
+			const rangeStart = startOfDay(new Date()).getTime();
+			const rangeEnd = endOfDay(new Date()).getTime();
 
 			const { rerender } = setupHook(useAttendeesAvailability, {
 				initialProps: [rangeStart, attendees]
@@ -164,8 +164,8 @@ describe('use attendees availability', () => {
 				.mockReturnValueOnce(Promise.resolve({ usr: [{ id: allAttendees[0].email }] }))
 				.mockReturnValueOnce(Promise.resolve({ usr: [{ id: allAttendees[1].email }] }));
 
-			const rangeStart = moment().startOf('day').valueOf();
-			const rangeEnd = moment().endOf('day').valueOf();
+			const rangeStart = startOfDay(new Date()).getTime();
+			const rangeEnd = endOfDay(new Date()).getTime();
 
 			const { rerender } = setupHook(useAttendeesAvailability, {
 				initialProps: [rangeStart, previousAttendees]
@@ -204,8 +204,8 @@ describe('use attendees availability', () => {
 
 				const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-				const rangeStart = moment().startOf('day').valueOf();
-				const rangeEnd = moment().endOf('day').valueOf();
+				const rangeStart = startOfDay(new Date()).getTime();
+				const rangeEnd = endOfDay(new Date()).getTime();
 
 				const { rerender } = setupHook(useAttendeesAvailability, {
 					initialProps: [rangeStart, attendees]
@@ -218,8 +218,8 @@ describe('use attendees availability', () => {
 				expect(spy).toHaveBeenCalledWith({ s: rangeStart, e: rangeEnd, uid });
 
 				const newStart = rangeStart - 86500000;
-				const newStartDay = moment(newStart).startOf('day').valueOf();
-				const newEndDay = moment(newStart).endOf('day').valueOf();
+				const newStartDay = startOfDay(new Date(newStart)).getTime();
+				const newEndDay = endOfDay(new Date(newStart)).getTime();
 
 				rerender([newStart, attendees]);
 
@@ -241,8 +241,8 @@ describe('use attendees availability', () => {
 
 				const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-				const rangeStart = moment().startOf('day').valueOf();
-				const rangeEnd = moment().endOf('day').valueOf();
+				const rangeStart = startOfDay(new Date()).getTime();
+				const rangeEnd = endOfDay(new Date()).getTime();
 
 				const { rerender } = setupHook(useAttendeesAvailability, {
 					initialProps: [rangeStart, attendees]
@@ -269,8 +269,8 @@ describe('use attendees availability', () => {
 
 				const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-				const rangeStart = moment().startOf('day').valueOf();
-				const rangeEnd = moment().endOf('day').valueOf();
+				const rangeStart = startOfDay(new Date()).getTime();
+				const rangeEnd = endOfDay(new Date()).getTime();
 
 				const { rerender } = setupHook(useAttendeesAvailability, {
 					initialProps: [rangeStart, attendees]
@@ -283,8 +283,8 @@ describe('use attendees availability', () => {
 				expect(spy).toHaveBeenCalledWith({ s: rangeStart, e: rangeEnd, uid });
 
 				const newStart = rangeStart + 172800000;
-				const newStartDay = moment(newStart).startOf('day').valueOf();
-				const newEndDay = moment(newStart).endOf('day').valueOf();
+				const newStartDay = startOfDay(new Date(newStart)).getTime();
+				const newEndDay = endOfDay(new Date(newStart)).getTime();
 
 				rerender([newStart, attendees]);
 				await waitFor(() => {
@@ -303,8 +303,8 @@ describe('use attendees availability', () => {
 
 					const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-					const rangeStart = moment().startOf('day').valueOf();
-					const rangeEnd = moment().endOf('day').valueOf();
+					const rangeStart = startOfDay(new Date()).getTime();
+					const rangeEnd = endOfDay(new Date()).getTime();
 
 					const { rerender } = setupHook(useAttendeesAvailability, {
 						initialProps: [rangeStart, attendees]
@@ -335,8 +335,8 @@ describe('use attendees availability', () => {
 
 					const uid = map(attendees, (attendee) => attendee.email).join(',');
 
-					const rangeStart = moment().startOf('day').valueOf();
-					const rangeEnd = moment().endOf('day').valueOf();
+					const rangeStart = startOfDay(new Date()).getTime();
+					const rangeEnd = endOfDay(new Date()).getTime();
 
 					const { rerender } = setupHook(useAttendeesAvailability, {
 						initialProps: [rangeStart, attendees]
@@ -363,8 +363,8 @@ describe('use attendees availability', () => {
 						.mockReturnValueOnce(Promise.resolve({ usr: [{ id: attendees[0].email }] }))
 						.mockReturnValueOnce(Promise.resolve({ usr: [{ id: attendees[1].email }] }));
 
-					const rangeStart = moment().startOf('day').valueOf();
-					const rangeEnd = moment().endOf('day').valueOf();
+					const rangeStart = startOfDay(new Date()).getTime();
+					const rangeEnd = endOfDay(new Date()).getTime();
 
 					const { rerender } = setupHook(useAttendeesAvailability, {
 						initialProps: [rangeStart, [attendees[0]]]
