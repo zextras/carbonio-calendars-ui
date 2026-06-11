@@ -105,7 +105,7 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 				)}
 				{method !== MESSAGE_METHOD.COUNTER && (
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{originalDate}
+						{convertedDate}
 					</Text>
 				)}
 

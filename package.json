@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.26.5",
+	"version": "1.26.6",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"packageManager": "pnpm@10.32.1",
@@ -58,7 +58,7 @@
 		"@typescript-eslint/parser": "6.21.0",
 		"@vitejs/plugin-react": "5.2.0",
 		"@vitest/coverage-v8": "4.1.6",
-		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#v0.0.8",
+		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#v0.0.11",
 		"@zextras/carbonio-ui-configs": "2.1.0",
 		"@zextras/carbonio-ui-sdk": "2.3.5",
 		"babel-plugin-transform-import-meta": "2.3.3",
