@@ -7,9 +7,16 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { Popover, useTheme } from '@zextras/carbonio-design-system';
 import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
+import {
+	differenceInDays,
+	format as dateFnsFormat,
+	getDay,
+	isSameDay,
+	parse as dateFnsParse,
+	startOfWeek as dateFnsStartOfWeek
+} from 'date-fns';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
-import moment from 'moment-timezone';
-import { Calendar, type Components, momentLocalizer } from 'react-big-calendar';
+import { Calendar, type Components, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
 
@@ -42,6 +49,7 @@ import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { WorkWeekDay, workWeek } from '../../utils/work-week';
 import EventPanelView from '../event-panel-view/event-panel-view';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
+import { useDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
 
 const _BigCalendar = withDragAndDrop<EventType, CalendarResource>(Calendar);
 // `workingSchedule` is a custom prop consumed by the WorkView component, not part of the library's types
@@ -80,8 +88,26 @@ export default function CalendarComponent(): React.JSX.Element {
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const anchorElement = useSummaryViewRef();
-	const firstDayOfWeek = (prefs.zimbraPrefCalendarFirstDayOfWeek as unknown as number) ?? 0;
-	const localizer = momentLocalizer(moment);
+	const firstDayOfWeek = Number(prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0);
+	const dateFnsLocale = useDateFnsLocale();
+	const customLocale = useMemo(
+		() => ({
+			...dateFnsLocale,
+			options: { ...dateFnsLocale.options, weekStartsOn: firstDayOfWeek }
+		}),
+		[dateFnsLocale, firstDayOfWeek]
+	);
+	const localizer = useMemo(
+		() =>
+			dateFnsLocalizer({
+				format: dateFnsFormat,
+				parse: dateFnsParse,
+				startOfWeek: dateFnsStartOfWeek,
+				getDay,
+				locales: { 'en-US': customLocale }
+			}),
+		[customLocale]
+	);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 
@@ -89,16 +115,8 @@ export default function CalendarComponent(): React.JSX.Element {
 	const { onEventDropOrResize, handleSelect, onRangeChange, onNavigate, date } =
 		useCalendarComponentUtils();
 
-	if (prefs.zimbraPrefLocale) {
-		moment.updateLocale(prefs.zimbraPrefLocale, {
-			week: {
-				dow: firstDayOfWeek
-			}
-		});
-	}
-
-	const workingSchedule = useMemo<WorkWeekDay[]>(
-		() => workWeek(String(prefs.zimbraPrefCalendarWorkingHours ?? '')),
+	const workingSchedule = useMemo(
+		() => workWeek(prefs.zimbraPrefCalendarWorkingHours),
 		[prefs?.zimbraPrefCalendarWorkingHours]
 	);
 
@@ -226,9 +244,9 @@ export default function CalendarComponent(): React.JSX.Element {
 
 	const draggableAccessor = useCallback(
 		(calendarEvent: EventType): boolean => {
-			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+			const startAndEndSameDay = isSameDay(calendarEvent.start, calendarEvent.end);
 
-			if (!isSameDay) {
+			if (!startAndEndSameDay) {
 				/* Drag is disabled for events that span over multiple days due to an issue with the library */
 				return false;
 			}
@@ -246,9 +264,9 @@ export default function CalendarComponent(): React.JSX.Element {
 
 	const resizableAccessor = useCallback(
 		(calendarEvent: EventType): boolean => {
-			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+			const startAndEndSameDay = isSameDay(calendarEvent.start, calendarEvent.end);
 
-			if (!isSameDay) {
+			if (!startAndEndSameDay) {
 				/* Resize is disabled for events that span over multiple days due to an issue with the library */
 				return false;
 			}
@@ -272,7 +290,7 @@ export default function CalendarComponent(): React.JSX.Element {
 	);
 
 	const allDayAccessor = useCallback((calendarEvent: EventType): boolean => {
-		const diffInDays = moment(calendarEvent.end).diff(calendarEvent.start, 'days');
+		const diffInDays = differenceInDays(calendarEvent.end, calendarEvent.start);
 
 		return diffInDays > 0 || calendarEvent.allDay;
 	}, []);
@@ -337,6 +355,7 @@ export default function CalendarComponent(): React.JSX.Element {
 				popup
 				dayLayoutAlgorithm="no-overlap"
 				selectable
+				culture="en-US"
 				localizer={localizer}
 				defaultView={defaultView}
 				events={events}

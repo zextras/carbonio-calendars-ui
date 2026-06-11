@@ -5,8 +5,8 @@
  */
 
 import { getRoot, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
+import { endOfDay, set, startOfDay } from 'date-fns';
 import { filter, find, isNil, map, omitBy } from 'lodash';
-import moment, { Moment } from 'moment';
 
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import type { EditorContext } from '../commons/editor-generator';
@@ -16,6 +16,7 @@ import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
+import { parseDateFromICS } from '../utils/dates';
 
 // TODO: REMOVE IF RELATED TO OLD CHAT PRODUCT
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -86,9 +87,32 @@ export type EventPropType = {
 	};
 	title: string;
 	allDay: boolean;
-	start: Date | Moment;
-	end: Date | Moment;
+	start: Date;
+	end: Date;
 };
+
+function resolveInviteTimestamp(comp: { u?: number; d?: string } | undefined): number {
+	if (comp === undefined) return 0;
+	if (comp.u !== undefined) return comp.u;
+	if (comp.d) return parseDateFromICS(comp.d).getTime();
+	return 0;
+}
+
+function coerceToDate(val: Date | number | undefined): Date {
+	if (val instanceof Date) return val;
+	return new Date(val ?? 0);
+}
+
+function resolveEditorDatePair(
+	startDate: Date,
+	endDate: Date,
+	allDay: boolean | undefined
+): { start: number; end: number } {
+	if (allDay) {
+		return { start: startOfDay(startDate).getTime(), end: endOfDay(endDate).getTime() };
+	}
+	return { start: startDate.getTime(), end: endDate.getTime() };
+}
 
 const setEditorDate = ({
 	editorType,
@@ -100,43 +124,25 @@ const setEditorDate = ({
 	event: EventPropType | undefined;
 }): { start: number; end: number } => {
 	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getPrefs();
-	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
-		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
-		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
+	const endDur = zimbraPrefCalendarDefaultApptDuration.includes('m')
+		? Number.parseInt(zimbraPrefCalendarDefaultApptDuration, 10) * 60 * 1000
+		: Number.parseInt(zimbraPrefCalendarDefaultApptDuration, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const start = invite?.start?.u ?? moment(invite?.start?.d).valueOf();
-			const end = invite?.end?.u ?? moment(invite?.end?.d).valueOf();
-
-			const currentStartDate = new Date(start);
-			const currentEndDate = new Date(end);
-
-			return {
-				start: event?.allDay
-					? moment(currentStartDate)?.startOf('date').valueOf()
-					: currentStartDate.getTime(),
-				end: event?.allDay
-					? moment(currentEndDate)?.endOf('date').valueOf()
-					: currentEndDate.getTime()
-			};
+			return resolveEditorDatePair(
+				new Date(resolveInviteTimestamp(invite.start)),
+				new Date(resolveInviteTimestamp(invite.end)),
+				event?.allDay
+			);
 		}
-
-		const currentStartDate = new Date(moment(event?.start).valueOf());
-		const currentEndDate = new Date(moment(event?.end).valueOf());
-
-		return {
-			start: event?.allDay
-				? moment(currentStartDate)?.startOf('date').valueOf()
-				: moment(currentStartDate).valueOf(),
-			end: event?.allDay
-				? moment(currentEndDate)?.endOf('date').valueOf()
-				: moment(currentEndDate).valueOf()
-		};
+		return resolveEditorDatePair(
+			coerceToDate(event?.start),
+			coerceToDate(event?.end),
+			event?.allDay
+		);
 	}
-	return {
-		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
-		end: moment().set('second', 0).set('millisecond', 0).valueOf() + endDur
-	};
+	const now = set(new Date(), { seconds: 0, milliseconds: 0 });
+	return { start: now.getTime(), end: now.getTime() + endDur };
 };
 
 export const normalizeCalendarEditor = (folder: CalendarEditor): CalendarEditor => {

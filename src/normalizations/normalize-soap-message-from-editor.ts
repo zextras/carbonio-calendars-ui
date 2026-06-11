@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
+import { formatInTimeZone } from 'date-fns-tz';
 import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
-import moment from 'moment';
 
 import { Rel } from './normalizations-utils';
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
@@ -47,20 +47,18 @@ const setResourceDate = ({
 	timezone?: string;
 }): { d: string; tz?: string } => {
 	if (allDay) {
+		const tz = timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 		return {
-			d: moment(time)
-				.tz(timezone ?? new Intl.DateTimeFormat().resolvedOptions().timeZone)
-				.startOf('day')
-				.format('YYYYMMDD')
+			d: formatInTimeZone(new Date(time ?? 0), tz, 'yyyyMMdd')
 		};
 	}
 	return timezone
 		? {
-				d: moment(time).tz(timezone).format('YYYYMMDD[T]HHmmss'),
+				d: formatInTimeZone(new Date(time ?? 0), timezone, "yyyyMMdd'T'HHmmss"),
 				tz: timezone
 			}
 		: {
-				d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
+				d: formatInTimeZone(new Date(time ?? 0), 'UTC', "yyyyMMdd'T'HHmmss'Z'")
 			};
 };
 

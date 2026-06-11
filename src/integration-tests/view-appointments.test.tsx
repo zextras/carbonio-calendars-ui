@@ -5,7 +5,7 @@
  */
 import { screen } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import moment from 'moment';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import { generateCalendar, mockExpandedFolders, setupCalendarViewIntegrationTest } from './utils';
 import { SIDEBAR_ROOT_SUBSECTION } from '../constants/sidebar';
@@ -25,7 +25,7 @@ const generateAppointmentsResponse = (): unknown => {
 				inst: [
 					{
 						s: nowMillis,
-						ridZ: moment.utc(nowMillis).format('YYYYMMDDTHHmmss[Z]')
+						ridZ: formatInTimeZone(new Date(nowMillis), 'UTC', "yyyyMMdd'T'HHmmss'Z'")
 					}
 				]
 			}

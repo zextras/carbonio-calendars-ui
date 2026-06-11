@@ -8,12 +8,12 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import moment from 'moment';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { MESSAGE_METHOD } from 'constants/api';
 import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
 import { Invite } from 'types/store/invite';
+import { parseDateFromICS } from 'utils/dates';
 
 type InviteHeaderPartProps = {
 	mailMsg: any;
@@ -36,13 +36,13 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	const allDay = invite.allDay ?? false;
 
 	const localStartTime = useMemo(
-		() => moment(invite.start?.d ?? invite.start.u).valueOf(),
-		[invite.start?.d, invite.start.u]
+		() => invite.start?.u ?? (invite.start?.d ? parseDateFromICS(invite.start.d).getTime() : 0),
+		[invite.start?.d, invite.start?.u]
 	);
 
 	const localEndTime = useMemo(
-		() => moment(invite.end?.d ?? invite.end.u).valueOf(),
-		[invite.end?.d, invite.end.u]
+		() => invite.end?.u ?? (invite.end?.d ? parseDateFromICS(invite.end.d).getTime() : 0),
+		[invite.end?.d, invite.end?.u]
 	);
 
 	const originalDate = useGetDateRangeConvertedToTimezone(localStartTime ?? 0, localEndTime ?? 0, {
@@ -55,8 +55,8 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	});
 
 	const counterDate = useGetDateRangeConvertedToTimezone(
-		proposedStartTime ? moment(proposedStartTime).valueOf() : 0,
-		proposedEndTime ? moment(proposedEndTime).valueOf() : 0,
+		proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0,
+		proposedEndTime ? parseDateFromICS(proposedEndTime).getTime() : 0,
 		{
 			allDay,
 			timeZone
@@ -105,7 +105,7 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 				)}
 				{method !== MESSAGE_METHOD.COUNTER && (
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{originalDate}
+						{convertedDate}
 					</Text>
 				)}
 

@@ -7,8 +7,8 @@
 import { useMemo } from 'react';
 
 import { DropdownItem } from '@zextras/carbonio-design-system';
+import { differenceInSeconds } from 'date-fns';
 import { filter } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import { AlarmType } from '../../types/event';
@@ -26,7 +26,10 @@ export const useGetReminderItems = (
 	const [t] = useTranslation();
 
 	const diff = useMemo(
-		() => moment(alarmData?.[0]?.alarmInstStart).diff(moment(), 'seconds'),
+		() =>
+			alarmData?.[0]?.alarmInstStart === undefined
+				? 0
+				: differenceInSeconds(new Date(alarmData[0].alarmInstStart), new Date()),
 		[alarmData]
 	);
 	const beforeList = useMemo(

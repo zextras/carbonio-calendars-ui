@@ -6,12 +6,13 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { add as datesAdd } from 'date-arithmetic';
+import { endOfDay, format, getDay, setDay, startOfDay } from 'date-fns';
 import { find, findLast, reduce } from 'lodash';
-import moment from 'moment';
 import { Navigate } from 'react-big-calendar';
 import TimeGrid from 'react-big-calendar/lib/TimeGrid';
 
 import { WorkWeekDay } from '../../utils/work-week';
+import { getDateFnsLocale } from 'commons/date-fns-react-widgets-localizer';
 
 // Needed by the "range" and "title" functions
 let schedule: WorkWeekDay[] = [];
@@ -41,11 +42,7 @@ export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement 
 	// Looks horrible but there is no other way to pass and sync the workingSchedule
 	schedule = useMemo(() => workingSchedule, [workingSchedule]);
 	const [min, max, range] = useMemo(
-		() => [
-			new Date(moment(date).startOf('day').valueOf()),
-			new Date(moment(date).endOf('day').valueOf()),
-			WorkView.range(date)
-		],
+		() => [startOfDay(date), endOfDay(date), WorkView.range(date)],
 		[date]
 	);
 
@@ -56,13 +53,13 @@ export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement 
 
 // Called by BigCalendar on week change
 WorkView.range = (rangeDate: Date): Date[] => {
-	const current = moment(rangeDate).day();
-	const d = moment(rangeDate).startOf('day');
+	const current = getDay(rangeDate);
+	const d = startOfDay(rangeDate);
 	return reduce(
 		schedule,
 		(acc: Date[], day: WorkWeekDay, i: number) => {
 			if (day.working) {
-				acc.push(datesAdd(d.toDate(), i - current, 'day'));
+				acc.push(datesAdd(d, i - current, 'day'));
 			}
 			return acc;
 		},
@@ -99,11 +96,12 @@ WorkView.weekBounds = (week: WorkWeekDay[]): WorkWeekBounds => {
 // no-unused-vars: Actually called by BigCalendar
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 WorkView.title = (titleDate: Date): string => {
+	const locale = getDateFnsLocale();
 	const { start, end } = WorkView.weekBounds(schedule);
-	const startDate = moment(titleDate).day(start);
-	const endDate = datesAdd(startDate.toDate(), end - start, 'day');
-	const isMonthSame = moment(startDate).format('MMMM') === moment(endDate).format('MMMM');
+	const startDate = setDay(titleDate, start);
+	const endDate = datesAdd(startDate, end - start, 'day');
+	const isMonthSame = format(startDate, 'MMMM', { locale }) === format(endDate, 'MMMM', { locale });
 	return isMonthSame
-		? `${moment(startDate).format('MMMM DD')} - ${moment(endDate).format('DD')}`
-		: ` ${moment(startDate).format('MMMM DD')} - ${moment(endDate).format('MMMM DD')}`;
+		? `${format(startDate, 'MMMM dd', { locale })} - ${format(endDate, 'dd', { locale })}`
+		: ` ${format(startDate, 'MMMM dd', { locale })} - ${format(endDate, 'MMMM dd', { locale })}`;
 };

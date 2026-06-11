@@ -8,7 +8,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, waitFor } from '@testing-library/react';
 import { addBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import moment from 'moment';
+import { endOfDay, startOfDay } from 'date-fns';
 
 import { useCalendarComponentUtils } from './use-calendar-component-utils';
 import { onSave } from '../commons/editor-save-send-fns';
@@ -80,8 +80,8 @@ describe('useCalendarComponentUtils', () => {
 			});
 
 			expect(setRange).toHaveBeenCalledWith({
-				start: moment(start).startOf('day').valueOf(),
-				end: moment(end).endOf('day').valueOf()
+				start: startOfDay(start).getTime(),
+				end: endOfDay(end).getTime()
 			});
 		});
 
@@ -101,8 +101,8 @@ describe('useCalendarComponentUtils', () => {
 			});
 
 			expect(setRange).toHaveBeenCalledWith({
-				start: moment(new Date(RANGE_START)).startOf('day').valueOf(),
-				end: moment(new Date(RANGE_END)).endOf('day').valueOf()
+				start: startOfDay(new Date(RANGE_START)).getTime(),
+				end: endOfDay(new Date(RANGE_END)).getTime()
 			});
 		});
 

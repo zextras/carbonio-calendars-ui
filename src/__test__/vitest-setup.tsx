@@ -6,7 +6,6 @@
  */
 
 import '@testing-library/jest-dom';
-import moment from 'moment-timezone';
 import { http, RequestHandler } from 'msw';
 import { SetupServer, setupServer } from 'msw/node';
 import { vi, beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
@@ -222,8 +221,6 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-	moment.tz.setDefault(VITEST_DEFAULT_TIMEZONE);
-	moment.tz.guess = vi.fn().mockImplementation(() => VITEST_DEFAULT_TIMEZONE);
 	const originalDateResolvedOptions = new Intl.DateTimeFormat().resolvedOptions();
 
 	vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockReturnValue({

@@ -1,3 +1,9 @@
+## <small>1.26.6 (2026-06-10)</small>
+
+* fix: correct timezone handling for start and end times (#765) ([637c1aa](https://github.com/zextras/carbonio-calendars-ui/commit/637c1aa)), closes [#765](https://github.com/zextras/carbonio-calendars-ui/issues/765)
+* chore: update jenkins-lib-common to v2.10.1 (#764) ([5bf6fb1](https://github.com/zextras/carbonio-calendars-ui/commit/5bf6fb1)), closes [#764](https://github.com/zextras/carbonio-calendars-ui/issues/764)
+* chore(store): add full coverage tests for editor-reducers (#759) ([539d5b6](https://github.com/zextras/carbonio-calendars-ui/commit/539d5b6)), closes [#759](https://github.com/zextras/carbonio-calendars-ui/issues/759)
+
 ## <small>1.26.5 (2026-06-08)</small>
 
 * fix(ci): update to 2.10.0 lib-common ([b8d4de9](https://github.com/zextras/carbonio-calendars-ui/commit/b8d4de9))

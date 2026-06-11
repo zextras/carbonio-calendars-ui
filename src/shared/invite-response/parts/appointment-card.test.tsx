@@ -7,8 +7,8 @@ import React from 'react';
 
 import { screen } from '@testing-library/react';
 import { useTagStore } from '@zextras/carbonio-ui-commons';
+import { format } from 'date-fns';
 import { map, values } from 'lodash';
-import moment from 'moment';
 
 import { AppointmentCard } from './appointment-card';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
@@ -59,7 +59,7 @@ describe('appointment card component', () => {
 				setupTest(<AppointmentCard event={event} />);
 
 				const timeString = screen.getByText(
-					`${moment(event.start).format('hh:mm A')} - ${moment(event.end).format('hh:mm A')}`
+					`${format(new Date(event.start), 'hh:mm a')} - ${format(new Date(event.end), 'hh:mm a')}`
 				);
 				expect(timeString).toBeVisible();
 			});
@@ -77,9 +77,7 @@ describe('appointment card component', () => {
 				setupTest(<AppointmentCard event={event} />);
 
 				const timeString = screen.getByText(
-					`${moment(event.start).format('MMMM Do YYYY hh:mm A')} - ${moment(event.end).format(
-						'MMMM Do YYYY hh:mm A'
-					)}`
+					`${format(new Date(event.start), 'MMMM do yyyy hh:mm a')} - ${format(new Date(event.end), 'MMMM do yyyy hh:mm a')}`
 				);
 				expect(timeString).toBeVisible();
 			});
@@ -94,9 +92,7 @@ describe('appointment card component', () => {
 				});
 				setupTest(<AppointmentCard event={event} />);
 
-				const string = `${moment(event.start).format('MMMM Do YYYY')} - ${moment(event.end).format(
-					'MMMM Do YYYY'
-				)} - All day`;
+				const string = `${format(new Date(event.start), 'MMMM do yyyy')} - ${format(new Date(event.end), 'MMMM do yyyy')} - All day`;
 				const timeString = screen.getByText(string);
 				expect(timeString).toBeVisible();
 			});

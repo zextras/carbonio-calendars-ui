@@ -9,8 +9,8 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { parse } from 'date-fns';
 import { keyBy, values } from 'lodash';
-import moment from 'moment-timezone';
 
 import * as handler from '../../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../../constants';
@@ -147,14 +147,14 @@ describe('invite response component', () => {
 										{
 											d: '20240128T090000',
 											tz: 'Europe/Berlin',
-											u: moment('20240128T090000').valueOf()
+											u: parse('20240128T090000', "yyyyMMdd'T'HHmmss", new Date()).getTime()
 										}
 									],
 									e: [
 										{
 											d: '20240130T093000',
 											tz: 'Europe/Berlin',
-											u: moment('20240130T093000').valueOf()
+											u: parse('20240130T093000', "yyyyMMdd'T'HHmmss", new Date()).getTime()
 										}
 									]
 								}
@@ -174,7 +174,7 @@ describe('invite response component', () => {
 
 				expect(localTimeString).toBeVisible();
 			});
-			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
+			test('if the event is created with a different timezone the main text shows the viewer local time and the tooltip shows the creation timezone', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
 					invite: [
@@ -190,16 +190,24 @@ describe('invite response component', () => {
 					store
 				});
 
+				// The main displayed time must be in the viewer's local timezone (Europe/Berlin),
+				// not in the organizer's creation timezone (Asia/Kolkata).
+				const localTimeString = await screen.findByText(
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+				);
+				expect(localTimeString).toBeVisible();
+
 				const timezoneIcon = await screen.findByTestId('icon: GlobeOutline');
 
 				expect(timezoneIcon).toBeVisible();
 
-				user.hover(timezoneIcon);
+				await user.hover(timezoneIcon);
 
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 
+				// The creation timezone time (Asia/Kolkata) is shown only in the tooltip.
 				const tooltipLocalTime = await screen.findByText(
-					'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT+05:30 Asia/Kolkata'
+					/Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT\+05:30 Asia\/Kolkata/i
 				);
 
 				expect(tooltipTitleString).toBeVisible();

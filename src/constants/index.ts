@@ -40,9 +40,9 @@ export const SHARE_USER_TYPE = {
 export const PUBLIC_SHARE_ZID = '99999999-9999-9999-9999-999999999999';
 
 export const DATE_FORMAT = {
-	ALL_DAY: 'YYYYMMDD',
-	LOCAL: 'YYYYMMDD[T]HHmmss',
-	UTC: 'YYYYMMDD[T]HHmmss[Z]'
+	ALL_DAY: 'yyyyMMdd',
+	LOCAL: "yyyyMMdd'T'HHmmss",
+	UTC: "yyyyMMdd'T'HHmmss'Z'"
 };
 
 export const INVITE_NEVER_SENT_WARNING_LABELS = {

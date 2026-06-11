@@ -7,9 +7,9 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { CreateSnackbarFn, useSnackbar } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, Folders } from '@zextras/carbonio-ui-commons';
+import { format, parse, subDays } from 'date-fns';
 import { TFunction } from 'i18next';
 import { size } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
@@ -21,6 +21,7 @@ import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { parseDateFromICS } from '../utils/dates';
 import { getInstanceExceptionId } from '../utils/event';
 
 const generateAppointmentDeletedSnackbar = (
@@ -190,7 +191,9 @@ export const useDeleteActions = (
 			createSnackbar
 		};
 		const eventDate = event?.resource?.ridZ ?? event.start.valueOf();
-		const untilDate = moment(eventDate).subtract(1, 'day').format('YYYYMMDD');
+		const parsedEventDate =
+			typeof eventDate === 'string' ? parseDateFromICS(eventDate) : new Date(eventDate);
+		const untilDate = format(subDays(parsedEventDate, 1), 'yyyyMMdd');
 		const deleteFunction = (): void => {
 			const modifiedInvite = {
 				...invite,
@@ -222,7 +225,16 @@ export const useDeleteActions = (
 					folders: context.folders
 				}
 			});
-			const isTheFirstInstance = moment(untilDate).isSameOrBefore(moment(invite.start.d));
+			const untilDateParsed = parse(untilDate, 'yyyyMMdd', new Date());
+			let startDateParsed: Date;
+			if (invite.start?.u) {
+				startDateParsed = new Date(invite.start.u);
+			} else if (invite.start.d) {
+				startDateParsed = parseDateFromICS(invite.start.d);
+			} else {
+				startDateParsed = new Date(0);
+			}
+			const isTheFirstInstance = untilDateParsed <= startDateParsed;
 			const draft = !(size(invite?.participants) > 0);
 			return deleteAll || isTheFirstInstance
 				? deleteEvent(event, ctxt)
@@ -274,7 +286,7 @@ export const useDeleteActions = (
 				tz: invite?.start?.tz,
 				allDay: event?.allDay
 			}),
-			s: moment(event.start).valueOf(),
+			s: event.start.getTime(),
 			folders: context.folders
 		};
 		deleteEvent(event, ctxt)

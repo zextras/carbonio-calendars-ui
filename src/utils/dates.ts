@@ -37,7 +37,7 @@ export const applyTimezoneToLocalDate = (date: Date, timezone?: string): Date =>
 	return new Date(date.getTime() + 60000 * offset);
 };
 
-export const parseDateFromICS = (icsString: string): string => {
+export const parseDateFromICS = (icsString: string): Date => {
 	const strYear = parseInt(icsString.substring(0, 4), 10);
 	const strMonth = parseInt(icsString.substring(4, 6), 10) - 1;
 	const strDay = parseInt(icsString.substring(6, 8), 10);
@@ -63,8 +63,8 @@ export const parseDateFromICS = (icsString: string): string => {
 					date.getUTCMinutes(),
 					date.getUTCSeconds()
 				)
-			).toUTCString()
-		: date.toString();
+			)
+		: date;
 };
 
 export const parseDateToICS = (stringToParse: string): string => {

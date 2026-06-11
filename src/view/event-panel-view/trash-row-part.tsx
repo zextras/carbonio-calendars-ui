@@ -7,8 +7,8 @@ import React, { ReactElement, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/carbonio-design-system';
+import { format } from 'date-fns';
 import { reduce } from 'lodash';
-import moment from 'moment';
 
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { useAppSelector } from '../../store/redux/hooks';
@@ -44,11 +44,7 @@ export const TrashRow = ({ event }: { event: EventType }): ReactElement => {
 			<Row orientation="horizontal" width="100%" mainAlignment="flex-start">
 				<Row width="auto%">
 					<Text size="large" overflow="break-word">
-						{moment(event.start).format(
-							`DD/MM/YYYY, [${moment(event.start).format(`HH:MM`)}]-[${moment(event.end).format(
-								`HH:MM`
-							)}]`
-						)}
+						{`${format(event.start, 'dd/MM/yyyy')}, [${format(event.start, 'HH:mm')}]-[${format(event.end, 'HH:mm')}]`}
 					</Text>
 				</Row>
 				<Row width="5%">
