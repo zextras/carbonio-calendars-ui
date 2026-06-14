@@ -178,12 +178,14 @@ export const sendInviteReplyRequest = async ({
 	id,
 	action,
 	updateOrganizer,
-	exceptId
+	exceptId,
+	m
 }: {
 	id: string;
 	action: InviteReplyVerb;
 	updateOrganizer: boolean;
 	exceptId?: InstanceExceptionId;
+	m?: Msg;
 }): Promise<SendInviteReplyReturnType> => {
 	const reqParams: SendInviteReplyRequest = {
 		_jsns: 'urn:zimbraMail',
@@ -192,7 +194,8 @@ export const sendInviteReplyRequest = async ({
 		exceptId,
 		verb: action,
 		rt: 'r',
-		updateOrganizer
+		updateOrganizer,
+		...(m !== undefined && { m })
 	};
 
 	const response: SendInviteReplyReturnType = await legacySoapFetch('SendInviteReply', reqParams);

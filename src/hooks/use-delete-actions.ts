@@ -16,6 +16,7 @@ import { Dispatch } from 'redux';
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
+import { buildMessagePart } from '../store/actions/move-appointment-to-trash';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
@@ -23,6 +24,7 @@ import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { parseDateFromICS } from '../utils/dates';
 import { getInstanceExceptionId } from '../utils/event';
+import { MimePartInfo, Msg } from 'soap/send-invite-reply-request';
 
 const generateAppointmentDeletedSnackbar = (
 	res: { type: string | string[] },
@@ -293,18 +295,30 @@ export const useDeleteActions = (
 			// then cancel that exception to move it to trash without sending further emails.
 			// sendInviteResponseFulfilled removes the invite from the store (to trigger a re-fetch),
 			// so we pass a snapshot via inv before it is deleted.
+			const cancelMessage: Msg = {
+				su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
+				mp: buildMessagePart({
+					t,
+					fullInvite: invite,
+					newMessage: `${t('message.meeting_removed_from_calendar', 'The following meeting has been removed from your calendar')}:`,
+					deleteSingleInstance: true,
+					inst: ctxt.inst
+				}) as MimePartInfo
+			};
 			const ctxtWithInviteSnapshot = { ...ctxt, inv: invite };
-			sendResponse(event, ctxtWithInviteSnapshot, ctxt.inst).then((res: { type: string }) => {
-				if (res.type.includes('fulfilled')) {
-					deleteEvent(event, ctxtWithInviteSnapshot).then(
-						(deleteRes: { type: string | string[] }) => {
-							generateAppointmentDeletedSnackbar(deleteRes, t, createSnackbar);
-						}
-					);
-				} else {
-					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
+			sendResponse(event, ctxtWithInviteSnapshot, ctxt.inst, cancelMessage).then(
+				(res: { type: string }) => {
+					if (res.type.includes('fulfilled')) {
+						deleteEvent(event, ctxtWithInviteSnapshot).then(
+							(deleteRes: { type: string | string[] }) => {
+								generateAppointmentDeletedSnackbar(deleteRes, t, createSnackbar);
+							}
+						);
+					} else {
+						generateAppointmentDeletedSnackbar(res, t, createSnackbar);
+					}
 				}
-			});
+			);
 		} else {
 			deleteEvent(event, ctxt).then((res: { type: string | string[] }) => {
 				generateAppointmentDeletedSnackbar(res, t, createSnackbar);

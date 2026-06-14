@@ -11,7 +11,7 @@ import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
 import { InstanceExceptionId } from '../../utils/event';
-import { InviteReplyVerb } from 'soap/send-invite-reply-request';
+import { InviteReplyVerb, Msg } from 'soap/send-invite-reply-request';
 
 type ResponseAction = {
 	inviteId: string;
@@ -24,6 +24,7 @@ type ResponseAction = {
 	createSnackbar: CreateSnackbarFn;
 	parent: string;
 	exceptId?: InstanceExceptionId;
+	m?: Msg;
 };
 
 export const sendResponse = ({
@@ -36,7 +37,8 @@ export const sendResponse = ({
 	activeCalendar,
 	createSnackbar,
 	parent,
-	exceptId
+	exceptId,
+	m
 }: ResponseAction): void => {
 	dispatch(
 		// WHAT!?
@@ -44,7 +46,8 @@ export const sendResponse = ({
 			inviteId,
 			updateOrganizer: notifyOrganizer,
 			action,
-			...(exceptId !== undefined && { exceptId })
+			...(exceptId !== undefined && { exceptId }),
+			...(m !== undefined && { m })
 		})
 	).then((res): void => {
 		if (res.type.includes('fulfilled')) {

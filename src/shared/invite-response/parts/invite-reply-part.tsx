@@ -25,10 +25,12 @@ import { generateEditor } from 'commons/editor-generator';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDAR_BOARD_ID } from 'constants/index';
 import { getEquipments, getMeetingRooms, getVirtualRoom } from 'normalizations/normalize-editor';
-import { InviteReplyVerb } from 'soap/send-invite-reply-request';
+import { InviteReplyVerb, MimePartInfo, Msg } from 'soap/send-invite-reply-request';
+import { buildMessagePart } from 'store/actions/move-appointment-to-trash';
 import { useAppDispatch } from 'store/redux/hooks';
 import { Editor } from 'types/editor';
 import type { InviteReplyPartArguments, InviteResponseArguments } from 'types/integrations';
+import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
 import { CalendarSelector } from 'view/editor/parts/calendar-selector';
 
@@ -90,6 +92,33 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 		return rawExceptId?.d ? { d: rawExceptId.d, tz: rawExceptId.tz } : undefined;
 	}, [message.invite]);
 
+	const declineMessage = useMemo((): Msg | undefined => {
+		if (!notifyOrganizer) return undefined;
+		const messageData = message.invite?.[0]?.comp?.[0];
+		if (!messageData) return undefined;
+		const inviteForMessage = {
+			name: messageData.name,
+			allDay: messageData.allDay ?? false,
+			start: { d: messageData.s?.[0]?.d, u: messageData.s?.[0]?.u, tz: messageData.s?.[0]?.tz },
+			end: { d: messageData.e?.[0]?.d, u: messageData.e?.[0]?.u, tz: messageData.e?.[0]?.tz },
+			textDescription: messageData.desc,
+			htmlDescription: messageData.descHtml?.length ? messageData.descHtml : undefined,
+			recurrenceRule: messageData.recur,
+			tz: messageData.s?.[0]?.tz
+		};
+		const messagePart = buildMessagePart({
+			t,
+			fullInvite: inviteForMessage as unknown as Invite,
+			newMessage: `${t('message.invite_declined', 'The following meeting invite has been declined')}:`,
+			deleteSingleInstance: true,
+			inst: exceptId
+		});
+		return {
+			su: `${t('label.declined', 'Declined')}: ${messageData.name ?? ''}`,
+			mp: messagePart as MimePartInfo
+		};
+	}, [notifyOrganizer, message.invite, t, exceptId]);
+
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];
 		const partialEditor = normalizeEditorFromMailMessage(messageData);
@@ -148,7 +177,8 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 					replaceHistory,
 					t,
 					parent: message.parent,
-					exceptId
+					exceptId,
+					...(action === InviteReplyVerb.DECLINE && declineMessage && { m: declineMessage })
 				});
 			},
 		[
@@ -160,7 +190,8 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 			activeCalendar,
 			dispatch,
 			message.parent,
-			exceptId
+			exceptId,
+			declineMessage
 		]
 	);
 

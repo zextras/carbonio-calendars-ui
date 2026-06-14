@@ -14,7 +14,7 @@ import { AppDispatch } from '../store/redux';
 import { EventType } from '../types/event';
 import { InstanceExceptionId } from '../utils/event';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
-import { InviteReplyVerb } from 'soap/send-invite-reply-request';
+import { InviteReplyVerb, Msg } from 'soap/send-invite-reply-request';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
@@ -32,14 +32,16 @@ export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
 export const sendResponse = (
 	event: EventType,
 	context: { dispatch: AppDispatch },
-	exceptId?: InstanceExceptionId
+	exceptId?: InstanceExceptionId,
+	m?: Msg
 ): Promise<any> =>
 	context.dispatch(
 		sendInviteResponse({
 			inviteId: event.resource.inviteId,
 			updateOrganizer: true,
 			action: InviteReplyVerb.DECLINE,
-			...(exceptId !== undefined && { exceptId })
+			...(exceptId !== undefined && { exceptId }),
+			...(m !== undefined && { m })
 		})
 	);
 
