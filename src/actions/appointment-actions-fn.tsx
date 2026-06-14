@@ -354,7 +354,7 @@ export const acceptAsAction =
 	({
 		actionType,
 		event,
-		invite,
+		invite: _invite,
 		context
 	}: {
 		actionType: InviteReplyVerb;
@@ -363,41 +363,52 @@ export const acceptAsAction =
 		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): (() => void) =>
 	(): void => {
-		const exceptId =
-			event.resource.isRecurrent && (context.isInstance || event.resource.isException)
-				? getInstanceExceptionId({
-						start: event.start,
-						allDay: event.allDay,
-						tz: invite?.tz
-					})
-				: undefined;
-		const config = REPLY_MESSAGE_CONFIG[actionType];
-		const replyMessage: Msg | undefined =
-			config && invite
-				? {
-						su: `${context.t(config.labelKey, config.labelDefault)}: ${invite.name ?? ''}`,
-						mp: buildMessagePart({
-							t: context.t,
-							fullInvite: invite,
-							newMessage: `${context.t(config.messageKey, config.messageDefault)}:`,
-							deleteSingleInstance: exceptId !== undefined,
-							inst: exceptId
-						}) as MimePartInfo,
-						e: [
-							{ t: 't', a: event.resource.organizer?.email ?? '' },
-							{ t: 'f', a: getUserAccount()?.name ?? '' }
-						]
+		const reply = (invite: Invite): void => {
+			const exceptId =
+				event.resource.isRecurrent && (context.isInstance || event.resource.isException)
+					? getInstanceExceptionId({
+							start: event.start,
+							allDay: event.allDay,
+							tz: invite.tz
+						})
+					: undefined;
+			const config = REPLY_MESSAGE_CONFIG[actionType];
+			const m: Msg = {
+				su: `${context.t(config.labelKey, config.labelDefault)}: ${invite.name ?? ''}`,
+				mp: buildMessagePart({
+					t: context.t,
+					fullInvite: invite,
+					newMessage: `${context.t(config.messageKey, config.messageDefault)}:`,
+					deleteSingleInstance: exceptId !== undefined,
+					inst: exceptId
+				}) as MimePartInfo,
+				e: [
+					{ t: 't', a: event.resource.organizer?.email ?? '' },
+					{ t: 'f', a: getUserAccount()?.name ?? '' }
+				]
+			};
+			context.dispatch(
+				sendInviteResponse({
+					inviteId: event.resource.inviteId,
+					exceptId,
+					updateOrganizer: true,
+					action: actionType,
+					m
+				})
+			);
+		};
+		if (!_invite) {
+			context
+				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
+				.then((res) => {
+					if (res.payload) {
+						const invite = normalizeInvite(res.payload.m[0]);
+						reply(invite);
 					}
-				: undefined;
-		context.dispatch(
-			sendInviteResponse({
-				inviteId: event.resource.inviteId,
-				exceptId,
-				updateOrganizer: true,
-				action: actionType,
-				...(replyMessage !== undefined && { m: replyMessage })
-			})
-		);
+				});
+		} else {
+			reply(_invite);
+		}
 	};
 
 export const proposeNewTimeFn =

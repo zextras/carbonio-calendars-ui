@@ -21,7 +21,7 @@ describe('invite-reply-actions', () => {
 
 	const baseArgs = {
 		inviteId: 'invite-123',
-		notifyOrganizer: true,
+		notifyOrganizer: false as const,
 		dispatch: mockDispatch,
 		replaceHistory: mockReplaceHistory,
 		t: mockT,
@@ -44,7 +44,7 @@ describe('invite-reply-actions', () => {
 
 			expect(vi.mocked(sendInviteResponse)).toHaveBeenCalledWith({
 				inviteId: 'invite-123',
-				updateOrganizer: true,
+				updateOrganizer: false,
 				action: InviteReplyVerb.ACCEPT
 			});
 		});
@@ -335,24 +335,8 @@ describe('invite-reply-actions', () => {
 		});
 	});
 
-	describe('sendResponse - m (custom message) parameter', () => {
-		it('should forward m to sendInviteResponse when provided', () => {
-			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
-			mockDispatch.mockReturnValue(dispatchResult);
-			vi.mocked(sendInviteResponse).mockReturnValue({ type: 'sendInviteResponse' } as any);
-
-			const m = { su: 'Declined: Meeting', mp: { ct: 'multipart/alternative', mp: [] } };
-			sendResponse({
-				...baseArgs,
-				action: InviteReplyVerb.DECLINE,
-				activeCalendar: null,
-				m
-			});
-
-			expect(vi.mocked(sendInviteResponse)).toHaveBeenCalledWith(expect.objectContaining({ m }));
-		});
-
-		it('should not include m in sendInviteResponse when not provided', () => {
+	describe('sendResponse - m parameter', () => {
+		it('sendResponse with notifyOrganizer false never includes m in sendInviteResponse', () => {
 			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
 			mockDispatch.mockReturnValue(dispatchResult);
 			vi.mocked(sendInviteResponse).mockReturnValue({ type: 'sendInviteResponse' } as any);
@@ -367,20 +351,26 @@ describe('invite-reply-actions', () => {
 			expect(call).not.toHaveProperty('m');
 		});
 
-		it('should not include m when explicitly undefined', () => {
+		it('sendResponse with notifyOrganizer true forwards m to sendInviteResponse', () => {
 			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
 			mockDispatch.mockReturnValue(dispatchResult);
 			vi.mocked(sendInviteResponse).mockReturnValue({ type: 'sendInviteResponse' } as any);
 
+			const m = { su: 'Declined: Meeting', mp: { ct: 'multipart/alternative', mp: [] } };
 			sendResponse({
-				...baseArgs,
+				inviteId: 'invite-123',
+				notifyOrganizer: true,
+				m,
+				dispatch: mockDispatch,
+				replaceHistory: mockReplaceHistory,
+				t: mockT,
+				createSnackbar: mockCreateSnackbar,
+				parent: 'folder-1',
 				action: InviteReplyVerb.DECLINE,
-				activeCalendar: null,
-				m: undefined
+				activeCalendar: null
 			});
 
-			const call = vi.mocked(sendInviteResponse).mock.calls[0][0];
-			expect(call).not.toHaveProperty('m');
+			expect(vi.mocked(sendInviteResponse)).toHaveBeenCalledWith(expect.objectContaining({ m }));
 		});
 	});
 
@@ -439,15 +429,22 @@ describe('invite-reply-actions', () => {
 	});
 
 	describe('sendResponse - notifyOrganizer parameter', () => {
-		it('should pass notifyOrganizer as true', () => {
+		it('should pass notifyOrganizer as true (updateOrganizer: true) with m', () => {
 			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
 			mockDispatch.mockReturnValue(dispatchResult);
 
 			vi.mocked(sendInviteResponse).mockReturnValue({ type: 'sendInviteResponse' } as any);
 
+			const m = { su: 'Accepted: Meeting', mp: { ct: 'multipart/alternative', mp: [] } };
 			sendResponse({
-				...baseArgs,
+				inviteId: 'invite-123',
 				notifyOrganizer: true,
+				m,
+				dispatch: mockDispatch,
+				replaceHistory: mockReplaceHistory,
+				t: mockT,
+				createSnackbar: mockCreateSnackbar,
+				parent: 'folder-1',
 				action: InviteReplyVerb.ACCEPT,
 				activeCalendar: { id: 'cal-123', name: 'Calendar' } as any
 			});
@@ -459,7 +456,7 @@ describe('invite-reply-actions', () => {
 			);
 		});
 
-		it('should pass notifyOrganizer as false', () => {
+		it('should pass notifyOrganizer as false (updateOrganizer: false)', () => {
 			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
 			mockDispatch.mockReturnValue(dispatchResult);
 

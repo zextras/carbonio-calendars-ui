@@ -20,7 +20,8 @@ import {
 } from './appointment-actions-fn';
 import { PANEL_VIEW, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE, ParticipantRoleType, PARTICIPATION_STATUS } from '../constants/api';
-import { reducers } from '../store/redux';
+import { AppDispatch, reducers } from '../store/redux';
+import { ActionsContext } from '../types/actions';
 import mockedData from '../test/generators';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
@@ -1063,11 +1064,19 @@ describe('actions', () => {
 		});
 
 		describe('decline message (m parameter)', () => {
-			const buildContext = (store: ReturnType<typeof configureStore>): any => ({
+			type TestContext = Omit<
+				ActionsContext,
+				'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+			>;
+			const buildContext = (store: { dispatch: AppDispatch }): TestContext => ({
 				folders: {},
 				dispatch: store.dispatch,
-				t: vi.fn().mockImplementation((_key: string, defaultValue: string) => defaultValue),
-				replaceHistory: vi.fn(),
+				t: vi
+					.fn()
+					.mockImplementation(
+						(_key: string, defaultValue: string) => defaultValue
+					) as unknown as ActionsContext['t'],
+				replaceHistory: vi.fn() as unknown as ActionsContext['replaceHistory'],
 				onClose: vi.fn()
 			});
 
@@ -1146,10 +1155,28 @@ describe('actions', () => {
 				});
 			});
 
-			it('sends SendInviteReply without m when invite is undefined', async () => {
+			it('fetches invite on-demand and sends SendInviteReply with m when invite is undefined', async () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
+				const rawInviteMsg = {
+					id: 'fetched-msg-1',
+					inv: [
+						{
+							comp: [
+								{
+									name: 'Fetched Meeting',
+									s: [{ u: 1704067200000, d: '20240101T100000', tz: 'UTC' }],
+									e: [{ u: 1704070800000, d: '20240101T110000', tz: 'UTC' }],
+									or: { a: 'organizer@example.com' },
+									at: []
+								}
+							]
+						}
+					],
+					parts: []
+				};
 				const spy = vi
 					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ m: [rawInviteMsg] } as any)
 					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
 				const event = mockedData.getEvent();
 
@@ -1163,7 +1190,9 @@ describe('actions', () => {
 				await waitFor(() => {
 					expect(spy).toHaveBeenCalledWith(
 						'SendInviteReply',
-						expect.not.objectContaining({ m: expect.anything() })
+						expect.objectContaining({
+							m: expect.objectContaining({ su: expect.stringContaining('Declined') })
+						})
 					);
 				});
 			});
@@ -1224,6 +1253,69 @@ describe('actions', () => {
 							m: expect.objectContaining({ su: expect.stringContaining('Declined') })
 						})
 					);
+				});
+			});
+
+			it('includes "instance" in mp body for a single event', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent();
+				const invite = mockedData.getInvite({ event });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.DECLINE,
+					event,
+					invite,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					const call = spy.mock.calls[0][1] as any;
+					expect(call.m?.mp?.mp?.[0]?.content).toContain('instance');
+				});
+			});
+
+			it('includes "series" in mp body for a series invite', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent();
+				const invite = mockedData.getInvite({ event, context: { recurrenceRule: [{ add: [] }] } });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.DECLINE,
+					event,
+					invite,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					const call = spy.mock.calls[0][1] as any;
+					expect(call.m?.mp?.mp?.[0]?.content).toContain('series');
+				});
+			});
+
+			it('includes a formatted date in mp body', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent();
+				const invite = mockedData.getInvite({ event });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.DECLINE,
+					event,
+					invite,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					const call = spy.mock.calls[0][1] as any;
+					expect(call.m?.mp?.mp?.[0]?.content).toMatch(/\d{4}/);
 				});
 			});
 		});

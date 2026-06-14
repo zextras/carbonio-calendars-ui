@@ -241,6 +241,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
 				expect.objectContaining({
 					action: 'DECLINE',
+					notifyOrganizer: true,
 					m: expect.objectContaining({
 						su: expect.stringContaining('Declined')
 					})
@@ -248,7 +249,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			);
 		});
 
-		it('does not pass m when clicking Decline with notifyOrganizer unchecked', async () => {
+		it('calls sendResponse with notifyOrganizer false when Decline is clicked with notifyOrganizer unchecked', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -261,6 +262,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			await user.click(declineButton);
 
 			const call = vi.mocked(sendResponse).mock.calls[0][0];
+			expect(call).toMatchObject({ action: 'DECLINE', notifyOrganizer: false });
 			expect(call).not.toHaveProperty('m');
 		});
 
@@ -276,6 +278,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
 				expect.objectContaining({
 					action: 'ACCEPT',
+					notifyOrganizer: true,
 					m: expect.objectContaining({ su: expect.stringContaining('Accepted') })
 				})
 			);
@@ -293,12 +296,13 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
 				expect.objectContaining({
 					action: 'TENTATIVE',
+					notifyOrganizer: true,
 					m: expect.objectContaining({ su: expect.stringContaining('Tentative') })
 				})
 			);
 		});
 
-		it('passes m with mp containing instance details when declining a single event', async () => {
+		it('passes mp in m when declining a single event', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -306,8 +310,11 @@ describe('InviteReplyPart - Calendar Selection', () => {
 
 			await user.click(await screen.findByRole('button', { name: /Decline/i }));
 
-			const call = vi.mocked(sendResponse).mock.calls[0][0];
-			expect(call.m?.mp).toBeDefined();
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp).toBeDefined();
 		});
 
 		it('passes m with e containing organizer as "to" and invitee as "from" when declining', async () => {
@@ -318,8 +325,11 @@ describe('InviteReplyPart - Calendar Selection', () => {
 
 			await user.click(await screen.findByRole('button', { name: /Decline/i }));
 
-			const call = vi.mocked(sendResponse).mock.calls[0][0];
-			expect(call.m?.e).toEqual(
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.e).toEqual(
 				expect.arrayContaining([
 					expect.objectContaining({ t: 't', a: 'sender@mail.com' }),
 					expect.objectContaining({ t: 'f', a: expect.stringContaining('@') })
@@ -327,7 +337,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			);
 		});
 
-		it('does not include e in m when notifyOrganizer is unchecked', async () => {
+		it('does not include m when notifyOrganizer is unchecked', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -340,6 +350,66 @@ describe('InviteReplyPart - Calendar Selection', () => {
 
 			const call = vi.mocked(sendResponse).mock.calls[0][0];
 			expect(call).not.toHaveProperty('m');
+		});
+
+		it('includes "instance" in mp body when replying to a single event invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toContain('instance');
+		});
+
+		it('includes "series" in mp body when replying to a series invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SERIES, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toContain('series');
+		});
+
+		it('includes "instance" in mp body when replying to a recurrent exception invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.EXCEPT, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toContain('instance');
+		});
+
+		it('includes a formatted date in mp body when replying to an invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toMatch(/2024/);
 		});
 	});
 

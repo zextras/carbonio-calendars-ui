@@ -164,58 +164,68 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const onAction = useCallback(
 		(action: InviteReplyVerb): (() => void) =>
 			(): void => {
-				let replyMessage: Msg | undefined;
-				if (notifyOrganizer) {
-					const messageData = message.invite?.[0]?.comp?.[0];
-					const config = REPLY_MESSAGE_CONFIG[action];
-					if (messageData && config) {
-						const inviteForMessage = {
-							name: messageData.name,
-							allDay: messageData.allDay ?? false,
-							start: {
-								d: messageData.s?.[0]?.d,
-								u: messageData.s?.[0]?.u,
-								tz: messageData.s?.[0]?.tz
-							},
-							end: {
-								d: messageData.e?.[0]?.d,
-								u: messageData.e?.[0]?.u,
-								tz: messageData.e?.[0]?.tz
-							},
-							textDescription: messageData.desc,
-							htmlDescription: messageData.descHtml?.length ? messageData.descHtml : undefined,
-							recurrenceRule: messageData.recur,
+				const messageData = message.invite?.[0]?.comp?.[0];
+				const config = REPLY_MESSAGE_CONFIG[action];
+				if (notifyOrganizer && messageData && config) {
+					const inviteForMessage = {
+						name: messageData.name,
+						allDay: messageData.allDay ?? false,
+						start: {
+							d: messageData.s?.[0]?.d,
+							u: messageData.s?.[0]?.u,
 							tz: messageData.s?.[0]?.tz
-						};
-						replyMessage = {
-							su: `${t(config.labelKey, config.labelDefault)}: ${messageData.name ?? ''}`,
-							mp: buildMessagePart({
-								t,
-								fullInvite: inviteForMessage as unknown as Invite,
-								newMessage: `${t(config.messageKey, config.messageDefault)}:`,
-								deleteSingleInstance: true,
-								inst: exceptId
-							}) as MimePartInfo,
-							e: [
-								{ t: 't', a: messageData.or?.a ?? messageData.or?.url ?? '' },
-								{ t: 'f', a: getUserAccount()?.name ?? '' }
-							]
-						};
-					}
+						},
+						end: {
+							d: messageData.e?.[0]?.d,
+							u: messageData.e?.[0]?.u,
+							tz: messageData.e?.[0]?.tz
+						},
+						textDescription: messageData.desc,
+						htmlDescription: messageData.descHtml?.length ? messageData.descHtml : undefined,
+						recurrenceRule: messageData.recur,
+						tz: messageData.s?.[0]?.tz
+					};
+					const m: Msg = {
+						su: `${t(config.labelKey, config.labelDefault)}: ${messageData.name ?? ''}`,
+						mp: buildMessagePart({
+							t,
+							fullInvite: inviteForMessage as unknown as Invite,
+							newMessage: `${t(config.messageKey, config.messageDefault)}:`,
+							deleteSingleInstance: exceptId !== undefined,
+							inst: exceptId
+						}) as MimePartInfo,
+						e: [
+							{ t: 't', a: messageData.or?.a ?? messageData.or?.url ?? '' },
+							{ t: 'f', a: getUserAccount()?.name ?? '' }
+						]
+					};
+					sendResponse({
+						action,
+						createSnackbar,
+						inviteId,
+						notifyOrganizer: true,
+						activeCalendar,
+						dispatch,
+						replaceHistory,
+						t,
+						parent: message.parent,
+						exceptId,
+						m
+					});
+				} else {
+					sendResponse({
+						action,
+						createSnackbar,
+						inviteId,
+						notifyOrganizer: false,
+						activeCalendar,
+						dispatch,
+						replaceHistory,
+						t,
+						parent: message.parent,
+						exceptId
+					});
 				}
-				sendResponse({
-					action,
-					createSnackbar,
-					inviteId,
-					notifyOrganizer,
-					activeCalendar,
-					dispatch,
-					replaceHistory,
-					t,
-					parent: message.parent,
-					exceptId,
-					...(replyMessage && { m: replyMessage })
-				});
 			},
 		[
 			t,
