@@ -36,7 +36,7 @@ export const buildMessagePart = ({
 }): MessagePart => {
 	const meetingCanceled =
 		newMessage ?? `${t('message.meeting_canceled', 'The following meeting has been cancelled')}:`;
-	const allDayLabel = t('label.all_day', 'All day');
+	const allDayLabel = fullInvite.allDay ? t('label.all_day', 'All day') : undefined;
 	const originalInviteTitle = t('message.original_invite', `-----Original Invite-----`);
 
 	const originalInviteContentPlain = fullInvite?.textDescription?.[0]?._content ?? '';
