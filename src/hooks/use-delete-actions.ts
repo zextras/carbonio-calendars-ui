@@ -274,7 +274,6 @@ export const useDeleteActions = (
 
 	const deleteRecurrentInstance = useCallback(() => {
 		context.onClose();
-		const isCanceled = false;
 		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
@@ -289,17 +288,23 @@ export const useDeleteActions = (
 			s: event.start.getTime(),
 			folders: context.folders
 		};
-		deleteEvent(event, ctxt)
-			.then((res: { type: string | string[] }) => {
+		if (notifyOrganizer) {
+			// First send the decline reply to notify the organizer (creates a declined exception),
+			// then cancel that exception to move it to trash without sending further emails.
+			sendResponse(event, ctxt, ctxt.inst).then((res: { type: string }) => {
+				if (res.type.includes('fulfilled')) {
+					deleteEvent(event, ctxt).then((deleteRes: { type: string | string[] }) => {
+						generateAppointmentDeletedSnackbar(deleteRes, t, createSnackbar);
+					});
+				} else {
+					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
+				}
+			});
+		} else {
+			deleteEvent(event, ctxt).then((res: { type: string | string[] }) => {
 				generateAppointmentDeletedSnackbar(res, t, createSnackbar);
-			})
-			.then(
-				setTimeout(() => {
-					if (notifyOrganizer && !isCanceled) {
-						sendResponse(event, ctxt, ctxt.inst);
-					}
-				}, 5000)
-			);
+			});
+		}
 	}, [
 		context,
 		replaceHistory,
