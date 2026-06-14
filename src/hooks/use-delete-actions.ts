@@ -304,7 +304,7 @@ export const useDeleteActions = (
 				mp: buildMessagePart({
 					t,
 					fullInvite: invite,
-					newMessage: `${t('message.meeting_declined_by_attendee', 'The attendee has declined the following meeting')}:`,
+					newMessage: `${t('message.invite_declined', 'The following meeting invite has been declined')}:`,
 					deleteSingleInstance: true,
 					inst: ctxt.inst
 				}) as MimePartInfo,
