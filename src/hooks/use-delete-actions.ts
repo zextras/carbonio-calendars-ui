@@ -304,7 +304,7 @@ export const useDeleteActions = (
 				mp: buildMessagePart({
 					t,
 					fullInvite: invite,
-					newMessage: `${t('message.meeting_removed_from_calendar', 'The following meeting has been removed from your calendar')}:`,
+					newMessage: `${t('message.meeting_declined_by_attendee', 'The attendee has declined the following meeting')}:`,
 					deleteSingleInstance: true,
 					inst: ctxt.inst
 				}) as MimePartInfo,
