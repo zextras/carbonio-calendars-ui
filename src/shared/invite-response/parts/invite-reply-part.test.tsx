@@ -301,6 +301,38 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			const call = vi.mocked(sendResponse).mock.calls[0][0];
 			expect(call.m?.mp).toBeDefined();
 		});
+
+		it('passes m with e containing organizer as "to" and invitee as "from" when declining', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0];
+			expect(call.m?.e).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({ t: 't', a: 'sender@mail.com' }),
+					expect.objectContaining({ t: 'f', a: expect.stringContaining('@') })
+				])
+			);
+		});
+
+		it('does not include e in m when notifyOrganizer is unchecked', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			const notifyCheckbox = await screen.findByTestId('checkbox');
+			await user.click(notifyCheckbox);
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0];
+			expect(call).not.toHaveProperty('m');
+		});
 	});
 
 	describe('Calendar selector configuration', () => {

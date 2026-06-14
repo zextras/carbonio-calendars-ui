@@ -32,9 +32,7 @@ describe('delete-actions', () => {
 
 			sendResponse(mockEvent, mockContext, undefined, m);
 
-			expect(vi.mocked(sendInviteResponse)).toHaveBeenCalledWith(
-				expect.objectContaining({ m })
-			);
+			expect(vi.mocked(sendInviteResponse)).toHaveBeenCalledWith(expect.objectContaining({ m }));
 		});
 
 		it('should not include m in sendInviteResponse when not provided', () => {

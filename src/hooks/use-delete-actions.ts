@@ -13,6 +13,8 @@ import { size } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
+
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
@@ -295,6 +297,8 @@ export const useDeleteActions = (
 			// then cancel that exception to move it to trash without sending further emails.
 			// sendInviteResponseFulfilled removes the invite from the store (to trigger a re-fetch),
 			// so we pass a snapshot via inv before it is deleted.
+			const inviteeEmail = getUserAccount()?.name ?? '';
+			const organizerEmail = invite?.organizer?.a ?? '';
 			const cancelMessage: Msg = {
 				su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
 				mp: buildMessagePart({
@@ -303,13 +307,13 @@ export const useDeleteActions = (
 					newMessage: `${t('message.meeting_removed_from_calendar', 'The following meeting has been removed from your calendar')}:`,
 					deleteSingleInstance: true,
 					inst: ctxt.inst
-				}) as MimePartInfo
+				}) as MimePartInfo,
+				e: [
+					{ t: 't', a: organizerEmail },
+					{ t: 'f', a: inviteeEmail }
+				]
 			};
-			// Use ridZ (Zulu/UTC format) for sendInviteReply exceptId: Zimbra requires Zulu
-			// format to correctly identify the instance when sending the organizer notification.
-			const replyExceptId: InstanceExceptionId | undefined = event.resource.ridZ
-				? { d: event.resource.ridZ, tz: undefined }
-				: ctxt.inst;
+			const replyExceptId: InstanceExceptionId | undefined = ctxt.inst;
 			const ctxtWithInviteSnapshot = { ...ctxt, inv: invite };
 			sendResponse(event, ctxtWithInviteSnapshot, replyExceptId, cancelMessage).then(
 				(res: { type: string }) => {

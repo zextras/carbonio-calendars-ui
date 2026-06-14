@@ -14,7 +14,7 @@ import {
 	Checkbox,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { addBoard, Board } from '@zextras/carbonio-shell-ui';
+import { addBoard, Board, getUserAccount } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
@@ -113,9 +113,15 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 			deleteSingleInstance: true,
 			inst: exceptId
 		});
+		const organizerEmail = messageData.or?.a ?? messageData.or?.url ?? '';
+		const inviteeEmail = getUserAccount()?.name ?? '';
 		return {
 			su: `${t('label.declined', 'Declined')}: ${messageData.name ?? ''}`,
-			mp: messagePart as MimePartInfo
+			mp: messagePart as MimePartInfo,
+			e: [
+				{ t: 't', a: organizerEmail },
+				{ t: 'f', a: inviteeEmail }
+			]
 		};
 	}, [notifyOrganizer, message.invite, t, exceptId]);
 
