@@ -335,6 +335,60 @@ describe('invite-reply-actions', () => {
 		});
 	});
 
+	describe('sendResponse - exceptId parameter', () => {
+		it('should forward exceptId to sendInviteResponse when provided', () => {
+			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
+			mockDispatch.mockReturnValue(dispatchResult);
+
+			vi.mocked(sendInviteResponse).mockReturnValue({ type: 'sendInviteResponse' } as any);
+
+			const exceptId = { d: '20240207T090000', tz: 'Europe/Berlin' };
+			sendResponse({
+				...baseArgs,
+				action: InviteReplyVerb.DECLINE,
+				activeCalendar: null,
+				exceptId
+			});
+
+			expect(vi.mocked(sendInviteResponse)).toHaveBeenCalledWith(
+				expect.objectContaining({ exceptId })
+			);
+		});
+
+		it('should not include exceptId in sendInviteResponse when not provided', () => {
+			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
+			mockDispatch.mockReturnValue(dispatchResult);
+
+			vi.mocked(sendInviteResponse).mockReturnValue({ type: 'sendInviteResponse' } as any);
+
+			sendResponse({
+				...baseArgs,
+				action: InviteReplyVerb.DECLINE,
+				activeCalendar: null
+			});
+
+			const call = vi.mocked(sendInviteResponse).mock.calls[0][0];
+			expect(call).not.toHaveProperty('exceptId');
+		});
+
+		it('should not include exceptId in sendInviteResponse when series invite (recur)', () => {
+			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });
+			mockDispatch.mockReturnValue(dispatchResult);
+
+			vi.mocked(sendInviteResponse).mockReturnValue({ type: 'sendInviteResponse' } as any);
+
+			sendResponse({
+				...baseArgs,
+				action: InviteReplyVerb.DECLINE,
+				activeCalendar: null,
+				exceptId: undefined
+			});
+
+			const call = vi.mocked(sendInviteResponse).mock.calls[0][0];
+			expect(call).not.toHaveProperty('exceptId');
+		});
+	});
+
 	describe('sendResponse - notifyOrganizer parameter', () => {
 		it('should pass notifyOrganizer as true', () => {
 			const dispatchResult = Promise.resolve({ type: 'sendInviteResponse/fulfilled' });

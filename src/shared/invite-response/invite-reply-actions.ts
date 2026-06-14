@@ -10,6 +10,7 @@ import type { TFunction } from 'i18next';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
+import { InstanceExceptionId } from '../../utils/event';
 import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
 type ResponseAction = {
@@ -22,6 +23,7 @@ type ResponseAction = {
 	activeCalendar: Folder | null;
 	createSnackbar: CreateSnackbarFn;
 	parent: string;
+	exceptId?: InstanceExceptionId;
 };
 
 export const sendResponse = ({
@@ -33,14 +35,16 @@ export const sendResponse = ({
 	t,
 	activeCalendar,
 	createSnackbar,
-	parent
+	parent,
+	exceptId
 }: ResponseAction): void => {
 	dispatch(
 		// WHAT!?
 		sendInviteResponse({
 			inviteId,
 			updateOrganizer: notifyOrganizer,
-			action
+			action,
+			...(exceptId !== undefined && { exceptId })
 		})
 	).then((res): void => {
 		if (res.type.includes('fulfilled')) {

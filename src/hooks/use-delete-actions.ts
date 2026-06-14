@@ -296,7 +296,7 @@ export const useDeleteActions = (
 			.then(
 				setTimeout(() => {
 					if (notifyOrganizer && !isCanceled) {
-						sendResponse(event, ctxt);
+						sendResponse(event, ctxt, ctxt.inst);
 					}
 				}, 5000)
 			);

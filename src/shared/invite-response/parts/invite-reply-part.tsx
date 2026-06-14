@@ -18,6 +18,8 @@ import { addBoard, Board } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
+import { InstanceExceptionId } from '../../../utils/event';
+
 import { sendResponse } from '../invite-reply-actions';
 import { generateEditor } from 'commons/editor-generator';
 import { PARTICIPATION_STATUS } from 'constants/api';
@@ -81,6 +83,13 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 		() => calendarFolders[message.parent] ?? null
 	);
 
+	const exceptId = useMemo((): InstanceExceptionId | undefined => {
+		const messageData = message.invite?.[0]?.comp?.[0];
+		if (!messageData || messageData.recur) return undefined;
+		const rawExceptId = messageData.exceptId?.[0];
+		return rawExceptId?.d ? { d: rawExceptId.d, tz: rawExceptId.tz } : undefined;
+	}, [message.invite]);
+
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];
 		const partialEditor = normalizeEditorFromMailMessage(messageData);
@@ -138,7 +147,8 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 					dispatch,
 					replaceHistory,
 					t,
-					parent: message.parent
+					parent: message.parent,
+					exceptId
 				});
 			},
 		[
@@ -149,7 +159,8 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 			notifyOrganizer,
 			activeCalendar,
 			dispatch,
-			message.parent
+			message.parent,
+			exceptId
 		]
 	);
 
