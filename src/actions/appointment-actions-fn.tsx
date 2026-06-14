@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { addBoard, getAction } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, getUserAccount } from '@zextras/carbonio-shell-ui';
 import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
@@ -21,10 +21,11 @@ import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import { getInstanceExceptionId } from '../utils/event';
+import { buildMessagePart } from '../store/actions/move-appointment-to-trash';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
-import { InviteReplyVerb } from 'soap/send-invite-reply-request';
+import { InviteReplyVerb, MimePartInfo, Msg } from 'soap/send-invite-reply-request';
 
 type ActionsContextIgnored =
 	| 'createAndApplyTag'
@@ -346,12 +347,30 @@ export const acceptAsAction =
 						tz: invite?.tz
 					})
 				: undefined;
+		const declineMessage: Msg | undefined =
+			actionType === InviteReplyVerb.DECLINE && invite
+				? {
+						su: `${context.t('label.declined', 'Declined')}: ${invite.name ?? ''}`,
+						mp: buildMessagePart({
+							t: context.t,
+							fullInvite: invite,
+							newMessage: `${context.t('message.invite_declined', 'The following meeting invite has been declined')}:`,
+							deleteSingleInstance: exceptId !== undefined,
+							inst: exceptId
+						}) as MimePartInfo,
+						e: [
+							{ t: 't', a: event.resource.organizer?.email ?? '' },
+							{ t: 'f', a: getUserAccount()?.name ?? '' }
+						]
+					}
+				: undefined;
 		context.dispatch(
 			sendInviteResponse({
 				inviteId: event.resource.inviteId,
 				exceptId,
 				updateOrganizer: true,
-				action: actionType
+				action: actionType,
+				...(declineMessage !== undefined && { m: declineMessage })
 			})
 		);
 	};

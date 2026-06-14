@@ -26,6 +26,7 @@ import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
+import * as soapLib from '../../__mocks__/@zextras/carbonio-ui-soap-lib';
 import defaultSettings from '@test-utils/settings/default-settings';
 import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
@@ -1058,6 +1059,145 @@ describe('actions', () => {
 			action();
 			await waitFor(() => {
 				expect(dispatchSpy).toHaveBeenCalled();
+			});
+		});
+
+		describe('decline message (m parameter)', () => {
+			const buildContext = (store: ReturnType<typeof configureStore>): any => ({
+				folders: {},
+				dispatch: store.dispatch,
+				t: vi.fn().mockImplementation((_key: string, defaultValue: string) => defaultValue),
+				replaceHistory: vi.fn(),
+				onClose: vi.fn()
+			});
+
+			it('sends SendInviteReply with m containing "Declined" subject when DECLINE', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent();
+				const invite = mockedData.getInvite({ event });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.DECLINE,
+					event,
+					invite,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					expect(spy).toHaveBeenCalledWith(
+						'SendInviteReply',
+						expect.objectContaining({
+							m: expect.objectContaining({ su: expect.stringContaining('Declined') })
+						})
+					);
+				});
+			});
+
+			it('sends SendInviteReply without m when ACCEPT', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent();
+				const invite = mockedData.getInvite({ event });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.ACCEPT,
+					event,
+					invite,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					expect(spy).toHaveBeenCalledWith(
+						'SendInviteReply',
+						expect.not.objectContaining({ m: expect.anything() })
+					);
+				});
+			});
+
+			it('sends SendInviteReply without m when invite is undefined', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent();
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.DECLINE,
+					event,
+					invite: undefined,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					expect(spy).toHaveBeenCalledWith(
+						'SendInviteReply',
+						expect.not.objectContaining({ m: expect.anything() })
+					);
+				});
+			});
+
+			it('sends m.e with organizer as "to" and current user as "from"', async () => {
+				const organizerEmail = 'organizer@example.com';
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent({
+					resource: { organizer: { email: organizerEmail, name: 'Organizer' } }
+				});
+				const invite = mockedData.getInvite({ event });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.DECLINE,
+					event,
+					invite,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					expect(spy).toHaveBeenCalledWith(
+						'SendInviteReply',
+						expect.objectContaining({
+							m: expect.objectContaining({
+								e: expect.arrayContaining([
+									expect.objectContaining({ t: 't', a: organizerEmail }),
+									expect.objectContaining({ t: 'f', a: expect.stringContaining('@') })
+								])
+							})
+						})
+					);
+				});
+			});
+
+			it('sends exceptId and m for recurring instance DECLINE', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent({ resource: { isRecurrent: true } });
+				const invite = mockedData.getInvite({ event });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.DECLINE,
+					event,
+					invite,
+					context: { ...buildContext(store), isInstance: true }
+				})();
+
+				await waitFor(() => {
+					expect(spy).toHaveBeenCalledWith(
+						'SendInviteReply',
+						expect.objectContaining({
+							exceptId: expect.objectContaining({ d: expect.any(String) }),
+							m: expect.objectContaining({ su: expect.stringContaining('Declined') })
+						})
+					);
+				});
 			});
 		});
 	});
