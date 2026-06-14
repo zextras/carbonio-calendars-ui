@@ -261,10 +261,28 @@ describe('appointment-actions-items', () => {
 			});
 		});
 
-		it('does not include m in SendInviteReply when invite is undefined', async () => {
+		it('fetches invite on-demand and includes m in SendInviteReply when invite is undefined', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
+			const rawInviteMsg = {
+				id: 'fetched-msg-1',
+				inv: [
+					{
+						comp: [
+							{
+								name: 'Fetched Meeting',
+								s: [{ u: 1704067200000, d: '20240101T100000', tz: 'UTC' }],
+								e: [{ u: 1704070800000, d: '20240101T110000', tz: 'UTC' }],
+								or: { a: 'organizer@example.com' },
+								at: []
+							}
+						]
+					}
+				],
+				parts: []
+			};
 			const spy = vi
 				.spyOn(soapLib, 'legacySoapFetch')
+				.mockResolvedValueOnce({ m: [rawInviteMsg] } as any)
 				.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
 
 			const event = mockedData.getEvent({
@@ -293,7 +311,9 @@ describe('appointment-actions-items', () => {
 			await waitFor(() => {
 				expect(spy).toHaveBeenCalledWith(
 					'SendInviteReply',
-					expect.not.objectContaining({ m: expect.anything() })
+					expect.objectContaining({
+						m: expect.objectContaining({ su: expect.stringContaining('Accepted') })
+					})
 				);
 			});
 		});
