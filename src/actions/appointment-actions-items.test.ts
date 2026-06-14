@@ -3,9 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { waitFor } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { editEventItem, moveEventItem } from './appointment-actions-items';
+import { answerToEventItem, editEventItem, moveEventItem } from './appointment-actions-items';
+import * as soapLib from '../../__mocks__/@zextras/carbonio-ui-soap-lib';
+import { EVENT_ACTIONS } from 'constants/event-actions';
+import { InviteReplyVerb } from 'soap/send-invite-reply-request';
+import { reducers } from 'store/redux';
 import mockedData from '../test/generators';
 
 describe('appointment-actions-items', () => {
@@ -208,6 +214,87 @@ describe('appointment-actions-items', () => {
 				};
 				const editAction = editEventItem({ invite, event, context });
 				expect(editAction.disabled).toBe(true);
+			});
+		});
+	});
+
+	describe('answerToEventItem', () => {
+		it('forwards invite to accept item so SendInviteReply includes m', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const spy = vi
+				.spyOn(soapLib, 'legacySoapFetch')
+				.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+
+			const event = mockedData.getEvent({
+				resource: {
+					iAmOrganizer: false,
+					organizer: { name: 'Organizer', email: 'organizer@example.com' }
+				}
+			});
+			const invite = mockedData.getInvite({ event });
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: store.dispatch,
+				t: vi.fn().mockImplementation((_key: string, fallback: string) => fallback),
+				replaceHistory: vi.fn(),
+				tags: [],
+				folders: mockedData.calendars.getCalendarsMap({ length: 0 })
+			};
+
+			const answerItem = answerToEventItem({ event, invite, context });
+			expect(answerItem).toBeDefined();
+			const acceptItem = answerItem?.items.find((item) => item.id === EVENT_ACTIONS.ACCEPT);
+			expect(acceptItem).toBeDefined();
+
+			acceptItem?.onClick?.();
+
+			await waitFor(() => {
+				expect(spy).toHaveBeenCalledWith(
+					'SendInviteReply',
+					expect.objectContaining({
+						m: expect.objectContaining({ su: expect.stringContaining('Accepted') })
+					})
+				);
+			});
+		});
+
+		it('does not include m in SendInviteReply when invite is undefined', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const spy = vi
+				.spyOn(soapLib, 'legacySoapFetch')
+				.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+
+			const event = mockedData.getEvent({
+				resource: {
+					iAmOrganizer: false,
+					organizer: { name: 'Organizer', email: 'organizer@example.com' }
+				}
+			});
+			const context = {
+				createAndApplyTag: vi.fn(),
+				createModal: vi.fn(),
+				closeModal: vi.fn(),
+				createSnackbar: vi.fn(),
+				dispatch: store.dispatch,
+				t: vi.fn().mockImplementation((_key: string, fallback: string) => fallback),
+				replaceHistory: vi.fn(),
+				tags: [],
+				folders: mockedData.calendars.getCalendarsMap({ length: 0 })
+			};
+
+			const answerItem = answerToEventItem({ event, invite: undefined, context });
+			const acceptItem = answerItem?.items.find((item) => item.id === EVENT_ACTIONS.ACCEPT);
+
+			acceptItem?.onClick?.();
+
+			await waitFor(() => {
+				expect(spy).toHaveBeenCalledWith(
+					'SendInviteReply',
+					expect.not.objectContaining({ m: expect.anything() })
+				);
 			});
 		});
 	});
