@@ -291,11 +291,16 @@ export const useDeleteActions = (
 		if (notifyOrganizer) {
 			// First send the decline reply to notify the organizer (creates a declined exception),
 			// then cancel that exception to move it to trash without sending further emails.
-			sendResponse(event, ctxt, ctxt.inst).then((res: { type: string }) => {
+			// sendInviteResponseFulfilled removes the invite from the store (to trigger a re-fetch),
+			// so we pass a snapshot via inv before it is deleted.
+			const ctxtWithInviteSnapshot = { ...ctxt, inv: invite };
+			sendResponse(event, ctxtWithInviteSnapshot, ctxt.inst).then((res: { type: string }) => {
 				if (res.type.includes('fulfilled')) {
-					deleteEvent(event, ctxt).then((deleteRes: { type: string | string[] }) => {
-						generateAppointmentDeletedSnackbar(deleteRes, t, createSnackbar);
-					});
+					deleteEvent(event, ctxtWithInviteSnapshot).then(
+						(deleteRes: { type: string | string[] }) => {
+							generateAppointmentDeletedSnackbar(deleteRes, t, createSnackbar);
+						}
+					);
 				} else {
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
 				}
@@ -305,16 +310,7 @@ export const useDeleteActions = (
 				generateAppointmentDeletedSnackbar(res, t, createSnackbar);
 			});
 		}
-	}, [
-		context,
-		replaceHistory,
-		dispatch,
-		t,
-		createSnackbar,
-		event,
-		invite?.start?.tz,
-		notifyOrganizer
-	]);
+	}, [context, replaceHistory, dispatch, t, createSnackbar, event, invite, notifyOrganizer]);
 
 	return useMemo(
 		() => ({

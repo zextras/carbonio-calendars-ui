@@ -62,7 +62,8 @@ export const deleteEvent = (
 			newMessage: context.newMessage,
 			inst: context?.inst,
 			s: context.s,
-			id
+			id,
+			inv: context?.inv
 		},
 		isNil
 	) as MoveAppointmentToTrashArguments;
