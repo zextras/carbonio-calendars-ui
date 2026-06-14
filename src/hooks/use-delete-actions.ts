@@ -23,7 +23,7 @@ import { useAppDispatch } from '../store/redux/hooks';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { parseDateFromICS } from '../utils/dates';
-import { getInstanceExceptionId } from '../utils/event';
+import { getInstanceExceptionId, InstanceExceptionId } from '../utils/event';
 import { MimePartInfo, Msg } from 'soap/send-invite-reply-request';
 
 const generateAppointmentDeletedSnackbar = (
@@ -305,8 +305,13 @@ export const useDeleteActions = (
 					inst: ctxt.inst
 				}) as MimePartInfo
 			};
+			// Use ridZ (Zulu/UTC format) for sendInviteReply exceptId: Zimbra requires Zulu
+			// format to correctly identify the instance when sending the organizer notification.
+			const replyExceptId: InstanceExceptionId | undefined = event.resource.ridZ
+				? { d: event.resource.ridZ, tz: undefined }
+				: ctxt.inst;
 			const ctxtWithInviteSnapshot = { ...ctxt, inv: invite };
-			sendResponse(event, ctxtWithInviteSnapshot, ctxt.inst, cancelMessage).then(
+			sendResponse(event, ctxtWithInviteSnapshot, replyExceptId, cancelMessage).then(
 				(res: { type: string }) => {
 					if (res.type.includes('fulfilled')) {
 						deleteEvent(event, ctxtWithInviteSnapshot).then(
