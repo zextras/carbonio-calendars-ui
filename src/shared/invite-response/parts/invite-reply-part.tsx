@@ -34,6 +34,30 @@ import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
 import { CalendarSelector } from 'view/editor/parts/calendar-selector';
 
+const REPLY_MESSAGE_CONFIG: Record<
+	string,
+	{ labelKey: string; labelDefault: string; messageKey: string; messageDefault: string }
+> = {
+	[InviteReplyVerb.ACCEPT]: {
+		labelKey: 'label.accepted',
+		labelDefault: 'Accepted',
+		messageKey: 'message.invite_accepted',
+		messageDefault: 'The following meeting invite has been accepted'
+	},
+	[InviteReplyVerb.TENTATIVE]: {
+		labelKey: 'label.tentative',
+		labelDefault: 'Tentative',
+		messageKey: 'message.invite_tentative',
+		messageDefault: 'The following meeting invite has been tentatively accepted'
+	},
+	[InviteReplyVerb.DECLINE]: {
+		labelKey: 'label.declined',
+		labelDefault: 'Declined',
+		messageKey: 'message.invite_declined',
+		messageDefault: 'The following meeting invite has been declined'
+	}
+};
+
 const normalizeEditorFromMailMessage = (
 	messageData: InviteResponseArguments['mailMsg']
 ): Partial<Editor> => ({
@@ -92,39 +116,6 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 		return rawExceptId?.d ? { d: rawExceptId.d, tz: rawExceptId.tz } : undefined;
 	}, [message.invite]);
 
-	const declineMessage = useMemo((): Msg | undefined => {
-		if (!notifyOrganizer) return undefined;
-		const messageData = message.invite?.[0]?.comp?.[0];
-		if (!messageData) return undefined;
-		const inviteForMessage = {
-			name: messageData.name,
-			allDay: messageData.allDay ?? false,
-			start: { d: messageData.s?.[0]?.d, u: messageData.s?.[0]?.u, tz: messageData.s?.[0]?.tz },
-			end: { d: messageData.e?.[0]?.d, u: messageData.e?.[0]?.u, tz: messageData.e?.[0]?.tz },
-			textDescription: messageData.desc,
-			htmlDescription: messageData.descHtml?.length ? messageData.descHtml : undefined,
-			recurrenceRule: messageData.recur,
-			tz: messageData.s?.[0]?.tz
-		};
-		const messagePart = buildMessagePart({
-			t,
-			fullInvite: inviteForMessage as unknown as Invite,
-			newMessage: `${t('message.invite_declined', 'The following meeting invite has been declined')}:`,
-			deleteSingleInstance: true,
-			inst: exceptId
-		});
-		const organizerEmail = messageData.or?.a ?? messageData.or?.url ?? '';
-		const inviteeEmail = getUserAccount()?.name ?? '';
-		return {
-			su: `${t('label.declined', 'Declined')}: ${messageData.name ?? ''}`,
-			mp: messagePart as MimePartInfo,
-			e: [
-				{ t: 't', a: organizerEmail },
-				{ t: 'f', a: inviteeEmail }
-			]
-		};
-	}, [notifyOrganizer, message.invite, t, exceptId]);
-
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];
 		const partialEditor = normalizeEditorFromMailMessage(messageData);
@@ -173,6 +164,45 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const onAction = useCallback(
 		(action: InviteReplyVerb): (() => void) =>
 			(): void => {
+				let replyMessage: Msg | undefined;
+				if (notifyOrganizer) {
+					const messageData = message.invite?.[0]?.comp?.[0];
+					const config = REPLY_MESSAGE_CONFIG[action];
+					if (messageData && config) {
+						const inviteForMessage = {
+							name: messageData.name,
+							allDay: messageData.allDay ?? false,
+							start: {
+								d: messageData.s?.[0]?.d,
+								u: messageData.s?.[0]?.u,
+								tz: messageData.s?.[0]?.tz
+							},
+							end: {
+								d: messageData.e?.[0]?.d,
+								u: messageData.e?.[0]?.u,
+								tz: messageData.e?.[0]?.tz
+							},
+							textDescription: messageData.desc,
+							htmlDescription: messageData.descHtml?.length ? messageData.descHtml : undefined,
+							recurrenceRule: messageData.recur,
+							tz: messageData.s?.[0]?.tz
+						};
+						replyMessage = {
+							su: `${t(config.labelKey, config.labelDefault)}: ${messageData.name ?? ''}`,
+							mp: buildMessagePart({
+								t,
+								fullInvite: inviteForMessage as unknown as Invite,
+								newMessage: `${t(config.messageKey, config.messageDefault)}:`,
+								deleteSingleInstance: true,
+								inst: exceptId
+							}) as MimePartInfo,
+							e: [
+								{ t: 't', a: messageData.or?.a ?? messageData.or?.url ?? '' },
+								{ t: 'f', a: getUserAccount()?.name ?? '' }
+							]
+						};
+					}
+				}
 				sendResponse({
 					action,
 					createSnackbar,
@@ -184,7 +214,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 					t,
 					parent: message.parent,
 					exceptId,
-					...(action === InviteReplyVerb.DECLINE && declineMessage && { m: declineMessage })
+					...(replyMessage && { m: replyMessage })
 				});
 			},
 		[
@@ -196,8 +226,8 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 			activeCalendar,
 			dispatch,
 			message.parent,
-			exceptId,
-			declineMessage
+			message.invite,
+			exceptId
 		]
 	);
 

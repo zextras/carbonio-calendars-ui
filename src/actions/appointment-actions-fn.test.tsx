@@ -1096,7 +1096,7 @@ describe('actions', () => {
 				});
 			});
 
-			it('sends SendInviteReply without m when ACCEPT', async () => {
+			it('sends SendInviteReply with m containing "Accepted" subject when ACCEPT', async () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				const spy = vi
 					.spyOn(soapLib, 'legacySoapFetch')
@@ -1114,7 +1114,34 @@ describe('actions', () => {
 				await waitFor(() => {
 					expect(spy).toHaveBeenCalledWith(
 						'SendInviteReply',
-						expect.not.objectContaining({ m: expect.anything() })
+						expect.objectContaining({
+							m: expect.objectContaining({ su: expect.stringContaining('Accepted') })
+						})
+					);
+				});
+			});
+
+			it('sends SendInviteReply with m containing "Tentative" subject when TENTATIVE', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const spy = vi
+					.spyOn(soapLib, 'legacySoapFetch')
+					.mockResolvedValueOnce({ apptId: '1', calItemId: '1', invId: '1' } as any);
+				const event = mockedData.getEvent();
+				const invite = mockedData.getInvite({ event });
+
+				acceptAsAction({
+					actionType: InviteReplyVerb.TENTATIVE,
+					event,
+					invite,
+					context: buildContext(store)
+				})();
+
+				await waitFor(() => {
+					expect(spy).toHaveBeenCalledWith(
+						'SendInviteReply',
+						expect.objectContaining({
+							m: expect.objectContaining({ su: expect.stringContaining('Tentative') })
+						})
 					);
 				});
 			});

@@ -326,6 +326,30 @@ export const openAppointment =
 		}
 	};
 
+const REPLY_MESSAGE_CONFIG: Record<
+	string,
+	{ labelKey: string; labelDefault: string; messageKey: string; messageDefault: string }
+> = {
+	[InviteReplyVerb.ACCEPT]: {
+		labelKey: 'label.accepted',
+		labelDefault: 'Accepted',
+		messageKey: 'message.invite_accepted',
+		messageDefault: 'The following meeting invite has been accepted'
+	},
+	[InviteReplyVerb.TENTATIVE]: {
+		labelKey: 'label.tentative',
+		labelDefault: 'Tentative',
+		messageKey: 'message.invite_tentative',
+		messageDefault: 'The following meeting invite has been tentatively accepted'
+	},
+	[InviteReplyVerb.DECLINE]: {
+		labelKey: 'label.declined',
+		labelDefault: 'Declined',
+		messageKey: 'message.invite_declined',
+		messageDefault: 'The following meeting invite has been declined'
+	}
+};
+
 export const acceptAsAction =
 	({
 		actionType,
@@ -347,14 +371,15 @@ export const acceptAsAction =
 						tz: invite?.tz
 					})
 				: undefined;
-		const declineMessage: Msg | undefined =
-			actionType === InviteReplyVerb.DECLINE && invite
+		const config = REPLY_MESSAGE_CONFIG[actionType];
+		const replyMessage: Msg | undefined =
+			config && invite
 				? {
-						su: `${context.t('label.declined', 'Declined')}: ${invite.name ?? ''}`,
+						su: `${context.t(config.labelKey, config.labelDefault)}: ${invite.name ?? ''}`,
 						mp: buildMessagePart({
 							t: context.t,
 							fullInvite: invite,
-							newMessage: `${context.t('message.invite_declined', 'The following meeting invite has been declined')}:`,
+							newMessage: `${context.t(config.messageKey, config.messageDefault)}:`,
 							deleteSingleInstance: exceptId !== undefined,
 							inst: exceptId
 						}) as MimePartInfo,
@@ -370,7 +395,7 @@ export const acceptAsAction =
 				exceptId,
 				updateOrganizer: true,
 				action: actionType,
-				...(declineMessage !== undefined && { m: declineMessage })
+				...(replyMessage !== undefined && { m: replyMessage })
 			})
 		);
 	};

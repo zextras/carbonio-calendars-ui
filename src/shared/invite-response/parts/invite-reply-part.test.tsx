@@ -264,7 +264,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			expect(call).not.toHaveProperty('m');
 		});
 
-		it('does not pass m when clicking Accept even with notifyOrganizer checked', async () => {
+		it('passes m with "Accepted" subject when clicking Accept with notifyOrganizer checked', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -273,11 +273,15 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			const acceptButton = await screen.findByRole('button', { name: /Accept/i });
 			await user.click(acceptButton);
 
-			const call = vi.mocked(sendResponse).mock.calls[0][0];
-			expect(call).not.toHaveProperty('m');
+			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
+				expect.objectContaining({
+					action: 'ACCEPT',
+					m: expect.objectContaining({ su: expect.stringContaining('Accepted') })
+				})
+			);
 		});
 
-		it('does not pass m when clicking Tentative even with notifyOrganizer checked', async () => {
+		it('passes m with "Tentative" subject when clicking Tentative with notifyOrganizer checked', async () => {
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -286,8 +290,12 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			const tentativeButton = await screen.findByRole('button', { name: /Tentative/i });
 			await user.click(tentativeButton);
 
-			const call = vi.mocked(sendResponse).mock.calls[0][0];
-			expect(call).not.toHaveProperty('m');
+			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
+				expect.objectContaining({
+					action: 'TENTATIVE',
+					m: expect.objectContaining({ su: expect.stringContaining('Tentative') })
+				})
+			);
 		});
 
 		it('passes m with mp containing instance details when declining a single event', async () => {
