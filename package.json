@@ -102,7 +102,7 @@
 		"core-js": "3.49.0",
 		"darkreader": "4.9.120",
 		"date-arithmetic": "4.1.0",
-		"date-fns": "^4.1.0",
+		"date-fns": "^4.4.0",
 		"date-fns-tz": "^3.2.0",
 		"i18next": "22.5.1",
 		"immer": "9.0.21",
