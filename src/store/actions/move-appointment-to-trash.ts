@@ -5,7 +5,7 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TFunction } from 'i18next';
-import { compact, lowerCase } from 'lodash';
+import { compact } from 'lodash';
 
 import { getTimeStrings } from '../../hooks/use-get-date-range-converted-to-timezone';
 import {
@@ -72,12 +72,16 @@ export const buildMessagePart = ({
 			timeZone: inst?.tz ?? fullInvite?.tz
 		}
 	});
-	const instance =
+	const instanceData =
 		!fullInvite.recurrenceRule || deleteSingleInstance
-			? t('label.instance', 'instance')
-			: t('label.series', 'series');
-
-	const instanceData = `"${fullInvite?.name ?? ''}" ${lowerCase(instance)}, ${date}`;
+			? t('message.event_instance_data', '"{{title}}" instance, {{date}}', {
+					title: fullInvite?.name ?? '',
+					date
+				})
+			: t('message.event_series_data', '"{{title}}" series, {{date}}', {
+					title: fullInvite?.name ?? '',
+					date
+				});
 
 	const originalContentPlainSection = originalInviteContentPlain
 		? `\n\n${originalInviteTitle}\n\n${originalInviteContentPlain}`
