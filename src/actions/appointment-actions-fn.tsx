@@ -334,19 +334,19 @@ const REPLY_MESSAGE_CONFIG: Record<
 		labelKey: 'message.subject_accepted',
 		labelDefault: 'Accepted',
 		messageKey: 'message.invite_accepted',
-		messageDefault: 'The following invitation has been accepted'
+		messageDefault: '{{user}} has accepted the following invitation'
 	},
 	[InviteReplyVerb.TENTATIVE]: {
 		labelKey: 'message.subject_tentative',
 		labelDefault: 'Tentative',
 		messageKey: 'message.invite_tentative',
-		messageDefault: 'The following invitation has been accepted as tentative'
+		messageDefault: '{{user}} has accepted the following invitation as tentative'
 	},
 	[InviteReplyVerb.DECLINE]: {
 		labelKey: 'message.subject_declined',
 		labelDefault: 'Declined',
 		messageKey: 'message.invite_declined',
-		messageDefault: 'The following invitation has been declined'
+		messageDefault: '{{user}} has declined the following invitation'
 	}
 };
 
@@ -373,12 +373,14 @@ export const acceptAsAction =
 						})
 					: undefined;
 			const config = REPLY_MESSAGE_CONFIG[actionType];
+			const user = getUserAccount();
+			const userName = user?.displayName ?? user?.name ?? '';
 			const m: Msg = {
 				su: `${context.t(config.labelKey, config.labelDefault)}: ${invite.name ?? ''}`,
 				mp: buildMessagePart({
 					t: context.t,
 					fullInvite: invite,
-					newMessage: `${context.t(config.messageKey, config.messageDefault)}:`,
+					newMessage: `${context.t(config.messageKey, config.messageDefault, { user: userName })}:`,
 					deleteSingleInstance: exceptId !== undefined,
 					inst: exceptId
 				}) as MimePartInfo,

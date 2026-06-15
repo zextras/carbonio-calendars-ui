@@ -297,14 +297,16 @@ export const useDeleteActions = (
 			// then cancel that exception to move it to trash without sending further emails.
 			// sendInviteResponseFulfilled removes the invite from the store (to trigger a re-fetch),
 			// so we pass a snapshot via inv before it is deleted.
-			const inviteeEmail = getUserAccount()?.name ?? '';
+			const inviteeAccount = getUserAccount();
+			const inviteeEmail = inviteeAccount?.name ?? '';
+			const inviteeName = inviteeAccount?.displayName ?? inviteeAccount?.name ?? '';
 			const organizerEmail = invite?.organizer?.a ?? '';
 			const cancelMessage: Msg = {
 				su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
 				mp: buildMessagePart({
 					t,
 					fullInvite: invite,
-					newMessage: `${t('message.invite_declined', 'The following invitation has been declined')}:`,
+					newMessage: `${t('message.invite_declined', '{{user}} has declined the following invitation', { user: inviteeName })}:`,
 					deleteSingleInstance: true,
 					inst: ctxt.inst
 				}) as MimePartInfo,

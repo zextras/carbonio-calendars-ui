@@ -42,19 +42,19 @@ const REPLY_MESSAGE_CONFIG: Record<
 		labelKey: 'message.subject_accepted',
 		labelDefault: 'Accepted',
 		messageKey: 'message.invite_accepted',
-		messageDefault: 'The following invitation has been accepted'
+		messageDefault: '{{user}} has accepted the following invitation'
 	},
 	[InviteReplyVerb.TENTATIVE]: {
 		labelKey: 'message.subject_tentative',
 		labelDefault: 'Tentative',
 		messageKey: 'message.invite_tentative',
-		messageDefault: 'The following invitation has been accepted as tentative'
+		messageDefault: '{{user}} has accepted the following invitation as tentative'
 	},
 	[InviteReplyVerb.DECLINE]: {
 		labelKey: 'message.subject_declined',
 		labelDefault: 'Declined',
 		messageKey: 'message.invite_declined',
-		messageDefault: 'The following invitation has been declined'
+		messageDefault: '{{user}} has declined the following invitation'
 	}
 };
 
@@ -185,12 +185,14 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						recurrenceRule: messageData.recur,
 						tz: messageData.s?.[0]?.tz
 					};
+					const account = getUserAccount();
+					const userName = account?.displayName ?? account?.name ?? '';
 					const m: Msg = {
 						su: `${t(config.labelKey, config.labelDefault)}: ${messageData.name ?? ''}`,
 						mp: buildMessagePart({
 							t,
 							fullInvite: inviteForMessage as unknown as Invite,
-							newMessage: `${t(config.messageKey, config.messageDefault)}:`,
+							newMessage: `${t(config.messageKey, config.messageDefault, { user: userName })}:`,
 							deleteSingleInstance: exceptId !== undefined,
 							inst: exceptId
 						}) as MimePartInfo,
