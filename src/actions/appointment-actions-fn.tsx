@@ -331,22 +331,22 @@ const REPLY_MESSAGE_CONFIG: Record<
 	{ labelKey: string; labelDefault: string; messageKey: string; messageDefault: string }
 > = {
 	[InviteReplyVerb.ACCEPT]: {
-		labelKey: 'label.accepted',
+		labelKey: 'message.subject_accepted',
 		labelDefault: 'Accepted',
 		messageKey: 'message.invite_accepted',
-		messageDefault: 'The following meeting invite has been accepted'
+		messageDefault: 'The following invitation has been accepted'
 	},
 	[InviteReplyVerb.TENTATIVE]: {
-		labelKey: 'label.tentative',
+		labelKey: 'message.subject_tentative',
 		labelDefault: 'Tentative',
 		messageKey: 'message.invite_tentative',
-		messageDefault: 'The following meeting invite has been tentatively accepted'
+		messageDefault: 'The following invitation has been accepted as tentative'
 	},
 	[InviteReplyVerb.DECLINE]: {
-		labelKey: 'label.declined',
+		labelKey: 'message.subject_declined',
 		labelDefault: 'Declined',
 		messageKey: 'message.invite_declined',
-		messageDefault: 'The following meeting invite has been declined'
+		messageDefault: 'The following invitation has been declined'
 	}
 };
 
