@@ -5,15 +5,35 @@
  */
 import { act } from '@testing-library/react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { http, HttpResponse } from 'msw';
 
-import * as deleteActionsModule from '../actions/delete-actions';
 import { useDeleteActions } from './use-delete-actions';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
 import { setupHook } from '@test-setup';
+import { getSetupServer } from '@jest-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { mockUseHistoryNavigation } from '@test-utils/routing/use-history-navigation-mock';
 
-vi.mock('../actions/delete-actions');
+const makeStore = (
+	event: ReturnType<typeof mockedData.getEvent>,
+	invite: ReturnType<typeof mockedData.getInvite>
+): ReturnType<typeof configureStore> => {
+	const appointment = mockedData.getAppointment({ event });
+	return configureStore({
+		reducer: combineReducers(reducers),
+		preloadedState: {
+			appointments: {
+				status: 'init',
+				appointments: { [event.resource.id]: appointment }
+			},
+			invites: {
+				status: '',
+				invites: { [event.resource.inviteId]: invite }
+			}
+		}
+	});
+};
 
 describe('useDeleteActions', () => {
 	beforeEach(() => {
@@ -21,17 +41,17 @@ describe('useDeleteActions', () => {
 	});
 
 	describe('deleteRecurrentInstance', () => {
-		it('calls sendResponse then deleteEvent when notifyOrganizer is true and response is fulfilled', async () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
+		it('sends invite reply then cancels the instance when notifyOrganizer is true', async () => {
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
+			const store = makeStore(event, invite);
 
-			vi.mocked(deleteActionsModule.sendResponse).mockResolvedValue({
-				type: 'invites/sendInviteResponse/fulfilled'
-			} as any);
-			vi.mocked(deleteActionsModule.deleteEvent).mockResolvedValue({
-				type: 'appointments/moveToTrash/fulfilled'
-			} as any);
+			const sendReplyInterceptor = createSoapAPIInterceptor('SendInviteReply', {
+				apptId: 'appt-1',
+				calItemId: 'cal-1',
+				invId: 'inv-1'
+			});
+			const cancelInterceptor = createSoapAPIInterceptor('CancelAppointment', {});
 
 			const { result } = setupHook(
 				() =>
@@ -49,25 +69,34 @@ describe('useDeleteActions', () => {
 
 			await act(async () => {
 				result.current.deleteRecurrentInstance();
-				await Promise.resolve();
-				await Promise.resolve();
+				await sendReplyInterceptor;
+				await cancelInterceptor;
 			});
 
-			expect(vi.mocked(deleteActionsModule.sendResponse)).toHaveBeenCalled();
-			expect(vi.mocked(deleteActionsModule.deleteEvent)).toHaveBeenCalled();
+			await expect(sendReplyInterceptor).resolves.toBeDefined();
+			await expect(cancelInterceptor).resolves.toBeDefined();
 		});
 
-		it('does not call deleteEvent when sendResponse rejects', async () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
+		it('sends invite reply but skips cancel when the reply fails', async () => {
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
+			const store = makeStore(event, invite);
 
-			vi.mocked(deleteActionsModule.sendResponse).mockResolvedValue({
-				type: 'invites/sendInviteResponse/rejected'
-			} as any);
-			vi.mocked(deleteActionsModule.deleteEvent).mockResolvedValue({
-				type: 'appointments/moveToTrash/fulfilled'
-			} as any);
+			const sendReplyInterceptor = createSoapAPIInterceptor('SendInviteReply', {
+				Fault: {
+					Code: { Value: 'SOAP-ENV:Receiver' },
+					Reason: { Text: 'Service failure' },
+					Detail: { Error: { Code: 'SERVICE.FAILURE', Trace: '', _jsns: 'urn:zimbra' } }
+				}
+			});
+
+			let cancelCalled = false;
+			getSetupServer().use(
+				http.post('/service/soap/CancelAppointmentRequest', () => {
+					cancelCalled = true;
+					return HttpResponse.json({ Body: { CancelAppointmentResponse: {} } });
+				})
+			);
 
 			const { result } = setupHook(
 				() =>
@@ -85,22 +114,31 @@ describe('useDeleteActions', () => {
 
 			await act(async () => {
 				result.current.deleteRecurrentInstance();
+				await sendReplyInterceptor;
 				await Promise.resolve();
 				await Promise.resolve();
 			});
 
-			expect(vi.mocked(deleteActionsModule.sendResponse)).toHaveBeenCalled();
-			expect(vi.mocked(deleteActionsModule.deleteEvent)).not.toHaveBeenCalled();
+			await expect(sendReplyInterceptor).resolves.toBeDefined();
+			expect(cancelCalled).toBe(false);
 		});
 
-		it('calls deleteEvent directly without sendResponse when notifyOrganizer is false', async () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
+		it('cancels the instance directly without sending a reply when notifyOrganizer is false', async () => {
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
+			const store = makeStore(event, invite);
 
-			vi.mocked(deleteActionsModule.deleteEvent).mockResolvedValue({
-				type: 'appointments/moveToTrash/fulfilled'
-			} as any);
+			let sendReplyCalled = false;
+			getSetupServer().use(
+				http.post('/service/soap/SendInviteReplyRequest', () => {
+					sendReplyCalled = true;
+					return HttpResponse.json({
+						Body: { SendInviteReplyResponse: { apptId: 'a', calItemId: 'c', invId: 'i' } }
+					});
+				})
+			);
+
+			const cancelInterceptor = createSoapAPIInterceptor('CancelAppointment', {});
 
 			const { result } = setupHook(
 				() =>
@@ -114,19 +152,19 @@ describe('useDeleteActions', () => {
 
 			await act(async () => {
 				result.current.deleteRecurrentInstance();
-				await Promise.resolve();
+				await cancelInterceptor;
 			});
 
-			expect(vi.mocked(deleteActionsModule.sendResponse)).not.toHaveBeenCalled();
-			expect(vi.mocked(deleteActionsModule.deleteEvent)).toHaveBeenCalled();
+			await expect(cancelInterceptor).resolves.toBeDefined();
+			expect(sendReplyCalled).toBe(false);
 		});
 	});
 
 	describe('toggleNotifyOrganizer', () => {
 		it('toggles notifyOrganizer from false to true', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
+			const store = makeStore(event, invite);
 
 			const { result } = setupHook(
 				() =>
@@ -150,9 +188,9 @@ describe('useDeleteActions', () => {
 
 	describe('toggleDeleteAll', () => {
 		it('toggles deleteAll from true to false', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
+			const store = makeStore(event, invite);
 
 			const { result } = setupHook(
 				() =>
