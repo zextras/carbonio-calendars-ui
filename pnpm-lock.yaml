@@ -33,8 +33,8 @@ importers:
         specifier: 14.2.2
         version: 14.2.2(9a4eb1db1237f51d5fd6b14c3e22e635)
       '@zextras/carbonio-ui-commons':
-        specifier: 2.3.0
-        version: 2.3.0(39fd61753315981fd0610c21e104e54f)
+        specifier: 2.3.4
+        version: 2.3.4(39fd61753315981fd0610c21e104e54f)
       '@zextras/carbonio-ui-preview':
         specifier: 5.0.1
         version: 5.0.1(@types/react@18.3.28)(@zextras/carbonio-design-system@12.0.4(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(date-fns@4.4.0)(lodash@4.18.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2662,22 +2662,22 @@ packages:
       react-router-dom:
         optional: true
 
-  '@zextras/carbonio-ui-commons@2.3.0':
-    resolution: {integrity: sha512-oiitBnrSBHa0pIHGjJqJaX3Kd/PS6YxuAPdxNBn3+J1TrBWePBssDQZogjrqDFR2ZI3g0TL9rqHIcg0ZscNDTA==}
+  '@zextras/carbonio-ui-commons@2.3.4':
+    resolution: {integrity: sha512-1PGO6Rl+i76ZxTOPEZCwTxxpPmf2pXR2NvAt3fRAGJ7KEAeteYCXsyZ4M2TyfBR1ymcJpcYr98iENCZHyPrlrA==}
     engines: {node: v22, pnpm: '>=10'}
     peerDependencies:
       '@emotion/react': 11.14.0
       '@emotion/styled': 11.14.1
       '@mui/icons-material': 5.18.0
       '@mui/material': 5.18.0
-      '@zextras/carbonio-design-system': '>=12.0.0'
+      '@zextras/carbonio-design-system': '>=12.0.4'
       '@zextras/carbonio-shell-ui': '>=14.0.0'
       '@zextras/carbonio-ui-soap-lib': 1.0.4
-      lodash: 4.17.21
+      lodash: 4.18.1
       react: 18.3.1
       react-dom: 18.3.1
       react-i18next: 12.3.1
-      react-router-dom: 6.30.1
+      react-router-dom: 6.30.3
 
   '@zextras/carbonio-ui-configs@2.1.0':
     resolution: {integrity: sha512-eBHiSyLyGpWUJIfGHVBRVV0cY98oaQCNrTcjA4Jjh711t+LxdQd4sNYSwnsGBKAeVo21SNKH54jHj3SQSFBvPQ==}
@@ -7007,13 +7007,12 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+  uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
@@ -10200,7 +10199,7 @@ snapshots:
       - encoding
       - use-sync-external-store
 
-  '@zextras/carbonio-ui-commons@2.3.0(39fd61753315981fd0610c21e104e54f)':
+  '@zextras/carbonio-ui-commons@2.3.4(39fd61753315981fd0610c21e104e54f)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.28)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1)
@@ -10218,7 +10217,7 @@ snapshots:
       react-i18next: 12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       redux: 4.2.1
-      uuid: 9.0.1
+      uuid: 11.1.1
       zustand: 4.5.7(@types/react@18.3.28)(immer@9.0.21)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
@@ -14859,9 +14858,9 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
-  uuid@8.3.2: {}
+  uuid@11.1.1: {}
 
-  uuid@9.0.1: {}
+  uuid@8.3.2: {}
 
   v8-compile-cache-lib@3.0.1: {}
 
