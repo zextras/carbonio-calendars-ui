@@ -4,44 +4,27 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { act } from '@testing-library/react';
-import { useSnackbar } from '@zextras/carbonio-design-system';
-import { Mock } from 'vitest';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import * as deleteActionsModule from '../actions/delete-actions';
 import { useDeleteActions } from './use-delete-actions';
+import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
 import { setupHook } from '@test-setup';
 import { mockUseHistoryNavigation } from '@test-utils/routing/use-history-navigation-mock';
 
-vi.mock('../store/redux/hooks', async () => ({
-	...(await vi.importActual('../store/redux/hooks')),
-	useAppDispatch: vi.fn()
-}));
-
-vi.mock('@zextras/carbonio-design-system', async () => ({
-	...(await vi.importActual('@zextras/carbonio-design-system')),
-	useSnackbar: vi.fn()
-}));
-
 vi.mock('../actions/delete-actions');
-vi.mock('../store/actions/move-appointment-to-trash');
 
 describe('useDeleteActions', () => {
-	let mockDispatch: Mock;
-
-	beforeEach(async () => {
-		mockDispatch = vi.fn();
-		const hooks = await import('../store/redux/hooks');
-		vi.mocked(hooks.useAppDispatch).mockReturnValue(mockDispatch as any);
-		(useSnackbar as Mock).mockReturnValue(vi.fn());
+	beforeEach(() => {
 		mockUseHistoryNavigation();
 	});
 
 	describe('deleteRecurrentInstance', () => {
 		it('calls sendResponse then deleteEvent when notifyOrganizer is true and response is fulfilled', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
-			const mockOnClose = vi.fn();
 
 			vi.mocked(deleteActionsModule.sendResponse).mockResolvedValue({
 				type: 'invites/sendInviteResponse/fulfilled'
@@ -50,12 +33,14 @@ describe('useDeleteActions', () => {
 				type: 'appointments/moveToTrash/fulfilled'
 			} as any);
 
-			const { result } = setupHook(() =>
-				useDeleteActions(event, invite, {
-					dispatch: mockDispatch,
-					onClose: mockOnClose,
-					folders: {}
-				})
+			const { result } = setupHook(
+				() =>
+					useDeleteActions(event, invite, {
+						dispatch: store.dispatch,
+						onClose: vi.fn(),
+						folders: {}
+					}),
+				{ store }
 			);
 
 			act(() => {
@@ -73,9 +58,9 @@ describe('useDeleteActions', () => {
 		});
 
 		it('does not call deleteEvent when sendResponse rejects', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
-			const mockOnClose = vi.fn();
 
 			vi.mocked(deleteActionsModule.sendResponse).mockResolvedValue({
 				type: 'invites/sendInviteResponse/rejected'
@@ -84,12 +69,14 @@ describe('useDeleteActions', () => {
 				type: 'appointments/moveToTrash/fulfilled'
 			} as any);
 
-			const { result } = setupHook(() =>
-				useDeleteActions(event, invite, {
-					dispatch: mockDispatch,
-					onClose: mockOnClose,
-					folders: {}
-				})
+			const { result } = setupHook(
+				() =>
+					useDeleteActions(event, invite, {
+						dispatch: store.dispatch,
+						onClose: vi.fn(),
+						folders: {}
+					}),
+				{ store }
 			);
 
 			act(() => {
@@ -107,20 +94,22 @@ describe('useDeleteActions', () => {
 		});
 
 		it('calls deleteEvent directly without sendResponse when notifyOrganizer is false', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
-			const mockOnClose = vi.fn();
 
 			vi.mocked(deleteActionsModule.deleteEvent).mockResolvedValue({
 				type: 'appointments/moveToTrash/fulfilled'
 			} as any);
 
-			const { result } = setupHook(() =>
-				useDeleteActions(event, invite, {
-					dispatch: mockDispatch,
-					onClose: mockOnClose,
-					folders: {}
-				})
+			const { result } = setupHook(
+				() =>
+					useDeleteActions(event, invite, {
+						dispatch: store.dispatch,
+						onClose: vi.fn(),
+						folders: {}
+					}),
+				{ store }
 			);
 
 			await act(async () => {
@@ -135,15 +124,18 @@ describe('useDeleteActions', () => {
 
 	describe('toggleNotifyOrganizer', () => {
 		it('toggles notifyOrganizer from false to true', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
 
-			const { result } = setupHook(() =>
-				useDeleteActions(event, invite, {
-					dispatch: mockDispatch,
-					onClose: vi.fn(),
-					folders: {}
-				})
+			const { result } = setupHook(
+				() =>
+					useDeleteActions(event, invite, {
+						dispatch: store.dispatch,
+						onClose: vi.fn(),
+						folders: {}
+					}),
+				{ store }
 			);
 
 			expect(result.current.notifyOrganizer).toBe(false);
@@ -158,15 +150,18 @@ describe('useDeleteActions', () => {
 
 	describe('toggleDeleteAll', () => {
 		it('toggles deleteAll from true to false', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
 
-			const { result } = setupHook(() =>
-				useDeleteActions(event, invite, {
-					dispatch: mockDispatch,
-					onClose: vi.fn(),
-					folders: {}
-				})
+			const { result } = setupHook(
+				() =>
+					useDeleteActions(event, invite, {
+						dispatch: store.dispatch,
+						onClose: vi.fn(),
+						folders: {}
+					}),
+				{ store }
 			);
 
 			expect(result.current.deleteAll).toBe(true);

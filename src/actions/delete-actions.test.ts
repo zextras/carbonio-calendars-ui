@@ -9,7 +9,6 @@ import { generateSnackbar, sendResponse } from './delete-actions';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 
 vi.mock('../store/actions/send-invite-response');
-vi.mock('../store/actions/move-appointment-to-trash');
 
 describe('delete-actions', () => {
 	const mockDispatch = vi.fn();
