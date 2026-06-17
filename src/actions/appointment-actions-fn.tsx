@@ -16,7 +16,7 @@ import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
-import { StoreProvider } from '../store/redux';
+import { AppDispatch, StoreProvider } from '../store/redux';
 import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
@@ -56,6 +56,25 @@ function getRecipientFromAttendee(attendee: Attendee): Recipient {
 	};
 }
 
+function withInvite(
+	_invite: Invite | undefined,
+	event: EventType,
+	dispatch: AppDispatch,
+	action: (invite: Invite) => void
+): void {
+	if (_invite) {
+		action(_invite);
+	} else {
+		dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })).then(
+			(res) => {
+				if (res.payload) {
+					action(normalizeInvite(res.payload.m[0]));
+				}
+			}
+		);
+	}
+}
+
 export const emailAttendees = (
 	{
 		event,
@@ -84,19 +103,7 @@ export const emailAttendees = (
 		const { execute } = mailTo;
 		execute(e);
 	};
-	if (!_invite) {
-		context
-			.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-			.then((res) => {
-				if (res.payload) {
-					const invite = normalizeInvite(res.payload.m[0]);
-					return sendMail(invite, identities);
-				}
-				return undefined;
-			});
-	} else {
-		sendMail(_invite, identities);
-	}
+	withInvite(_invite, event, context.dispatch, (invite) => sendMail(invite, identities));
 };
 
 export const createCopy =
@@ -146,18 +153,7 @@ export const createCopy =
 				editor
 			});
 		};
-		if (!_invite) {
-			context
-				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res) => {
-					if (res.payload) {
-						const invite = normalizeInvite(res.payload.m[0]);
-						copy(invite);
-					}
-				});
-		} else {
-			copy(_invite);
-		}
+		withInvite(_invite, event, context.dispatch, copy);
 	};
 
 export const editAppointment =
@@ -189,18 +185,7 @@ export const editAppointment =
 				editor
 			});
 		};
-		if (!_invite) {
-			context
-				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res) => {
-					if (res.payload) {
-						const invite = normalizeInvite(res.payload.m[0]);
-						edit(invite);
-					}
-				});
-		} else {
-			edit(_invite);
-		}
+		withInvite(_invite, event, context.dispatch, edit);
 	};
 
 export const moveAppointment =
@@ -294,18 +279,7 @@ export const moveToTrash =
 				true
 			);
 		};
-		if (!_invite) {
-			context
-				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res) => {
-					if (res.payload) {
-						const invite = normalizeInvite(res.payload.m[0]);
-						trashEvent(invite);
-					}
-				});
-		} else {
-			trashEvent(_invite);
-		}
+		withInvite(_invite, event, context.dispatch, trashEvent);
 	};
 
 export const openAppointment =
@@ -399,18 +373,7 @@ export const acceptAsAction =
 				})
 			);
 		};
-		if (!_invite) {
-			context
-				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res) => {
-					if (res.payload) {
-						const invite = normalizeInvite(res.payload.m[0]);
-						reply(invite);
-					}
-				});
-		} else {
-			reply(_invite);
-		}
+		withInvite(_invite, event, context.dispatch, reply);
 	};
 
 export const proposeNewTimeFn =
@@ -468,18 +431,7 @@ export const proposeNewTimeFn =
 				editor
 			});
 		};
-		if (!_invite) {
-			context
-				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res) => {
-					if (res.payload) {
-						const invite = normalizeInvite(res.payload.m[0]);
-						proposeTime(invite);
-					}
-				});
-		} else {
-			proposeTime(_invite);
-		}
+		withInvite(_invite, event, context.dispatch, proposeTime);
 	};
 
 export const exportAppointmentICSFn =

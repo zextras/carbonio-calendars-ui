@@ -249,7 +249,7 @@ describe('appointment-actions-items', () => {
 			const acceptItem = answerItem?.items.find((item) => item.id === EVENT_ACTIONS.ACCEPT);
 			expect(acceptItem).toBeDefined();
 
-			acceptItem?.onClick?.();
+			acceptItem?.onClick?.(new KeyboardEvent('keydown'));
 
 			await waitFor(() => {
 				expect(spy).toHaveBeenCalledWith(
@@ -306,7 +306,7 @@ describe('appointment-actions-items', () => {
 			const answerItem = answerToEventItem({ event, invite: undefined, context });
 			const acceptItem = answerItem?.items.find((item) => item.id === EVENT_ACTIONS.ACCEPT);
 
-			acceptItem?.onClick?.();
+			acceptItem?.onClick?.(new KeyboardEvent('keydown'));
 
 			await waitFor(() => {
 				expect(spy).toHaveBeenCalledWith(
