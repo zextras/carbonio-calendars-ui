@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 
-import { sendResponse } from './delete-actions';
+import { generateSnackbar, sendResponse } from './delete-actions';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 
 vi.mock('../store/actions/send-invite-response');
@@ -58,6 +58,33 @@ describe('delete-actions', () => {
 			expect(vi.mocked(sendInviteResponse)).toHaveBeenCalledWith(
 				expect.objectContaining({ exceptId, m })
 			);
+		});
+	});
+
+	describe('generateSnackbar', () => {
+		const mockT = vi.fn((_key: string, fallback: string) => fallback);
+		const mockCreateSnackbar = vi.fn();
+
+		it('calls createSnackbar with error severity when result type does not include fulfilled', () => {
+			generateSnackbar({
+				res: { type: 'some/rejected' },
+				t: mockT,
+				createSnackbar: mockCreateSnackbar
+			});
+
+			expect(mockCreateSnackbar).toHaveBeenCalledWith(
+				expect.objectContaining({ severity: 'error' })
+			);
+		});
+
+		it('does not call createSnackbar when result type includes fulfilled', () => {
+			generateSnackbar({
+				res: { type: 'some/fulfilled' },
+				t: mockT,
+				createSnackbar: mockCreateSnackbar
+			});
+
+			expect(mockCreateSnackbar).not.toHaveBeenCalled();
 		});
 	});
 });
