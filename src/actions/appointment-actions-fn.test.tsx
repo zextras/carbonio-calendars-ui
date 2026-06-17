@@ -1074,7 +1074,13 @@ describe('actions', () => {
 				t: vi
 					.fn()
 					.mockImplementation(
-						(_key: string, defaultValue: string) => defaultValue
+						(_key: string, defaultValue: string, options?: Record<string, unknown>) => {
+							if (!options) return defaultValue;
+							return Object.entries(options).reduce(
+								(str, [k, v]) => str.replace(new RegExp(`{{${k}}}`, 'g'), String(v)),
+								defaultValue
+							);
+						}
 					) as unknown as ActionsContext['t'],
 				replaceHistory: vi.fn() as unknown as ActionsContext['replaceHistory'],
 				onClose: vi.fn()
