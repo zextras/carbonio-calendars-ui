@@ -203,9 +203,7 @@ describe('move appointment to trash', () => {
 			});
 
 			expect(result.mp[0].content).toStrictEqual(
-				expect.stringContaining(
-					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00'
-				)
+				expect.stringContaining('instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00')
 			);
 		});
 		test('if the date of the event is all day, the date will have all day at the end', async () => {
