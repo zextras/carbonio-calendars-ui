@@ -1,3 +1,9 @@
+## <small>1.26.7 (2026-06-11)</small>
+
+* refactor: replace moment with date-fns ([fde70de](https://github.com/zextras/carbonio-calendars-ui/commit/fde70de))
+* chore(deps): lock file maintenance (#763) ([356f726](https://github.com/zextras/carbonio-calendars-ui/commit/356f726)), closes [#763](https://github.com/zextras/carbonio-calendars-ui/issues/763)
+* chore(deps): update dependency @zextras/carbonio-search-ui to v0.0.11 (#762) ([ec556b8](https://github.com/zextras/carbonio-calendars-ui/commit/ec556b8)), closes [#762](https://github.com/zextras/carbonio-calendars-ui/issues/762)
+
 ## <small>1.26.6 (2026-06-10)</small>
 
 * fix: correct timezone handling for start and end times (#765) ([637c1aa](https://github.com/zextras/carbonio-calendars-ui/commit/637c1aa)), closes [#765](https://github.com/zextras/carbonio-calendars-ui/issues/765)
