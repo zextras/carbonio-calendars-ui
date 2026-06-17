@@ -1,3 +1,8 @@
+## <small>1.26.8 (2026-06-17)</small>
+
+* fix: resolved an issue opening a new editor board (#766) ([4dfb8c7](https://github.com/zextras/carbonio-calendars-ui/commit/4dfb8c7)), closes [#766](https://github.com/zextras/carbonio-calendars-ui/issues/766)
+* chore(deps): update vitest to v4.1.9 (#770) ([2425fcf](https://github.com/zextras/carbonio-calendars-ui/commit/2425fcf)), closes [#770](https://github.com/zextras/carbonio-calendars-ui/issues/770)
+
 ## <small>1.26.7 (2026-06-11)</small>
 
 * refactor: replace moment with date-fns ([fde70de](https://github.com/zextras/carbonio-calendars-ui/commit/fde70de))
