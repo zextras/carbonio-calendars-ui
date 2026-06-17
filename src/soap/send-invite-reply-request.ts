@@ -89,6 +89,30 @@ export enum InviteReplyVerb {
 	DELEGATED = 'DELEGATED' // NOT supported as of 9/12/2005
 }
 
+export const REPLY_MESSAGE_CONFIG: Record<
+	string,
+	{ labelKey: string; labelDefault: string; messageKey: string; messageDefault: string }
+> = {
+	[InviteReplyVerb.ACCEPT]: {
+		labelKey: 'message.subject_accepted',
+		labelDefault: 'Accepted',
+		messageKey: 'message.invite_accepted',
+		messageDefault: '{{user}} has accepted the following invitation'
+	},
+	[InviteReplyVerb.TENTATIVE]: {
+		labelKey: 'message.subject_tentative',
+		labelDefault: 'Tentative',
+		messageKey: 'message.invite_tentative',
+		messageDefault: '{{user}} has accepted the following invitation as tentative'
+	},
+	[InviteReplyVerb.DECLINE]: {
+		labelKey: 'message.subject_declined',
+		labelDefault: 'Declined',
+		messageKey: 'message.invite_declined',
+		messageDefault: '{{user}} has declined the following invitation'
+	}
+};
+
 // InvitationInfo types (simplified - only what's needed for reply)
 export type InvitationInfo = {
 	id?: string;

@@ -25,7 +25,12 @@ import { generateEditor } from 'commons/editor-generator';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDAR_BOARD_ID } from 'constants/index';
 import { getEquipments, getMeetingRooms, getVirtualRoom } from 'normalizations/normalize-editor';
-import { InviteReplyVerb, MimePartInfo, Msg } from 'soap/send-invite-reply-request';
+import {
+	InviteReplyVerb,
+	MimePartInfo,
+	Msg,
+	REPLY_MESSAGE_CONFIG
+} from 'soap/send-invite-reply-request';
 import { buildMessagePart } from 'store/actions/move-appointment-to-trash';
 import { useAppDispatch } from 'store/redux/hooks';
 import { Editor } from 'types/editor';
@@ -33,30 +38,6 @@ import type { InviteReplyPartArguments, InviteResponseArguments } from 'types/in
 import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
 import { CalendarSelector } from 'view/editor/parts/calendar-selector';
-
-const REPLY_MESSAGE_CONFIG: Record<
-	string,
-	{ labelKey: string; labelDefault: string; messageKey: string; messageDefault: string }
-> = {
-	[InviteReplyVerb.ACCEPT]: {
-		labelKey: 'message.subject_accepted',
-		labelDefault: 'Accepted',
-		messageKey: 'message.invite_accepted',
-		messageDefault: '{{user}} has accepted the following invitation'
-	},
-	[InviteReplyVerb.TENTATIVE]: {
-		labelKey: 'message.subject_tentative',
-		labelDefault: 'Tentative',
-		messageKey: 'message.invite_tentative',
-		messageDefault: '{{user}} has accepted the following invitation as tentative'
-	},
-	[InviteReplyVerb.DECLINE]: {
-		labelKey: 'message.subject_declined',
-		labelDefault: 'Declined',
-		messageKey: 'message.invite_declined',
-		messageDefault: '{{user}} has declined the following invitation'
-	}
-};
 
 const normalizeEditorFromMailMessage = (
 	messageData: InviteResponseArguments['mailMsg']

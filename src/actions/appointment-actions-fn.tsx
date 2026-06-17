@@ -25,7 +25,12 @@ import { buildMessagePart } from '../store/actions/move-appointment-to-trash';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
-import { InviteReplyVerb, MimePartInfo, Msg } from 'soap/send-invite-reply-request';
+import {
+	InviteReplyVerb,
+	MimePartInfo,
+	Msg,
+	REPLY_MESSAGE_CONFIG
+} from 'soap/send-invite-reply-request';
 
 type ActionsContextIgnored =
 	| 'createAndApplyTag'
@@ -299,30 +304,6 @@ export const openAppointment =
 			context.replaceHistory(path);
 		}
 	};
-
-const REPLY_MESSAGE_CONFIG: Record<
-	string,
-	{ labelKey: string; labelDefault: string; messageKey: string; messageDefault: string }
-> = {
-	[InviteReplyVerb.ACCEPT]: {
-		labelKey: 'message.subject_accepted',
-		labelDefault: 'Accepted',
-		messageKey: 'message.invite_accepted',
-		messageDefault: '{{user}} has accepted the following invitation'
-	},
-	[InviteReplyVerb.TENTATIVE]: {
-		labelKey: 'message.subject_tentative',
-		labelDefault: 'Tentative',
-		messageKey: 'message.invite_tentative',
-		messageDefault: '{{user}} has accepted the following invitation as tentative'
-	},
-	[InviteReplyVerb.DECLINE]: {
-		labelKey: 'message.subject_declined',
-		labelDefault: 'Declined',
-		messageKey: 'message.invite_declined',
-		messageDefault: '{{user}} has declined the following invitation'
-	}
-};
 
 export const acceptAsAction =
 	({
