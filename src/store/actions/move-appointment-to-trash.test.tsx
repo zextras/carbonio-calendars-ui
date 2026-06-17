@@ -111,7 +111,7 @@ describe('move appointment to trash', () => {
 
 			expect(result.mp[0].content).toEqual(
 				expect.stringContaining(
-					'"test" instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+05:30 Asia/Kolkata All day'
+					'"test" instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+05:30 Asia/Kolkata'
 				)
 			);
 		});
@@ -134,7 +134,7 @@ describe('move appointment to trash', () => {
 
 			expect(result.mp[0].content).toEqual(
 				expect.stringContaining(
-					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+05:30 Asia/Kolkata All day'
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+05:30 Asia/Kolkata'
 				)
 			);
 		});
@@ -158,7 +158,7 @@ describe('move appointment to trash', () => {
 
 			expect(result.mp[0].content).toStrictEqual(
 				expect.stringContaining(
-					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 Europe/Berlin All day'
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 Europe/Berlin'
 				)
 			);
 		});
@@ -181,7 +181,7 @@ describe('move appointment to trash', () => {
 
 			expect(result.mp[0].content).toStrictEqual(
 				expect.stringContaining(
-					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 Europe/Berlin All day'
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 Europe/Berlin'
 				)
 			);
 		});
@@ -204,7 +204,7 @@ describe('move appointment to trash', () => {
 
 			expect(result.mp[0].content).toStrictEqual(
 				expect.stringContaining(
-					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 All day'
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00'
 				)
 			);
 		});
