@@ -193,8 +193,8 @@ importers:
         specifier: 2.1.0
         version: 2.1.0(@testing-library/dom@10.4.1)(@types/eslint@9.6.1)(typescript@5.7.3)
       '@zextras/carbonio-ui-sdk':
-        specifier: 2.3.5
-        version: 2.3.5(tslib@2.8.1)(typescript@5.7.3)
+        specifier: 2.3.6
+        version: 2.3.6(tslib@2.8.1)(typescript@5.7.3)
       babel-plugin-transform-import-meta:
         specifier: 2.3.3
         version: 2.3.3(@babel/core@7.29.0)
@@ -2692,8 +2692,8 @@ packages:
       react: ^18.3.1
       react-dom: ^18.3.1
 
-  '@zextras/carbonio-ui-sdk@2.3.5':
-    resolution: {integrity: sha512-X4lEobZS6hkeFbj1cVZJXA2xEdoh7MjdyBwaKycrVHE5hyq2MwRWX5QEgLJ2xZKcR5l0Whuw15Rxky2VoxV1DQ==}
+  '@zextras/carbonio-ui-sdk@2.3.6':
+    resolution: {integrity: sha512-3tVdp/JNjjtj51YP6DIO0p5nfSD9OVNaLmCucnx2kUKTh80RXbs00MjwbdEHiJiYlNHadf4k+AAWWZtkm/dZCw==}
     engines: {node: v22, pnpm: '>=9'}
     hasBin: true
 
@@ -7164,8 +7164,8 @@ packages:
       webpack:
         optional: true
 
-  webpack-dev-server@5.2.3:
-    resolution: {integrity: sha512-9Gyu2F7+bg4Vv+pjbovuYDhHX+mqdqITykfzdM9UyKqKHlsE5aAjRhR+oOEfXW5vBeu8tarzlJFIZva4ZjAdrQ==}
+  webpack-dev-server@5.2.4:
+    resolution: {integrity: sha512-GqDPGZN9bRqKBTkp4aWkobDDHMsrXKoGSdOH56smIri8qR0JG8gfL8/v/f/OZR3/OKXjG8uwJbFVhKm/FNU/UA==}
     engines: {node: '>= 18.12.0'}
     hasBin: true
     peerDependencies:
@@ -10263,7 +10263,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@zextras/carbonio-ui-sdk@2.3.5(tslib@2.8.1)(typescript@5.7.3)':
+  '@zextras/carbonio-ui-sdk@2.3.6(tslib@2.8.1)(typescript@5.7.3)':
     dependencies:
       '@babel/core': 7.29.0
       '@svgr/webpack': 5.5.0
@@ -10284,7 +10284,7 @@ snapshots:
       semver: 7.7.4
       webpack: 5.105.4(postcss@8.5.10)
       webpack-bundle-analyzer: 4.10.2
-      webpack-dev-server: 5.2.3(tslib@2.8.1)(webpack@5.105.4(postcss@8.5.10))
+      webpack-dev-server: 5.2.4(tslib@2.8.1)(webpack@5.105.4(postcss@8.5.10))
       yargs: 18.0.0
     transitivePeerDependencies:
       - '@minify-html/node'
@@ -11050,14 +11050,14 @@ snapshots:
 
   css-loader@6.11.0(webpack@5.105.4(postcss@8.5.10)):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.10)
-      postcss: 8.5.10
-      postcss-modules-extract-imports: 3.1.0(postcss@8.5.10)
-      postcss-modules-local-by-default: 4.2.0(postcss@8.5.10)
-      postcss-modules-scope: 3.2.1(postcss@8.5.10)
-      postcss-modules-values: 4.0.0(postcss@8.5.10)
+      icss-utils: 5.1.0(postcss@8.5.15)
+      postcss: 8.5.15
+      postcss-modules-extract-imports: 3.1.0(postcss@8.5.15)
+      postcss-modules-local-by-default: 4.2.0(postcss@8.5.15)
+      postcss-modules-scope: 3.2.1(postcss@8.5.15)
+      postcss-modules-values: 4.0.0(postcss@8.5.15)
       postcss-value-parser: 4.2.0
-      semver: 7.7.4
+      semver: 7.8.4
     optionalDependencies:
       webpack: 5.105.4(postcss@8.5.10)
 
@@ -12356,9 +12356,9 @@ snapshots:
       safer-buffer: 2.1.2
     optional: true
 
-  icss-utils@5.1.0(postcss@8.5.10):
+  icss-utils@5.1.0(postcss@8.5.15):
     dependencies:
-      postcss: 8.5.10
+      postcss: 8.5.15
 
   identity-obj-proxy@3.0.0:
     dependencies:
@@ -13451,32 +13451,32 @@ snapshots:
       cosmiconfig: 9.0.2(typescript@5.7.3)
       jiti: 2.7.0
       postcss: 8.5.10
-      semver: 7.7.4
+      semver: 7.8.4
     optionalDependencies:
       webpack: 5.105.4(postcss@8.5.10)
     transitivePeerDependencies:
       - typescript
 
-  postcss-modules-extract-imports@3.1.0(postcss@8.5.10):
+  postcss-modules-extract-imports@3.1.0(postcss@8.5.15):
     dependencies:
-      postcss: 8.5.10
+      postcss: 8.5.15
 
-  postcss-modules-local-by-default@4.2.0(postcss@8.5.10):
+  postcss-modules-local-by-default@4.2.0(postcss@8.5.15):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.10)
-      postcss: 8.5.10
+      icss-utils: 5.1.0(postcss@8.5.15)
+      postcss: 8.5.15
       postcss-selector-parser: 7.1.2
       postcss-value-parser: 4.2.0
 
-  postcss-modules-scope@3.2.1(postcss@8.5.10):
+  postcss-modules-scope@3.2.1(postcss@8.5.15):
     dependencies:
-      postcss: 8.5.10
+      postcss: 8.5.15
       postcss-selector-parser: 7.1.2
 
-  postcss-modules-values@4.0.0(postcss@8.5.10):
+  postcss-modules-values@4.0.0(postcss@8.5.15):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.10)
-      postcss: 8.5.10
+      icss-utils: 5.1.0(postcss@8.5.15)
+      postcss: 8.5.15
 
   postcss-selector-parser@7.1.2:
     dependencies:
@@ -14990,7 +14990,7 @@ snapshots:
     transitivePeerDependencies:
       - tslib
 
-  webpack-dev-server@5.2.3(tslib@2.8.1)(webpack@5.105.4(postcss@8.5.10)):
+  webpack-dev-server@5.2.4(tslib@2.8.1)(webpack@5.105.4(postcss@8.5.10)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
