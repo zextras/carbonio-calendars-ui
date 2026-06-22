@@ -9,6 +9,8 @@ import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { compact, toLower } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { getDateFnsLocale } from '../commons/date-fns-react-widgets-localizer';
+
 type EventTimeOptions = {
 	allDay?: boolean;
 	timeZone?: string;
@@ -43,11 +45,11 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 	} as const;
 
 	const dateTimeFormat = new Intl.DateTimeFormat(
-		options.locale ?? navigator.language,
+		options.locale ?? getDateFnsLocale()?.code ?? navigator.language,
 		rangeOptions
 	);
 	const dateGmtTimeFormat = new Intl.DateTimeFormat(
-		options.locale ?? navigator.language,
+		options.locale ?? getDateFnsLocale()?.code ?? navigator.language,
 		gmtOptions
 	);
 
