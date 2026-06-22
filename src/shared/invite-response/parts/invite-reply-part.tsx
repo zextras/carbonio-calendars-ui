@@ -14,19 +14,28 @@ import {
 	Checkbox,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { addBoard, Board } from '@zextras/carbonio-shell-ui';
+import { addBoard, Board, getUserAccount } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
+
+import { InstanceExceptionId } from '../../../utils/event';
 
 import { sendResponse } from '../invite-reply-actions';
 import { generateEditor } from 'commons/editor-generator';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { CALENDAR_BOARD_ID } from 'constants/index';
 import { getEquipments, getMeetingRooms, getVirtualRoom } from 'normalizations/normalize-editor';
-import { InviteReplyVerb } from 'soap/send-invite-reply-request';
+import {
+	InviteReplyVerb,
+	MimePartInfo,
+	Msg,
+	REPLY_MESSAGE_CONFIG
+} from 'soap/send-invite-reply-request';
+import { buildMessagePart } from 'store/actions/move-appointment-to-trash';
 import { useAppDispatch } from 'store/redux/hooks';
 import { Editor } from 'types/editor';
 import type { InviteReplyPartArguments, InviteResponseArguments } from 'types/integrations';
+import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
 import { CalendarSelector } from 'view/editor/parts/calendar-selector';
 
@@ -81,6 +90,13 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 		() => calendarFolders[message.parent] ?? null
 	);
 
+	const exceptId = useMemo((): InstanceExceptionId | undefined => {
+		const messageData = message.invite?.[0]?.comp?.[0];
+		if (!messageData || messageData.recur) return undefined;
+		const rawExceptId = messageData.exceptId?.[0];
+		return rawExceptId?.d ? { d: rawExceptId.d, tz: rawExceptId.tz } : undefined;
+	}, [message.invite]);
+
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];
 		const partialEditor = normalizeEditorFromMailMessage(messageData);
@@ -129,17 +145,70 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const onAction = useCallback(
 		(action: InviteReplyVerb): (() => void) =>
 			(): void => {
-				sendResponse({
-					action,
-					createSnackbar,
-					inviteId,
-					notifyOrganizer,
-					activeCalendar,
-					dispatch,
-					replaceHistory,
-					t,
-					parent: message.parent
-				});
+				const messageData = message.invite?.[0]?.comp?.[0];
+				const config = REPLY_MESSAGE_CONFIG[action];
+				if (notifyOrganizer && messageData && config) {
+					const inviteForMessage = {
+						name: messageData.name,
+						allDay: messageData.allDay ?? false,
+						start: {
+							d: messageData.s?.[0]?.d,
+							u: messageData.s?.[0]?.u,
+							tz: messageData.s?.[0]?.tz
+						},
+						end: {
+							d: messageData.e?.[0]?.d,
+							u: messageData.e?.[0]?.u,
+							tz: messageData.e?.[0]?.tz
+						},
+						textDescription: messageData.desc,
+						htmlDescription: messageData.descHtml?.length ? messageData.descHtml : undefined,
+						recurrenceRule: messageData.recur,
+						tz: messageData.s?.[0]?.tz
+					};
+					const account = getUserAccount();
+					const userName = account?.displayName ?? account?.name ?? '';
+					const m: Msg = {
+						su: `${t(config.labelKey, config.labelDefault)}: ${messageData.name ?? ''}`,
+						mp: buildMessagePart({
+							t,
+							fullInvite: inviteForMessage as unknown as Invite,
+							newMessage: `${t(config.messageKey, config.messageDefault, { user: userName })}:`,
+							deleteSingleInstance: exceptId !== undefined,
+							inst: exceptId
+						}) as MimePartInfo,
+						e: [
+							{ t: 't', a: messageData.or?.a ?? messageData.or?.url ?? '' },
+							{ t: 'f', a: getUserAccount()?.name ?? '' }
+						]
+					};
+					sendResponse({
+						action,
+						createSnackbar,
+						inviteId,
+						notifyOrganizer: true,
+						activeCalendar,
+						dispatch,
+						replaceHistory,
+						t,
+						parent: message.parent,
+						exceptId,
+						m
+					});
+				} else {
+					sendResponse({
+						action,
+						createSnackbar,
+						inviteId,
+						notifyOrganizer: false,
+						activeCalendar,
+						dispatch,
+						replaceHistory,
+						t,
+						parent: message.parent,
+						exceptId
+					});
+				}
 			},
 		[
 			t,
@@ -149,7 +218,9 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 			notifyOrganizer,
 			activeCalendar,
 			dispatch,
-			message.parent
+			message.parent,
+			message.invite,
+			exceptId
 		]
 	);
 

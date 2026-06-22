@@ -320,9 +320,9 @@ const getInviteActionsArray = ({
 	context,
 	invite
 }: ActionsProps): AppointmentActionsItems[] => [
-	acceptInvitationItem({ event, context }),
-	acceptAsTentativeItem({ event, context }),
-	declineInvitationItem({ event, context }),
+	acceptInvitationItem({ event, invite, context }),
+	acceptAsTentativeItem({ event, invite, context }),
+	declineInvitationItem({ event, invite, context }),
 	proposeNewTimeItem({ event, invite, context })
 ];
 

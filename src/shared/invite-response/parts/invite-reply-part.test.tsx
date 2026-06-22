@@ -12,12 +12,15 @@ import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy } from 'lodash';
 
 import { buildMailMessageType, MESSAGE_TYPE } from '../invite-test-utils';
+import { sendResponse } from '../invite-reply-actions';
 import InviteReplyPart from './invite-reply-part';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
 import { MESSAGE_METHOD } from 'constants/api';
 import { reducers } from 'store/redux';
 import mockedData from 'test/generators';
+
+vi.mock('../invite-reply-actions');
 
 const SECONDARY_CALENDAR_NAME = 'Secondary Calendar';
 const SHARED_CALENDAR_NAME = 'Shared Calendar';
@@ -218,6 +221,195 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			await waitFor(() => {
 				expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
 			});
+		});
+	});
+
+	describe('Decline message (m parameter)', () => {
+		beforeEach(() => {
+			vi.mocked(sendResponse).mockReturnValue(undefined as any);
+		});
+
+		it('passes m with subject containing "Declined" when clicking Decline with notifyOrganizer checked', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			const declineButton = await screen.findByRole('button', { name: /Decline/i });
+			await user.click(declineButton);
+
+			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
+				expect.objectContaining({
+					action: 'DECLINE',
+					notifyOrganizer: true,
+					m: expect.objectContaining({
+						su: expect.stringContaining('Declined')
+					})
+				})
+			);
+		});
+
+		it('calls sendResponse with notifyOrganizer false when Decline is clicked with notifyOrganizer unchecked', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			const notifyCheckbox = await screen.findByTestId('checkbox');
+			await user.click(notifyCheckbox);
+
+			const declineButton = await screen.findByRole('button', { name: /Decline/i });
+			await user.click(declineButton);
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0];
+			expect(call).toMatchObject({ action: 'DECLINE', notifyOrganizer: false });
+			expect(call).not.toHaveProperty('m');
+		});
+
+		it('passes m with "Accepted" subject when clicking Accept with notifyOrganizer checked', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			const acceptButton = await screen.findByRole('button', { name: /Accept/i });
+			await user.click(acceptButton);
+
+			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
+				expect.objectContaining({
+					action: 'ACCEPT',
+					notifyOrganizer: true,
+					m: expect.objectContaining({ su: expect.stringContaining('Accepted') })
+				})
+			);
+		});
+
+		it('passes m with "Tentative" subject when clicking Tentative with notifyOrganizer checked', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			const tentativeButton = await screen.findByRole('button', { name: /Tentative/i });
+			await user.click(tentativeButton);
+
+			expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
+				expect.objectContaining({
+					action: 'TENTATIVE',
+					notifyOrganizer: true,
+					m: expect.objectContaining({ su: expect.stringContaining('Tentative') })
+				})
+			);
+		});
+
+		it('passes mp in m when declining a single event', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp).toBeDefined();
+		});
+
+		it('passes m with e containing organizer as "to" and invitee as "from" when declining', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.e).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({ t: 't', a: 'sender@mail.com' }),
+					expect.objectContaining({ t: 'f', a: expect.stringContaining('@') })
+				])
+			);
+		});
+
+		it('does not include m when notifyOrganizer is unchecked', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			const notifyCheckbox = await screen.findByTestId('checkbox');
+			await user.click(notifyCheckbox);
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0];
+			expect(call).not.toHaveProperty('m');
+		});
+
+		it('includes "instance" in mp body when replying to a single event invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toContain('instance');
+		});
+
+		it('includes "series" in mp body when replying to a series invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SERIES, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toContain('series');
+		});
+
+		it('includes "instance" in mp body when replying to a recurrent exception invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.EXCEPT, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toContain('instance');
+		});
+
+		it('includes a formatted date in mp body when replying to an invite', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+				store
+			});
+
+			await user.click(await screen.findByRole('button', { name: /Decline/i }));
+
+			const call = vi.mocked(sendResponse).mock.calls[0][0] as Extract<
+				Parameters<typeof sendResponse>[0],
+				{ notifyOrganizer: true }
+			>;
+			expect(call.m.mp?.mp?.[0]?.content).toMatch(/2024/);
 		});
 	});
 

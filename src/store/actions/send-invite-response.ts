@@ -7,6 +7,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import {
 	InviteReplyVerb,
+	Msg,
 	SendInviteReplyRejectedType,
 	sendInviteReplyRequest,
 	SendInviteReplyReturnType
@@ -19,6 +20,7 @@ export type SendInviteArguments = {
 	exceptId?: InstanceExceptionId;
 	updateOrganizer: boolean;
 	fromMail?: boolean;
+	m?: Msg;
 };
 
 export const sendInviteResponse = createAsyncThunk<
@@ -27,12 +29,13 @@ export const sendInviteResponse = createAsyncThunk<
 	{ rejectValue: SendInviteReplyRejectedType }
 >(
 	'invites/sendInviteResponse',
-	async ({ inviteId, action, updateOrganizer, exceptId }, { rejectWithValue }) => {
+	async ({ inviteId, action, updateOrganizer, exceptId, m }, { rejectWithValue }) => {
 		const response = await sendInviteReplyRequest({
 			id: inviteId,
 			action,
 			updateOrganizer,
-			exceptId
+			exceptId,
+			m
 		});
 		if (response?.error) {
 			return rejectWithValue(response);
