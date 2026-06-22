@@ -1,3 +1,16 @@
+## <small>1.26.9 (2026-06-18)</small>
+
+* fix(deps): update dependency @zextras/carbonio-shell-ui to v14.3.1 (#781) ([f02bf10](https://github.com/zextras/carbonio-calendars-ui/commit/f02bf10)), closes [#781](https://github.com/zextras/carbonio-calendars-ui/issues/781)
+* chore: update package.json and dependencies (#788) ([34cff17](https://github.com/zextras/carbonio-calendars-ui/commit/34cff17)), closes [#788](https://github.com/zextras/carbonio-calendars-ui/issues/788)
+* chore(deps): update date-fns to ^4.4.0 (#771) ([62be024](https://github.com/zextras/carbonio-calendars-ui/commit/62be024)), closes [#771](https://github.com/zextras/carbonio-calendars-ui/issues/771)
+* chore(deps): update dependency @zextras/carbonio-ui-commons to v2.3.4 (#773) ([32fd99a](https://github.com/zextras/carbonio-calendars-ui/commit/32fd99a)), closes [#773](https://github.com/zextras/carbonio-calendars-ui/issues/773)
+* chore(deps): update dependency @zextras/carbonio-ui-sdk to v2.3.6 (#767) ([1caf8cd](https://github.com/zextras/carbonio-calendars-ui/commit/1caf8cd)), closes [#767](https://github.com/zextras/carbonio-calendars-ui/issues/767)
+
+## <small>1.26.8 (2026-06-17)</small>
+
+* fix: resolved an issue opening a new editor board (#766) ([4dfb8c7](https://github.com/zextras/carbonio-calendars-ui/commit/4dfb8c7)), closes [#766](https://github.com/zextras/carbonio-calendars-ui/issues/766)
+* chore(deps): update vitest to v4.1.9 (#770) ([2425fcf](https://github.com/zextras/carbonio-calendars-ui/commit/2425fcf)), closes [#770](https://github.com/zextras/carbonio-calendars-ui/issues/770)
+
 ## <small>1.26.7 (2026-06-11)</small>
 
 * refactor: replace moment with date-fns ([fde70de](https://github.com/zextras/carbonio-calendars-ui/commit/fde70de))

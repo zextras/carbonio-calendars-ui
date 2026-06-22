@@ -16,7 +16,6 @@ import { Participant } from './use-participants-availability';
 import { getWithinSameDay } from './utils';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
-	selectEditor,
 	selectEditorAttendees,
 	selectEditorEnd,
 	selectEditorEquipment,
@@ -25,6 +24,7 @@ import {
 	selectEditorRecurrence,
 	selectEditorStart,
 	selectEditorTimezone,
+	selectEditorUid,
 	selectSender
 } from '../../../store/selectors/editor';
 
@@ -42,7 +42,7 @@ export const EditorDailyPlannerController = ({
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const sender = useAppSelector(selectSender(editorId));
-	const currentAppointmentUid = useAppSelector(selectEditor(editorId)).uid;
+	const currentAppointmentUid = useAppSelector(selectEditorUid(editorId));
 
 	const equipment = (useAppSelector(selectEditorEquipment(editorId)) ?? []).map((equip) => ({
 		email: equip.email,
