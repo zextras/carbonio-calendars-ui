@@ -13,16 +13,20 @@ import { size } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
+
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
+import { buildMessagePart } from '../store/actions/move-appointment-to-trash';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { parseDateFromICS } from '../utils/dates';
-import { getInstanceExceptionId } from '../utils/event';
+import { getInstanceExceptionId, InstanceExceptionId } from '../utils/event';
+import { MimePartInfo, Msg } from 'soap/send-invite-reply-request';
 
 const generateAppointmentDeletedSnackbar = (
 	res: { type: string | string[] },
@@ -274,7 +278,6 @@ export const useDeleteActions = (
 
 	const deleteRecurrentInstance = useCallback(() => {
 		context.onClose();
-		const isCanceled = false;
 		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
@@ -289,27 +292,50 @@ export const useDeleteActions = (
 			s: event.start.getTime(),
 			folders: context.folders
 		};
-		deleteEvent(event, ctxt)
-			.then((res: { type: string | string[] }) => {
-				generateAppointmentDeletedSnackbar(res, t, createSnackbar);
-			})
-			.then(
-				setTimeout(() => {
-					if (notifyOrganizer && !isCanceled) {
-						sendResponse(event, ctxt);
+		if (notifyOrganizer) {
+			// First send the decline reply to notify the organizer (creates a declined exception),
+			// then cancel that exception to move it to trash without sending further emails.
+			// sendInviteResponseFulfilled removes the invite from the store (to trigger a re-fetch),
+			// so we pass a snapshot via inv before it is deleted.
+			const inviteeAccount = getUserAccount();
+			const inviteeEmail = inviteeAccount?.name ?? '';
+			const inviteeName = inviteeAccount?.displayName ?? inviteeAccount?.name ?? '';
+			const organizerEmail = invite?.organizer?.a ?? '';
+			const cancelMessage: Msg = {
+				su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
+				mp: buildMessagePart({
+					t,
+					fullInvite: invite,
+					newMessage: `${t('message.invite_declined', '{{user}} has declined the following invitation', { user: inviteeName })}:`,
+					deleteSingleInstance: true,
+					inst: ctxt.inst
+				}) as MimePartInfo,
+				e: [
+					{ t: 't', a: organizerEmail },
+					{ t: 'f', a: inviteeEmail }
+				]
+			};
+			const replyExceptId: InstanceExceptionId | undefined = ctxt.inst;
+			const ctxtWithInviteSnapshot = { ...ctxt, inv: invite };
+			sendResponse(event, ctxtWithInviteSnapshot, replyExceptId, cancelMessage).then(
+				(res: { type: string }) => {
+					if (res.type.includes('fulfilled')) {
+						deleteEvent(event, ctxtWithInviteSnapshot).then(
+							(deleteRes: { type: string | string[] }) => {
+								generateAppointmentDeletedSnackbar(deleteRes, t, createSnackbar);
+							}
+						);
+					} else {
+						generateAppointmentDeletedSnackbar(res, t, createSnackbar);
 					}
-				}, 5000)
+				}
 			);
-	}, [
-		context,
-		replaceHistory,
-		dispatch,
-		t,
-		createSnackbar,
-		event,
-		invite?.start?.tz,
-		notifyOrganizer
-	]);
+		} else {
+			deleteEvent(event, ctxt).then((res: { type: string | string[] }) => {
+				generateAppointmentDeletedSnackbar(res, t, createSnackbar);
+			});
+		}
+	}, [context, replaceHistory, dispatch, t, createSnackbar, event, invite, notifyOrganizer]);
 
 	return useMemo(
 		() => ({

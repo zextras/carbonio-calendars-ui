@@ -33,7 +33,7 @@ describe('dateFnsLocalizer', () => {
 		const { dateFnsLocalizer } = await import('../date-fns-react-widgets-localizer');
 		dateFnsLocalizer();
 		dateFnsLocalizer();
-		expect(configure.setDateLocalizer).toHaveBeenCalledOnce();
+		expect(configure.setDateLocalizer).toHaveBeenCalledTimes(1);
 	});
 
 	describe('parse', () => {
