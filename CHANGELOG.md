@@ -1,3 +1,8 @@
+## <small>1.26.10 (2026-06-23)</small>
+
+* chore(deps): update dependency sonarqube-scanner to v4.3.8 (#797) ([dce6bf7](https://github.com/zextras/carbonio-calendars-ui/commit/dce6bf7)), closes [#797](https://github.com/zextras/carbonio-calendars-ui/issues/797)
+* fix(CO-3651): specify which kind of occurrence has been answered by invitee ([18dafa3](https://github.com/zextras/carbonio-calendars-ui/commit/18dafa3))
+
 ## <small>1.26.9 (2026-06-18)</small>
 
 * fix(deps): update dependency @zextras/carbonio-shell-ui to v14.3.1 (#781) ([f02bf10](https://github.com/zextras/carbonio-calendars-ui/commit/f02bf10)), closes [#781](https://github.com/zextras/carbonio-calendars-ui/issues/781)
