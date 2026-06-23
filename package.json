@@ -73,7 +73,7 @@
 		"identity-obj-proxy": "3.0.0",
 		"is-ci": "3.0.1",
 		"jsdom": "27.4.0",
-		"msw": "2.12.14",
+		"msw": "2.14.6",
 		"pinst": "3.0.0",
 		"sonarqube-scanner": "4.3.6",
 		"ts-node": "10.9.2",
