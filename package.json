@@ -5,7 +5,7 @@
 	"main": "src/app.tsx",
 	"packageManager": "pnpm@10.34.4",
 	"engines": {
-		"node": "v22",
+		"node": "22.23.0",
 		"pnpm": ">=10.34.4"
 	},
 	"scripts": {
