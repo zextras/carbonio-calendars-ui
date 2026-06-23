@@ -1,3 +1,8 @@
+## <small>1.26.12 (2026-06-23)</small>
+
+* fix(deps): update dependency darkreader to v4.9.125 (#774) ([00b4366](https://github.com/zextras/carbonio-calendars-ui/commit/00b4366)), closes [#774](https://github.com/zextras/carbonio-calendars-ui/issues/774)
+* chore(deps): update dependency zextras/jenkins-lib-common to v2.11.3 (#777) ([35f76f2](https://github.com/zextras/carbonio-calendars-ui/commit/35f76f2)), closes [#777](https://github.com/zextras/carbonio-calendars-ui/issues/777)
+
 ## <small>1.26.11 (2026-06-23)</small>
 
 * fix(deps): update dependency @zextras/carbonio-ui-soap-lib to v1.3.0 (#782) ([43a0937](https://github.com/zextras/carbonio-calendars-ui/commit/43a0937)), closes [#782](https://github.com/zextras/carbonio-calendars-ui/issues/782)
