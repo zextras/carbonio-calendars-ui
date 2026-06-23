@@ -1,3 +1,8 @@
+## <small>1.26.11 (2026-06-23)</small>
+
+* fix(deps): update dependency @zextras/carbonio-ui-soap-lib to v1.3.0 (#782) ([43a0937](https://github.com/zextras/carbonio-calendars-ui/commit/43a0937)), closes [#782](https://github.com/zextras/carbonio-calendars-ui/issues/782)
+* chore(deps): update babel to v7.29.7 (#761) ([9e565a5](https://github.com/zextras/carbonio-calendars-ui/commit/9e565a5)), closes [#761](https://github.com/zextras/carbonio-calendars-ui/issues/761)
+
 ## <small>1.26.10 (2026-06-23)</small>
 
 * chore(deps): update dependency sonarqube-scanner to v4.3.8 (#797) ([dce6bf7](https://github.com/zextras/carbonio-calendars-ui/commit/dce6bf7)), closes [#797](https://github.com/zextras/carbonio-calendars-ui/issues/797)
