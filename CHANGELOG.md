@@ -1,3 +1,7 @@
+## <small>1.26.16 (2026-06-26)</small>
+
+* fix(deps): update dependency react-big-calendar to v1.20.0 (#783) ([5172e8f](https://github.com/zextras/carbonio-calendars-ui/commit/5172e8f)), closes [#783](https://github.com/zextras/carbonio-calendars-ui/issues/783)
+
 ## <small>1.26.15 (2026-06-26)</small>
 
 * fix(deps): update dependency @zextras/carbonio-shell-ui to v15 (#786) ([682b077](https://github.com/zextras/carbonio-calendars-ui/commit/682b077)), closes [#786](https://github.com/zextras/carbonio-calendars-ui/issues/786)
