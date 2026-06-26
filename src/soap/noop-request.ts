@@ -7,7 +7,7 @@ import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 import { SearchReturnType } from './search-request';
 
-export const NoOpRequest = async (): Promise<void> => {
+export const NoOpRequest = async (): Promise<SearchReturnType> => {
 	const response: SearchReturnType = await legacySoapFetch('NoOp', {
 		_jsns: 'urn:zimbraMail'
 	});
