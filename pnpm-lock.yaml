@@ -78,8 +78,8 @@ importers:
         specifier: 18.3.1
         version: 18.3.1
       react-big-calendar:
-        specifier: 1.15.0
-        version: 1.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 1.20.0
+        version: 1.20.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
@@ -3195,6 +3195,9 @@ packages:
   classnames@2.5.1:
     resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
+  cldrjs@0.5.5:
+    resolution: {integrity: sha512-KDwzwbmLIPfCgd8JERVDpQKrUUM1U4KpFJJg2IROv89rF172lLufoJnqJ/Wea6fXL5bO6WjuLMzY8V52UWPvkA==}
+
   clean-css@5.3.3:
     resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}
     engines: {node: '>= 10.0'}
@@ -3230,10 +3233,6 @@ packages:
   cliui@9.0.1:
     resolution: {integrity: sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w==}
     engines: {node: '>=20'}
-
-  clsx@1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
-    engines: {node: '>=6'}
 
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
@@ -3684,6 +3683,9 @@ packages:
 
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
+
+  dom-helpers@6.0.1:
+    resolution: {integrity: sha512-IKySryuFwseGkrCA/pIqlwUPOD50w1Lj/B2Yief3vBOP18k5y4t+hTqKh55gULDVeJMRitcozve+g/wVFf4sFQ==}
 
   dom-serializer@0.2.2:
     resolution: {integrity: sha512-2/xPb3ORsQ42nHYiSunXkDjPLBaEj/xTwUO4B7XCZQTRk7EBtTOPaygh10YAAh2OI1Qrp6NWfpAhzswj0ydt9g==}
@@ -4328,8 +4330,8 @@ packages:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==}
     engines: {node: '>=18'}
 
-  globalize@0.1.1:
-    resolution: {integrity: sha512-5e01v8eLGfuQSOvx2MsDMOWS0GFtCx1wPzQSmcHw4hkxFzrQDBO3Xwg/m8Hr/7qXMrHeOIE29qWVzyv06u1TZA==}
+  globalize@1.7.1:
+    resolution: {integrity: sha512-PFymRL0PtitFOlSniuwwwNfkooi3cLQJo9Uke1+j1DsGfUkkHkwneImqVtGcqKI0TuzhAlHt7hAcgK324902HA==}
 
   globals@13.24.0:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
@@ -6003,11 +6005,11 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  react-big-calendar@1.15.0:
-    resolution: {integrity: sha512-RNiPH1Vh/fpJpNIValpl6lHvuEroWkDvS8z3YW2QpmGUuAk6a0Q1uEujlQTd/gQrpKAaBA4Gyc1mzCdNIQ7DZQ==}
+  react-big-calendar@1.20.0:
+    resolution: {integrity: sha512-Lp1mvG34l/9xtb/2LsBb4UAF3iPcUkmDqbmpsvDHzp/n8GA5gtn3+nf8BsULWw08opKDgv38nQi75dQlOOqzkg==}
     peerDependencies:
-      react: ^16.14.0 || ^17 || ^18
-      react-dom: ^16.14.0 || ^17 || ^18
+      react: ^16.14.0 || ^17 || ^18 || ^19
+      react-dom: ^16.14.0 || ^17 || ^18 || ^19
 
   react-component-managers@3.2.2:
     resolution: {integrity: sha512-SqtB09hS1ir0koBNybvNbNAB3k/r7IbIGbXSxvkkTV0m50s+4oJ59KYsbPAQ/2DhE169Rc5V26d674EcGcDbGA==}
@@ -10924,6 +10926,8 @@ snapshots:
 
   classnames@2.5.1: {}
 
+  cldrjs@0.5.5: {}
+
   clean-css@5.3.3:
     dependencies:
       source-map: 0.6.1
@@ -10968,8 +10972,6 @@ snapshots:
       string-width: 7.2.0
       strip-ansi: 7.2.0
       wrap-ansi: 9.0.2
-
-  clsx@1.2.1: {}
 
   clsx@2.1.1: {}
 
@@ -11402,6 +11404,11 @@ snapshots:
       '@babel/runtime': 7.29.7
 
   dom-helpers@5.2.1:
+    dependencies:
+      '@babel/runtime': 7.29.7
+      csstype: 3.2.3
+
+  dom-helpers@6.0.1:
     dependencies:
       '@babel/runtime': 7.29.7
       csstype: 3.2.3
@@ -12228,7 +12235,9 @@ snapshots:
     dependencies:
       ini: 4.1.1
 
-  globalize@0.1.1: {}
+  globalize@1.7.1:
+    dependencies:
+      cldrjs: 0.5.5
 
   globals@13.24.0:
     dependencies:
@@ -13797,14 +13806,14 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-big-calendar@1.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-big-calendar@1.20.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.29.7
-      clsx: 1.2.1
+      clsx: 2.1.1
       date-arithmetic: 4.1.0
       dayjs: 1.11.21
-      dom-helpers: 5.2.1
-      globalize: 0.1.1
+      dom-helpers: 6.0.1
+      globalize: 1.7.1
       invariant: 2.2.4
       lodash: 4.18.1
       lodash-es: 4.18.1
