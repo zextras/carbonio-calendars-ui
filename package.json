@@ -51,7 +51,7 @@
 		"@testing-library/user-event": "14.6.1",
 		"@types/date-arithmetic": "4.1.4",
 		"@types/lodash": "4.17.24",
-		"@types/react": "18.3.28",
+		"@types/react": "18.3.31",
 		"@types/react-big-calendar": "1.16.3",
 		"@types/react-dom": "18.3.7",
 		"@types/react-redux": "7.1.34",
