@@ -44,6 +44,8 @@ describe('Editor panel', () => {
 				upTest = setupTest(<EditorPanel editorId={defaultEditor.id} />, { store });
 			});
 
+			abortSpy.mockClear();
+
 			// eslint-disable-next-line testing-library/no-unnecessary-act
 			await act(async () => {
 				upTest.rerender(<div />); // Force cleanup of useEffect
