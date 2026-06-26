@@ -1,3 +1,8 @@
+## <small>1.26.13 (2026-06-26)</small>
+
+* fix(deps): update dependency react-router-dom to v6.30.4 (#775) ([b2d952e](https://github.com/zextras/carbonio-calendars-ui/commit/b2d952e)), closes [#775](https://github.com/zextras/carbonio-calendars-ui/issues/775)
+* chore(deps): update node.js to v22.23.0 (#778) ([2757613](https://github.com/zextras/carbonio-calendars-ui/commit/2757613)), closes [#778](https://github.com/zextras/carbonio-calendars-ui/issues/778)
+
 ## <small>1.26.12 (2026-06-23)</small>
 
 * fix(deps): update dependency darkreader to v4.9.125 (#774) ([00b4366](https://github.com/zextras/carbonio-calendars-ui/commit/00b4366)), closes [#774](https://github.com/zextras/carbonio-calendars-ui/issues/774)
