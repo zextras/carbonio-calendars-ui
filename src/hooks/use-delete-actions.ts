@@ -198,7 +198,7 @@ export const useDeleteActions = (
 		const parsedEventDate =
 			typeof eventDate === 'string' ? parseDateFromICS(eventDate) : new Date(eventDate);
 		const untilDate = format(subDays(parsedEventDate, 1), 'yyyyMMdd');
-		const deleteFunction = (): void => {
+		const deleteFunction = () => {
 			const modifiedInvite = {
 				...invite,
 				recurrenceRule: [
@@ -245,8 +245,6 @@ export const useDeleteActions = (
 				: dispatch(modifyAppointment({ editor, draft }));
 		};
 		deleteFunction()
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			.then((res: { type: string | string[] }) => {
 				generateAppointmentDeletedSnackbar(
 					res,
