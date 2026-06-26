@@ -1,3 +1,18 @@
+## <small>1.26.16 (2026-06-26)</small>
+
+* fix(deps): update dependency react-big-calendar to v1.20.0 (#783) ([5172e8f](https://github.com/zextras/carbonio-calendars-ui/commit/5172e8f)), closes [#783](https://github.com/zextras/carbonio-calendars-ui/issues/783)
+
+## <small>1.26.15 (2026-06-26)</small>
+
+* fix(deps): update dependency @zextras/carbonio-shell-ui to v15 (#786) ([682b077](https://github.com/zextras/carbonio-calendars-ui/commit/682b077)), closes [#786](https://github.com/zextras/carbonio-calendars-ui/issues/786)
+
+## <small>1.26.14 (2026-06-26)</small>
+
+* fix(deps): update dependency darkreader to v4.9.128 (#804) ([b3d9652](https://github.com/zextras/carbonio-calendars-ui/commit/b3d9652)), closes [#804](https://github.com/zextras/carbonio-calendars-ui/issues/804)
+* chore(deps): update dependency @types/react to v18.3.31 (#768) ([6047eea](https://github.com/zextras/carbonio-calendars-ui/commit/6047eea)), closes [#768](https://github.com/zextras/carbonio-calendars-ui/issues/768)
+* chore(deps): update dependency semantic-release to v25.0.5 (#769) ([14869d9](https://github.com/zextras/carbonio-calendars-ui/commit/14869d9)), closes [#769](https://github.com/zextras/carbonio-calendars-ui/issues/769)
+* chore(deps): update node.js to v22.23.1 (#803) ([12fce68](https://github.com/zextras/carbonio-calendars-ui/commit/12fce68)), closes [#803](https://github.com/zextras/carbonio-calendars-ui/issues/803)
+
 ## <small>1.26.13 (2026-06-26)</small>
 
 * fix(deps): update dependency react-router-dom to v6.30.4 (#775) ([b2d952e](https://github.com/zextras/carbonio-calendars-ui/commit/b2d952e)), closes [#775](https://github.com/zextras/carbonio-calendars-ui/issues/775)
