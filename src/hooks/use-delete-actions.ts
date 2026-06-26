@@ -198,7 +198,7 @@ export const useDeleteActions = (
 		const parsedEventDate =
 			typeof eventDate === 'string' ? parseDateFromICS(eventDate) : new Date(eventDate);
 		const untilDate = format(subDays(parsedEventDate, 1), 'yyyyMMdd');
-		const deleteFunction = () => {
+		const deleteFunction = (): Promise<{ type: string | string[] }> => {
 			const modifiedInvite = {
 				...invite,
 				recurrenceRule: [
@@ -255,13 +255,13 @@ export const useDeleteActions = (
 					event.resource.inviteNeverSent
 				);
 			})
-			.then(
+			.then(() => {
 				setTimeout(() => {
 					if (notifyOrganizer && !isCanceled) {
 						sendResponse(event, ctxt);
 					}
-				}, 5000)
-			);
+				}, 5000);
+			});
 	}, [
 		context,
 		replaceHistory,
