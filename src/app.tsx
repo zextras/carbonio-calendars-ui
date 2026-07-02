@@ -24,24 +24,25 @@ import { FOLDER_VIEW, useInitializeFolders, useFoldersMap } from '@zextras/carbo
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { AuthGuard } from './auth-guard';
-import { CenteredSpinner } from './components/CenteredSpinner';
-import { SyncDataHandler } from './components/sync-data-handler';
-import { QuotaRefreshHandler } from './components/quota-refresh-handler';
-import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
-import { CalendarIntegrations } from './constants/event-actions';
-import { useOnClickNewButton } from './hooks/on-click-new-button';
-import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
-import { InviteResponseComp } from './shared/invite-response/invite-response';
-import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
-import { StoreProvider } from './store/redux';
-import { useAppDispatch } from './store/redux/hooks';
-import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
-import { GlobalModalManager } from './view/global-modal-manager';
 import Notifications from './view/notifications';
-import { AppointmentReminder } from './view/reminder/appointment-reminder';
-import { InitializeTags } from './view/tags/initialize-tags';
+import { AuthGuard } from 'auth-guard';
+import { CenteredSpinner } from 'components/CenteredSpinner';
+import { QuotaRefreshHandler } from 'components/quota-refresh-handler';
+import { SyncDataHandler } from 'components/sync-data-handler';
+import { CalendarIntegrations } from 'constants/event-actions';
+import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from 'constants/index';
+import { useOnClickNewButton } from 'hooks/on-click-new-button';
+import { getSettingsSubSections } from 'settings/sub-sections';
+import { ImportAppointmentsModalComp } from 'shared/import-appointments-integration';
+import { InviteResponseComp } from 'shared/invite-response/invite-response';
+import { getCalendarGroupsRequest } from 'soap/get-calendar-groups-request';
+import { StoreProvider } from 'store/redux';
+import { useAppDispatch } from 'store/redux/hooks';
+import { updateCalendarGroupsStore } from 'store/zustand/calendar-group-store';
+import { GlobalModalManager } from 'view/global-modal-manager';
+import { AppointmentReminder } from 'view/reminder/appointment-reminder';
+import { InitializeTags } from 'view/tags/initialize-tags';
 
 const LazyCalendarView = lazy(
 	() => import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -202,6 +203,10 @@ const AppRegistrations = (): null => {
 		registerComponents({
 			id: 'invites-reply',
 			component: InviteResponseComp
+		});
+		registerComponents({
+			id: CalendarIntegrations.IMPORT_APPOINTMENTS,
+			component: ImportAppointmentsModalComp
 		});
 	}, [calendars, dispatch, newAction]);
 
