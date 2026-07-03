@@ -9,6 +9,7 @@ import { isEqual, isNil, omit, union } from 'lodash';
 import { CalendarEditor, Resource, Editor, Room, CalendarSender } from '../../types/editor';
 import { EditorChipAttendees, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
+import { haveAttendeesChanged } from '../../utils/attendees';
 
 const METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
 	'id',
@@ -33,9 +34,6 @@ const METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
 
 const ATTENDEE_FIELDS: ReadonlyArray<keyof Editor> = ['attendees', 'optionalAttendees'];
 
-const getAttendeeEmails = (attendees: Editor['attendees']): string[] =>
-	(attendees ?? []).map((a) => a.email.toLowerCase()).sort((a, b) => a.localeCompare(b));
-
 const recomputeIsDirty = (
 	editors: EditorSlice['editors'],
 	originalEditors: EditorSlice['originalEditors'],
@@ -52,13 +50,10 @@ const recomputeIsDirty = (
 		omit(editors[id], excludedFields),
 		omit(original, excludedFields)
 	);
-	const attendeesChanged = !isEqual(
-		getAttendeeEmails(editors[id].attendees),
-		getAttendeeEmails(original.attendees)
-	);
-	const optionalAttendeesChanged = !isEqual(
-		getAttendeeEmails(editors[id].optionalAttendees),
-		getAttendeeEmails(original.optionalAttendees)
+	const attendeesChanged = haveAttendeesChanged(editors[id].attendees, original.attendees);
+	const optionalAttendeesChanged = haveAttendeesChanged(
+		editors[id].optionalAttendees,
+		original.optionalAttendees
 	);
 	// eslint-disable-next-line no-param-reassign
 	editors[id].isDirty = nonAttendeeChanged || attendeesChanged || optionalAttendeesChanged;

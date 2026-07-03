@@ -60,6 +60,16 @@ export const selectEditorOptionalAttendees =
 	(state: RootState): Editor['optionalAttendees'] =>
 		state?.editor?.editors?.[id]?.optionalAttendees;
 
+export const selectOriginalEditorAttendees =
+	(id: string) =>
+	(state: RootState): Editor['attendees'] =>
+		state?.editor?.originalEditors?.[id]?.attendees;
+
+export const selectOriginalEditorOptionalAttendees =
+	(id: string) =>
+	(state: RootState): Editor['optionalAttendees'] =>
+		state?.editor?.originalEditors?.[id]?.optionalAttendees;
+
 export const selectEditorAllDay =
 	(id: string) =>
 	(state: RootState): Editor['allDay'] =>
