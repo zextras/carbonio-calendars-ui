@@ -18,11 +18,11 @@ import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, Folder } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
-import { PREFS_DEFAULTS } from '../../constants';
-import { importAppointmentsRequest } from '../../soap/import-appointments-request';
-import { NoOpRequest } from '../../soap/noop-request';
-import { StoreProvider } from '../../store/redux';
-import { CalendarSelector } from '../../view/editor/parts/calendar-selector';
+import { PREFS_DEFAULTS } from 'constants/index';
+import { importAppointmentsRequest } from 'soap/import-appointments-request';
+import { NoOpRequest } from 'soap/noop-request';
+import { StoreProvider } from 'store/redux';
+import { CalendarSelector } from 'view/editor/parts/calendar-selector';
 
 export type ImportAppointmentsModalProps = {
 	messageId: string;
@@ -97,7 +97,7 @@ export const ImportAppointmentsModal = ({
 					{t('message.import_appointment_from_email', {
 						fileName,
 						defaultValue:
-							'The appointments contained in {{fileName}} will be imported into the selected calendar.'
+							'The appointments contained in "{{fileName}}" will be imported into the selected calendar.'
 					})}
 				</Text>
 				<Padding top="medium" />
