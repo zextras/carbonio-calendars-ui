@@ -45,7 +45,7 @@ export const ImportAppointmentsModal = ({
 	const calendarId = useMemo(
 		() =>
 			selectedCalendar?.id ??
-			(zimbraPrefDefaultCalendarId as string) ??
+			zimbraPrefDefaultCalendarId ??
 			PREFS_DEFAULTS.DEFAULT_CALENDAR_ID ??
 			FOLDERS.CALENDAR,
 		[selectedCalendar?.id, zimbraPrefDefaultCalendarId]
