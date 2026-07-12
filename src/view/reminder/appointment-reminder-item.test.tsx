@@ -8,14 +8,29 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useTheme } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { addHours, format as dateFnsFormat, subHours } from 'date-fns';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
+import { CALENDAR_ROUTE } from '../../constants';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { reducers } from '../../store/redux';
 import { generateReminderItem } from '../../test/generators/reminder';
 import { setupHook, setupTest, screen } from '@test-setup';
 
+vi.mock('@zextras/carbonio-ui-commons', async () => ({
+	...(await vi.importActual('@zextras/carbonio-ui-commons')),
+	useHistoryNavigation: vi.fn()
+}));
+
 describe('Appointment Reminder Item', () => {
+	beforeEach(() => {
+		vi.mocked(useHistoryNavigation).mockReturnValue({
+			replaceHistory: vi.fn(),
+			pushHistory: vi.fn()
+		});
+	});
+
 	it('should render the icon', () => {
 		const reminderItem = generateReminderItem();
 		const store = configureStore({ reducer: combineReducers(reducers) });
@@ -180,6 +195,53 @@ describe('Appointment Reminder Item', () => {
 
 		const dismissButton = await screen.findByTestId('icon: BellOffOutline');
 		expect(dismissButton).toBeVisible();
+	});
+
+	it('should render a button to open the appointment in calendar', async () => {
+		const reminderItem = generateReminderItem();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={vi.fn()}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
+			/>,
+			{ store }
+		);
+
+		const openButton = await screen.findByTestId('icon: ExpandOutline');
+		expect(openButton).toBeVisible();
+	});
+
+	it('should navigate to the appointment and remove the reminder when open button is clicked', async () => {
+		const pushHistory = vi.fn();
+		vi.mocked(useHistoryNavigation).mockReturnValue({
+			replaceHistory: vi.fn(),
+			pushHistory
+		});
+		const removeReminder = vi.fn();
+		const reminderItem = generateReminderItem();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const { user } = setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={vi.fn()}
+				removeReminder={removeReminder}
+				setActiveReminder={vi.fn()}
+			/>,
+			{ store }
+		);
+
+		const openButton = await screen.findByTestId('icon: ExpandOutline');
+		await user.click(openButton);
+
+		expect(pushHistory).toHaveBeenCalledWith(
+			`/${CALENDAR_ROUTE}/${reminderItem.calendar.id}/${EVENT_ACTIONS.EXPAND}/${reminderItem.id}`
+		);
+		expect(removeReminder).toHaveBeenCalledWith(reminderItem.key);
 	});
 
 	it('should call setActiveReminder and toggleModal when reschedule button is clicked', async () => {

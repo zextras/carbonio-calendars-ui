@@ -18,6 +18,7 @@ import {
 	Tooltip,
 	TextProps
 } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { addMinutes, format, getHours, getMinutes, set, subMinutes } from 'date-fns';
 import { noop } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +26,8 @@ import { useTranslation } from 'react-i18next';
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
 import { useGetReminderItems } from './reminder-time-options';
 import { getTimeToDisplayData } from '../../commons/utilities';
+import { CALENDAR_ROUTE } from '../../constants';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
 import { useAppDispatch } from '../../store/redux/hooks';
@@ -55,7 +58,9 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const [t] = useTranslation();
 	const [now, setNow] = useState(Date.now());
 	const [isDetailsExpanded, setDetailsExpanded] = useState(false);
+	const { pushHistory } = useHistoryNavigation();
 
+	const openAppointmentLabel = t('label.open_appointment', 'Go to appointment');
 	const rescheduleLabel = t('label.reschedule_appointment', 'Reschedule appointment');
 	const snoozeLabel = t('label.snooze', 'Snooze');
 	const dismissLabel = t('label.dismiss', 'Dismiss');
@@ -80,6 +85,21 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 		);
 		removeReminder(key);
 	}, [dispatch, id, key, removeReminder]);
+
+	const openInCalendar = useCallback(() => {
+		pushHistory(
+			`/${CALENDAR_ROUTE}/${reminderItem.calendar.id}/${EVENT_ACTIONS.EXPAND}/${reminderItem.id}`
+		);
+		dismissReminder();
+		removeReminder(key);
+	}, [
+		dismissReminder,
+		key,
+		pushHistory,
+		reminderItem.calendar.id,
+		reminderItem.id,
+		removeReminder
+	]);
 
 	const toggleDetailsExpanded = useCallback(() => setDetailsExpanded((expanded) => !expanded), []);
 
@@ -158,6 +178,15 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 							icon="BellOffOutline"
 							size="large"
 							onClick={dismissReminder}
+						/>
+					</Tooltip>
+					<Tooltip placement="top" label={openAppointmentLabel}>
+						<Button
+							icon="DiagonalArrowRightUp"
+							type="ghost"
+							color="text"
+							size="large"
+							onClick={openInCalendar}
 						/>
 					</Tooltip>
 				</Row>
