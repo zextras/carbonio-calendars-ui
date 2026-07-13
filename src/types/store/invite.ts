@@ -39,6 +39,8 @@ export type InviteOrganizer = {
 	a: string;
 	d: string;
 	url: string;
+	/** Address of the user who created the appointment on behalf of the organizer (ICS ORGANIZER;SENT-BY) */
+	sentBy?: string;
 };
 
 export type InviteDescription = {

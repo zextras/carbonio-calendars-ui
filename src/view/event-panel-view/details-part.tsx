@@ -195,7 +195,7 @@ export const DetailsPart = ({
 					{invite && (
 						<FreeBusyStatusRowComponent
 							freeBusy={event.resource.freeBusy}
-							organizerName={invite?.organizer?.a}
+							organizer={invite?.organizer}
 						/>
 					)}
 					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
