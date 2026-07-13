@@ -1,3 +1,9 @@
+## 1.27.0 (2026-07-08)
+
+* feat(CO-3905): add import appointments modal and related functionality (#805) ([f12175a](https://github.com/zextras/carbonio-calendars-ui/commit/f12175a)), closes [#805](https://github.com/zextras/carbonio-calendars-ui/issues/805)
+* chore(deps): update dependency msw to v2.14.6 (#776) ([2ad042c](https://github.com/zextras/carbonio-calendars-ui/commit/2ad042c)), closes [#776](https://github.com/zextras/carbonio-calendars-ui/issues/776)
+* chore(deps): update dependency typescript to v5.9.3 (#780) ([fa05aeb](https://github.com/zextras/carbonio-calendars-ui/commit/fa05aeb)), closes [#780](https://github.com/zextras/carbonio-calendars-ui/issues/780)
+
 ## <small>1.26.16 (2026-06-26)</small>
 
 * fix(deps): update dependency react-big-calendar to v1.20.0 (#783) ([5172e8f](https://github.com/zextras/carbonio-calendars-ui/commit/5172e8f)), closes [#783](https://github.com/zextras/carbonio-calendars-ui/issues/783)

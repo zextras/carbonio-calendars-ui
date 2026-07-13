@@ -42,7 +42,8 @@ export const GROUP_ACTIONS = {
 };
 
 export const CalendarIntegrations = {
-	CREATE_APPOINTMENT: 'create_appointment'
+	CREATE_APPOINTMENT: 'create_appointment',
+	IMPORT_APPOINTMENTS: 'import_appointments'
 } as const;
 
 export type ObjectValues<T> = T[keyof T];
