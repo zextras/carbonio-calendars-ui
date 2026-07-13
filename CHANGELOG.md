@@ -1,3 +1,11 @@
+## 1.28.0 (2026-07-13)
+
+* Merge branch 'devel' into co-3695-appointment-reminder ([bc96a75](https://github.com/zextras/carbonio-calendars-ui/commit/bc96a75))
+* Merge pull request #807 from zextras/co-3695-appointment-reminder ([0529878](https://github.com/zextras/carbonio-calendars-ui/commit/0529878)), closes [#807](https://github.com/zextras/carbonio-calendars-ui/issues/807)
+* fix: test ([9985fd0](https://github.com/zextras/carbonio-calendars-ui/commit/9985fd0))
+* fix: test ([a8ea8ac](https://github.com/zextras/carbonio-calendars-ui/commit/a8ea8ac))
+* feat: appointment reminder button ([a9dcef3](https://github.com/zextras/carbonio-calendars-ui/commit/a9dcef3))
+
 ## 1.27.0 (2026-07-08)
 
 * feat(CO-3905): add import appointments modal and related functionality (#805) ([f12175a](https://github.com/zextras/carbonio-calendars-ui/commit/f12175a)), closes [#805](https://github.com/zextras/carbonio-calendars-ui/issues/805)
