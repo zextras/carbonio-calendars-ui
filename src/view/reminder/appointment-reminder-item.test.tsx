@@ -211,7 +211,7 @@ describe('Appointment Reminder Item', () => {
 			{ store }
 		);
 
-		const openButton = await screen.findByTestId('icon: ExpandOutline');
+		const openButton = await screen.findByTestId('icon: DiagonalArrowRightUp');
 		expect(openButton).toBeVisible();
 	});
 
@@ -235,7 +235,7 @@ describe('Appointment Reminder Item', () => {
 			{ store }
 		);
 
-		const openButton = await screen.findByTestId('icon: ExpandOutline');
+		const openButton = await screen.findByTestId('icon: DiagonalArrowRightUp');
 		await user.click(openButton);
 
 		expect(pushHistory).toHaveBeenCalledWith(
