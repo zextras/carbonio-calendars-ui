@@ -112,7 +112,7 @@ export const OrganizerPart = ({
 
 	const onBehalfOfRow = isSentOnBehalf ? (
 		<Row mainAlignment="flex-start" width="100%" data-testid={'OnBehalfOf'}>
-			<Text color="secondary" size="small">
+			<Text color="secondary" size="small" overflow="break-word">
 				<Trans
 					i18nKey="message.on_behalf_of"
 					defaults="on behalf of <strong>{{owner}}</strong>"
