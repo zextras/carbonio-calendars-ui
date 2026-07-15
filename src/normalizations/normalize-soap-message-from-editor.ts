@@ -144,8 +144,10 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 					concat(
 						resource?.attendees,
 						resource?.optionalAttendees,
-						resource?.meetingRoom ?? [],
-						resource?.equipment ?? []
+						// Resources removed from the GAL lose their email (see CO-3632); without one they
+						// cannot be a valid mail recipient, so exclude them from the participant list.
+						(resource?.meetingRoom ?? []).filter((c) => !!c?.email),
+						(resource?.equipment ?? []).filter((c) => !!c?.email)
 					),
 					(attendee) => ({
 						a: attendee?.email ?? attendee?.label,
@@ -317,30 +319,37 @@ const generateInvite = (editor: Editor): any => {
 			}))
 		);
 
+	// Skip resources without an address: a calendar resource removed from the GAL (see CO-3632)
+	// loses its email, and sending an <at> element with no address makes the server reject the
+	// whole request with "missing attendee address".
 	editor?.meetingRoom &&
 		at.push(
-			...editor.meetingRoom.map((c) => ({
-				a: c?.email,
-				d: c.label,
-				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
-				ptst: PARTICIPATION_STATUS.NEED_ACTION,
-				rsvp: true,
-				url: c?.email,
-				cutype: CALENDAR_RESOURCES.ROOM
-			}))
+			...editor.meetingRoom
+				.filter((c) => !!c?.email)
+				.map((c) => ({
+					a: c?.email,
+					d: c.label,
+					role: PARTICIPANT_ROLE.NON_PARTICIPANT,
+					ptst: PARTICIPATION_STATUS.NEED_ACTION,
+					rsvp: true,
+					url: c?.email,
+					cutype: CALENDAR_RESOURCES.ROOM
+				}))
 		);
 
 	editor?.equipment &&
 		at.push(
-			...editor.equipment.map((c) => ({
-				a: c?.email,
-				d: c.label,
-				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
-				ptst: PARTICIPATION_STATUS.NEED_ACTION,
-				rsvp: true,
-				url: c?.email,
-				cutype: CALENDAR_RESOURCES.RESOURCE
-			}))
+			...editor.equipment
+				.filter((c) => !!c?.email)
+				.map((c) => ({
+					a: c?.email,
+					d: c.label,
+					role: PARTICIPANT_ROLE.NON_PARTICIPANT,
+					ptst: PARTICIPATION_STATUS.NEED_ACTION,
+					rsvp: true,
+					url: c?.email,
+					cutype: CALENDAR_RESOURCES.RESOURCE
+				}))
 		);
 
 	return {
