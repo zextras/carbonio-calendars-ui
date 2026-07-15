@@ -170,7 +170,7 @@ export const OrganizerPart = ({
 						takeAvailableSpace
 						padding={{ left: 'small' }}
 					>
-						<Text size={fontSize}>
+						<Text size={fontSize} overflow="break-word">
 							{calendarOwner ? (
 								<Trans
 									i18nKey="message.somebody_invited_owner"
@@ -203,7 +203,7 @@ export const OrganizerPart = ({
 							takeAvailableSpace
 							padding={{ left: 'small' }}
 						>
-							<Text size={fontSize}>
+							<Text size={fontSize} overflow="break-word">
 								<Trans
 									i18nKey="message.somebody_is_organizer"
 									defaults="<strong>{{somebody}}</strong> is the organizer"
