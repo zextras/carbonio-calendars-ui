@@ -144,8 +144,6 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 					concat(
 						resource?.attendees,
 						resource?.optionalAttendees,
-						// Resources removed from the GAL lose their email (see CO-3632); without one they
-						// cannot be a valid mail recipient, so exclude them from the participant list.
 						(resource?.meetingRoom ?? []).filter((c) => !!c?.email),
 						(resource?.equipment ?? []).filter((c) => !!c?.email)
 					),
@@ -319,9 +317,6 @@ const generateInvite = (editor: Editor): any => {
 			}))
 		);
 
-	// Skip resources without an address: a calendar resource removed from the GAL (see CO-3632)
-	// loses its email, and sending an <at> element with no address makes the server reject the
-	// whole request with "missing attendee address".
 	editor?.meetingRoom &&
 		at.push(
 			...editor.meetingRoom

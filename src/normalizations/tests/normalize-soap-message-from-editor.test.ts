@@ -136,7 +136,7 @@ describe('normalize soap message from editor', () => {
 					ptst: PARTICIPATION_STATUS.NEED_ACTION
 				});
 			});
-			describe('resources without an address (CO-3632)', () => {
+			describe('resources without an address', () => {
 				test('a meeting room / equipment with an email is kept as attendee and participant', () => {
 					const userAccount = getMockedAccountItem({ identity1: mainAccount });
 					shell.getUserAccount.mockImplementation(() => userAccount);
@@ -177,14 +177,12 @@ describe('normalize soap message from editor', () => {
 					});
 					const body = normalizeSoapMessageFromEditor(editor);
 
-					// the invite must not carry an <at> without an address (server rejects the request)
 					body.m.inv.comp[0].at.forEach((attendee: { a?: string }) => {
 						expect(attendee.a).toBeTruthy();
 					});
 					const attendeeLabels = body.m.inv.comp[0].at.map((a: { d?: string }) => a.d);
 					expect(attendeeLabels).not.toContain('Deleted Room');
 					expect(attendeeLabels).not.toContain('Deleted Beamer');
-					// and neither should the participant (<e>) list use the label as an address
 					const participantAddresses = body.m.e.map((e: { a?: string }) => e.a);
 					expect(participantAddresses).not.toContain('Deleted Room');
 					expect(participantAddresses).not.toContain('Deleted Beamer');
