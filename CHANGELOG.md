@@ -1,3 +1,7 @@
+## <small>1.29.1 (2026-07-20)</small>
+
+* fix(CO-3632): exclude resources without an address from invite attendees and participants (#814) ([050dd82](https://github.com/zextras/carbonio-calendars-ui/commit/050dd82)), closes [#814](https://github.com/zextras/carbonio-calendars-ui/issues/814)
+
 ## 1.29.0 (2026-07-17)
 
 * feat(CO-3751): display appointment creator in shared calendars (#808) ([8fd0625](https://github.com/zextras/carbonio-calendars-ui/commit/8fd0625)), closes [#808](https://github.com/zextras/carbonio-calendars-ui/issues/808)
