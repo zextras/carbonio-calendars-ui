@@ -144,8 +144,8 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 					concat(
 						resource?.attendees,
 						resource?.optionalAttendees,
-						resource?.meetingRoom ?? [],
-						resource?.equipment ?? []
+						(resource?.meetingRoom ?? []).filter((c) => !!c?.email),
+						(resource?.equipment ?? []).filter((c) => !!c?.email)
 					),
 					(attendee) => ({
 						a: attendee?.email ?? attendee?.label,
@@ -319,28 +319,32 @@ const generateInvite = (editor: Editor): any => {
 
 	editor?.meetingRoom &&
 		at.push(
-			...editor.meetingRoom.map((c) => ({
-				a: c?.email,
-				d: c.label,
-				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
-				ptst: PARTICIPATION_STATUS.NEED_ACTION,
-				rsvp: true,
-				url: c?.email,
-				cutype: CALENDAR_RESOURCES.ROOM
-			}))
+			...editor.meetingRoom
+				.filter((c) => !!c?.email)
+				.map((c) => ({
+					a: c?.email,
+					d: c.label,
+					role: PARTICIPANT_ROLE.NON_PARTICIPANT,
+					ptst: PARTICIPATION_STATUS.NEED_ACTION,
+					rsvp: true,
+					url: c?.email,
+					cutype: CALENDAR_RESOURCES.ROOM
+				}))
 		);
 
 	editor?.equipment &&
 		at.push(
-			...editor.equipment.map((c) => ({
-				a: c?.email,
-				d: c.label,
-				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
-				ptst: PARTICIPATION_STATUS.NEED_ACTION,
-				rsvp: true,
-				url: c?.email,
-				cutype: CALENDAR_RESOURCES.RESOURCE
-			}))
+			...editor.equipment
+				.filter((c) => !!c?.email)
+				.map((c) => ({
+					a: c?.email,
+					d: c.label,
+					role: PARTICIPANT_ROLE.NON_PARTICIPANT,
+					ptst: PARTICIPATION_STATUS.NEED_ACTION,
+					rsvp: true,
+					url: c?.email,
+					cutype: CALENDAR_RESOURCES.RESOURCE
+				}))
 		);
 
 	return {
