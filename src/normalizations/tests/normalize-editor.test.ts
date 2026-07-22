@@ -10,6 +10,7 @@ import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { createEmptyEditor } from '../../commons/editor-generator';
 import mockedData from '../../test/generators';
 import { normalizeEditor } from '../normalize-editor';
+import { mockedAccount } from '@test-mocks/@zextras/carbonio-shell-ui';
 
 describe('normalizeEditor', () => {
 	test('If event and invite are not available, it will return empty editor', () => {
@@ -265,6 +266,59 @@ describe('normalizeEditor', () => {
 			});
 
 			expect(result.compNum).toBe(0);
+		});
+	});
+	describe('normalize organizer property', () => {
+		test('if the logged-in user is the organizer, fullName is taken from the current DEFAULT identity instead of the invite snapshot', () => {
+			const folders = mockedData.calendars.getCalendarsMap();
+			const emptyEditor = createEmptyEditor('1', folders);
+			const staleName = 'Stale Old Display Name';
+			const currentIdentityFullName = mockedAccount.identities.identity[0]._attrs
+				?.zimbraPrefFromDisplay as string;
+			const event = mockedData.getEvent({
+				resource: {
+					organizer: {
+						email: mockedAccount.name,
+						name: staleName
+					}
+				}
+			});
+			const invite = mockedData.getInvite({ event });
+
+			const result = normalizeEditor({
+				invite,
+				event,
+				emptyEditor,
+				context: { folders, dispatch: vi.fn() }
+			});
+
+			expect(result.organizer?.fullName).toBe(currentIdentityFullName);
+			expect(result.organizer?.fullName).not.toBe(staleName);
+		});
+		test('if the logged-in user is not the organizer, fullName is taken from the invite snapshot', () => {
+			const folders = mockedData.calendars.getCalendarsMap();
+			const emptyEditor = createEmptyEditor('1', folders);
+			const event = mockedData.getEvent({
+				resource: {
+					organizer: {
+						email: 'someone-else@example.com',
+						name: 'Someone Else'
+					}
+				}
+			});
+			const invite = mockedData.getInvite({ event });
+
+			const result = normalizeEditor({
+				invite,
+				event,
+				emptyEditor,
+				context: { folders, dispatch: vi.fn() }
+			});
+
+			expect(result.organizer).toStrictEqual({
+				email: 'someone-else@example.com',
+				fullName: 'Someone Else'
+			});
 		});
 	});
 });
