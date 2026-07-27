@@ -5,7 +5,7 @@
  */
 import React, { useCallback, useMemo } from 'react';
 
-import { Container, Text } from '@zextras/carbonio-design-system';
+import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard, t } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../commons/modal-footer';
@@ -26,9 +26,8 @@ export const EditorCloseConfirmationModal = ({
 	onClose
 }: EditorCloseConfirmationModalProps): React.JSX.Element => {
 	const editor = useAppSelector(selectEditor(editorId));
-
+	const createSnackbar = useSnackbar();
 	const title = useMemo(() => t('label.close_appointment_editor', 'Unsaved changes'), []);
-
 	const message = useMemo(
 		() =>
 			t(
@@ -56,7 +55,19 @@ export const EditorCloseConfirmationModal = ({
 
 	const onDiscardChanges = useCallback(() => {
 		onClose();
-	}, [onClose]);
+
+		createSnackbar({
+			key: 'discard-changes',
+			replace: true,
+			severity: 'info',
+			label: t('label.discard_changes_confirmation', 'Appointment changes discarded'),
+			actionLabel: t('label.undo', 'Undo'),
+			onActionClick: () => {
+				onKeepEditing();
+			},
+			autoHideTimeout: 3000
+		});
+	}, [createSnackbar, onClose, onKeepEditing]);
 
 	return (
 		<Container
