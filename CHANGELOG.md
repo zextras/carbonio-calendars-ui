@@ -1,3 +1,7 @@
+## <small>1.29.2 (2026-07-27)</small>
+
+* fix(CO-3649): preserve allDay flag on Month view drag and correctly convert it on other views (#815) ([4554292](https://github.com/zextras/carbonio-calendars-ui/commit/4554292)), closes [#815](https://github.com/zextras/carbonio-calendars-ui/issues/815)
+
 ## <small>1.29.1 (2026-07-20)</small>
 
 * fix(CO-3632): exclude resources without an address from invite attendees and participants (#814) ([050dd82](https://github.com/zextras/carbonio-calendars-ui/commit/050dd82)), closes [#814](https://github.com/zextras/carbonio-calendars-ui/issues/814)
