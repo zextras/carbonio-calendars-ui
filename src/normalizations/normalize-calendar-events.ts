@@ -89,7 +89,8 @@ const normalizeEventResource = ({
 		appt?.or?.d || appt?.or?.a
 			? {
 					name: appt?.or?.d,
-					email: appt?.or?.a
+					email: appt?.or?.a,
+					sentBy: appt?.or?.sentBy
 				}
 			: undefined,
 	compNum: appt.compNum,

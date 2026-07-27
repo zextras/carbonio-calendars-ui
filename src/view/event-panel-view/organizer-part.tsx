@@ -21,6 +21,11 @@ import { Trans } from 'react-i18next';
 import { isIcsOrCaldavExternalFolder } from 'commons/utilities';
 import { copyEmailToClipboard, sendMsg } from 'store/actions/participant-displayer-actions';
 import { Invite, InviteOrganizer } from 'types/store/invite';
+import {
+	getAppointmentCreatorEmail,
+	isAppointmentCreatedBy,
+	isSentOnBehalfOf
+} from 'utils/organizer';
 
 type OrganizerPartProps = {
 	invite: Invite;
@@ -57,6 +62,22 @@ export const OrganizerPart = ({
 	);
 	const iAmAttendee = useMemo(() => showAttendeePerspective ?? false, [showAttendeePerspective]);
 
+	const isSentOnBehalf = useMemo(() => isSentOnBehalfOf(organizer), [organizer]);
+	const creatorEmail = useMemo(() => getAppointmentCreatorEmail(organizer) ?? '', [organizer]);
+	// SENT-BY only carries an address, so the delegate has no display name to fall back on
+	const creatorName = useMemo(
+		() => (isSentOnBehalf ? '' : organizer.d),
+		[isSentOnBehalf, organizer.d]
+	);
+	const creatorLabel = useMemo(
+		() => creatorName || creatorEmail || organizer.url || '',
+		[creatorEmail, creatorName, organizer.url]
+	);
+	const iAmTheCreator = useMemo(
+		() => isAppointmentCreatedBy(organizer, account.name),
+		[account.name, organizer]
+	);
+
 	const organizerChip = (
 		<Row
 			mainAlignment="flex-start"
@@ -64,7 +85,7 @@ export const OrganizerPart = ({
 			padding={{ top: 'extrasmall', bottom: 'extrasmall' }}
 		>
 			<Chip
-				label={organizer.a || organizer.d}
+				label={creatorEmail || creatorName}
 				background={'gray3'}
 				color="text"
 				data-testid={'Chip'}
@@ -75,19 +96,31 @@ export const OrganizerPart = ({
 						label: t('message.send_email', 'Send e-mail'),
 						type: 'button',
 						icon: 'EmailOutline',
-						onClick: () => sendMsg(organizer.a, organizer.d)
+						onClick: () => sendMsg(creatorEmail, creatorName)
 					},
 					{
 						id: 'action2',
 						label: t('message.copy', 'Copy'),
 						type: 'button',
 						icon: 'Copy',
-						onClick: () => copyEmailToClipboard(organizer.a, createSnackbar)
+						onClick: () => copyEmailToClipboard(creatorEmail, createSnackbar)
 					}
 				]}
 			/>
 		</Row>
 	);
+
+	const onBehalfOfRow = isSentOnBehalf ? (
+		<Row mainAlignment="flex-start" width="100%" data-testid={'OnBehalfOf'}>
+			<Text color="secondary" size="small" overflow="break-word">
+				<Trans
+					i18nKey="message.on_behalf_of"
+					defaults="on behalf of <strong>{{owner}}</strong>"
+					values={{ owner: organizer.a || organizer.d }}
+				/>
+			</Text>
+		</Row>
+	) : null;
 
 	return (
 		<Container
@@ -99,44 +132,51 @@ export const OrganizerPart = ({
 			padding={isSummary ? { top: 'small' } : { horizontal: 'large', vertical: 'medium' }}
 			background={'gray6'}
 		>
-			{invite?.organizer?.a === account.name && (
+			{iAmTheCreator && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						size={isSummary ? 'small' : 'large'}
 						label={account.name ?? account.displayName ?? ''}
 					/>
-					<Text style={{ padding: '0 0.5rem' }} size={fontSize}>
-						<Trans
-							i18nKey="message.you_are_organizer"
-							defaults="<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>"
-							components={{
-								Row: <Row />,
-								Text: <Text color="secondary" size={fontSize} />,
-								BoldText: <span style={{ fontWeight: 'bold', color: '#333333' }} />
-							}}
-						/>
-					</Text>
+					<Container
+						orientation="vertical"
+						mainAlignment="flex-start"
+						crossAlignment="flex-start"
+						width="fit"
+						height="fit"
+						padding={{ horizontal: 'small' }}
+					>
+						<Text size={fontSize}>
+							<Trans
+								i18nKey="message.you_are_organizer"
+								defaults="<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>"
+								components={{
+									Row: <Row />,
+									Text: <Text color="secondary" size={fontSize} />,
+									BoldText: <span style={{ fontWeight: 'bold', color: '#333333' }} />
+								}}
+							/>
+						</Text>
+						{onBehalfOfRow}
+					</Container>
 				</Row>
 			)}
 			{showAttendeePerspective ? (
 				<Row mainAlignment="flex-start" crossAlignment="flex-start" padding={{ vertical: 'small' }}>
-					<Avatar
-						label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
-						size={isSummary ? 'small' : 'large'}
-					/>
+					<Avatar label={creatorLabel} size={isSummary ? 'small' : 'large'} />
 					<Row
 						mainAlignment="flex-start"
 						crossAlignment="center"
 						takeAvailableSpace
 						padding={{ left: 'small' }}
 					>
-						<Text size={fontSize}>
+						<Text size={fontSize} overflow="break-word">
 							{calendarOwner ? (
 								<Trans
 									i18nKey="message.somebody_invited_owner"
 									defaults="<strong>{{somebody}}</strong> invited {{owner}}"
 									values={{
-										somebody: organizer.d || organizer.a || organizer.url,
+										somebody: creatorLabel,
 										owner: calendarOwner
 									}}
 								/>
@@ -144,35 +184,34 @@ export const OrganizerPart = ({
 								<Trans
 									i18nKey="message.somebody_invited_you"
 									defaults="<strong>{{somebody}}</strong> invited you"
-									values={{ somebody: organizer.d || organizer.a || organizer.url }}
+									values={{ somebody: creatorLabel }}
 								/>
 							)}
 						</Text>
 						{organizerChip}
+						{onBehalfOfRow}
 					</Row>
 				</Row>
 			) : (
-				invite?.organizer?.a !== account.name &&
+				!iAmTheCreator &&
 				!iAmAttendee && (
 					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
-						<Avatar
-							size={isSummary ? 'small' : 'large'}
-							label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
-						/>
+						<Avatar size={isSummary ? 'small' : 'large'} label={creatorLabel} />
 						<Row
 							mainAlignment="flex-start"
 							crossAlignment="flex-start"
 							takeAvailableSpace
 							padding={{ left: 'small' }}
 						>
-							<Text size={fontSize}>
+							<Text size={fontSize} overflow="break-word">
 								<Trans
 									i18nKey="message.somebody_is_organizer"
 									defaults="<strong>{{somebody}}</strong> is the organizer"
-									values={{ somebody: organizer.d || organizer.a }}
+									values={{ somebody: creatorLabel }}
 								/>
 							</Text>
 							{organizerChip}
+							{onBehalfOfRow}
 						</Row>
 					</Row>
 				)

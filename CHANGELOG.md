@@ -1,3 +1,13 @@
+## <small>1.29.1 (2026-07-20)</small>
+
+* fix(CO-3632): exclude resources without an address from invite attendees and participants (#814) ([050dd82](https://github.com/zextras/carbonio-calendars-ui/commit/050dd82)), closes [#814](https://github.com/zextras/carbonio-calendars-ui/issues/814)
+
+## 1.29.0 (2026-07-17)
+
+* feat(CO-3751): display appointment creator in shared calendars (#808) ([8fd0625](https://github.com/zextras/carbonio-calendars-ui/commit/8fd0625)), closes [#808](https://github.com/zextras/carbonio-calendars-ui/issues/808)
+* chore(deps): update dependency @zextras/carbonio-ui-sdk to v2.3.12 (#809) ([52657ac](https://github.com/zextras/carbonio-calendars-ui/commit/52657ac)), closes [#809](https://github.com/zextras/carbonio-calendars-ui/issues/809)
+* chore(deps): update semantic-release monorepo (#810) ([9df803a](https://github.com/zextras/carbonio-calendars-ui/commit/9df803a)), closes [#810](https://github.com/zextras/carbonio-calendars-ui/issues/810)
+
 ## 1.28.0 (2026-07-13)
 
 * Merge branch 'devel' into co-3695-appointment-reminder ([bc96a75](https://github.com/zextras/carbonio-calendars-ui/commit/bc96a75))

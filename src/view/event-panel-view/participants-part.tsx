@@ -46,10 +46,7 @@ export const ParticipantsPart = ({
 				isSummary={isSummary}
 			/>
 			{isSummary && (
-				<FreeBusyStatusRow
-					freeBusy={event.resource.freeBusy}
-					organizerName={invite?.organizer?.a}
-				/>
+				<FreeBusyStatusRow freeBusy={event.resource.freeBusy} organizer={invite?.organizer} />
 			)}
 			{isSummary ? (
 				<ParticipantsDisplayerSmall participants={participants} event={event} />
