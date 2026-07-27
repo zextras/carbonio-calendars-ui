@@ -442,5 +442,69 @@ describe('useCalendarComponentUtils', () => {
 			await waitFor(() => expect(onSave).toHaveBeenCalled());
 			expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true, isNew: false }));
 		});
+
+		it('keeps the event all-day when the drag callback does not provide isAllDay (Month view drag)', async () => {
+			useAppStatusStore.setState({ calendarView: 'month' });
+			const event = mockedData.getEvent({ allDay: true, resource: { isRecurrent: false } });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.onEventDropOrResize({
+					start: new Date(event.start.valueOf() + 24 * ONE_HOUR_MS),
+					end: new Date(event.end.valueOf() + 24 * ONE_HOUR_MS),
+					event
+				});
+			});
+
+			await waitFor(() => expect(onSave).toHaveBeenCalled());
+			expect(onSave).toHaveBeenCalledWith(
+				expect.objectContaining({ editor: expect.objectContaining({ allDay: true }) })
+			);
+		});
+
+		it('converts an all-day event to non-all-day when dropped in the timed grid outside Month view', async () => {
+			useAppStatusStore.setState({ calendarView: 'week' });
+			const event = mockedData.getEvent({ allDay: true, resource: { isRecurrent: false } });
+			const dropStart = new Date(event.start.valueOf() + 17.5 * ONE_HOUR_MS);
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.onEventDropOrResize({
+					start: dropStart,
+					end: new Date(dropStart.valueOf() + 24 * ONE_HOUR_MS - 1000),
+					event
+				});
+			});
+
+			await waitFor(() => expect(onSave).toHaveBeenCalled());
+			expect(onSave).toHaveBeenCalledWith(
+				expect.objectContaining({
+					editor: expect.objectContaining({
+						allDay: false,
+						start: dropStart.getTime(),
+						end: endOfDay(dropStart).getTime()
+					})
+				})
+			);
+		});
+
+		it('keeps a timed event non-all-day when the drag callback provides an explicit isAllDay: false', async () => {
+			const event = mockedData.getEvent({ allDay: false, resource: { isRecurrent: false } });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.onEventDropOrResize({
+					start: new Date(event.start.valueOf() + ONE_HOUR_MS),
+					end: new Date(event.end.valueOf() + ONE_HOUR_MS),
+					event,
+					isAllDay: false
+				});
+			});
+
+			await waitFor(() => expect(onSave).toHaveBeenCalled());
+			expect(onSave).toHaveBeenCalledWith(
+				expect.objectContaining({ editor: expect.objectContaining({ allDay: false }) })
+			);
+		});
 	});
 });
