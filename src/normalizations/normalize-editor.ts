@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { getRoot, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
 import { endOfDay, set, startOfDay } from 'date-fns';
 import { filter, find, isNil, map, omitBy } from 'lodash';
 
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import type { EditorContext } from '../commons/editor-generator';
+import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
@@ -168,9 +170,17 @@ export const normalizeEditor = ({
 	context: EditorContext;
 }): Editor => {
 	if (event && invite) {
+		const account = getUserAccount();
+		const isOrganizerCurrentUser = event.resource.organizer?.email === account?.name;
+		// event.resource.organizer.name is frozen at the time the invite was created/last sent;
+		// if the logged-in user is the organizer, prefer the identity's current display name
+		// so a displayName change is picked up without needing a full app reload.
+		const currentIdentityFullName = isOrganizerCurrentUser
+			? find(getIdentityItems(), ['identityName', 'DEFAULT'])?.fullName
+			: undefined;
 		const organizer = {
 			email: event.resource.organizer?.email ?? '',
-			fullName: event.resource.organizer?.name
+			fullName: currentIdentityFullName ?? event.resource.organizer?.name
 		};
 		const isSeries = event?.resource?.isRecurrent;
 		const isInstance = context.isInstance ?? !!event?.resource?.ridZ;
