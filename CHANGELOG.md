@@ -1,3 +1,7 @@
+## <small>1.29.3 (2026-07-28)</small>
+
+* fix: use current identity displayName for organizer on resend (#816) ([e881fb8](https://github.com/zextras/carbonio-calendars-ui/commit/e881fb8)), closes [#816](https://github.com/zextras/carbonio-calendars-ui/issues/816)
+
 ## <small>1.29.2 (2026-07-27)</small>
 
 * fix(CO-3649): preserve allDay flag on Month view drag and correctly convert it on other views (#815) ([4554292](https://github.com/zextras/carbonio-calendars-ui/commit/4554292)), closes [#815](https://github.com/zextras/carbonio-calendars-ui/issues/815)
