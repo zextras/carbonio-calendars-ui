@@ -1,3 +1,7 @@
+## <small>1.29.4 (2026-07-28)</small>
+
+* fix(CO-3616): apply default appointment visibility setting to new appointments (#817) ([087d5c4](https://github.com/zextras/carbonio-calendars-ui/commit/087d5c4)), closes [#817](https://github.com/zextras/carbonio-calendars-ui/issues/817)
+
 ## <small>1.29.3 (2026-07-28)</small>
 
 * fix: use current identity displayName for organizer on resend (#816) ([e881fb8](https://github.com/zextras/carbonio-calendars-ui/commit/e881fb8)), closes [#816](https://github.com/zextras/carbonio-calendars-ui/issues/816)
