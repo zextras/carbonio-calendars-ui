@@ -63,7 +63,8 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 	const {
 		zimbraPrefCalendarDefaultApptDuration,
 		zimbraPrefCalendarApptReminderWarningTime,
-		zimbraPrefDefaultCalendarId
+		zimbraPrefDefaultCalendarId,
+		zimbraPrefCalendarApptVisibility
 	} = getPrefs();
 	const account = getUserAccount();
 	const defaultOrganizerIdentity = find(identities, ['identityName', 'DEFAULT']);
@@ -107,7 +108,7 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 		optionalAttendees: [],
 		allDay: false,
 		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
-		class: 'PUB',
+		class: zimbraPrefCalendarApptVisibility === 'private' ? 'PRI' : 'PUB',
 		originalStart: new Date(new Date().setSeconds(0, 0)).getTime(),
 		originalEnd: getEndTime({
 			start: new Date(new Date().setSeconds(0, 0)).getTime(),

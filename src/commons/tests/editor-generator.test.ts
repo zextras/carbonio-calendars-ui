@@ -92,6 +92,22 @@ describe('Editor generator', () => {
 			expect(editor.title).toBe('');
 			expect(editor.compNum).toBe(0);
 		});
+		test('default visibility follows the zimbraPrefCalendarApptVisibility setting', () => {
+			shell.getUserSettings.mockImplementationOnce(() => ({
+				...defaultSettings,
+				prefs: {
+					...defaultSettings.prefs,
+					zimbraPrefCalendarApptVisibility: 'private'
+				}
+			}));
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const context = { folders, dispatch: store.dispatch };
+			const editor = generateEditor({
+				context
+			});
+
+			expect(editor.class).toBe('PRI');
+		});
 		test('series appointment', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent({

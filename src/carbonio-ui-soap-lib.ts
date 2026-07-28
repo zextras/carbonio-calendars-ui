@@ -14,6 +14,7 @@ declare module '@zextras/carbonio-ui-soap-lib' {
 		zimbraPrefCalendarFirstDayOfWeek: string;
 		zimbraPrefCalendarInitialView: string;
 		zimbraPrefCalendarApptReminderWarningTime: string;
+		zimbraPrefCalendarApptVisibility: string;
 		zimbraPrefUseTimeZoneListInCalendar: string;
 		zimbraPrefCalendarForwardInvitesTo: string;
 		zimbraPrefAppleIcalDelegationEnabled: string;
