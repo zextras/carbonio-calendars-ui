@@ -1000,7 +1000,7 @@ describe('invite response component', () => {
 				});
 				const titleString = await screen.findByText(mailMsg.subject);
 				expect(titleString).toBeVisible();
-				expect(titleString).toHaveStyleRule('font-size', '1rem');
+				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 			});
 			test('should show the correct start and end time', async () => {
 				setupFoldersStore();
@@ -1012,7 +1012,7 @@ describe('invite response component', () => {
 				});
 				const titleString = await screen.findByText(mailMsg.subject);
 				expect(titleString).toBeVisible();
-				expect(titleString).toHaveStyleRule('font-size', '1rem');
+				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 
 				expect(
 					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')

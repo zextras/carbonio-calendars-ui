@@ -94,7 +94,11 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	return (
 		<>
 			<Row width="fill" mainAlignment="flex-start" padding={{ bottom: 'extrasmall' }}>
-				{method === MESSAGE_METHOD.COUNTER && <Text size="medium">{mailMsg.subject}</Text>}
+				{method === MESSAGE_METHOD.COUNTER && (
+					<Text weight="light" size="large">
+						{mailMsg.subject}
+					</Text>
+				)}
 				{method !== MESSAGE_METHOD.COUNTER &&
 					(isSentOnBehalfOf(invite.organizer) ? (
 						<Trans
