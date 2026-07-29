@@ -55,14 +55,28 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 		allDay
 	});
 
-	const counterDate = useGetDateRangeConvertedToTimezone(
-		proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0,
-		proposedEndTime ? parseDateFromICS(proposedEndTime).getTime() : 0,
-		{
-			allDay,
-			timeZone
-		}
+	const proposedStart = useMemo(
+		() => (proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0),
+		[proposedStartTime]
 	);
+
+	const proposedEnd = useMemo(
+		() => (proposedEndTime ? parseDateFromICS(proposedEndTime).getTime() : 0),
+		[proposedEndTime]
+	);
+
+	const counterDate = useGetDateRangeConvertedToTimezone(proposedStart, proposedEnd, {
+		allDay,
+		timeZone
+	});
+
+	// In a counter proposal the invite holds the current appointment times, while the
+	// mail message holds the attendee's proposed ones: show both when they differ.
+	const showOriginalTime =
+		method === MESSAGE_METHOD.COUNTER &&
+		mailMsg.parent !== FOLDERS.SENT &&
+		localStartTime !== 0 &&
+		(proposedStart !== localStartTime || proposedEnd !== localEndTime);
 
 	const showTimezoneIndicator = convertedDate !== originalDate;
 
@@ -80,11 +94,7 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	return (
 		<>
 			<Row width="fill" mainAlignment="flex-start" padding={{ bottom: 'extrasmall' }}>
-				{method === MESSAGE_METHOD.COUNTER && (
-					<Text weight="light" size="large">
-						{mailMsg.subject}
-					</Text>
-				)}
+				{method === MESSAGE_METHOD.COUNTER && <Text size="medium">{mailMsg.subject}</Text>}
 				{method !== MESSAGE_METHOD.COUNTER &&
 					(isSentOnBehalfOf(invite.organizer) ? (
 						<Trans
@@ -111,26 +121,54 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 						/>
 					))}
 			</Row>
-			<Row width="100%" mainAlignment="flex-start">
-				{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{counterDate}
-					</Text>
-				)}
-				{method !== MESSAGE_METHOD.COUNTER && (
+			{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (
+				<>
+					{showOriginalTime && (
+						<Row width="100%" mainAlignment="flex-start" padding={{ bottom: 'small' }}>
+							<Text color="gray1" weight="bold" size="small">
+								{t('label.original', 'Original')}:
+							</Text>
+							<Padding left="extrasmall">
+								<Text overflow="ellipsis" color="gray1" weight="bold" size="small">
+									{originalDate}
+								</Text>
+							</Padding>
+						</Row>
+					)}
+					<Row width="100%" mainAlignment="flex-start">
+						<Text color="warning.focus" size="small">
+							{t('label.proposed', 'Proposed')}:
+						</Text>
+						<Padding left="extrasmall">
+							<Text overflow="ellipsis" color="warning.focus" size="small">
+								{counterDate}
+							</Text>
+						</Padding>
+						{showTimezoneIndicator && (
+							<Tooltip label={timezoneTooltip}>
+								<Padding left="small">
+									<Icon icon="GlobeOutline" color="gray1" />
+								</Padding>
+							</Tooltip>
+						)}
+					</Row>
+				</>
+			)}
+			{method !== MESSAGE_METHOD.COUNTER && (
+				<Row width="100%" mainAlignment="flex-start">
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
 						{convertedDate}
 					</Text>
-				)}
 
-				{showTimezoneIndicator && (
-					<Tooltip label={timezoneTooltip}>
-						<Padding left="small">
-							<Icon icon="GlobeOutline" color="gray1" />
-						</Padding>
-					</Tooltip>
-				)}
-			</Row>
+					{showTimezoneIndicator && (
+						<Tooltip label={timezoneTooltip}>
+							<Padding left="small">
+								<Icon icon="GlobeOutline" color="gray1" />
+							</Padding>
+						</Tooltip>
+					)}
+				</Row>
+			)}
 		</>
 	);
 };

@@ -1000,7 +1000,7 @@ describe('invite response component', () => {
 				});
 				const titleString = await screen.findByText(mailMsg.subject);
 				expect(titleString).toBeVisible();
-				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
+				expect(titleString).toHaveStyleRule('font-size', '1rem');
 			});
 			test('should show the correct start and end time', async () => {
 				setupFoldersStore();
@@ -1012,7 +1012,7 @@ describe('invite response component', () => {
 				});
 				const titleString = await screen.findByText(mailMsg.subject);
 				expect(titleString).toBeVisible();
-				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
+				expect(titleString).toHaveStyleRule('font-size', '1rem');
 
 				expect(
 					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
@@ -1032,6 +1032,62 @@ describe('invite response component', () => {
 				);
 
 				expect(localTimeString).toBeVisible();
+			});
+			test('shows the proposed new time and the original time of the appointment when they differ', async () => {
+				setupFoldersStore();
+				setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false, {
+					invite: [{ tz: [], comp: [{ apptId: '1484' }] }]
+				} as never);
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+					store
+				});
+
+				expect(await screen.findByText('Original:')).toBeVisible();
+				expect(
+					screen.getByText('Monday, February 05, 2024, 4:00 – 4:30 PM GMT+01:00 Europe/Berlin')
+				).toBeVisible();
+
+				expect(screen.getByText('Proposed:')).toBeVisible();
+				expect(
+					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
+				).toBeVisible();
+			});
+			test('the original time is bold gray and the proposed time has the warning color', async () => {
+				setupFoldersStore();
+				setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false, {
+					invite: [{ tz: [], comp: [{ apptId: '1484' }] }]
+				} as never);
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+					store
+				});
+
+				const originalTime = await screen.findByText(
+					'Monday, February 05, 2024, 4:00 – 4:30 PM GMT+01:00 Europe/Berlin'
+				);
+				const proposedTime = screen.getByText(
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+				);
+
+				expect(originalTime).toHaveStyleRule('color', '#828282');
+				expect(originalTime).toHaveStyleRule('font-weight', '700');
+				expect(proposedTime).toHaveStyleRule('color', '#d39e00');
+			});
+			test('does not show the original time when the appointment details are unavailable', async () => {
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+					store
+				});
+
+				await screen.findByText('Proposed:');
+
+				expect(screen.queryByText('Original:')).not.toBeInTheDocument();
 			});
 			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
