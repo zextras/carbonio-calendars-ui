@@ -33,7 +33,7 @@ describe('useSecondaryBarTreePrimaryAccount', () => {
 
 		const expectedResult = {
 			id: primaryAccountRoot.id,
-			label: account?.name,
+			label: account?.displayName,
 			CustomComponent: AccountAccordionItem,
 			items: [
 				{

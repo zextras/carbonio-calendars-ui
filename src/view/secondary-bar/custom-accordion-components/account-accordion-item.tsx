@@ -13,13 +13,15 @@ import {
 	Container,
 	Avatar
 } from '@zextras/carbonio-design-system';
+import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 
 export const AccountAccordionItem: FC<AccordionItemProps> = (props) => {
 	const { id, label } = props.item;
 
 	const item: AccordionItemType = {
 		id,
-		label
+		label,
+		textProps: { size: 'small' }
 	};
 
 	return (
@@ -29,7 +31,7 @@ export const AccountAccordionItem: FC<AccordionItemProps> = (props) => {
 			mainAlignment="flex-start"
 			padding={{ vertical: 'extrasmall' }}
 		>
-			<Avatar label={label ?? ''} colorLabel={item.iconColor} size="medium" />
+			<Avatar label={label ?? ''} colorLabel={ZIMBRA_STANDARD_COLORS[0].hex} size="medium" />
 			<Tooltip label={label}>
 				<AccordionItem {...props} item={item} />
 			</Tooltip>

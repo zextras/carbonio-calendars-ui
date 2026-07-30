@@ -1,3 +1,7 @@
+## <small>1.30.1 (2026-07-30)</small>
+
+* fix(CO-3633): align primary account sidebar label to displayName, avatar color and font size (#818) ([40eac42](https://github.com/zextras/carbonio-calendars-ui/commit/40eac42)), closes [#818](https://github.com/zextras/carbonio-calendars-ui/issues/818)
+
 ## 1.30.0 (2026-07-28)
 
 * Merge branch 'devel' into co-3906-confirmation-modal ([7eda277](https://github.com/zextras/carbonio-calendars-ui/commit/7eda277))

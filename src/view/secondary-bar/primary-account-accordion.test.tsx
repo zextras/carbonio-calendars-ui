@@ -15,7 +15,7 @@ import { getMocksContext } from '@test-utils/utils/mocks-context';
 import { reducers } from 'store/redux';
 
 describe('PrimaryAccountAccordion', () => {
-	it('should render the primary account email', () => {
+	it('should render the primary account display name', () => {
 		useLocalStorage.mockReturnValue([[], vi.fn()]);
 		populateFoldersStore();
 		const mockedContext = getMocksContext();
@@ -25,6 +25,6 @@ describe('PrimaryAccountAccordion', () => {
 
 		setupTest(<PrimaryAccountAccordion />, { store });
 
-		expect(screen.getByText(mockedContext.identities.primary.identity.email)).toBeVisible();
+		expect(screen.getByText(mockedContext.identities.primary.identity.fullName)).toBeVisible();
 	});
 });
