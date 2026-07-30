@@ -1,3 +1,16 @@
+## 1.30.0 (2026-07-28)
+
+* Merge branch 'devel' into co-3906-confirmation-modal ([7eda277](https://github.com/zextras/carbonio-calendars-ui/commit/7eda277))
+* Merge branch 'devel' into co-3906-confirmation-modal ([9c8aec1](https://github.com/zextras/carbonio-calendars-ui/commit/9c8aec1))
+* Merge branch 'devel' into co-3906-confirmation-modal ([775ff12](https://github.com/zextras/carbonio-calendars-ui/commit/775ff12))
+* Merge pull request #819 from zextras/co-3906-confirmation-modal ([fa94c54](https://github.com/zextras/carbonio-calendars-ui/commit/fa94c54)), closes [#819](https://github.com/zextras/carbonio-calendars-ui/issues/819)
+* feat: confirmation modal changes ([2dcf96f](https://github.com/zextras/carbonio-calendars-ui/commit/2dcf96f))
+* feat: discard appointment modal snackbar ([fe19d6e](https://github.com/zextras/carbonio-calendars-ui/commit/fe19d6e))
+
+## <small>1.29.4 (2026-07-28)</small>
+
+* fix(CO-3616): apply default appointment visibility setting to new appointments (#817) ([087d5c4](https://github.com/zextras/carbonio-calendars-ui/commit/087d5c4)), closes [#817](https://github.com/zextras/carbonio-calendars-ui/issues/817)
+
 ## <small>1.29.3 (2026-07-28)</small>
 
 * fix: use current identity displayName for organizer on resend (#816) ([e881fb8](https://github.com/zextras/carbonio-calendars-ui/commit/e881fb8)), closes [#816](https://github.com/zextras/carbonio-calendars-ui/issues/816)

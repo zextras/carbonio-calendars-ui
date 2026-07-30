@@ -107,7 +107,7 @@ describe('Editor board wrapper', () => {
 			onClose();
 
 			expect(mockCreateModal).toHaveBeenCalledWith(
-				expect.objectContaining({ id: 'editor-close-confirmation' }),
+				expect.objectContaining({ id: 'editor-close-confirmation-1' }),
 				true
 			);
 		});
@@ -131,7 +131,38 @@ describe('Editor board wrapper', () => {
 			const modalArgs = mockCreateModal.mock.calls[0][0];
 			modalArgs.onClose();
 
-			expect(mockCloseModal).toHaveBeenCalledWith('editor-close-confirmation');
+			expect(mockCloseModal).toHaveBeenCalledWith('editor-close-confirmation-1');
+		});
+
+		it('uses a distinct modal id per editor so multiple dirty boards do not collide', () => {
+			const storeA = configureStore({ reducer: combineReducers(reducers) });
+			const storeB = configureStore({ reducer: combineReducers(reducers) });
+
+			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
+			generateEditor({
+				context: { folders: {}, dispatch: storeA.dispatch, ...defaultEditor, id: '1' }
+			});
+			storeA.dispatch(editEditorTitle({ id: '1', title: 'Changed title A' }));
+			const mockBoardHooksA = shell.useBoardHooks();
+			setupTest(<BoardEditPanel />, { store: storeA });
+			const updateBoardCallsA = mockBoardHooksA.updateBoard.mock.calls;
+			updateBoardCallsA[updateBoardCallsA.length - 1][0].onClose();
+
+			shell.useBoard.mockImplementation(() => initBoard({ editorId: '2', isNew: true }));
+			generateEditor({
+				context: { folders: {}, dispatch: storeB.dispatch, ...defaultEditor, id: '2' }
+			});
+			storeB.dispatch(editEditorTitle({ id: '2', title: 'Changed title B' }));
+			const mockBoardHooksB = shell.useBoardHooks();
+			setupTest(<BoardEditPanel />, { store: storeB });
+			const updateBoardCallsB = mockBoardHooksB.updateBoard.mock.calls;
+			updateBoardCallsB[updateBoardCallsB.length - 1][0].onClose();
+
+			const modalIds = mockCreateModal.mock.calls.map((call) => call[0].id);
+			expect(modalIds).toEqual(
+				expect.arrayContaining(['editor-close-confirmation-1', 'editor-close-confirmation-2'])
+			);
+			expect(new Set(modalIds).size).toBe(modalIds.length);
 		});
 
 		it('does not open close confirmation modal when onClose fires with clean editor', () => {
