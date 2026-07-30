@@ -35,4 +35,28 @@ describe('AccountAccordionItem', () => {
 
 		expect(screen.getByTestId(TEST_SELECTORS.AVATAR)).toBeVisible();
 	});
+
+	it('should render the account avatar with the same color regardless of the account label', () => {
+		const { rerender } = setupTest(<AccountAccordionItem item={item} />);
+		const firstColor = window.getComputedStyle(
+			screen.getByTestId(TEST_SELECTORS.AVATAR)
+		).backgroundColor;
+
+		rerender(<AccountAccordionItem item={{ ...item, label: 'a-different-label@example.com' }} />);
+		const secondColor = window.getComputedStyle(
+			screen.getByTestId(TEST_SELECTORS.AVATAR)
+		).backgroundColor;
+
+		expect(firstColor).not.toBe('');
+		expect(firstColor).toBe(secondColor);
+	});
+
+	it('should render the account label at the small font size', () => {
+		setupTest(<AccountAccordionItem item={item} />);
+
+		expect(screen.getByText(primaryIdentity.identity.email)).toHaveStyleRule(
+			'font-size',
+			'0.875rem'
+		);
+	});
 });
