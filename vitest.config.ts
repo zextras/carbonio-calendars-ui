@@ -47,7 +47,10 @@ export default defineConfig({
 		clearMocks: true,
 		// mockReset: true,
 		restoreMocks: true,
-		maxWorkers: '50%',
+		// '50%' is computed off os.cpus(), which reports the host's core count even inside a
+		// CPU-limited CI container — likely oversubscribing far more workers than the container
+		// can actually run in parallel. Fixed low cap as an experiment to reduce contention.
+		maxWorkers: 2,
 		testTimeout: 15000,
 		reporters: ['default', junitReporter],
 		coverage: {
