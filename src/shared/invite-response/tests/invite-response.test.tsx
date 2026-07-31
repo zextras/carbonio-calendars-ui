@@ -1052,7 +1052,7 @@ describe('invite response component', () => {
 
 				expect(timezoneIcon).toBeVisible();
 
-				user.hover(timezoneIcon);
+				await user.hover(timezoneIcon);
 
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 

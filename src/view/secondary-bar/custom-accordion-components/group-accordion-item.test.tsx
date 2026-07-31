@@ -126,7 +126,7 @@ describe('GroupAccordionItem', () => {
 		const item = { id: groups[0].id };
 
 		const { user } = setupTest(<GroupAccordionItem item={item} />, { store });
-		user.click(screen.getByText(groups[0].name));
+		await user.click(screen.getByText(groups[0].name));
 		const paramsSent = await apiInterceptor;
 
 		expect(paramsSent).toEqual({
@@ -152,7 +152,7 @@ describe('GroupAccordionItem', () => {
 		const item = { id: groups[0].id };
 
 		const { user } = setupTest(<GroupAccordionItem item={item} />, { store });
-		user.click(screen.getByText(groups[0].name));
+		await user.click(screen.getByText(groups[0].name));
 		const paramsSent = await apiInterceptor;
 
 		expect(paramsSent).toEqual({

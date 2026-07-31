@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 
 import { GlobalModalManager, useGlobalModal } from '../global-modal-manager';
 import { setupTest } from '@test-setup';
@@ -39,7 +39,9 @@ describe('GlobalModalManager', () => {
 		);
 		const { createModal } = useGlobalModal();
 		expect(() =>
-			createModal({ id: 'test-modal', children: <span>modal</span> }, true)
+			act(() => {
+				createModal({ id: 'test-modal', children: <span>modal</span> }, true);
+			})
 		).not.toThrow();
 	});
 
@@ -50,6 +52,6 @@ describe('GlobalModalManager', () => {
 			</GlobalModalManager>
 		);
 		const { closeModal } = useGlobalModal();
-		expect(() => closeModal('test-modal')).not.toThrow();
+		expect(() => act(() => closeModal('test-modal'))).not.toThrow();
 	});
 });

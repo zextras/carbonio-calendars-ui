@@ -19,7 +19,7 @@ import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 function waitAnimationsToComplete(): void {
-	act(() => vi.advanceTimersByTime(1000));
+	act(() => vi.advanceTimersByTime(300));
 }
 
 export async function setupSidebarIntegrationTest({
