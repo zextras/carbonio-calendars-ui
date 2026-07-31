@@ -83,6 +83,7 @@ export type ForwardAppointmentRequest = ZimbraRequest & {
 	id: string;
 	m: {
 		e: Array<{ a: string; t: string }>;
+		su?: string;
 		mp?: {
 			ct: string;
 			mp: Array<{ ct: string; content: string }>;
