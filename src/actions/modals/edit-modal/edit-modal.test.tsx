@@ -213,7 +213,7 @@ describe('the edit calendar modal is composed by', () => {
 					name: /calendar name/i
 				});
 
-				user.hover(title);
+				await user.hover(title);
 				const tooltipTextElement = await screen.findByText(
 					/you cannot edit the name of a system calendar/i
 				);

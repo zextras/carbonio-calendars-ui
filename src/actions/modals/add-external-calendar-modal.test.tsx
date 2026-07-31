@@ -6,7 +6,7 @@
  */
 import React from 'react';
 
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { JSNS } from '@zextras/carbonio-shell-ui';
 import { FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
 
@@ -702,7 +702,10 @@ describe('AddExternalCalendarModal', () => {
 			expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeDisabled();
 			expect(screen.getByText('Loading, please wait...')).toBeVisible();
 			expect(screen.getByTestId('icon: LoaderOutline')).toBeVisible();
-			resolveRequest?.({ folder: [], _jsns: JSNS.mail });
+			await act(async () => {
+				resolveRequest?.({ folder: [], _jsns: JSNS.mail });
+				await pendingRequest;
+			});
 		});
 		test('shows success snackbar and closes modal on successful ICS creation', async () => {
 			vi.spyOn(createFolderApi, 'createFolderRequest').mockResolvedValue({
