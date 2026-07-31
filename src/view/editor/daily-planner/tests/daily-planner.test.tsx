@@ -7,7 +7,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { waitFor, within } from '@testing-library/react';
+import { act, waitFor, within } from '@testing-library/react';
 
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import * as handler from '../../../../soap/get-free-busy-request';
@@ -211,8 +211,10 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		await freeBusyInterceptor;
-		await failingInterceptor;
+		await act(async () => {
+			await freeBusyInterceptor;
+			await failingInterceptor;
+		});
 		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
 		expect(errorSnackbar).toBeVisible();
 	});
@@ -230,8 +232,10 @@ describe('EditorDailyPlanner', () => {
 			<EditorDailyPlanner editorId={'1'} startDate={0} endDate={1} participants={participants} />,
 			{ store }
 		);
-		await workingHoursInterceptor;
-		await failingInterceptor;
+		await act(async () => {
+			await workingHoursInterceptor;
+			await failingInterceptor;
+		});
 		await waitFor(async () => {
 			const errorSnackbar = screen.getByText('Something went wrong, please try again');
 			expect(errorSnackbar).toBeVisible();

@@ -213,7 +213,7 @@ describe('the edit calendar modal is composed by', () => {
 					name: /calendar name/i
 				});
 
-				user.hover(title);
+				await user.hover(title);
 				const tooltipTextElement = await screen.findByText(
 					/you cannot edit the name of a system calendar/i
 				);
@@ -505,7 +505,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 
 						await user.clear(title);
-						await user.type(title, newCalendarName);
+						await user.pasteInto(title, newCalendarName);
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).toHaveBeenCalledTimes(1);
@@ -532,7 +532,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 
 						await user.clear(title);
-						await user.type(title, folder.name);
+						await user.pasteInto(title, folder.name);
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).not.toHaveBeenCalled();

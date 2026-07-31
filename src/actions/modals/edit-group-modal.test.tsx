@@ -364,7 +364,7 @@ describe('EditGroupModal', () => {
 			const modifyGroupApiSpy = vi.spyOn(modifyGroupApi, 'modifyCalendarGroupRequest');
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.clear(input);
-			await user.type(input, groupNewName);
+			await user.pasteInto(input, groupNewName);
 			await selectCalendarFromSelector(user, otherCalendars[0].name);
 			await selectCalendarFromSelector(user, otherCalendars[1].name);
 			const confirmButton = screen.getByRole('button', { name: /save changes/i });
