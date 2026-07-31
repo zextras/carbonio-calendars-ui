@@ -30,13 +30,13 @@ describe('AddExternalCalendarModal', () => {
 	describe('ICS type', () => {
 		test('enables add button when a valid ics url and calendar name are provided', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'My ICS');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'My ICS');
 			expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
 		});
 		test('shows protocol error when url does not start with http or https', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), 'a.b');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), 'a.b');
 			expect(screen.getByText("The URL should begin with 'http://' or 'https://'")).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
@@ -53,7 +53,7 @@ describe('AddExternalCalendarModal', () => {
 
 		test('shows sync info text when a valid ics url is entered', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
 			expect(
 				screen.getByText('This calendar will be read-only and will sync every 12 hours')
 			).toBeVisible();
@@ -69,7 +69,7 @@ describe('AddExternalCalendarModal', () => {
 				}
 			}));
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), existingUrl);
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), existingUrl);
 			expect(screen.getByText('A calendar with the same URL has already been added')).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
@@ -91,8 +91,8 @@ describe('AddExternalCalendarModal', () => {
 				});
 			const onClose = vi.fn();
 			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 			await waitFor(() => {
 				expect(createFolderRequestSpy).toHaveBeenCalledWith({
@@ -649,8 +649,8 @@ describe('AddExternalCalendarModal', () => {
 				customFolders: [generateFolder({ name: 'External calendar', view: 'appointment' })]
 			});
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(
 				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
 				'External calendar'
 			);
@@ -659,14 +659,14 @@ describe('AddExternalCalendarModal', () => {
 		});
 		test('add button is disabled when only the url is provided', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
 		test('disables add button while submission is in progress', async () => {
 			const onClose = vi.fn();
 			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
 			const addButton = screen.getByRole('button', { name: 'Add' });
 			expect(addButton).toBeEnabled();
 			await user.click(addButton);
@@ -680,8 +680,11 @@ describe('AddExternalCalendarModal', () => {
 				new Error('Network error')
 			);
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'My Calendar');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
+				'My Calendar'
+			);
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 			await waitFor(() => {
 				expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
@@ -695,8 +698,11 @@ describe('AddExternalCalendarModal', () => {
 			});
 			vi.spyOn(createFolderApi, 'createFolderRequest').mockReturnValue(pendingRequest);
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'My Calendar');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
+				'My Calendar'
+			);
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 			expect(screen.getByRole('textbox', { name: URL_LABEL })).toBeDisabled();
 			expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeDisabled();
@@ -723,8 +729,8 @@ describe('AddExternalCalendarModal', () => {
 			});
 			const onClose = vi.fn();
 			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
 			await user.click(screen.getByRole('button', { name: 'Add' }));
 			await waitFor(() => {
 				expect(screen.getByText('Calendar added successfully')).toBeVisible();
@@ -777,7 +783,7 @@ describe('AddExternalCalendarModal', () => {
 				}
 			}));
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), trashUrl);
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), trashUrl);
 			expect(
 				screen.getByText(
 					'A calendar with the same URL is in Trash. Permanently delete it to proceed'
@@ -791,8 +797,11 @@ describe('AddExternalCalendarModal', () => {
 				customFolders: [generateFolder({ name: 'My Calendar', view: 'appointment' })]
 			});
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
-			await user.type(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'my calendar');
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
+				'my calendar'
+			);
 			expect(screen.getByText('A calendar with the same name already exists')).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
@@ -807,7 +816,7 @@ describe('AddExternalCalendarModal', () => {
 				}
 			}));
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), urlUpperCase);
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), urlUpperCase);
 			expect(screen.getByText('A calendar with the same URL has already been added')).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
@@ -827,7 +836,7 @@ describe('AddExternalCalendarModal', () => {
 			const typeSelect = screen.getByText('ICS');
 
 			// Enter URL in ICS
-			await user.type(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
 			expect(screen.getByRole('textbox', { name: URL_LABEL })).toHaveValue(VALID_ICS_URL);
 
 			// Switch to CalDAV
