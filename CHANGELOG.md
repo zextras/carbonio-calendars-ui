@@ -1,3 +1,10 @@
+## <small>1.30.2 (2026-07-31)</small>
+
+* fix(CO-3619): speed up slow view-appointments integration test (#824) ([07395dc](https://github.com/zextras/carbonio-calendars-ui/commit/07395dc)), closes [#824](https://github.com/zextras/carbonio-calendars-ui/issues/824)
+* Merge pull request #823 from zextras/chore/IN-1168-jenkins-lib-common-v4.2.0 ([4cbb1aa](https://github.com/zextras/carbonio-calendars-ui/commit/4cbb1aa)), closes [#823](https://github.com/zextras/carbonio-calendars-ui/issues/823)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.1.4 (#822) ([6616d0d](https://github.com/zextras/carbonio-calendars-ui/commit/6616d0d)), closes [#822](https://github.com/zextras/carbonio-calendars-ui/issues/822)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.2.0 ([e954f71](https://github.com/zextras/carbonio-calendars-ui/commit/e954f71))
+
 ## <small>1.30.1 (2026-07-30)</small>
 
 * fix(CO-3633): align primary account sidebar label to displayName, avatar color and font size (#818) ([40eac42](https://github.com/zextras/carbonio-calendars-ui/commit/40eac42)), closes [#818](https://github.com/zextras/carbonio-calendars-ui/issues/818)
