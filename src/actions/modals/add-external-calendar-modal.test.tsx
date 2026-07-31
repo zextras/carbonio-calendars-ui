@@ -482,7 +482,7 @@ describe('AddExternalCalendarModal', () => {
 			});
 
 			await user.clear(hostInput);
-			await user.type(hostInput, 'calendar.example.com');
+			await user.pasteInto(hostInput, 'calendar.example.com');
 
 			expect(
 				screen.getByText('Added calendars will be read-only and will sync every 12 hours')
@@ -748,11 +748,11 @@ describe('AddExternalCalendarModal', () => {
 				]
 			});
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
-			await user.type(
+			await user.pasteInto(
 				screen.getByRole('textbox', { name: URL_LABEL }),
 				'  https://example.com/cal.ics  '
 			);
-			await user.type(
+			await user.pasteInto(
 				screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }),
 				'  Trimmed Calendar  '
 			);
