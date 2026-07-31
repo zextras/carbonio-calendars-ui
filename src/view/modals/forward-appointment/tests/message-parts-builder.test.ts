@@ -246,4 +246,95 @@ describe('buildMessageParts', () => {
 			}
 		]);
 	});
+
+	it('should fall back to raw mp plain text part when comp has no desc', () => {
+		const messageData = {
+			inv: [{ comp: [{}] }],
+			mp: [{ ct: 'text/plain', content: 'Plain text from mp' }]
+		};
+
+		const result = buildMessageParts(messageData);
+
+		expect(result).toEqual([
+			{
+				ct: 'text/plain',
+				content: 'Plain text from mp'
+			}
+		]);
+	});
+
+	it('should fall back to raw mp html part when comp has no descHtml', () => {
+		const messageData = {
+			inv: [{ comp: [{}] }],
+			mp: [{ ct: 'text/html', content: '<p>HTML from mp</p>' }]
+		};
+
+		const result = buildMessageParts(messageData);
+
+		expect(result).toEqual([
+			{
+				ct: 'text/html',
+				content: '<p>HTML from mp</p>'
+			}
+		]);
+	});
+
+	it('should find both text and html parts nested inside a multipart/alternative mp tree', () => {
+		const messageData = {
+			inv: [{ comp: [{}] }],
+			mp: [
+				{
+					ct: 'multipart/alternative',
+					mp: [
+						{ ct: 'text/plain', content: 'Nested plain text' },
+						{ ct: 'text/html', content: '<p>Nested HTML</p>' }
+					]
+				}
+			]
+		};
+
+		const result = buildMessageParts(messageData);
+
+		expect(result).toEqual([
+			{ ct: 'text/plain', content: 'Nested plain text' },
+			{ ct: 'text/html', content: '<p>Nested HTML</p>' }
+		]);
+	});
+
+	it('should prefer comp desc/descHtml over the raw mp fallback', () => {
+		const messageData = {
+			inv: [
+				{
+					comp: [
+						{
+							desc: [{ _content: 'Component text' }],
+							descHtml: [{ _content: '<p>Component html</p>' }]
+						}
+					]
+				}
+			],
+			mp: [
+				{ ct: 'text/plain', content: 'Should not be used' },
+				{ ct: 'text/html', content: '<p>Should not be used</p>' }
+			]
+		};
+
+		const result = buildMessageParts(messageData);
+
+		expect(result).toEqual([
+			{ ct: 'text/plain', content: 'Component text' },
+			{ ct: 'text/html', content: '<p>Component html</p>' }
+		]);
+	});
+
+	it('should return empty array when neither comp nor mp have description content', () => {
+		const messageData = {
+			inv: [{ comp: [{}] }],
+			mp: [{ ct: 'application/pdf', content: '', filename: 'document.pdf' }]
+		};
+
+		const result = buildMessageParts(messageData);
+
+		expect(result).toEqual([]);
+	});
 });

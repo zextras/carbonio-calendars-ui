@@ -44,6 +44,7 @@ export const ForwardAppointmentModal = ({
 
 	const forwardAppointment = useForwardAppointment({
 		eventId: event.resource.id,
+		subject: event.title,
 		onSuccess: showSuccessSnackbar,
 		onError: showErrorSnackbar,
 		onComplete: onClose
