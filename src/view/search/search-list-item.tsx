@@ -25,6 +25,7 @@ import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import { selectInstanceInvite } from 'store/selectors/invites';
 import { ActionsContext } from 'types/actions';
 import { EventType } from 'types/event';
+import { isSentOnBehalfOf } from 'utils/organizer';
 
 const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
 	const [t] = useTranslation();
@@ -32,7 +33,10 @@ const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
 	const isPrivateLabel = t('is_private', 'Is private');
 	const isRecurrentLabel = t('label.recurrent', 'Recurrent appointment');
 	const hasAttachmentsLabel = t('has_attachments', 'Has attachments');
-	const organizerLabel = item.resource?.organizer?.name ?? item.resource?.organizer?.email;
+	const organizer = item.resource?.organizer;
+	const organizerLabel = isSentOnBehalfOf({ a: organizer?.email, sentBy: organizer?.sentBy })
+		? organizer?.sentBy
+		: (organizer?.name ?? organizer?.email);
 	const organizedByLabel = `${t('search.organized_by', 'organized by')} ${organizerLabel}`;
 
 	const dispatch = useAppDispatch();

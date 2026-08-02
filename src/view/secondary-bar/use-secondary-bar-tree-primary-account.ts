@@ -20,6 +20,7 @@ import { SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
 	const [t] = useTranslation();
 	const account = useUserAccount();
+	const accountName = account?.displayName ?? account?.name;
 	const groupsItems = useSecondaryBarTreeGroups();
 	const calendarsItems = useSecondaryBarTreePrimaryCalendars(FOLDERS.USER_ROOT);
 	const { isOpen, setOpenStatus } = useAccordionItemOpenStatusStorage();
@@ -41,7 +42,7 @@ export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
 	return useMemo(
 		() => ({
 			id: FOLDERS.USER_ROOT,
-			label: account?.name,
+			label: accountName,
 			CustomComponent: AccountAccordionItem,
 			open: isOpen(FOLDERS.USER_ROOT),
 			onOpen: onPrimaryAccountOpen(FOLDERS.USER_ROOT),
@@ -66,7 +67,7 @@ export const useSecondaryBarTreePrimaryAccount = (): AccordionItemType => {
 			]
 		}),
 		[
-			account?.name,
+			accountName,
 			isOpen,
 			onPrimaryAccountOpen,
 			onPrimaryAccountClose,

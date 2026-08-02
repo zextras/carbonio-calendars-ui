@@ -30,7 +30,7 @@ describe('ExpandedSecondaryBar', () => {
 
 		setupTest(<ExpandedSecondaryBar />, { store });
 
-		expect(screen.getByText(primaryIdentity.identity.email)).toBeVisible();
+		expect(screen.getByText(primaryIdentity.identity.fullName)).toBeVisible();
 	});
 
 	it('should render the shared accounts accordion items', () => {

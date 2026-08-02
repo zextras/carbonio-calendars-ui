@@ -27,6 +27,7 @@ async function inputAttendee(user: UserEvent, input: HTMLElement, attendee: stri
 
 describe('ForwardAppointmentModal', () => {
 	const event = {
+		title: 'Test event title',
 		resource: {
 			id: '123'
 		}
@@ -81,6 +82,7 @@ describe('ForwardAppointmentModal', () => {
 			const request = await interceptor;
 
 			expect(request.id).toBe('123');
+			expect(request.m.su).toBe('Test event title');
 			expect(request.m.e).toEqual([{ a: attendee, t: 't' }]);
 		});
 

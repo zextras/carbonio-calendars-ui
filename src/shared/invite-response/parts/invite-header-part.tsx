@@ -14,6 +14,7 @@ import { MESSAGE_METHOD } from 'constants/api';
 import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
 import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
+import { isSentOnBehalfOf } from 'utils/organizer';
 
 type InviteHeaderPartProps = {
 	mailMsg: any;
@@ -84,18 +85,31 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 						{mailMsg.subject}
 					</Text>
 				)}
-				{method !== MESSAGE_METHOD.COUNTER && (
-					<Trans
-						i18nKey="message.organizer_invited_you"
-						values={{
-							organizer: invite.organizer?.d ?? invite.organizer?.a,
-							title: mailMsg.subject ?? invite?.name
-						}}
-						defaults="<text>{{organizer}} invited you to an event <bold>{{title}}</bold></text>"
-						components={{ bold: <strong />, text: <Text /> }}
-						t={t}
-					/>
-				)}
+				{method !== MESSAGE_METHOD.COUNTER &&
+					(isSentOnBehalfOf(invite.organizer) ? (
+						<Trans
+							i18nKey="message.organizer_invited_you_on_behalf_of"
+							values={{
+								organizer: invite.organizer?.sentBy,
+								owner: invite.organizer?.a,
+								title: mailMsg.subject ?? invite?.name
+							}}
+							defaults="<text>{{organizer}} invited you to an event <bold>{{title}}</bold> on behalf of <bold>{{owner}}</bold></text>"
+							components={{ bold: <strong />, text: <Text /> }}
+							t={t}
+						/>
+					) : (
+						<Trans
+							i18nKey="message.organizer_invited_you"
+							values={{
+								organizer: invite.organizer?.d ?? invite.organizer?.a,
+								title: mailMsg.subject ?? invite?.name
+							}}
+							defaults="<text>{{organizer}} invited you to an event <bold>{{title}}</bold></text>"
+							components={{ bold: <strong />, text: <Text /> }}
+							t={t}
+						/>
+					))}
 			</Row>
 			<Row width="100%" mainAlignment="flex-start">
 				{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (

@@ -32,7 +32,7 @@ const BoardEditPanel = (): ReactElement | null => {
 		updateBoard({
 			onClose: () => {
 				if (isDirtyRef.current && editorId) {
-					const modalId = 'editor-close-confirmation';
+					const modalId = `editor-close-confirmation-${editorId}`;
 					createModal(
 						{
 							id: modalId,

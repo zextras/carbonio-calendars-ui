@@ -25,6 +25,7 @@ describe('useForwardAppointment', () => {
 
 	const defaultParams = {
 		eventId: 'event-123',
+		subject: 'Test event subject',
 		onSuccess: mockOnSuccess,
 		onError: mockOnError,
 		onComplete: mockOnComplete
@@ -54,6 +55,7 @@ describe('useForwardAppointment', () => {
 		const request = await interceptor;
 
 		expect(request.id).toBe('event-123');
+		expect(request.m.su).toBe('Test event subject');
 		expect(request.m.e).toEqual([
 			{ a: EMAIL_1, t: 't' },
 			{ a: EMAIL_2, t: 't' }
@@ -161,6 +163,20 @@ describe('useForwardAppointment', () => {
 		const firstHandler = result.current;
 
 		rerender({ ...defaultParams, eventId: 'event-456' });
+
+		const secondHandler = result.current;
+
+		expect(firstHandler).not.toBe(secondHandler);
+	});
+
+	it('should create new handler when subject changes', () => {
+		const { result, rerender } = renderHook((props) => useForwardAppointment(props), {
+			initialProps: defaultParams
+		});
+
+		const firstHandler = result.current;
+
+		rerender({ ...defaultParams, subject: 'A different subject' });
 
 		const secondHandler = result.current;
 

@@ -13,6 +13,7 @@ import { forwardAppointmentRequest } from 'soap/forward-appointment-request';
 
 type UseForwardAppointmentParams = {
 	eventId: string;
+	subject: string;
 	onSuccess: () => void;
 	onError: () => void;
 	onComplete: () => void;
@@ -25,6 +26,7 @@ type ForwardAppointmentHandler = (
 
 export const useForwardAppointment = ({
 	eventId,
+	subject,
 	onSuccess,
 	onError,
 	onComplete
@@ -35,6 +37,7 @@ export const useForwardAppointment = ({
 				const response = await forwardAppointmentRequest({
 					id: eventId,
 					attendees: contacts.map((contact) => contact.value.email),
+					subject,
 					messageParts
 				});
 
@@ -50,5 +53,5 @@ export const useForwardAppointment = ({
 				onComplete();
 			}
 		},
-		[eventId, onSuccess, onError, onComplete]
+		[eventId, subject, onSuccess, onError, onComplete]
 	);

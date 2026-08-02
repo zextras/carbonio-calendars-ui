@@ -37,6 +37,9 @@ describe('View appointments Integration Tests', () => {
 		mockExpandedFolders([FOLDERS.USER_ROOT, SIDEBAR_ROOT_SUBSECTION.CALENDARS]);
 	});
 
+	// CalendarComponent is lazy-loaded and pulls in react-big-calendar; the first render in this
+	// suite pays a one-off module transform/evaluation cost that can exceed the default timeout
+	// on slower CI runners.
 	it('should display Calendar appointments when clicking the calendar', async () => {
 		const response = generateAppointmentsResponse();
 		const myCalendar = { ...generateCalendar(), checked: true };
@@ -46,5 +49,5 @@ describe('View appointments Integration Tests', () => {
 		await screen.findByText(myCalendar.name);
 		await searchApi;
 		await screen.findByText(eventApiData.name);
-	});
+	}, 15000);
 });

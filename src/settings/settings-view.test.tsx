@@ -81,7 +81,7 @@ describe('Settings view', () => {
 				createSoapAPIInterceptor('GetRights', {});
 				const { user } = setupTest(<CalendarSettingsView />);
 
-				await user.type(
+				await user.pasteInto(
 					screen.getByRole('textbox', { name: /settings.label.enter_email/i }),
 					'test@demo.com'
 				);

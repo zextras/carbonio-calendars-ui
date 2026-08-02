@@ -1,3 +1,59 @@
+## <small>1.30.2 (2026-07-31)</small>
+
+* fix(CO-3619): speed up slow view-appointments integration test (#824) ([07395dc](https://github.com/zextras/carbonio-calendars-ui/commit/07395dc)), closes [#824](https://github.com/zextras/carbonio-calendars-ui/issues/824)
+* Merge pull request #823 from zextras/chore/IN-1168-jenkins-lib-common-v4.2.0 ([4cbb1aa](https://github.com/zextras/carbonio-calendars-ui/commit/4cbb1aa)), closes [#823](https://github.com/zextras/carbonio-calendars-ui/issues/823)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.1.4 (#822) ([6616d0d](https://github.com/zextras/carbonio-calendars-ui/commit/6616d0d)), closes [#822](https://github.com/zextras/carbonio-calendars-ui/issues/822)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.2.0 ([e954f71](https://github.com/zextras/carbonio-calendars-ui/commit/e954f71))
+
+## <small>1.30.1 (2026-07-30)</small>
+
+* fix(CO-3633): align primary account sidebar label to displayName, avatar color and font size (#818) ([40eac42](https://github.com/zextras/carbonio-calendars-ui/commit/40eac42)), closes [#818](https://github.com/zextras/carbonio-calendars-ui/issues/818)
+
+## 1.30.0 (2026-07-28)
+
+* Merge branch 'devel' into co-3906-confirmation-modal ([7eda277](https://github.com/zextras/carbonio-calendars-ui/commit/7eda277))
+* Merge branch 'devel' into co-3906-confirmation-modal ([9c8aec1](https://github.com/zextras/carbonio-calendars-ui/commit/9c8aec1))
+* Merge branch 'devel' into co-3906-confirmation-modal ([775ff12](https://github.com/zextras/carbonio-calendars-ui/commit/775ff12))
+* Merge pull request #819 from zextras/co-3906-confirmation-modal ([fa94c54](https://github.com/zextras/carbonio-calendars-ui/commit/fa94c54)), closes [#819](https://github.com/zextras/carbonio-calendars-ui/issues/819)
+* feat: confirmation modal changes ([2dcf96f](https://github.com/zextras/carbonio-calendars-ui/commit/2dcf96f))
+* feat: discard appointment modal snackbar ([fe19d6e](https://github.com/zextras/carbonio-calendars-ui/commit/fe19d6e))
+
+## <small>1.29.4 (2026-07-28)</small>
+
+* fix(CO-3616): apply default appointment visibility setting to new appointments (#817) ([087d5c4](https://github.com/zextras/carbonio-calendars-ui/commit/087d5c4)), closes [#817](https://github.com/zextras/carbonio-calendars-ui/issues/817)
+
+## <small>1.29.3 (2026-07-28)</small>
+
+* fix: use current identity displayName for organizer on resend (#816) ([e881fb8](https://github.com/zextras/carbonio-calendars-ui/commit/e881fb8)), closes [#816](https://github.com/zextras/carbonio-calendars-ui/issues/816)
+
+## <small>1.29.2 (2026-07-27)</small>
+
+* fix(CO-3649): preserve allDay flag on Month view drag and correctly convert it on other views (#815) ([4554292](https://github.com/zextras/carbonio-calendars-ui/commit/4554292)), closes [#815](https://github.com/zextras/carbonio-calendars-ui/issues/815)
+
+## <small>1.29.1 (2026-07-20)</small>
+
+* fix(CO-3632): exclude resources without an address from invite attendees and participants (#814) ([050dd82](https://github.com/zextras/carbonio-calendars-ui/commit/050dd82)), closes [#814](https://github.com/zextras/carbonio-calendars-ui/issues/814)
+
+## 1.29.0 (2026-07-17)
+
+* feat(CO-3751): display appointment creator in shared calendars (#808) ([8fd0625](https://github.com/zextras/carbonio-calendars-ui/commit/8fd0625)), closes [#808](https://github.com/zextras/carbonio-calendars-ui/issues/808)
+* chore(deps): update dependency @zextras/carbonio-ui-sdk to v2.3.12 (#809) ([52657ac](https://github.com/zextras/carbonio-calendars-ui/commit/52657ac)), closes [#809](https://github.com/zextras/carbonio-calendars-ui/issues/809)
+* chore(deps): update semantic-release monorepo (#810) ([9df803a](https://github.com/zextras/carbonio-calendars-ui/commit/9df803a)), closes [#810](https://github.com/zextras/carbonio-calendars-ui/issues/810)
+
+## 1.28.0 (2026-07-13)
+
+* Merge branch 'devel' into co-3695-appointment-reminder ([bc96a75](https://github.com/zextras/carbonio-calendars-ui/commit/bc96a75))
+* Merge pull request #807 from zextras/co-3695-appointment-reminder ([0529878](https://github.com/zextras/carbonio-calendars-ui/commit/0529878)), closes [#807](https://github.com/zextras/carbonio-calendars-ui/issues/807)
+* fix: test ([9985fd0](https://github.com/zextras/carbonio-calendars-ui/commit/9985fd0))
+* fix: test ([a8ea8ac](https://github.com/zextras/carbonio-calendars-ui/commit/a8ea8ac))
+* feat: appointment reminder button ([a9dcef3](https://github.com/zextras/carbonio-calendars-ui/commit/a9dcef3))
+
+## 1.27.0 (2026-07-08)
+
+* feat(CO-3905): add import appointments modal and related functionality (#805) ([f12175a](https://github.com/zextras/carbonio-calendars-ui/commit/f12175a)), closes [#805](https://github.com/zextras/carbonio-calendars-ui/issues/805)
+* chore(deps): update dependency msw to v2.14.6 (#776) ([2ad042c](https://github.com/zextras/carbonio-calendars-ui/commit/2ad042c)), closes [#776](https://github.com/zextras/carbonio-calendars-ui/issues/776)
+* chore(deps): update dependency typescript to v5.9.3 (#780) ([fa05aeb](https://github.com/zextras/carbonio-calendars-ui/commit/fa05aeb)), closes [#780](https://github.com/zextras/carbonio-calendars-ui/issues/780)
+
 ## <small>1.26.16 (2026-06-26)</small>
 
 * fix(deps): update dependency react-big-calendar to v1.20.0 (#783) ([5172e8f](https://github.com/zextras/carbonio-calendars-ui/commit/5172e8f)), closes [#783](https://github.com/zextras/carbonio-calendars-ui/issues/783)

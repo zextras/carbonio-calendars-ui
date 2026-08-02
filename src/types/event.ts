@@ -84,6 +84,7 @@ export type EventResource = {
 		| {
 				name?: string;
 				email?: string;
+				sentBy?: string;
 		  }
 		| undefined;
 	room?: any;

@@ -23,7 +23,12 @@ import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
 import { useAppDispatch } from '../store/redux/hooks';
-import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
+import {
+	useCalendarDate,
+	useCalendarView,
+	useIsSummaryViewOpen,
+	useSetRange
+} from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventType } from '../types/event';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
@@ -43,6 +48,7 @@ export const useCalendarComponentUtils = (): {
 	date: Date;
 } => {
 	const calendarDate = useCalendarDate();
+	const calendarView = useCalendarView();
 	const [date, setDate] = useState(calendarDate);
 	const [t] = useTranslation();
 	const { createModal, closeModal } = useModal();
@@ -94,12 +100,14 @@ export const useCalendarComponentUtils = (): {
 	const getEnd = useCallback(
 		({
 			isAllDay,
+			dropStart,
 			dropEnd,
 			isSeries,
 			inviteEnd,
 			eventEnd,
 			eventAllDay
 		}: {
+			dropStart: Date;
 			dropEnd: Date;
 			inviteEnd: Date;
 			eventEnd: Date;
@@ -107,8 +115,12 @@ export const useCalendarComponentUtils = (): {
 			isSeries?: boolean;
 			eventAllDay: boolean;
 		}) => {
-			if (isAllDay || eventAllDay) {
+			if (isAllDay) {
 				return startOfDay(dropEnd).getTime();
+			}
+			if (eventAllDay) {
+				// converting away from all-day: stay within the dropped-on day
+				return endOfDay(dropStart).getTime();
 			}
 			if (isSeries) {
 				const diff = dropEnd.getTime() - eventEnd.getTime();
@@ -144,18 +156,21 @@ export const useCalendarComponentUtils = (): {
 					const eventEnd = event.end;
 					const dropEnd = new Date(end);
 					const eventAllDay = event.allDay;
+					const resolvedAllDay =
+						calendarView === 'month' ? (isAllDay ?? eventAllDay) : (isAllDay ?? false);
 					const invite = normalizeInvite(payload.m[0]);
 					const startTime = getStart({
 						isSeries,
 						dropStart,
-						isAllDay,
+						isAllDay: resolvedAllDay,
 						inviteStart,
 						eventStart
 					});
 					const endTime = getEnd({
 						isSeries,
+						dropStart,
 						dropEnd,
-						isAllDay,
+						isAllDay: resolvedAllDay,
 						inviteEnd,
 						eventEnd,
 						eventAllDay
@@ -183,7 +198,7 @@ export const useCalendarComponentUtils = (): {
 							folders: calendarFolders,
 							start: startTime,
 							end: endTime,
-							allDay: isAllDay,
+							allDay: resolvedAllDay,
 							panel: false
 						};
 						const editor = generateEditor({
@@ -239,7 +254,17 @@ export const useCalendarComponentUtils = (): {
 				}
 			});
 		},
-		[calendarFolders, closeModal, createModal, createSnackbar, dispatch, getEnd, getStart, t]
+		[
+			calendarFolders,
+			calendarView,
+			closeModal,
+			createModal,
+			createSnackbar,
+			dispatch,
+			getEnd,
+			getStart,
+			t
+		]
 	);
 
 	const onEventDropOrResize = useCallback(

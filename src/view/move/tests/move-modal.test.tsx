@@ -91,7 +91,10 @@ describe('MoveModal', () => {
 			/>
 		);
 
-		const moveButton = screen.getByRole('button', { name: 'label.move' });
+		// getByRole here is much slower than getByText + closest('button'): it has to compute
+		// the accessible role of every node under FolderSelector's folder tree.
+		// eslint-disable-next-line testing-library/no-node-access
+		const moveButton = screen.getByText('label.move').closest('button') as HTMLButtonElement;
 
 		expect(moveButton).toBeDisabled();
 
@@ -116,7 +119,10 @@ describe('MoveModal', () => {
 			/>
 		);
 
-		const moveButton = screen.getByRole('button', { name: 'label.move' });
+		// getByText + closest('button') avoids getByRole's slow accessible-role computation
+		// across FolderSelector's folder tree (see comment above for details).
+		// eslint-disable-next-line testing-library/no-node-access
+		const moveButton = screen.getByText('label.move').closest('button') as HTMLButtonElement;
 		expect(moveButton).toBeDisabled();
 	});
 
@@ -134,7 +140,10 @@ describe('MoveModal', () => {
 		const destinationFolder = screen.getByText(defaultCalendarFolder.name);
 		await user.click(destinationFolder);
 
-		const moveButton = screen.getByRole('button', { name: 'label.move' });
+		// getByText + closest('button') avoids getByRole's slow accessible-role computation
+		// across FolderSelector's folder tree (see comment above for details).
+		// eslint-disable-next-line testing-library/no-node-access
+		const moveButton = screen.getByText('label.move').closest('button') as HTMLButtonElement;
 		expect(moveButton).toBeDisabled();
 	});
 });

@@ -10,10 +10,12 @@ import { ForwardAppointmentRequest, ForwardAppointmentResponse } from '../types/
 export const forwardAppointmentRequest = async ({
 	id,
 	attendees,
+	subject,
 	messageParts
 }: {
 	id: string;
 	attendees: Array<string>;
+	subject: string;
 	messageParts: Array<{ ct: string; content: string }>;
 }): Promise<ForwardAppointmentResponse | ErrorSoapResponse> =>
 	legacySoapFetch<ForwardAppointmentRequest, ForwardAppointmentResponse>('ForwardAppointment', {
@@ -21,6 +23,7 @@ export const forwardAppointmentRequest = async ({
 		id,
 		m: {
 			e: attendees.map((attendee) => ({ a: attendee, t: 't' })),
+			su: subject,
 			...(messageParts.length > 0
 				? {
 						mp: {

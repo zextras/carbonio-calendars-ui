@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 
 import { setupTest, screen } from '@test-setup';
 import { DeleteCaldavCalendarModal } from './delete-caldav-calendar-modal';
@@ -64,7 +64,10 @@ describe('DeleteCaldavCalendarModal', () => {
 		const button = screen.getByRole('button', { name: 'YES, DELETE' });
 		await user.click(button);
 		expect(button).toBeDisabled();
-		resolve?.();
+		await act(async () => {
+			resolve?.();
+			await pendingConfirm;
+		});
 	});
 
 	it('calls onClose when close icon is clicked', async () => {

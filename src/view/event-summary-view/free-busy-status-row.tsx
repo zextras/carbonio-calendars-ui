@@ -10,24 +10,25 @@ import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { toLower } from 'lodash';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { EVENT_DISPLAY_STATUS } from '../../constants/api';
-import { InviteFreeBusy, InviteOrganizer } from '../../types/store/invite';
+import { EVENT_DISPLAY_STATUS } from 'constants/api';
+import { InviteFreeBusy, InviteOrganizer } from 'types/store/invite';
+import { isAppointmentCreatedBy } from 'utils/organizer';
 
 export const FreeBusyStatusRowComponent = ({
 	freeBusy,
-	organizerName
+	organizer
 }: {
 	freeBusy: InviteFreeBusy;
-	organizerName: InviteOrganizer['a'];
+	organizer: InviteOrganizer | undefined;
 }): React.JSX.Element => {
 	const account = useUserAccount();
 	const [t] = useTranslation();
 	const whoSetThis = useMemo(
 		() =>
-			organizerName === account.name
+			isAppointmentCreatedBy(organizer, account.name)
 				? t('message.you', 'You')
 				: t('message.the_organizer', 'The organizer'),
-		[account.name, organizerName, t]
+		[account.name, organizer, t]
 	);
 
 	const status = useMemo(() => {
@@ -58,10 +59,10 @@ export const FreeBusyStatusRowComponent = ({
 
 export const FreeBusyStatusRow = ({
 	freeBusy,
-	organizerName
+	organizer
 }: {
 	freeBusy: InviteFreeBusy;
-	organizerName: InviteOrganizer['a'];
+	organizer: InviteOrganizer | undefined;
 }): React.JSX.Element => (
 	<Container
 		orientation="vertical"
@@ -82,7 +83,7 @@ export const FreeBusyStatusRow = ({
 		>
 			<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 				<Padding left={'1.5rem'} />
-				<FreeBusyStatusRowComponent organizerName={organizerName} freeBusy={freeBusy} />
+				<FreeBusyStatusRowComponent organizer={organizer} freeBusy={freeBusy} />
 			</Row>
 		</Container>
 	</Container>
