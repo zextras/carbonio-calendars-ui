@@ -52,7 +52,8 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	start,
 	end,
 	msg,
-	to
+	to,
+	proposalApplied = false
 }): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
@@ -68,8 +69,9 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	});
 	// Acceptance is kept in a store rather than in component state: the mails module re-creates
 	// this panel once the counter mail is trashed, and mount-scoped state would come back reset,
-	// re-enabling the button and letting the attendee receive a duplicate notification.
-	const isAccepted = useIsProposalAccepted(proposalKey);
+	// re-enabling the button and letting the attendee receive a duplicate notification. The store
+	// is gone after a reload, so the appointment itself is the fallback source of truth.
+	const isAccepted = useIsProposalAccepted(proposalKey) || proposalApplied;
 	// A ref set synchronously before the first request is what stops a second click landing
 	// while the chain is in flight, since a state update may not be committed yet.
 	const submissionLock = useRef(false);

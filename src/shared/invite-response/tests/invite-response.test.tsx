@@ -1300,6 +1300,36 @@ describe('invite response component', () => {
 
 							modifyAppointmentSpy.mockClear();
 						});
+						test('is already accepted when the appointment sits at the proposed time', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const appointmentComp = singleAppointmentResponse.appt[0].inv[0].comp[0];
+							// a proposal accepted before this session shows up only in the appointment
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false,
+								{
+									invite: [
+										{
+											tz: [],
+											comp: [{ apptId: '1484', s: appointmentComp.s, e: appointmentComp.e }]
+										}
+									]
+								} as never
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							const accept = await screen.findByRole('button', { name: /Accept/i });
+							await waitFor(() => {
+								expect(accept).toBeDisabled();
+							});
+							expect(screen.getByRole('button', { name: /Decline/i })).toBeDisabled();
+							expect(screen.getByText('You accepted the proposed time')).toBeVisible();
+						});
 						test('shows an error and keeps the counter mail when the appointment cannot be retrieved', async () => {
 							setupFoldersStore();
 							const moveToTrash = vi.fn();
