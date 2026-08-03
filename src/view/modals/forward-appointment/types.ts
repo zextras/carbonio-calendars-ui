@@ -17,6 +17,13 @@ interface MessageInv {
 	comp?: MessageComp[];
 }
 
+export interface RawMimePart {
+	ct?: string;
+	content?: string;
+	mp?: RawMimePart[];
+}
+
 export interface MessageData {
 	inv?: MessageInv[];
+	mp?: RawMimePart[];
 }
