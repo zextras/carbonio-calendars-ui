@@ -3,9 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback } from 'react';
+import React, { FC, ReactElement, useCallback, useRef, useState } from 'react';
 
-import { Container, Padding, Button, Divider, useSnackbar } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Padding,
+	Button,
+	Divider,
+	Text,
+	useSnackbar
+} from '@zextras/carbonio-design-system';
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { find, map } from 'lodash';
@@ -32,6 +39,8 @@ function resolveCompTimestamp(
 	return fallback;
 }
 
+type SubmissionStatus = 'idle' | 'submitting' | 'accepted';
+
 const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	id,
 	moveToTrash,
@@ -48,9 +57,38 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	const calendarFolders = useFoldersMap();
 	const [openComposer, available] = useIntegratedFunction('compose');
 
+	// Accepting spans three chained requests and sends a notification to the attendee, so a
+	// second click must be impossible. A ref is set synchronously before the first request,
+	// while a state update could still be uncommitted when the second click arrives. It is
+	// released only on failure: after a successful accept the proposal cannot be replied to again.
+	const submissionLock = useRef(false);
+	const [status, setStatus] = useState<SubmissionStatus>('idle');
+
 	const acceptProposedTime = useCallback(() => {
-		getAppointment(id).then((res) => {
-			if (res?.appt?.[0]) {
+		if (submissionLock.current) {
+			return;
+		}
+		submissionLock.current = true;
+		setStatus('submitting');
+
+		const handleFailure = (): void => {
+			submissionLock.current = false;
+			setStatus('idle');
+			createSnackbar({
+				key: 'proposedTimeAcceptFailed',
+				replace: true,
+				severity: 'error',
+				hideButton: true,
+				label: t('label.error_try_again', 'Something went wrong, please try again'),
+				autoHideTimeout: 3000
+			});
+		};
+
+		getAppointment(id)
+			.then((res) => {
+				if (!res?.appt?.[0]) {
+					throw new Error('Appointment not found');
+				}
 				const inviteToNormalize =
 					find(
 						res.appt[0]?.inv,
@@ -65,57 +103,58 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 					inviteId
 				};
 
-				dispatch(
+				return dispatch(
 					getInvite({
 						inviteId,
 						ridZ
 					})
 				).then((res2) => {
 					const calendar = find(calendarFolders, ['id', folderId]);
-					if (calendar && res2?.payload?.m) {
-						const invite = normalizeInvite(res2?.payload.m[0]);
-						const appointment = normalizeFromGetAppointment(appointmentToNormalize);
-						const event = normalizeCalendarEvent({ appointment, invite, calendar });
-						const startComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0];
-						const endComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0];
-						const editor = generateEditor({
-							event,
-							invite,
-							context: {
-								attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
-								isInstance: !!ridZ,
-								originalStart: resolveCompTimestamp(startComp, start),
-								originalEnd: resolveCompTimestamp(endComp, end),
-								exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
-								start,
-								end,
-								folders: calendarFolders,
-								dispatch,
-								panel: false
-							}
-						});
-
-						dispatch(modifyAppointment({ draft: false, editor })).then(({ payload }) => {
-							const { response, error } = payload;
-							if (response && !error) {
-								dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
-							}
-							createSnackbar({
-								key: error ? 'proposedTimeDeclined' : 'proposedTimeAccepted',
-								replace: true,
-								severity: error ? 'error' : 'success',
-								hideButton: true,
-								label: error
-									? t('label.error_try_again', 'Something went wrong, please try again')
-									: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
-								autoHideTimeout: 3000
-							});
-							moveToTrash?.();
-						});
+					if (!calendar || !res2?.payload?.m) {
+						throw new Error('Calendar or invite not available');
 					}
+					const invite = normalizeInvite(res2?.payload.m[0]);
+					const appointment = normalizeFromGetAppointment(appointmentToNormalize);
+					const event = normalizeCalendarEvent({ appointment, invite, calendar });
+					const startComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0];
+					const endComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0];
+					const editor = generateEditor({
+						event,
+						invite,
+						context: {
+							attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
+							isInstance: !!ridZ,
+							originalStart: resolveCompTimestamp(startComp, start),
+							originalEnd: resolveCompTimestamp(endComp, end),
+							exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
+							start,
+							end,
+							folders: calendarFolders,
+							dispatch,
+							panel: false
+						}
+					});
+
+					return dispatch(modifyAppointment({ draft: false, editor })).then(({ payload }) => {
+						// payload is undefined when the request throws, and carries error: true on a fault
+						if (!payload?.response || payload.error) {
+							throw new Error('Modify appointment failed');
+						}
+						dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
+						setStatus('accepted');
+						createSnackbar({
+							key: 'proposedTimeAccepted',
+							replace: true,
+							severity: 'success',
+							hideButton: true,
+							label: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
+							autoHideTimeout: 3000
+						});
+						moveToTrash?.();
+					});
 				});
-			}
-		});
+			})
+			.catch(handleFailure);
 	}, [calendarFolders, createSnackbar, dispatch, end, id, moveToTrash, msg?.invite, start, t]);
 
 	const declineProposedTime = useCallback(() => {
@@ -144,6 +183,8 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 						icon="CheckmarkOutline"
 						color="success"
 						onClick={acceptProposedTime}
+						disabled={status !== 'idle'}
+						loading={status === 'submitting'}
 					/>
 				</Padding>
 				<Padding right="small" vertical="medium">
@@ -153,9 +194,17 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 						icon="Close"
 						color="error"
 						onClick={declineProposedTime}
+						disabled={status !== 'idle'}
 					/>
 				</Padding>
 			</Container>
+			{status === 'accepted' && (
+				<Padding bottom="small">
+					<Text color="secondary" size="small">
+						{t('label.proposed_time_accepted', 'You accepted the proposed time')}
+					</Text>
+				</Padding>
+			)}
 			<Divider />
 		</>
 	);
