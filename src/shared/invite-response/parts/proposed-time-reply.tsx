@@ -26,6 +26,11 @@ import { getInvite } from '../../../store/actions/get-invite';
 import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { updateEditor } from '../../../store/slices/editor-slice';
+import {
+	getProposalKey,
+	markProposalAsAccepted,
+	useIsProposalAccepted
+} from '../../../store/zustand/accepted-proposals-store';
 import { ProposedTimeReplyArguments } from '../../../types/integrations';
 import { parseDateFromICS } from '../../../utils/dates';
 
@@ -38,8 +43,6 @@ function resolveCompTimestamp(
 	if (comp.d) return parseDateFromICS(comp.d).getTime();
 	return fallback;
 }
-
-type SubmissionStatus = 'idle' | 'submitting' | 'accepted';
 
 const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	id,
@@ -57,23 +60,31 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	const calendarFolders = useFoldersMap();
 	const [openComposer, available] = useIntegratedFunction('compose');
 
-	// Accepting spans three chained requests and sends a notification to the attendee, so a
-	// second click must be impossible. A ref is set synchronously before the first request,
-	// while a state update could still be uncommitted when the second click arrives. It is
-	// released only on failure: after a successful accept the proposal cannot be replied to again.
+	const proposalKey = getProposalKey({
+		messageId: msg?.id,
+		ridZ: msg?.invite?.[0]?.comp?.[0]?.ridZ,
+		start,
+		end
+	});
+	// Acceptance is kept in a store rather than in component state: the mails module re-creates
+	// this panel once the counter mail is trashed, and mount-scoped state would come back reset,
+	// re-enabling the button and letting the attendee receive a duplicate notification.
+	const isAccepted = useIsProposalAccepted(proposalKey);
+	// A ref set synchronously before the first request is what stops a second click landing
+	// while the chain is in flight, since a state update may not be committed yet.
 	const submissionLock = useRef(false);
-	const [status, setStatus] = useState<SubmissionStatus>('idle');
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const acceptProposedTime = useCallback(() => {
 		if (submissionLock.current) {
 			return;
 		}
 		submissionLock.current = true;
-		setStatus('submitting');
+		setIsSubmitting(true);
 
 		const handleFailure = (): void => {
 			submissionLock.current = false;
-			setStatus('idle');
+			setIsSubmitting(false);
 			createSnackbar({
 				key: 'proposedTimeAcceptFailed',
 				replace: true,
@@ -141,7 +152,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 							throw new Error('Modify appointment failed');
 						}
 						dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
-						setStatus('accepted');
+						markProposalAsAccepted(proposalKey);
 						createSnackbar({
 							key: 'proposedTimeAccepted',
 							replace: true,
@@ -155,7 +166,18 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 				});
 			})
 			.catch(handleFailure);
-	}, [calendarFolders, createSnackbar, dispatch, end, id, moveToTrash, msg?.invite, start, t]);
+	}, [
+		calendarFolders,
+		createSnackbar,
+		dispatch,
+		end,
+		id,
+		moveToTrash,
+		msg?.invite,
+		proposalKey,
+		start,
+		t
+	]);
 
 	const declineProposedTime = useCallback(() => {
 		if (available)
@@ -183,8 +205,8 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 						icon="CheckmarkOutline"
 						color="success"
 						onClick={acceptProposedTime}
-						disabled={status !== 'idle'}
-						loading={status === 'submitting'}
+						disabled={isAccepted || isSubmitting}
+						loading={isSubmitting}
 					/>
 				</Padding>
 				<Padding right="small" vertical="medium">
@@ -194,16 +216,22 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 						icon="Close"
 						color="error"
 						onClick={declineProposedTime}
-						disabled={status !== 'idle'}
+						disabled={isAccepted || isSubmitting}
 					/>
 				</Padding>
 			</Container>
-			{status === 'accepted' && (
-				<Padding bottom="small">
+			{isAccepted && (
+				<Container
+					crossAlignment="flex-start"
+					mainAlignment="flex-start"
+					width="fill"
+					height="fit"
+					padding={{ bottom: 'small' }}
+				>
 					<Text color="secondary" size="small">
 						{t('label.proposed_time_accepted', 'You accepted the proposed time')}
 					</Text>
-				</Padding>
+				</Container>
 			)}
 			<Divider />
 		</>

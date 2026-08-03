@@ -33,6 +33,7 @@ import * as moveAppointmentHandler from 'store/actions/move-appointment';
 import * as modifyAppointmentHandler from 'store/actions/new-modify-appointment';
 import * as sendInviteResponseHandler from 'store/actions/send-invite-response';
 import { reducers } from 'store/redux';
+import { useAcceptedProposalsStore } from 'store/zustand/accepted-proposals-store';
 import mockedData from 'test/generators';
 import {
 	exceptionAppointmentAllDayResponse,
@@ -65,6 +66,11 @@ const setupFoldersStore = (): void => {
 };
 
 describe('invite response component', () => {
+	beforeEach(() => {
+		// the store is module scoped on purpose, so it has to be cleared between tests
+		useAcceptedProposalsStore.setState({ acceptedProposals: {} });
+	});
+
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', async () => {
 			setupFoldersStore();
@@ -1256,6 +1262,43 @@ describe('invite response component', () => {
 							expect(screen.getAllByText('You accepted the proposed time').length).toBeGreaterThan(
 								0
 							);
+						});
+						test('stays accepted when the panel is re-created after the counter mail is trashed', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const modifyAppointmentSpy = vi.spyOn(modifyAppointmentHandler, 'modifyAppointment');
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user, unmount } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							await act(async () => {
+								await user.click(await screen.findByRole('button', { name: /Accept/i }));
+							});
+							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
+
+							// the mails module re-creates the panel once the mail is moved to trash
+							unmount();
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							const acceptAfterRemount = await screen.findByRole('button', { name: /Accept/i });
+							await waitFor(() => {
+								expect(acceptAfterRemount).toBeDisabled();
+							});
+							expect(screen.getByRole('button', { name: /Decline/i })).toBeDisabled();
+							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
+
+							modifyAppointmentSpy.mockClear();
 						});
 						test('shows an error and keeps the counter mail when the appointment cannot be retrieved', async () => {
 							setupFoldersStore();
