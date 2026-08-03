@@ -180,6 +180,65 @@ describe('EditorSendButton', () => {
 			expect(onSend).not.toHaveBeenCalled();
 		});
 
+		it('does not open the send-update modal when an attendee is only removed', async () => {
+			(onSend as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE, { email: 'removed-attendee@test.com' }]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE]
+				})
+			);
+
+			const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /send/i }));
+
+			await waitFor(() => {
+				expect(onSend).toHaveBeenCalled();
+			});
+			expect(
+				screen.queryByText("You've changed the attendee list. Who should get the update?")
+			).not.toBeInTheDocument();
+		});
+
+		it('opens the send-update modal when an attendee is removed and another is added', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE, { email: 'removed-attendee@test.com' }]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+
+			const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /send/i }));
+
+			expect(
+				await screen.findByText("You've changed the attendee list. Who should get the update?")
+			).toBeInTheDocument();
+			expect(onSend).not.toHaveBeenCalled();
+		});
+
 		it('does not open the send-update modal for a new appointment even if attendees changed', async () => {
 			(onSend as Mock).mockResolvedValue({ response: true });
 			const store = configureStore({ reducer: combineReducers(reducers) });

@@ -20,7 +20,7 @@ import {
 	selectOriginalEditorOptionalAttendees
 } from 'store/selectors/editor';
 import { EditorProps, NotifyAttendeesOverride } from 'types/editor';
-import { getNewlyAddedAttendees, haveAttendeesChanged } from 'utils/attendees';
+import { getNewlyAddedAttendees } from 'utils/attendees';
 import {
 	SendUpdateModal,
 	SEND_UPDATE_OPTIONS,
@@ -113,12 +113,15 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	);
 
 	const onClick = useCallback(() => {
-		const attendeesChanged =
-			!isNew &&
-			(haveAttendeesChanged(editor.attendees, originalAttendees) ||
-				haveAttendeesChanged(editor.optionalAttendees, originalOptionalAttendees));
+		const newlyAddedAttendees = getNewlyAddedAttendees(editor.attendees, originalAttendees);
+		const newlyAddedOptionalAttendees = getNewlyAddedAttendees(
+			editor.optionalAttendees,
+			originalOptionalAttendees
+		);
+		const attendeesAdded =
+			!isNew && (newlyAddedAttendees.length > 0 || newlyAddedOptionalAttendees.length > 0);
 
-		if (attendeesChanged) {
+		if (attendeesAdded) {
 			const modalId = 'send-update';
 			const onConfirm = (option: SendUpdateOption): void => {
 				closeModal(modalId);
@@ -129,11 +132,8 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				proceedWithSave(
 					option === SEND_UPDATE_OPTIONS.ADDED_OR_REMOVED
 						? {
-								attendees: getNewlyAddedAttendees(editor.attendees, originalAttendees),
-								optionalAttendees: getNewlyAddedAttendees(
-									editor.optionalAttendees,
-									originalOptionalAttendees
-								)
+								attendees: newlyAddedAttendees,
+								optionalAttendees: newlyAddedOptionalAttendees
 							}
 						: undefined,
 					false
