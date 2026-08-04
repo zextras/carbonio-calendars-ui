@@ -1,3 +1,8 @@
+## 1.31.0 (2026-08-03)
+
+* feat(CO-3662): show original time alongside proposed new time in counter proposals (#821) ([dffab4a](https://github.com/zextras/carbonio-calendars-ui/commit/dffab4a)), closes [#821](https://github.com/zextras/carbonio-calendars-ui/issues/821)
+* fix(CO-3619): include subject and description when forwarding an appointment (#820) ([abdeaaa](https://github.com/zextras/carbonio-calendars-ui/commit/abdeaaa)), closes [#820](https://github.com/zextras/carbonio-calendars-ui/issues/820)
+
 ## <small>1.30.2 (2026-07-31)</small>
 
 * fix(CO-3619): speed up slow view-appointments integration test (#824) ([07395dc](https://github.com/zextras/carbonio-calendars-ui/commit/07395dc)), closes [#824](https://github.com/zextras/carbonio-calendars-ui/issues/824)
