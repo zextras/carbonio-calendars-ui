@@ -868,6 +868,29 @@ describe('normalize soap message from editor', () => {
 			expect(result).toContain('Meeting description');
 		});
 
+		test('does not leave an unbalanced quote around the organizer name', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					title: 'Test Meeting',
+					plainText: 'Meeting description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).not.toContain('Organizer: "');
+			expect((result.match(/"/g) ?? []).length % 2).toBe(0);
+		});
+
 		test('should generate virtual room message when room is present', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
 			shell.getUserAccount.mockImplementation(() => userAccount);
