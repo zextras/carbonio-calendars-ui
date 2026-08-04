@@ -1149,6 +1149,65 @@ describe('normalize soap message from editor', () => {
 			expect(result).toContain('<p>Meeting with optional attendees</p>');
 		});
 	});
+
+	describe('xprop', () => {
+		test('has no xprop when there is no room and no changes', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn() }
+			});
+
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.inv.comp[0].xprop).toBeUndefined();
+		});
+
+		test('adds an X-CRB-CHANGES xprop with the serialized diff when changes are provided', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn() }
+			});
+			const changes = { message: { before: 'old', after: 'new' } };
+
+			const body = normalizeSoapMessageFromEditor(editor, changes);
+
+			expect(body.m.inv.comp[0].xprop).toEqual([
+				{ name: 'X-CRB-CHANGES', value: JSON.stringify(changes) }
+			]);
+		});
+
+		test('keeps the existing meeting-room xprop when changes are also provided', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: {
+					folders: {},
+					dispatch: vi.fn(),
+					room: { label: 'Virtual Room', link: 'https://meet.example.com/room123' }
+				}
+			});
+			const changes = { message: { before: 'old', after: 'new' } };
+
+			const body = normalizeSoapMessageFromEditor(editor, changes);
+
+			expect(body.m.inv.comp[0].xprop).toEqual([
+				{
+					name: 'X-CRB-MEETING-ROOM',
+					value: 'X-CRB-MEETING-ROOM',
+					xparam: [
+						{ name: 'ROOM-LINK', value: 'https://meet.example.com/room123' },
+						{ name: 'ROOM-NAME', value: 'Virtual Room' }
+					]
+				},
+				{ name: 'X-CRB-CHANGES', value: JSON.stringify(changes) }
+			]);
+		});
+	});
 });
 
 type EditorAttendee = {

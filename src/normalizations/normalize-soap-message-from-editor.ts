@@ -13,6 +13,7 @@ import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { getTimeStrings } from '../hooks/use-get-date-range-converted-to-timezone';
 import { CalendarEditor, CalendarOrganizer, CalendarSender, Editor } from '../types/editor';
+import { InviteChanges } from '../types/invite-changes';
 import {
 	isDaysInMinutes,
 	isHoursInMinutes,
@@ -284,7 +285,7 @@ const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content:
 			]
 });
 
-const generateInvite = (editor: Editor): any => {
+const generateInvite = (editor: Editor, changes?: InviteChanges): any => {
 	const at = [];
 	const organizer = getOrganizer({
 		calendar: editor?.calendar,
@@ -347,6 +348,31 @@ const generateInvite = (editor: Editor): any => {
 				}))
 		);
 
+	const xprop = compact([
+		editor?.room
+			? {
+					name: CRB_XPROPS.MEETING_ROOM,
+					value: CRB_XPROPS.MEETING_ROOM,
+					xparam: [
+						{
+							name: CRB_XPARAMS.ROOM_LINK,
+							value: editor.room.link
+						},
+						{
+							name: CRB_XPARAMS.ROOM_NAME,
+							value: editor.room.label
+						}
+					]
+				}
+			: undefined,
+		changes
+			? {
+					name: CRB_XPROPS.CHANGES,
+					value: JSON.stringify(changes)
+				}
+			: undefined
+	]);
+
 	return {
 		comp: [
 			{
@@ -361,24 +387,7 @@ const generateInvite = (editor: Editor): any => {
 								}
 							]
 						: undefined,
-				xprop: editor?.room
-					? [
-							{
-								name: CRB_XPROPS.MEETING_ROOM,
-								value: CRB_XPROPS.MEETING_ROOM,
-								xparam: [
-									{
-										name: CRB_XPARAMS.ROOM_LINK,
-										value: editor.room.link
-									},
-									{
-										name: CRB_XPARAMS.ROOM_NAME,
-										value: editor.room.label
-									}
-								]
-							}
-						]
-					: undefined,
+				xprop: xprop.length > 0 ? xprop : undefined,
 				at,
 				allDay: editor.allDay ? '1' : '0',
 				fb: editor.freeBusy,
@@ -416,7 +425,7 @@ const generateInvite = (editor: Editor): any => {
 	};
 };
 
-export const normalizeSoapMessageFromEditor = (msg: Editor): any =>
+export const normalizeSoapMessageFromEditor = (msg: Editor, changes?: InviteChanges): any =>
 	omitBy(
 		{
 			echo: '1',
@@ -431,7 +440,7 @@ export const normalizeSoapMessageFromEditor = (msg: Editor): any =>
 							}
 						: undefined,
 					e: generateParticipantInformation(msg),
-					inv: generateInvite(msg),
+					inv: generateInvite(msg, changes),
 					l: msg?.calendar?.id,
 					mp: generateMp(msg),
 					su: msg?.title
