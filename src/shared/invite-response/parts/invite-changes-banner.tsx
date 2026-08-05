@@ -22,13 +22,37 @@ const BannerContainer = styled(Container)`
 	margin-bottom: ${({ theme }): string => theme.sizes.padding.medium};
 `;
 
-const ToggleText = styled(Text)`
+const ToggleRow = styled(Row)`
 	cursor: pointer;
-	text-decoration: underline;
-	&:hover {
+	&:hover span {
 		text-decoration: none;
 	}
 `;
+
+const ToggleText = styled(Text)`
+	text-decoration: underline;
+`;
+
+const ExpandToggle: FC<{
+	label: string;
+	expanded: boolean;
+	onClick: () => void;
+	testId: string;
+}> = ({ label, expanded, onClick, testId }): ReactElement => (
+	<ToggleRow
+		data-testid={testId}
+		onClick={onClick}
+		mainAlignment="flex-end"
+		crossAlignment="center"
+	>
+		<ToggleText color="info" size="small">
+			{label}
+		</ToggleText>
+		<Row padding={{ left: 'extrasmall' }}>
+			<Icon icon={expanded ? 'ChevronUpOutline' : 'ChevronDownOutline'} color="info" size="small" />
+		</Row>
+	</ToggleRow>
+);
 
 const FieldRow: FC<{ label: string; children: ReactElement | string }> = ({
 	label,
@@ -67,13 +91,11 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 	const formatMessageSide = (text: string): string => text || noMessageLabel;
 	const [isMessageExpanded, setIsMessageExpanded] = useState(false);
 	const [isParticipantsExpanded, setIsParticipantsExpanded] = useState(false);
-	const [isBodyVisible, setIsBodyVisible] = useState(true);
 
 	const participantsCount =
 		(changes.participants?.added.length ?? 0) + (changes.participants?.removed.length ?? 0);
 	const isParticipantsDetailed = participantsCount > PARTICIPANTS_INLINE_THRESHOLD;
 	const isMessageChangeDetailed = !!changes.message && isMessageDetailed(changes.message);
-	const isDetailed = isParticipantsDetailed || isMessageChangeDetailed;
 
 	const dateTimeLabel = changes.dateTime
 		? `${changes.dateTime.before} → ${changes.dateTime.after}`
@@ -85,115 +107,95 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 
 	return (
 		<BannerContainer data-testid="invite-changes-banner" width="100%" crossAlignment="flex-start">
-			<Row width="100%" mainAlignment="space-between">
-				<Row>
-					<Row padding={{ right: 'small' }}>
-						<Icon icon="InfoOutline" color="info" size="large" />
-					</Row>
-					<Text weight="bold">{t('label.invitation_updated', 'This invitation was updated')}</Text>
+			<Row width="100%" mainAlignment="flex-start">
+				<Row padding={{ right: 'small' }}>
+					<Icon icon="InfoOutline" color="info" size="large" />
 				</Row>
-				{isDetailed && (
-					<ToggleText
-						data-testid="invite-changes-toggle"
-						color="info"
-						size="small"
-						onClick={(): void => setIsBodyVisible((prev) => !prev)}
-					>
-						{isBodyVisible ? t('label.hide', 'Hide') : t('label.show', 'Show')}
-					</ToggleText>
-				)}
+				<Text weight="bold">{t('label.invitation_updated', 'This invitation was updated')}</Text>
 			</Row>
-			{isBodyVisible && (
-				<Container crossAlignment="flex-start" padding={{ top: 'small' }}>
-					{changes.message && (
-						<FieldRow label={t('label.message', 'Message')}>
-							{isMessageChangeDetailed ? (
-								<Row width="100%" crossAlignment="flex-start">
-									<Row width="100%" mainAlignment="flex-start">
-										<Text size="small">{t('label.updated', 'updated')}</Text>
-										<ToggleText
-											data-testid="invite-changes-message-toggle"
-											color="info"
-											size="small"
-											onClick={(): void => setIsMessageExpanded((prev) => !prev)}
-										>
-											&nbsp;
-											{isMessageExpanded
+			<Container crossAlignment="flex-start" padding={{ top: 'small' }}>
+				{dateTimeLabel && (
+					<FieldRow label={t('label.date_and_time', 'Date & Time')}>{dateTimeLabel}</FieldRow>
+				)}
+				{changes.participants && (
+					<FieldRow label={t('label.participants', 'Participants')}>
+						{isParticipantsDetailed ? (
+							<Row width="100%" crossAlignment="flex-start">
+								<Row width="100%" mainAlignment="space-between" crossAlignment="center">
+									<Text size="small">
+										{t('label.participants_added_removed', '{{added}} added, {{removed}} removed', {
+											added: changes.participants.added.length,
+											removed: changes.participants.removed.length
+										})}
+									</Text>
+									<ExpandToggle
+										testId="invite-changes-participants-toggle"
+										expanded={isParticipantsExpanded}
+										onClick={(): void => setIsParticipantsExpanded((prev) => !prev)}
+										label={
+											isParticipantsExpanded
 												? t('label.hide', 'Hide')
-												: t('label.compare_full_text', 'Compare full text')}
-										</ToggleText>
-									</Row>
-									{isMessageExpanded && (
-										<Container crossAlignment="flex-start" padding={{ top: 'extrasmall' }}>
-											<Text size="small" overflow="break-word">
-												{t('label.before', 'Before')}: {changes.message.before}
-											</Text>
-											<Text size="small" overflow="break-word">
-												{t('label.after', 'After')}: {changes.message.after}
-											</Text>
-										</Container>
-									)}
+												: t('label.view_names', 'View names')
+										}
+									/>
 								</Row>
-							) : (
-								`${formatMessageSide(changes.message.before)} → ${formatMessageSide(changes.message.after)}`
-							)}
-						</FieldRow>
-					)}
-					{dateTimeLabel && (
-						<FieldRow label={t('label.date_and_time', 'Date & Time')}>{dateTimeLabel}</FieldRow>
-					)}
-					{changes.participants && (
-						<FieldRow label={t('label.participants', 'Participants')}>
-							{isParticipantsDetailed ? (
-								<Row width="100%" crossAlignment="flex-start">
-									<Row width="100%" mainAlignment="flex-start">
-										<Text size="small">
-											{t(
-												'label.participants_added_removed',
-												'{{added}} added, {{removed}} removed',
-												{
-													added: changes.participants.added.length,
-													removed: changes.participants.removed.length
-												}
-											)}
+								{isParticipantsExpanded && (
+									<Row width="100%" wrap="wrap" padding={{ top: 'extrasmall' }}>
+										{[...changes.participants.added, ...changes.participants.removed].map(
+											(participant, index) => (
+												<Row
+													key={`${participant.a}-${index}`}
+													padding={{ right: 'extrasmall', bottom: 'extrasmall' }}
+												>
+													<ParticipantChip participant={participant} />
+												</Row>
+											)
+										)}
+									</Row>
+								)}
+							</Row>
+						) : (
+							[
+								...changes.participants.added.map((p) => `+ ${formatParticipant(p)}`),
+								...changes.participants.removed.map((p) => `- ${formatParticipant(p)}`)
+							].join(', ')
+						)}
+					</FieldRow>
+				)}
+				{changes.message && (
+					<FieldRow label={t('label.message', 'Message')}>
+						{isMessageChangeDetailed ? (
+							<Row width="100%" crossAlignment="flex-start">
+								<Row width="100%" mainAlignment="space-between" crossAlignment="center">
+									<Text size="small">{t('label.updated', 'updated')}</Text>
+									<ExpandToggle
+										testId="invite-changes-message-toggle"
+										expanded={isMessageExpanded}
+										onClick={(): void => setIsMessageExpanded((prev) => !prev)}
+										label={
+											isMessageExpanded
+												? t('label.hide', 'Hide')
+												: t('label.compare_full_text', 'Compare full text')
+										}
+									/>
+								</Row>
+								{isMessageExpanded && (
+									<Container crossAlignment="flex-start" padding={{ top: 'extrasmall' }}>
+										<Text size="small" overflow="break-word">
+											{t('label.before', 'Before')}: {changes.message.before}
 										</Text>
-										<ToggleText
-											data-testid="invite-changes-participants-toggle"
-											color="info"
-											size="small"
-											onClick={(): void => setIsParticipantsExpanded((prev) => !prev)}
-										>
-											&nbsp;
-											{isParticipantsExpanded
-												? t('label.hide', 'Hide')
-												: t('label.view_names', 'View names')}
-										</ToggleText>
-									</Row>
-									{isParticipantsExpanded && (
-										<Row width="100%" wrap="wrap" padding={{ top: 'extrasmall' }}>
-											{[...changes.participants.added, ...changes.participants.removed].map(
-												(participant, index) => (
-													<Row
-														key={`${participant.a}-${index}`}
-														padding={{ right: 'extrasmall', bottom: 'extrasmall' }}
-													>
-														<ParticipantChip participant={participant} />
-													</Row>
-												)
-											)}
-										</Row>
-									)}
-								</Row>
-							) : (
-								[
-									...changes.participants.added.map((p) => `+ ${formatParticipant(p)}`),
-									...changes.participants.removed.map((p) => `- ${formatParticipant(p)}`)
-								].join(', ')
-							)}
-						</FieldRow>
-					)}
-				</Container>
-			)}
+										<Text size="small" overflow="break-word">
+											{t('label.after', 'After')}: {changes.message.after}
+										</Text>
+									</Container>
+								)}
+							</Row>
+						) : (
+							`${formatMessageSide(changes.message.before)} → ${formatMessageSide(changes.message.after)}`
+						)}
+					</FieldRow>
+				)}
+			</Container>
 		</BannerContainer>
 	);
 };

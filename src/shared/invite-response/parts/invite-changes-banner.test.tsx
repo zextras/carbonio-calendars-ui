@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 
 import { InviteChangesBanner } from './invite-changes-banner';
 import type { InviteChanges } from '../../../types/invite-changes';
@@ -35,9 +35,15 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByText('This invitation was updated')).toBeVisible();
 		});
 
-		it('does not show a header Hide/Show toggle', () => {
+		it('never shows a toggle for the whole banner', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
 			expect(screen.queryByTestId('invite-changes-toggle')).not.toBeInTheDocument();
+		});
+
+		it('shows the participants field before the message field', () => {
+			setupTest(<InviteChangesBanner changes={changes} />);
+			const labels = screen.getAllByText(/^(Participants|Message):$/).map((el) => el.textContent);
+			expect(labels).toEqual(['Participants:', 'Message:']);
 		});
 
 		it('shows the message change inline', () => {
@@ -94,19 +100,15 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByText(`After: ${longAfter}`)).toBeVisible();
 		});
 
-		it('shows a header Hide/Show toggle since the content is detailed', () => {
-			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByTestId('invite-changes-toggle')).toBeVisible();
-		});
-
-		it('hides the whole body when the header toggle is clicked', async () => {
+		it('shows a downward chevron when collapsed and an upward one after expanding', async () => {
 			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
 
-			expect(screen.getByText('updated')).toBeVisible();
+			const toggle = screen.getByTestId('invite-changes-message-toggle');
+			expect(within(toggle).getByTestId('icon: ChevronDownOutline')).toBeVisible();
 
-			await user.click(screen.getByTestId('invite-changes-toggle'));
+			await user.click(toggle);
 
-			expect(screen.queryByText('updated')).not.toBeInTheDocument();
+			expect(within(toggle).getByTestId('icon: ChevronUpOutline')).toBeVisible();
 		});
 	});
 
@@ -137,6 +139,17 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByText('Attendee Two')).toBeVisible();
 			expect(screen.getByText('Attendee Three')).toBeVisible();
 			expect(screen.getByText('Removed One')).toBeVisible();
+		});
+
+		it('shows a downward chevron when collapsed and an upward one after expanding', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
+
+			const toggle = screen.getByTestId('invite-changes-participants-toggle');
+			expect(within(toggle).getByTestId('icon: ChevronDownOutline')).toBeVisible();
+
+			await user.click(toggle);
+
+			expect(within(toggle).getByTestId('icon: ChevronUpOutline')).toBeVisible();
 		});
 	});
 });
