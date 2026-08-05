@@ -6,6 +6,7 @@
 
 import React, { FC, ReactElement, useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { Trans, useTranslation } from 'react-i18next';
@@ -15,6 +16,13 @@ import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-con
 import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
 import { isSentOnBehalfOf } from 'utils/organizer';
+
+// keeps the indicator in the text flow, so it follows the last line instead of dropping below it
+const InlineTimezoneIndicator = styled.span`
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: ${({ theme }): string => theme.sizes.padding.extrasmall};
+`;
 
 type InviteHeaderPartProps = {
 	mailMsg: any;
@@ -134,17 +142,17 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 							</Text>
 						</Row>
 					)}
-					<Row width="100%" mainAlignment="flex-start" crossAlignment="flex-start">
+					<Row width="100%" mainAlignment="flex-start">
 						<Text overflow="break-word" color="warning.focus" size="small">
 							{`${t('label.proposed', 'Proposed')}: ${counterDate}`}
+							{showTimezoneIndicator && (
+								<Tooltip label={timezoneTooltip}>
+									<InlineTimezoneIndicator>
+										<Icon icon="GlobeOutline" color="gray1" />
+									</InlineTimezoneIndicator>
+								</Tooltip>
+							)}
 						</Text>
-						{showTimezoneIndicator && (
-							<Tooltip label={timezoneTooltip}>
-								<Padding left="small">
-									<Icon icon="GlobeOutline" color="gray1" />
-								</Padding>
-							</Tooltip>
-						)}
 					</Row>
 				</>
 			)}
