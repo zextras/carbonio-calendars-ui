@@ -74,6 +74,29 @@ const FieldRow: FC<{ label: string; children: ReactElement | string }> = ({
 	</Row>
 );
 
+// Header for a field that can be expanded: collapsed shows "label: summary",
+// expanded drops the summary and shows just the label, per design.
+const ExpandableFieldHeader: FC<{
+	label: string;
+	summary: string;
+	expanded: boolean;
+	onToggle: () => void;
+	toggleLabel: string;
+	testId: string;
+}> = ({ label, summary, expanded, onToggle, toggleLabel, testId }): ReactElement => (
+	<Row
+		width="100%"
+		mainAlignment="space-between"
+		crossAlignment="center"
+		padding={{ top: 'extrasmall' }}
+	>
+		<Text weight="bold" size="small">
+			{expanded ? label : `${label}: ${summary}`}
+		</Text>
+		<ExpandToggle testId={testId} expanded={expanded} onClick={onToggle} label={toggleLabel} />
+	</Row>
+);
+
 const isMessageDetailed = (message: NonNullable<InviteChanges['message']>): boolean =>
 	message.before.length + message.after.length > MESSAGE_INLINE_MAX_LENGTH ||
 	message.before.includes('\n') ||
@@ -84,6 +107,12 @@ const formatParticipant = (participant: InviteChangeParticipant): string =>
 
 const formatParticipantLine = (prefix: '+' | '-', participant: InviteChangeParticipant): string =>
 	`${prefix} ${formatParticipant(participant)}`;
+
+const formatParticipantsLine = (participants: NonNullable<InviteChanges['participants']>): string =>
+	[
+		...participants.added.map((p) => formatParticipantLine('+', p)),
+		...participants.removed.map((p) => formatParticipantLine('-', p))
+	].join(', ');
 
 const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): ReactElement => (
 	<Container crossAlignment="flex-start" padding={{ top: 'extrasmall', left: 'large' }}>
@@ -125,86 +154,72 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 				{dateTimeLabel && (
 					<FieldRow label={t('label.date_and_time', 'Date & Time')}>{dateTimeLabel}</FieldRow>
 				)}
-				{changes.participants && (
-					<FieldRow label={t('label.participants', 'Participants')}>
-						{isParticipantsDetailed ? (
-							<Row width="100%" crossAlignment="flex-start">
-								<Row width="100%" mainAlignment="space-between" crossAlignment="center">
-									<Text size="small">
-										{t('label.participants_added_removed', '{{added}} added, {{removed}} removed', {
-											added: changes.participants.added.length,
-											removed: changes.participants.removed.length
-										})}
+				{changes.participants &&
+					(isParticipantsDetailed ? (
+						<Container crossAlignment="flex-start" width="100%">
+							<ExpandableFieldHeader
+								testId="invite-changes-participants-toggle"
+								label={t('label.participants', 'Participants')}
+								summary={t(
+									'label.participants_added_removed',
+									'{{added}} added, {{removed}} removed',
+									{
+										added: changes.participants.added.length,
+										removed: changes.participants.removed.length
+									}
+								)}
+								expanded={isParticipantsExpanded}
+								onToggle={(): void => setIsParticipantsExpanded((prev) => !prev)}
+								toggleLabel={
+									isParticipantsExpanded
+										? t('label.hide', 'Hide')
+										: t('label.view_names', 'View names')
+								}
+							/>
+							{isParticipantsExpanded && (
+								<DetailedContent>
+									<Text size="small" overflow="break-word">
+										{formatParticipantsLine(changes.participants)}
 									</Text>
-									<ExpandToggle
-										testId="invite-changes-participants-toggle"
-										expanded={isParticipantsExpanded}
-										onClick={(): void => setIsParticipantsExpanded((prev) => !prev)}
-										label={
-											isParticipantsExpanded
-												? t('label.hide', 'Hide')
-												: t('label.view_names', 'View names')
-										}
-									/>
-								</Row>
-								{isParticipantsExpanded && (
-									<DetailedContent>
-										{[
-											...changes.participants.added.map((participant, index) => (
-												<Text key={`added-${index}`} size="small" overflow="break-word">
-													{formatParticipantLine('+', participant)}
-												</Text>
-											)),
-											...changes.participants.removed.map((participant, index) => (
-												<Text key={`removed-${index}`} size="small" overflow="break-word">
-													{formatParticipantLine('-', participant)}
-												</Text>
-											))
-										]}
-									</DetailedContent>
-								)}
-							</Row>
-						) : (
-							[
-								...changes.participants.added.map((p) => formatParticipantLine('+', p)),
-								...changes.participants.removed.map((p) => formatParticipantLine('-', p))
-							].join(', ')
-						)}
-					</FieldRow>
-				)}
-				{changes.message && (
-					<FieldRow label={t('label.message', 'Message')}>
-						{isMessageChangeDetailed ? (
-							<Row width="100%" crossAlignment="flex-start">
-								<Row width="100%" mainAlignment="space-between" crossAlignment="center">
-									<Text size="small">{t('label.updated', 'updated')}</Text>
-									<ExpandToggle
-										testId="invite-changes-message-toggle"
-										expanded={isMessageExpanded}
-										onClick={(): void => setIsMessageExpanded((prev) => !prev)}
-										label={
-											isMessageExpanded
-												? t('label.hide', 'Hide')
-												: t('label.compare_full_text', 'Compare full text')
-										}
-									/>
-								</Row>
-								{isMessageExpanded && (
-									<DetailedContent>
-										<Text size="small" overflow="break-word">
-											{t('label.before', 'Before')}: {changes.message.before}
-										</Text>
-										<Text size="small" overflow="break-word">
-											{t('label.after', 'After')}: {changes.message.after}
-										</Text>
-									</DetailedContent>
-								)}
-							</Row>
-						) : (
-							`${formatMessageSide(changes.message.before)} → ${formatMessageSide(changes.message.after)}`
-						)}
-					</FieldRow>
-				)}
+								</DetailedContent>
+							)}
+						</Container>
+					) : (
+						<FieldRow label={t('label.participants', 'Participants')}>
+							{formatParticipantsLine(changes.participants)}
+						</FieldRow>
+					))}
+				{changes.message &&
+					(isMessageChangeDetailed ? (
+						<Container crossAlignment="flex-start" width="100%">
+							<ExpandableFieldHeader
+								testId="invite-changes-message-toggle"
+								label={t('label.message', 'Message')}
+								summary={t('label.updated', 'updated')}
+								expanded={isMessageExpanded}
+								onToggle={(): void => setIsMessageExpanded((prev) => !prev)}
+								toggleLabel={
+									isMessageExpanded
+										? t('label.hide', 'Hide')
+										: t('label.compare_full_text', 'Compare full text')
+								}
+							/>
+							{isMessageExpanded && (
+								<DetailedContent>
+									<Text size="small" overflow="break-word">
+										{t('label.previous', 'Previous')}: {changes.message.before}
+									</Text>
+									<Text size="small" overflow="break-word">
+										{t('label.updated_value', 'Updated')}: {changes.message.after}
+									</Text>
+								</DetailedContent>
+							)}
+						</Container>
+					) : (
+						<FieldRow label={t('label.message', 'Message')}>
+							{`${formatMessageSide(changes.message.before)} → ${formatMessageSide(changes.message.after)}`}
+						</FieldRow>
+					))}
 			</Container>
 		</BannerContainer>
 	);

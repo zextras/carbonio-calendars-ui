@@ -86,18 +86,20 @@ describe('InviteChangesBanner', () => {
 
 		it('shows a summary and a Compare full text toggle instead of the raw text', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('updated')).toBeVisible();
+			expect(screen.getByText('Message: updated')).toBeVisible();
 			expect(screen.getByTestId('invite-changes-message-toggle')).toBeVisible();
 			expect(screen.queryByText(`${longBefore} → ${longAfter}`)).not.toBeInTheDocument();
 		});
 
-		it('reveals the full before/after text after clicking the toggle', async () => {
+		it('drops the summary and reveals the full before/after text after clicking the toggle', async () => {
 			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
 
 			await user.click(screen.getByTestId('invite-changes-message-toggle'));
 
-			expect(screen.getByText(`Before: ${longBefore}`)).toBeVisible();
-			expect(screen.getByText(`After: ${longAfter}`)).toBeVisible();
+			expect(screen.queryByText('Message: updated')).not.toBeInTheDocument();
+			expect(screen.getByText('Message')).toBeVisible();
+			expect(screen.getByText(`Previous: ${longBefore}`)).toBeVisible();
+			expect(screen.getByText(`Updated: ${longAfter}`)).toBeVisible();
 		});
 
 		it('shows a downward chevron when collapsed and an upward one after expanding', async () => {
@@ -126,19 +128,20 @@ describe('InviteChangesBanner', () => {
 
 		it('shows a count summary and a View names toggle instead of the raw list', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('3 added, 1 removed')).toBeVisible();
+			expect(screen.getByText('Participants: 3 added, 1 removed')).toBeVisible();
 			expect(screen.getByTestId('invite-changes-participants-toggle')).toBeVisible();
 		});
 
-		it('reveals plain +/- text lines (no chips) after clicking View names', async () => {
+		it('drops the summary and reveals names on a single line (no chips) after clicking View names', async () => {
 			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
 
 			await user.click(screen.getByTestId('invite-changes-participants-toggle'));
 
-			expect(screen.getByText('+ Attendee One')).toBeVisible();
-			expect(screen.getByText('+ Attendee Two')).toBeVisible();
-			expect(screen.getByText('+ Attendee Three')).toBeVisible();
-			expect(screen.getByText('- Removed One')).toBeVisible();
+			expect(screen.queryByText('Participants: 3 added, 1 removed')).not.toBeInTheDocument();
+			expect(screen.getByText('Participants')).toBeVisible();
+			expect(
+				screen.getByText('+ Attendee One, + Attendee Two, + Attendee Three, - Removed One')
+			).toBeVisible();
 		});
 
 		it('shows a downward chevron when collapsed and an upward one after expanding', async () => {
