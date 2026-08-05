@@ -176,11 +176,9 @@ const MessageDiffLine: FC<{ label: string; text: string; testId: string }> = ({
 		<Text weight="bold" size="small">
 			{label}:
 		</Text>
-		<Row padding={{ left: 'small' }}>
-			<Text size="small" overflow="break-word">
-				&quot;{text}&quot;
-			</Text>
-		</Row>
+		<Text size="small" overflow="break-word">
+			&quot;{text}&quot;
+		</Text>
 	</Row>
 );
 
