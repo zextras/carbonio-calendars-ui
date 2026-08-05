@@ -1024,7 +1024,9 @@ describe('invite response component', () => {
 				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 
 				expect(
-					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
+					screen.getByText(
+						'Proposed: Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+					)
 				).toBeVisible();
 			});
 			test('a string with the user local time of the event', async () => {
@@ -1037,7 +1039,7 @@ describe('invite response component', () => {
 				});
 
 				const localTimeString = await screen.findByText(
-					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+					'Proposed: Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
 				);
 
 				expect(localTimeString).toBeVisible();
@@ -1053,14 +1055,15 @@ describe('invite response component', () => {
 					store
 				});
 
-				expect(await screen.findByText('Original:')).toBeVisible();
 				expect(
-					screen.getByText('Monday, February 05, 2024, 4:00 – 4:30 PM GMT+01:00 Europe/Berlin')
+					await screen.findByText(
+						'Original: Monday, February 05, 2024, 4:00 – 4:30 PM GMT+01:00 Europe/Berlin'
+					)
 				).toBeVisible();
-
-				expect(screen.getByText('Proposed:')).toBeVisible();
 				expect(
-					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
+					screen.getByText(
+						'Proposed: Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+					)
 				).toBeVisible();
 			});
 			test('does not show the original time when the appointment details are unavailable', async () => {
@@ -1072,9 +1075,9 @@ describe('invite response component', () => {
 					store
 				});
 
-				await screen.findByText('Proposed:');
+				await screen.findByText(/^Proposed:/);
 
-				expect(screen.queryByText('Original:')).not.toBeInTheDocument();
+				expect(screen.queryByText(/^Original:/)).not.toBeInTheDocument();
 			});
 			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
@@ -1097,14 +1100,14 @@ describe('invite response component', () => {
 
 				await user.hover(timezoneIcon);
 
-				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
-
-				const tooltipLocalTime = await screen.findByText(
-					'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT+05:30 Asia/Kolkata'
+				// the proposed date is rendered inline in the same timezone, so the tooltip has to be
+				// matched by its title and date together to avoid matching that row instead
+				const creationDate = 'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT\\+05:30 Asia/Kolkata';
+				const tooltip = await screen.findByText(
+					new RegExp(`Date and time on creation timezone:.*${creationDate}`)
 				);
 
-				expect(tooltipTitleString).toBeVisible();
-				expect(tooltipLocalTime).toBeVisible();
+				expect(tooltip).toBeVisible();
 			});
 			describe('two different buttons to reply to the counter appointment: ', () => {
 				describe('a button to accept the counter appointment', () => {

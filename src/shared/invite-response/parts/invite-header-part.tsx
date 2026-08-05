@@ -129,25 +129,15 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 				<>
 					{showOriginalTime && (
 						<Row width="100%" mainAlignment="flex-start" padding={{ bottom: 'small' }}>
-							<Text color="gray1" weight="bold" size="small">
-								{t('label.original', 'Original')}:
+							<Text overflow="break-word" color="gray1" weight="bold" size="small">
+								{`${t('label.original', 'Original')}: ${originalDate}`}
 							</Text>
-							<Padding left="extrasmall">
-								<Text overflow="ellipsis" color="gray1" weight="bold" size="small">
-									{originalDate}
-								</Text>
-							</Padding>
 						</Row>
 					)}
-					<Row width="100%" mainAlignment="flex-start">
-						<Text color="warning.focus" size="small">
-							{t('label.proposed', 'Proposed')}:
+					<Row width="100%" mainAlignment="flex-start" crossAlignment="flex-start">
+						<Text overflow="break-word" color="warning.focus" size="small">
+							{`${t('label.proposed', 'Proposed')}: ${counterDate}`}
 						</Text>
-						<Padding left="extrasmall">
-							<Text overflow="ellipsis" color="warning.focus" size="small">
-								{counterDate}
-							</Text>
-						</Padding>
 						{showTimezoneIndicator && (
 							<Tooltip label={timezoneTooltip}>
 								<Padding left="small">
