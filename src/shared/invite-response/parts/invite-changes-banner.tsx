@@ -169,23 +169,19 @@ const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): React
 	</Container>
 );
 
+// Label and text are native inline elements (<b>/<span>) inside a single
+// Text block, not separate Row flex items — a flex layout would either drop
+// the whole text to its own line or hang-indent every wrapped line under
+// where the quote started. Plain inline flow wraps like a normal paragraph:
+// only the overflow moves down, flush with the label's own left edge.
 const MessageDiffLine: FC<{ label: string; text: string; testId: string }> = ({
 	label,
 	text,
 	testId
 }): ReactElement => (
-	<Row
-		width="100%"
-		wrap="wrap"
-		mainAlignment="flex-start"
-		padding={{ top: 'extrasmall' }}
-		data-testid={testId}
-	>
-		<Text weight="bold" size="small">
-			{label}:
-		</Text>
+	<Row width="100%" padding={{ top: 'extrasmall' }} data-testid={testId}>
 		<Text size="small" overflow="break-word">
-			&quot;{text}&quot;
+			<b>{label}:</b> <span>&quot;{text}&quot;</span>
 		</Text>
 	</Row>
 );
