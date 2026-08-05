@@ -69,7 +69,7 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 			participants: { added: [{ a: 'new@test.com', d: 'New' }], removed: [] }
 		};
 		const formatted = formatInviteChangesText(changes);
-		expect(formatted).not.toContain('Participants removed:');
+		expect(formatted).not.toContain('[removed]');
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
@@ -86,11 +86,44 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
-	it('produces a human-readable block embeddable inside the existing invite text', () => {
+	it('produces a block embeddable inside the existing invite text, anchored by stable tags', () => {
 		const changes: InviteChanges = { message: { before: 'old', after: 'new' } };
 		const formatted = formatInviteChangesText(changes);
-		expect(formatted).toContain('What changed:');
-		expect(formatted).toContain('Message:');
+		expect(formatted).toContain('[changed]');
+		expect(formatted).toContain('[before]');
+		expect(formatted).toContain('[after]');
+	});
+
+	it('puts each tag on its own line, with the value(s) starting on the next line', () => {
+		const changes: InviteChanges = {
+			dateTime: { before: 'before-label', after: 'after-label' }
+		};
+		const formatted = formatInviteChangesText(changes);
+		expect(formatted.split('\n')).toEqual([
+			'[changed]',
+			'[datetime]',
+			'before-label -> after-label'
+		]);
+	});
+
+	it('still parses correctly even if surrounding prose on the tag line were translated', () => {
+		const message = { before: 'testo prima', after: 'testo dopo\ncon più righe' };
+		const dateTime = { before: 'prima-label', after: 'dopo-label' };
+		const changes: InviteChanges = {
+			message,
+			dateTime,
+			participants: { added: [{ a: 'a@test.com', d: 'A' }], removed: [] }
+		};
+		const localized = `Modifiche [changed]
+Data e ora [datetime]
+${dateTime.before} -> ${dateTime.after}
+Partecipanti aggiunti [added]
++ A <a@test.com>
+Messaggio prima [before]
+${message.before}
+Messaggio dopo [after]
+${message.after}`;
+		expect(parseInviteChangesFromText(localized)).toEqual(changes);
 	});
 
 	it('still parses correctly when embedded inside surrounding boilerplate text', () => {
