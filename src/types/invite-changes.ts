@@ -8,10 +8,7 @@ export type InviteChangeParticipant = { a: string; d?: string };
 
 export type InviteChanges = {
 	message?: { before: string; after: string };
-	dateTime?: {
-		before: { start: number; end: number };
-		after: { start: number; end: number };
-	};
+	dateTime?: { before: string; after: string };
 	participants?: {
 		added: InviteChangeParticipant[];
 		removed: InviteChangeParticipant[];

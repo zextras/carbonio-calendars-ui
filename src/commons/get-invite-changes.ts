@@ -5,6 +5,7 @@
  */
 import { differenceBy, unionBy } from 'lodash';
 
+import { getTimeStrings } from '../hooks/use-get-date-range-converted-to-timezone';
 import { Editor } from '../types/editor';
 import { InviteChangeParticipant, InviteChanges } from '../types/invite-changes';
 import { EditorChipAttendees } from '../types/store/invite';
@@ -45,8 +46,8 @@ export const getInviteChanges = (
 
 	if (original.start !== current.start || original.end !== current.end) {
 		changes.dateTime = {
-			before: { start: original.start ?? 0, end: original.end ?? 0 },
-			after: { start: current.start ?? 0, end: current.end ?? 0 }
+			before: getTimeStrings({ start: original.start ?? 0, end: original.end ?? 0, options: {} }),
+			after: getTimeStrings({ start: current.start ?? 0, end: current.end ?? 0, options: {} })
 		};
 	}
 
