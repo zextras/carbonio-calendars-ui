@@ -161,6 +161,27 @@ const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): React
 	</Container>
 );
 
+const MessageDiffLine: FC<{ label: string; text: string; testId: string }> = ({
+	label,
+	text,
+	testId
+}): ReactElement => (
+	<Row
+		width="100%"
+		wrap="wrap"
+		mainAlignment="flex-start"
+		padding={{ top: 'extrasmall' }}
+		data-testid={testId}
+	>
+		<Text weight="bold" size="small">
+			{label}:
+		</Text>
+		<Text size="small" overflow="break-word">
+			&nbsp;&quot;{text}&quot;
+		</Text>
+	</Row>
+);
+
 export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 	changes
 }): ReactElement | null => {
@@ -238,12 +259,16 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 							/>
 							{isMessageExpanded && (
 								<DetailedContent>
-									<Text size="small" overflow="break-word">
-										{t('label.previous', 'Previous')}: {changes.message.before}
-									</Text>
-									<Text size="small" overflow="break-word">
-										{t('label.updated_value', 'Updated')}: {changes.message.after}
-									</Text>
+									<MessageDiffLine
+										testId="invite-changes-message-previous"
+										label={t('label.previous', 'Previous')}
+										text={changes.message.before}
+									/>
+									<MessageDiffLine
+										testId="invite-changes-message-updated"
+										label={t('label.updated_value', 'Updated')}
+										text={changes.message.after}
+									/>
 								</DetailedContent>
 							)}
 						</Container>
