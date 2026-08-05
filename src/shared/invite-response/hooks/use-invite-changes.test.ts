@@ -11,6 +11,11 @@ const buildMailMsg = (desc?: unknown): any => ({
 	invite: [{ comp: [{ desc }] }]
 });
 
+const buildMailMsgWithParts = (parts: unknown): any => ({
+	invite: [{ comp: [{}] }],
+	parts
+});
+
 describe('useInviteChanges', () => {
 	it('returns undefined when there is no invite component at all', () => {
 		const { result } = setupHook(useInviteChanges, { initialProps: [{}] });
@@ -70,5 +75,39 @@ describe('useInviteChanges', () => {
 			initialProps: [buildMailMsg(desc)]
 		});
 		expect(result.current).toEqual(changes);
+	});
+
+	describe('when the invite component has no desc (a GetMsg-fetched invitation email)', () => {
+		it('falls back to the plain text MIME part', () => {
+			const changes = { message: { before: 'old', after: 'new' } };
+			const mailMsg = buildMailMsgWithParts([
+				{
+					contentType: 'multipart/alternative',
+					parts: [
+						{ contentType: 'text/html', content: '<p>Hello!</p>' },
+						{
+							contentType: 'text/plain',
+							content: `Subject: test\n\n${formatInviteChangesText(changes)}\n\nHello!`
+						}
+					]
+				}
+			]);
+			const { result } = setupHook(useInviteChanges, { initialProps: [mailMsg] });
+			expect(result.current).toEqual(changes);
+		});
+
+		it('returns undefined when the MIME parts have no changes block either', () => {
+			const mailMsg = buildMailMsgWithParts([
+				{ contentType: 'text/plain', content: 'Subject: test\n\nJust a regular message' }
+			]);
+			const { result } = setupHook(useInviteChanges, { initialProps: [mailMsg] });
+			expect(result.current).toBeUndefined();
+		});
+
+		it('returns undefined when there are no parts at all', () => {
+			const mailMsg = buildMailMsgWithParts(undefined);
+			const { result } = setupHook(useInviteChanges, { initialProps: [mailMsg] });
+			expect(result.current).toBeUndefined();
+		});
 	});
 });
