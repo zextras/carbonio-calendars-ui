@@ -317,12 +317,12 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 			<Container crossAlignment="flex-start" padding={{ top: 'small' }}>
 				{changes.title && (
 					<FieldRow label={t('label.title', 'Title')}>
-						{`${changes.title.before} → ${changes.title.after}`}
+						{`"${changes.title.before}" → "${changes.title.after}"`}
 					</FieldRow>
 				)}
 				{changes.location && (
 					<FieldRow label={t('label.location', 'Location')}>
-						{`${changes.location.before} → ${changes.location.after}`}
+						{`"${changes.location.before}" → "${changes.location.after}"`}
 					</FieldRow>
 				)}
 				{changes.resources && (
