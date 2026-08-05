@@ -15,7 +15,7 @@ import type { InviteChanges } from '../../../types/invite-changes';
 // us still iCalendar-escaped instead of the plain JSON string that was
 // originally embedded.
 const unescapeIcsText = (value: string): string =>
-	value.replace(/\\(.)/g, (_match, next: string) => (next === 'n' || next === 'N' ? '\n' : next));
+	value.replaceAll(/\\(.)/g, (_match, next: string) => (next === 'n' || next === 'N' ? '\n' : next));
 
 // The calendar server has been observed appending a stray trailing character
 // after the JSON object when round-tripping this X-property (e.g. a trailing
