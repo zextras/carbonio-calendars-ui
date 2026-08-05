@@ -90,9 +90,16 @@ const ExpandableFieldHeader: FC<{
 		crossAlignment="center"
 		padding={{ top: 'extrasmall' }}
 	>
-		<Text weight="bold" size="small">
-			{expanded ? label : `${label}: ${summary}`}
-		</Text>
+		<Row>
+			<Text weight="bold" size="small">
+				{expanded ? label : `${label}:`}
+			</Text>
+			{!expanded && (
+				<Text size="small" overflow="break-word">
+					&nbsp;{summary}
+				</Text>
+			)}
+		</Row>
 		<ExpandToggle testId={testId} expanded={expanded} onClick={onToggle} label={toggleLabel} />
 	</Row>
 );
@@ -115,7 +122,7 @@ const formatParticipantsLine = (participants: NonNullable<InviteChanges['partici
 	].join(', ');
 
 const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): ReactElement => (
-	<Container crossAlignment="flex-start" padding={{ top: 'extrasmall', left: 'large' }}>
+	<Container crossAlignment="flex-start" padding={{ top: 'extrasmall' }}>
 		{children}
 	</Container>
 );

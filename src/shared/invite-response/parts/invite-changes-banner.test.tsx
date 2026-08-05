@@ -84,9 +84,10 @@ describe('InviteChangesBanner', () => {
 			message: { before: longBefore, after: longAfter }
 		};
 
-		it('shows a summary and a Compare full text toggle instead of the raw text', () => {
+		it('shows the label and the summary as separate text nodes, and a Compare full text toggle instead of the raw text', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('Message: updated')).toBeVisible();
+			expect(screen.getByText('Message:')).toBeVisible();
+			expect(screen.getByText('updated')).toBeVisible();
 			expect(screen.getByTestId('invite-changes-message-toggle')).toBeVisible();
 			expect(screen.queryByText(`${longBefore} → ${longAfter}`)).not.toBeInTheDocument();
 		});
@@ -96,7 +97,8 @@ describe('InviteChangesBanner', () => {
 
 			await user.click(screen.getByTestId('invite-changes-message-toggle'));
 
-			expect(screen.queryByText('Message: updated')).not.toBeInTheDocument();
+			expect(screen.queryByText('Message:')).not.toBeInTheDocument();
+			expect(screen.queryByText('updated')).not.toBeInTheDocument();
 			expect(screen.getByText('Message')).toBeVisible();
 			expect(screen.getByText(`Previous: ${longBefore}`)).toBeVisible();
 			expect(screen.getByText(`Updated: ${longAfter}`)).toBeVisible();
@@ -126,9 +128,10 @@ describe('InviteChangesBanner', () => {
 			}
 		};
 
-		it('shows a count summary and a View names toggle instead of the raw list', () => {
+		it('shows a bold label, a regular-weight count summary, and a View names toggle instead of the raw list', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('Participants: 3 added, 1 removed')).toBeVisible();
+			expect(screen.getByText('Participants:')).toBeVisible();
+			expect(screen.getByText('3 added, 1 removed')).toBeVisible();
 			expect(screen.getByTestId('invite-changes-participants-toggle')).toBeVisible();
 		});
 
@@ -137,7 +140,8 @@ describe('InviteChangesBanner', () => {
 
 			await user.click(screen.getByTestId('invite-changes-participants-toggle'));
 
-			expect(screen.queryByText('Participants: 3 added, 1 removed')).not.toBeInTheDocument();
+			expect(screen.queryByText('Participants:')).not.toBeInTheDocument();
+			expect(screen.queryByText('3 added, 1 removed')).not.toBeInTheDocument();
 			expect(screen.getByText('Participants')).toBeVisible();
 			expect(
 				screen.getByText('+ Attendee One, + Attendee Two, + Attendee Three, - Removed One')
