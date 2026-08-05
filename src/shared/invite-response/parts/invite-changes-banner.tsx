@@ -104,6 +104,40 @@ const ExpandableFieldHeader: FC<{
 	</Row>
 );
 
+// Participants' expanded content is always inline on the same row as the
+// label and the toggle (unlike message, whose Previous/Updated text is too
+// long to stay on one line and therefore goes on separate rows below).
+const InlineFieldHeader: FC<{
+	label: string;
+	content: string;
+	expanded: boolean;
+	onToggle: () => void;
+	toggleLabel: string;
+	testId: string;
+}> = ({ label, content, expanded, onToggle, toggleLabel, testId }): ReactElement => (
+	<Row
+		width="100%"
+		mainAlignment="space-between"
+		crossAlignment="center"
+		padding={{ top: 'extrasmall' }}
+	>
+		<Row
+			takeAvailableSpace
+			wrap="wrap"
+			mainAlignment="flex-start"
+			data-testid={`${testId}-content`}
+		>
+			<Text weight="bold" size="small">
+				{label}:
+			</Text>
+			<Text size="small" overflow="break-word">
+				&nbsp;{content}
+			</Text>
+		</Row>
+		<ExpandToggle testId={testId} expanded={expanded} onClick={onToggle} label={toggleLabel} />
+	</Row>
+);
+
 const isMessageDetailed = (message: NonNullable<InviteChanges['message']>): boolean =>
 	message.before.length + message.after.length > MESSAGE_INLINE_MAX_LENGTH ||
 	message.before.includes('\n') ||
@@ -163,34 +197,25 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 				)}
 				{changes.participants &&
 					(isParticipantsDetailed ? (
-						<Container crossAlignment="flex-start" width="100%">
-							<ExpandableFieldHeader
-								testId="invite-changes-participants-toggle"
-								label={t('label.participants', 'Participants')}
-								summary={t(
-									'label.participants_added_removed',
-									'{{added}} added, {{removed}} removed',
-									{
-										added: changes.participants.added.length,
-										removed: changes.participants.removed.length
-									}
-								)}
-								expanded={isParticipantsExpanded}
-								onToggle={(): void => setIsParticipantsExpanded((prev) => !prev)}
-								toggleLabel={
-									isParticipantsExpanded
-										? t('label.hide', 'Hide')
-										: t('label.view_names', 'View names')
-								}
-							/>
-							{isParticipantsExpanded && (
-								<DetailedContent>
-									<Text size="small" overflow="break-word">
-										{formatParticipantsLine(changes.participants)}
-									</Text>
-								</DetailedContent>
-							)}
-						</Container>
+						<InlineFieldHeader
+							testId="invite-changes-participants-toggle"
+							label={t('label.participants', 'Participants')}
+							content={
+								isParticipantsExpanded
+									? formatParticipantsLine(changes.participants)
+									: t('label.participants_added_removed', '{{added}} added, {{removed}} removed', {
+											added: changes.participants.added.length,
+											removed: changes.participants.removed.length
+										})
+							}
+							expanded={isParticipantsExpanded}
+							onToggle={(): void => setIsParticipantsExpanded((prev) => !prev)}
+							toggleLabel={
+								isParticipantsExpanded
+									? t('label.hide', 'Hide')
+									: t('label.view_names', 'View names')
+							}
+						/>
 					) : (
 						<FieldRow label={t('label.participants', 'Participants')}>
 							{formatParticipantsLine(changes.participants)}
