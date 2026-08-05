@@ -135,16 +135,17 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByTestId('invite-changes-participants-toggle')).toBeVisible();
 		});
 
-		it('drops the summary and reveals names on a single line (no chips) after clicking View names', async () => {
+		it('drops the summary and reveals names on the same row (no chips) after clicking View names', async () => {
 			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
 
 			await user.click(screen.getByTestId('invite-changes-participants-toggle'));
 
-			expect(screen.queryByText('Participants:')).not.toBeInTheDocument();
 			expect(screen.queryByText('3 added, 1 removed')).not.toBeInTheDocument();
-			expect(screen.getByText('Participants')).toBeVisible();
+			// same row as the label and the toggle, not a separate block below it
+			const row = within(screen.getByTestId('invite-changes-participants-toggle-content'));
+			expect(row.getByText('Participants:')).toBeVisible();
 			expect(
-				screen.getByText('+ Attendee One, + Attendee Two, + Attendee Three, - Removed One')
+				row.getByText('+ Attendee One, + Attendee Two, + Attendee Three, - Removed One')
 			).toBeVisible();
 		});
 
