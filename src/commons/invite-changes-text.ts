@@ -10,7 +10,6 @@ import type { InviteChangeParticipant, InviteChanges } from '../types/invite-cha
 
 // Fixed, never-translated tags, always on their own line, with the value(s)
 // starting on the line right after. Parsing anchors only on these tags.
-const CHANGES_TAG = '[changed]';
 const DATE_TIME_TAG = '[datetime]';
 const PARTICIPANTS_ADDED_TAG = '[added]';
 const PARTICIPANTS_REMOVED_TAG = '[removed]';
@@ -47,7 +46,7 @@ export const formatInviteChangesText = (changes: InviteChanges): string => {
 			? `${MESSAGE_BEFORE_TAG}\n${changes.message.before}\n${MESSAGE_AFTER_TAG}\n${changes.message.after}`
 			: undefined
 	]);
-	return sections.length > 0 ? `${CHANGES_TAG}\n${sections.join('\n')}` : '';
+	return sections.join('\n');
 };
 
 const parseParticipantLine = (line: string): InviteChangeParticipant | undefined => {
@@ -111,7 +110,7 @@ const parseDateTime = (text: string): { before: string; after: string } | undefi
 export const parseInviteChangesFromText = (
 	rawText: string | undefined
 ): InviteChanges | undefined => {
-	if (!rawText || !rawText.includes(CHANGES_TAG)) {
+	if (!rawText) {
 		return undefined;
 	}
 

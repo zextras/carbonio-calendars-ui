@@ -1229,7 +1229,7 @@ describe('normalize soap message from editor', () => {
 
 			expect(firstDivider).toBeDefined();
 			expect(secondDivider).toBeDefined();
-			expect(result).toContain('[changed]');
+			expect(result).toContain('[before]');
 			expect(parseInviteChangesFromText(result)).toEqual(changes);
 			// the wrapped block (including the changes) is what body-message-renderer strips before display
 			expect(extractBody(result)).toBe('Meeting description');
@@ -1252,7 +1252,7 @@ describe('normalize soap message from editor', () => {
 
 			const result = generateBodyRequest(editor);
 
-			expect(result).not.toContain('[changed]');
+			expect(result).not.toContain('[before]');
 			expect(parseInviteChangesFromText(result)).toBeUndefined();
 		});
 
@@ -1276,7 +1276,7 @@ describe('normalize soap message from editor', () => {
 
 			const result = generateHtmlBodyRequest(editor, changes);
 
-			expect(result).toContain('[changed]');
+			expect(result).toContain('[added]');
 			expect(result).toContain('added@test.com');
 		});
 	});

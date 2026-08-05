@@ -89,7 +89,6 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 	it('produces a block embeddable inside the existing invite text, anchored by stable tags', () => {
 		const changes: InviteChanges = { message: { before: 'old', after: 'new' } };
 		const formatted = formatInviteChangesText(changes);
-		expect(formatted).toContain('[changed]');
 		expect(formatted).toContain('[before]');
 		expect(formatted).toContain('[after]');
 	});
@@ -99,11 +98,7 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 			dateTime: { before: 'before-label', after: 'after-label' }
 		};
 		const formatted = formatInviteChangesText(changes);
-		expect(formatted.split('\n')).toEqual([
-			'[changed]',
-			'[datetime]',
-			'before-label -> after-label'
-		]);
+		expect(formatted.split('\n')).toEqual(['[datetime]', 'before-label -> after-label']);
 	});
 
 	it('still parses correctly even if surrounding prose on the tag line were translated', () => {
@@ -114,8 +109,7 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 			dateTime,
 			participants: { added: [{ a: 'a@test.com', d: 'A' }], removed: [] }
 		};
-		const localized = `Modifiche [changed]
-Data e ora [datetime]
+		const localized = `Data e ora [datetime]
 ${dateTime.before} -> ${dateTime.after}
 Partecipanti aggiunti [added]
 + A <a@test.com>
