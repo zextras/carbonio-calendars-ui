@@ -46,6 +46,38 @@ describe('InviteChangesBanner', () => {
 			expect(labels).toEqual(['Participants:', 'Message:']);
 		});
 
+		it('renders every field in the same order as the editor', () => {
+			const allFieldsChanges: InviteChanges = {
+				title: { before: 'Old title', after: 'New title' },
+				location: { before: 'Room A', after: 'Room B' },
+				resources: {
+					added: [{ a: 'room@test.com', d: 'Room A' }],
+					removed: []
+				},
+				virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' },
+				participants: {
+					added: [{ a: 'added@test.com', d: 'Added' }],
+					removed: []
+				},
+				dateTime: { before: 'before-label', after: 'after-label' },
+				allDay: { before: false, after: true },
+				message: { before: 'old', after: 'new' }
+			};
+			setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			const labels = screen
+				.getAllByText(/^(Title|Location|Resources|Virtual room|Participants|Date & Time|Message):$/)
+				.map((el) => el.textContent);
+			expect(labels).toEqual([
+				'Title:',
+				'Location:',
+				'Resources:',
+				'Virtual room:',
+				'Participants:',
+				'Date & Time:',
+				'Message:'
+			]);
+		});
+
 		it('shows the message change inline, quoted', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
 			expect(screen.getByText('"old text" → "new text"')).toBeVisible();
@@ -74,6 +106,77 @@ describe('InviteChangesBanner', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
 			expect(screen.queryByTestId('invite-changes-message-toggle')).not.toBeInTheDocument();
 			expect(screen.queryByTestId('invite-changes-participants-toggle')).not.toBeInTheDocument();
+		});
+	});
+
+	describe('new simple fields', () => {
+		it('shows a title change', () => {
+			setupTest(
+				<InviteChangesBanner changes={{ title: { before: 'Old title', after: 'New title' } }} />
+			);
+			expect(screen.getByText('Old title → New title')).toBeVisible();
+		});
+
+		it('shows a location change', () => {
+			setupTest(
+				<InviteChangesBanner changes={{ location: { before: 'Room A', after: 'Room B' } }} />
+			);
+			expect(screen.getByText('Room A → Room B')).toBeVisible();
+		});
+
+		it('shows added/removed resources inline with +/- prefixes, no chips', () => {
+			setupTest(
+				<InviteChangesBanner
+					changes={{
+						resources: {
+							added: [{ a: 'room@test.com', d: 'Room A' }],
+							removed: [{ a: 'projector@test.com', d: 'Projector' }]
+						}
+					}}
+				/>
+			);
+			expect(screen.getByText('+ Room A, - Projector')).toBeVisible();
+		});
+
+		it('shows a virtual room link change', () => {
+			setupTest(
+				<InviteChangesBanner
+					changes={{
+						virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' }
+					}}
+				/>
+			);
+			expect(screen.getByText('https://old.example.com → https://new.example.com')).toBeVisible();
+		});
+
+		it('appends "all day" to the Date & Time row when the event became all day', () => {
+			setupTest(
+				<InviteChangesBanner
+					changes={{
+						dateTime: { before: 'before-label', after: 'after-label' },
+						allDay: { before: false, after: true }
+					}}
+				/>
+			);
+			expect(screen.getByText('before-label → after-label - all day')).toBeVisible();
+		});
+
+		it('appends "not all day" to the Date & Time row when the event stopped being all day', () => {
+			setupTest(
+				<InviteChangesBanner
+					changes={{
+						dateTime: { before: 'before-label', after: 'after-label' },
+						allDay: { before: true, after: false }
+					}}
+				/>
+			);
+			expect(screen.getByText('before-label → after-label - not all day')).toBeVisible();
+		});
+
+		it('shows just "all day" with no dash on the Date & Time row when only all-day changed', () => {
+			setupTest(<InviteChangesBanner changes={{ allDay: { before: false, after: true } }} />);
+			expect(screen.getByText('Date & Time:')).toBeVisible();
+			expect(screen.getByText('all day')).toBeVisible();
 		});
 	});
 

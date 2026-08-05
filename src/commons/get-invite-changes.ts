@@ -6,7 +6,7 @@
 import { differenceBy, unionBy } from 'lodash';
 
 import { getTimeStrings } from '../hooks/use-get-date-range-converted-to-timezone';
-import { Editor } from '../types/editor';
+import { Editor, Resource } from '../types/editor';
 import { InviteChangeParticipant, InviteChanges } from '../types/invite-changes';
 import { EditorChipAttendees } from '../types/store/invite';
 
@@ -26,7 +26,20 @@ const getAllAttendees = (editor: Editor | undefined): EditorChipAttendees[] =>
 		attendee.email.toLowerCase()
 	);
 
-const byLowerCaseEmail = (attendee: EditorChipAttendees): string => attendee.email.toLowerCase();
+const byLowerCaseEmail = (attendee: { email: string }): string => attendee.email.toLowerCase();
+
+const toChangeResource = (resource: Resource): InviteChangeParticipant => ({
+	a: resource.email.toLowerCase(),
+	d: resource.label
+});
+
+const getAllResources = (editor: Editor | undefined): Resource[] =>
+	unionBy(
+		[...(editor?.meetingRoom ?? []), ...(editor?.equipment ?? [])].filter(
+			(resource) => !!resource?.email
+		),
+		byLowerCaseEmail
+	);
 
 export const getInviteChanges = (
 	original: Editor | undefined,
@@ -38,17 +51,33 @@ export const getInviteChanges = (
 
 	const changes: InviteChanges = {};
 
-	const beforeMessage = original.plainText?.trim() ?? '';
-	const afterMessage = current.plainText?.trim() ?? '';
-	if (beforeMessage !== afterMessage) {
-		changes.message = { before: beforeMessage, after: afterMessage };
+	const beforeTitle = original.title ?? '';
+	const afterTitle = current.title ?? '';
+	if (beforeTitle !== afterTitle) {
+		changes.title = { before: beforeTitle, after: afterTitle };
 	}
 
-	if (original.start !== current.start || original.end !== current.end) {
-		changes.dateTime = {
-			before: getTimeStrings({ start: original.start ?? 0, end: original.end ?? 0, options: {} }),
-			after: getTimeStrings({ start: current.start ?? 0, end: current.end ?? 0, options: {} })
+	const beforeLocation = original.location ?? '';
+	const afterLocation = current.location ?? '';
+	if (beforeLocation !== afterLocation) {
+		changes.location = { before: beforeLocation, after: afterLocation };
+	}
+
+	const beforeResources = getAllResources(original);
+	const afterResources = getAllResources(current);
+	const addedResources = differenceBy(afterResources, beforeResources, byLowerCaseEmail);
+	const removedResources = differenceBy(beforeResources, afterResources, byLowerCaseEmail);
+	if (addedResources.length > 0 || removedResources.length > 0) {
+		changes.resources = {
+			added: addedResources.map(toChangeResource),
+			removed: removedResources.map(toChangeResource)
 		};
+	}
+
+	const beforeRoomLink = original.room?.link ?? '';
+	const afterRoomLink = current.room?.link ?? '';
+	if (beforeRoomLink !== afterRoomLink) {
+		changes.virtualRoom = { before: beforeRoomLink, after: afterRoomLink };
 	}
 
 	const beforeAttendees = getAllAttendees(original);
@@ -60,6 +89,23 @@ export const getInviteChanges = (
 			added: added.map(toChangeParticipant),
 			removed: removed.map(toChangeParticipant)
 		};
+	}
+
+	if (original.start !== current.start || original.end !== current.end) {
+		changes.dateTime = {
+			before: getTimeStrings({ start: original.start ?? 0, end: original.end ?? 0, options: {} }),
+			after: getTimeStrings({ start: current.start ?? 0, end: current.end ?? 0, options: {} })
+		};
+	}
+
+	if (!!original.allDay !== !!current.allDay) {
+		changes.allDay = { before: !!original.allDay, after: !!current.allDay };
+	}
+
+	const beforeMessage = original.plainText?.trim() ?? '';
+	const afterMessage = current.plainText?.trim() ?? '';
+	if (beforeMessage !== afterMessage) {
+		changes.message = { before: beforeMessage, after: afterMessage };
 	}
 
 	return Object.keys(changes).length > 0 ? changes : undefined;

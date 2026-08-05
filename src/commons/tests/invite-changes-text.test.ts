@@ -28,6 +28,81 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
+	it('round-trips a title change', () => {
+		const changes: InviteChanges = { title: { before: 'Old title', after: 'New title' } };
+		const formatted = formatInviteChangesText(changes);
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+	});
+
+	it('round-trips a location change', () => {
+		const changes: InviteChanges = { location: { before: 'Room A', after: 'Room B' } };
+		const formatted = formatInviteChangesText(changes);
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+	});
+
+	it('round-trips added and removed resources', () => {
+		const changes: InviteChanges = {
+			resources: {
+				added: [{ a: 'room@test.com', d: 'Room A' }],
+				removed: [{ a: 'projector@test.com', d: 'Projector' }]
+			}
+		};
+		const formatted = formatInviteChangesText(changes);
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+	});
+
+	it('round-trips a virtual room link change', () => {
+		const changes: InviteChanges = {
+			virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' }
+		};
+		const formatted = formatInviteChangesText(changes);
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+	});
+
+	it('round-trips an all day change', () => {
+		const changes: InviteChanges = { allDay: { before: false, after: true } };
+		const formatted = formatInviteChangesText(changes);
+		expect(formatted).toBe('[allday]\nfalse -> true');
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+	});
+
+	it('does not confuse resources with participants when both are present', () => {
+		const changes: InviteChanges = {
+			resources: { added: [{ a: 'room@test.com', d: 'Room A' }], removed: [] },
+			participants: { added: [{ a: 'person@test.com', d: 'Person' }], removed: [] }
+		};
+		const formatted = formatInviteChangesText(changes);
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+	});
+
+	it('round-trips every field together, in editor field order', () => {
+		const changes: InviteChanges = {
+			title: { before: 'Old title', after: 'New title' },
+			location: { before: 'Room A', after: 'Room B' },
+			resources: {
+				added: [{ a: 'room@test.com', d: 'Room A' }],
+				removed: [{ a: 'projector@test.com', d: 'Projector' }]
+			},
+			virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' },
+			participants: {
+				added: [{ a: 'added@test.com', d: 'Added' }],
+				removed: [{ a: 'removed@test.com', d: 'Removed' }]
+			},
+			dateTime: { before: 'before-label', after: 'after-label' },
+			allDay: { before: false, after: true },
+			message: { before: 'old', after: 'new' }
+		};
+		const formatted = formatInviteChangesText(changes);
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+		expect(formatted.indexOf('[title]')).toBeLessThan(formatted.indexOf('[location]'));
+		expect(formatted.indexOf('[location]')).toBeLessThan(formatted.indexOf('[resourceadded]'));
+		expect(formatted.indexOf('[resourceremoved]')).toBeLessThan(formatted.indexOf('[virtualroom]'));
+		expect(formatted.indexOf('[virtualroom]')).toBeLessThan(formatted.indexOf('[added]'));
+		expect(formatted.indexOf('[removed]')).toBeLessThan(formatted.indexOf('[datetime]'));
+		expect(formatted.indexOf('[datetime]')).toBeLessThan(formatted.indexOf('[allday]'));
+		expect(formatted.indexOf('[allday]')).toBeLessThan(formatted.indexOf('[before]'));
+	});
+
 	it('round-trips a date/time change', () => {
 		const changes: InviteChanges = {
 			dateTime: {
