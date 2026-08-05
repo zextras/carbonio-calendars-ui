@@ -179,7 +179,7 @@ const MessageDiffLine: FC<{ label: string; text: string; testId: string }> = ({
 	text,
 	testId
 }): ReactElement => (
-	<Row width="100%" padding={{ top: 'extrasmall' }} data-testid={testId}>
+	<Row width="100%" mainAlignment="flex-start" padding={{ top: 'extrasmall' }} data-testid={testId}>
 		<Text size="small" overflow="break-word">
 			<b>{label}:</b> <span>&quot;{text}&quot;</span>
 		</Text>
