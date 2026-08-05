@@ -101,4 +101,60 @@ describe('useFetchInvite', () => {
 			expect(result.current.loading).toBe(false);
 		});
 	});
+
+	describe('when GetAppointment returns one <inv> per occurrence of a recurring series', () => {
+		const masterInv = { comp: [{ name: 'master occurrence' }] };
+		const exceptionJune17Inv = {
+			comp: [{ name: 'june 17 exception', exceptId: [{ d: '20260617T110000', tz: 'Europe/Rome' }] }]
+		};
+		const exceptionAug4Inv = {
+			comp: [{ name: 'aug 4 exception', exceptId: [{ d: '20260804T110000', tz: 'Europe/Rome' }] }]
+		};
+
+		it('selects the invite whose exceptId matches the mail message being viewed', async () => {
+			const mailMsg: MailMsg = {
+				invite: [
+					{ comp: [{ apptId: '123', exceptId: [{ d: '20260804T110000', tz: 'Europe/Rome' }] }] }
+				]
+			} as any;
+			createSoapAPIInterceptor('GetAppointment', {
+				appt: [{ inv: [masterInv, exceptionJune17Inv, exceptionAug4Inv] }]
+			});
+
+			const { result } = renderHook(() => useFetchInvite(mailMsg));
+
+			await waitFor(() => {
+				expect(result.current.invite).toEqual([exceptionAug4Inv]);
+			});
+		});
+
+		it('falls back to the unfiltered list when the mail message has no exceptId', async () => {
+			createSoapAPIInterceptor('GetAppointment', {
+				appt: [{ inv: [masterInv, exceptionJune17Inv, exceptionAug4Inv] }]
+			});
+
+			const { result } = renderHook(() => useFetchInvite(baseMailMsg));
+
+			await waitFor(() => {
+				expect(result.current.invite).toEqual([masterInv, exceptionJune17Inv, exceptionAug4Inv]);
+			});
+		});
+
+		it('falls back to the unfiltered list when no entry matches the exceptId', async () => {
+			const mailMsg: MailMsg = {
+				invite: [
+					{ comp: [{ apptId: '123', exceptId: [{ d: '20261231T110000', tz: 'Europe/Rome' }] }] }
+				]
+			} as any;
+			createSoapAPIInterceptor('GetAppointment', {
+				appt: [{ inv: [masterInv, exceptionJune17Inv, exceptionAug4Inv] }]
+			});
+
+			const { result } = renderHook(() => useFetchInvite(mailMsg));
+
+			await waitFor(() => {
+				expect(result.current.invite).toEqual([masterInv, exceptionJune17Inv, exceptionAug4Inv]);
+			});
+		});
+	});
 });
