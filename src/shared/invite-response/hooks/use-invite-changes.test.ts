@@ -5,6 +5,7 @@
  */
 import { useInviteChanges } from './use-invite-changes';
 import { formatInviteChangesText } from '../../../commons/invite-changes-text';
+import { ROOM_DIVIDER } from '../../../constants';
 import { setupHook } from '@test-setup';
 
 const buildMailMsg = (desc?: unknown): any => ({
@@ -38,7 +39,11 @@ describe('useInviteChanges', () => {
 
 	it('parses a changes block embedded in a description given as an array of {_content}', () => {
 		const changes = { message: { before: 'old', after: 'new' } };
-		const desc = [{ _content: `Subject: test\n\n${formatInviteChangesText(changes)}\n\nHello!` }];
+		const desc = [
+			{
+				_content: `Subject: test\n\n${formatInviteChangesText(changes)}\n${ROOM_DIVIDER}\nHello!`
+			}
+		];
 		const { result } = setupHook(useInviteChanges, {
 			initialProps: [buildMailMsg(desc)]
 		});
@@ -69,7 +74,9 @@ describe('useInviteChanges', () => {
 			}
 		};
 		const desc = [
-			{ _content: `Subject: test\n\n${formatInviteChangesText(changes)}\n\nActual message body` }
+			{
+				_content: `Subject: test\n\n${formatInviteChangesText(changes)}\n${ROOM_DIVIDER}\nActual message body`
+			}
 		];
 		const { result } = setupHook(useInviteChanges, {
 			initialProps: [buildMailMsg(desc)]
@@ -87,7 +94,7 @@ describe('useInviteChanges', () => {
 						{ contentType: 'text/html', content: '<p>Hello!</p>' },
 						{
 							contentType: 'text/plain',
-							content: `Subject: test\n\n${formatInviteChangesText(changes)}\n\nHello!`
+							content: `Subject: test\n\n${formatInviteChangesText(changes)}\n${ROOM_DIVIDER}\nHello!`
 						}
 					]
 				}

@@ -256,13 +256,13 @@ export function generateBodyRequest(app: Editor, changes?: InviteChanges): strin
 			}\n\n${app.room.link} \n\n${ROOM_DIVIDER}\n`
 		: '';
 
-	const changesText = changes ? `\n${formatInviteChangesText(changes)}\n` : '';
+	const changesText = changes ? `\n${formatInviteChangesText(changes)}` : '';
 
 	const meetingMessage = `${ROOM_DIVIDER}\n${
 		organizer.name ?? ''
 	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
 		organizer.name
-	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n${changesText}\n${ROOM_DIVIDER}`;
+	} \n\nTime: ${date}\n \nInvitees: ${attendees} ${changesText}\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
 
 	return attendees?.length ? `${defaultMessage}\n${app.plainText}` : app.plainText;
