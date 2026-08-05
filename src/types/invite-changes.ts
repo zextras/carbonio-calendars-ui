@@ -6,11 +6,21 @@
 
 export type InviteChangeParticipant = { a: string; d?: string };
 
+// Order mirrors the editor's own field order (src/view/editor/editor-panel.tsx):
+// title, location, resources, virtual room, participants, date/time, all day, message.
 export type InviteChanges = {
-	message?: { before: string; after: string };
-	dateTime?: { before: string; after: string };
+	title?: { before: string; after: string };
+	location?: { before: string; after: string };
+	resources?: {
+		added: InviteChangeParticipant[];
+		removed: InviteChangeParticipant[];
+	};
+	virtualRoom?: { before: string; after: string };
 	participants?: {
 		added: InviteChangeParticipant[];
 		removed: InviteChangeParticipant[];
 	};
+	dateTime?: { before: string; after: string };
+	allDay?: { before: boolean; after: boolean };
+	message?: { before: string; after: string };
 };
