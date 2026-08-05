@@ -17,13 +17,13 @@ import { getLocationUrl } from './normalize-calendar-events';
 import { EVENT_DISPLAY_STATUS } from 'constants/api';
 import { Invite } from 'types/store/invite';
 
-interface MailPart {
+export interface MailPart {
 	contentType?: string;
 	content?: string;
 	parts?: MailPart[];
 }
 
-interface DescriptionContent {
+export interface DescriptionContent {
 	html?: string;
 	text?: string;
 }
@@ -37,7 +37,7 @@ interface DescriptionArray {
  * @param parts - The mail parts structure to search through
  * @returns Object containing extracted HTML and text content
  */
-const extractDescriptionFromParts = (parts: MailPart[]): DescriptionContent => {
+export const extractDescriptionFromParts = (parts: MailPart[]): DescriptionContent => {
 	const result: DescriptionContent = {};
 
 	const findContentInParts = (partsList: MailPart[]): void => {

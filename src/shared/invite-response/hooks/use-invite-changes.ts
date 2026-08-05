@@ -6,6 +6,7 @@
 import { useMemo } from 'react';
 
 import { parseInviteChangesFromText } from '../../../commons/invite-changes-text';
+import { extractDescriptionFromParts } from '../../../normalizations/normalize-invite';
 import type { MailMsg } from '../../../types/integrations';
 import type { InviteChanges } from '../../../types/invite-changes';
 
@@ -21,7 +22,12 @@ const extractContent = (description: unknown): string | undefined => {
 
 const parseInviteChanges = (mailMsg: MailMsg): InviteChanges | undefined => {
 	const inviteComponent = mailMsg?.invite?.[0]?.comp?.[0];
-	const textContent = extractContent(inviteComponent?.desc);
+	// The invite component's own `desc` is populated when fetching a calendar
+	// item directly (e.g. GetAppointment). A calendar invitation email fetched
+	// via GetMsg instead carries the actual body in the message's MIME parts,
+	// same as normalizeInvite falls back to for rendering the message itself.
+	const textContent =
+		extractContent(inviteComponent?.desc) ?? extractDescriptionFromParts(mailMsg?.parts ?? []).text;
 	return parseInviteChangesFromText(textContent);
 };
 

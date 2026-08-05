@@ -1648,6 +1648,30 @@ describe('invite response component', () => {
 			expect(await screen.findByText('old → new')).toBeVisible();
 		});
 
+		test('is shown when the changes block is only in the MIME parts (a GetMsg-fetched invitation email)', async () => {
+			setupFoldersStore();
+			const changes = { message: { before: 'old', after: 'new' } };
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+				invite: [{ comp: [{ desc: [] }] }],
+				parts: [
+					{
+						contentType: 'text/plain',
+						content: `Subject: test\n\n${formatInviteChangesText(changes)}`
+					}
+				]
+			} as any);
+			createSoapAPIInterceptor('GetAppointment', {});
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+				store
+			});
+
+			const banner = await screen.findByTestId('invite-changes-banner');
+
+			expect(banner).toBeVisible();
+			expect(await screen.findByText('old → new')).toBeVisible();
+		});
+
 		test('is not shown when the mail-embedded invite description has no changes block', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
