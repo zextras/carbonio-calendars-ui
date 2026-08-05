@@ -130,15 +130,15 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByTestId('invite-changes-participants-toggle')).toBeVisible();
 		});
 
-		it('reveals participant chips after clicking View names', async () => {
+		it('reveals plain +/- text lines (no chips) after clicking View names', async () => {
 			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
 
 			await user.click(screen.getByTestId('invite-changes-participants-toggle'));
 
-			expect(screen.getByText('Attendee One')).toBeVisible();
-			expect(screen.getByText('Attendee Two')).toBeVisible();
-			expect(screen.getByText('Attendee Three')).toBeVisible();
-			expect(screen.getByText('Removed One')).toBeVisible();
+			expect(screen.getByText('+ Attendee One')).toBeVisible();
+			expect(screen.getByText('+ Attendee Two')).toBeVisible();
+			expect(screen.getByText('+ Attendee Three')).toBeVisible();
+			expect(screen.getByText('- Removed One')).toBeVisible();
 		});
 
 		it('shows a downward chevron when collapsed and an upward one after expanding', async () => {
