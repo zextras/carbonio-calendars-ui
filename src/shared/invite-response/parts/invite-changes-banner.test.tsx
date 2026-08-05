@@ -114,14 +114,14 @@ describe('InviteChangesBanner', () => {
 			setupTest(
 				<InviteChangesBanner changes={{ title: { before: 'Old title', after: 'New title' } }} />
 			);
-			expect(screen.getByText('Old title → New title')).toBeVisible();
+			expect(screen.getByText('"Old title" → "New title"')).toBeVisible();
 		});
 
 		it('shows a location change', () => {
 			setupTest(
 				<InviteChangesBanner changes={{ location: { before: 'Room A', after: 'Room B' } }} />
 			);
-			expect(screen.getByText('Room A → Room B')).toBeVisible();
+			expect(screen.getByText('"Room A" → "Room B"')).toBeVisible();
 		});
 
 		it('shows added/removed resources inline with +/- prefixes, no chips', () => {
