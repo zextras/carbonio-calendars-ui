@@ -21,8 +21,8 @@ describe('InviteChangesBanner', () => {
 		const changes: InviteChanges = {
 			message: { before: 'old text', after: 'new text' },
 			dateTime: {
-				before: { start: 1735642800000, end: 1735646400000 },
-				after: { start: 1735729200000, end: 1735732800000 }
+				before: 'Wednesday, December 31, 2025, 09:00 – 10:00 AM',
+				after: 'Thursday, January 01, 2026, 09:00 – 10:00 AM'
 			},
 			participants: {
 				added: [{ a: 'maria@test.com', d: 'Maria Rossi' }],
@@ -48,6 +48,15 @@ describe('InviteChangesBanner', () => {
 		it('shows a placeholder for an empty message side instead of a blank string', () => {
 			setupTest(<InviteChangesBanner changes={{ message: { before: '', after: 'aasd' } }} />);
 			expect(screen.getByText('(no message) → aasd')).toBeVisible();
+		});
+
+		it('shows the pre-formatted date/time change joined by an arrow', () => {
+			setupTest(<InviteChangesBanner changes={changes} />);
+			expect(
+				screen.getByText(
+					'Wednesday, December 31, 2025, 09:00 – 10:00 AM → Thursday, January 01, 2026, 09:00 – 10:00 AM'
+				)
+			).toBeVisible();
 		});
 
 		it('shows the participants change inline with +/- prefixes', () => {

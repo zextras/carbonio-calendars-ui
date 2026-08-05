@@ -3,14 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import ParticipantChip from './participant-chip';
-import { getTimeStrings } from '../../../hooks/use-get-date-range-converted-to-timezone';
 import type { InviteChangeParticipant, InviteChanges } from '../../../types/invite-changes';
 
 const PARTICIPANTS_INLINE_THRESHOLD = 3;
@@ -76,20 +75,9 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 	const isMessageChangeDetailed = !!changes.message && isMessageDetailed(changes.message);
 	const isDetailed = isParticipantsDetailed || isMessageChangeDetailed;
 
-	const dateTimeLabel = useMemo(() => {
-		if (!changes.dateTime) return undefined;
-		const before = getTimeStrings({
-			start: changes.dateTime.before.start,
-			end: changes.dateTime.before.end,
-			options: {}
-		});
-		const after = getTimeStrings({
-			start: changes.dateTime.after.start,
-			end: changes.dateTime.after.end,
-			options: {}
-		});
-		return `${before} → ${after}`;
-	}, [changes.dateTime]);
+	const dateTimeLabel = changes.dateTime
+		? `${changes.dateTime.before} → ${changes.dateTime.after}`
+		: undefined;
 
 	if (!changes.message && !changes.dateTime && !changes.participants) {
 		return null;

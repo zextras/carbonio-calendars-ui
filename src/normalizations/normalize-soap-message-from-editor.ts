@@ -7,6 +7,7 @@ import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { formatInTimeZone } from 'date-fns-tz';
 import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 
+import { formatInviteChangesText } from '../commons/invite-changes-text';
 import { Rel } from './normalizations-utils';
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../constants/api';
@@ -209,7 +210,7 @@ const getOrganizer = ({
 	};
 };
 
-export function generateHtmlBodyRequest(app: Editor): string {
+export function generateHtmlBodyRequest(app: Editor, changes?: InviteChanges): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
@@ -221,7 +222,8 @@ export function generateHtmlBodyRequest(app: Editor): string {
 		end: app.end ?? 0,
 		options: { allDay: app.allDay, allDayLabel: 'allDay' }
 	});
-	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
+	const changesHtml = changes ? `<pre>${formatInviteChangesText(changes)}</pre>` : '';
+	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p>${changesHtml}<br/>${ROOM_DIVIDER}`;
 	const virtualRoomHtml = app?.room?.label
 		? `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a virtual meeting on Carbonio Chats.</h3><p>Join here when it's time: <a href="${app.room.link}">${app.room.label}</a></p><br/>${ROOM_DIVIDER}`
 		: '';
@@ -232,7 +234,7 @@ export function generateHtmlBodyRequest(app: Editor): string {
 		: app.richText;
 }
 
-export function generateBodyRequest(app: Editor): string {
+export function generateBodyRequest(app: Editor, changes?: InviteChanges): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
@@ -254,38 +256,43 @@ export function generateBodyRequest(app: Editor): string {
 			}\n\n${app.room.link} \n\n${ROOM_DIVIDER}\n`
 		: '';
 
+	const changesText = changes ? `\n${formatInviteChangesText(changes)}\n` : '';
+
 	const meetingMessage = `${ROOM_DIVIDER}\n${
 		organizer.name ?? ''
 	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: ${
 		organizer.name
-	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
+	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n${changesText}\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
 
 	return attendees?.length ? `${defaultMessage}\n${app.plainText}` : app.plainText;
 }
 
-const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content: string }> } => ({
+const generateMp = (
+	msg: Editor,
+	changes?: InviteChanges
+): { ct: string; mp: Array<{ ct: string; content: string }> } => ({
 	ct: 'multipart/alternative',
 	mp: msg.isRichText
 		? [
 				{
 					ct: 'text/html',
-					content: generateHtmlBodyRequest(msg)
+					content: generateHtmlBodyRequest(msg, changes)
 				},
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg)
+					content: generateBodyRequest(msg, changes)
 				}
 			]
 		: [
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg)
+					content: generateBodyRequest(msg, changes)
 				}
 			]
 });
 
-const generateInvite = (editor: Editor, changes?: InviteChanges): any => {
+const generateInvite = (editor: Editor): any => {
 	const at = [];
 	const organizer = getOrganizer({
 		calendar: editor?.calendar,
@@ -364,12 +371,6 @@ const generateInvite = (editor: Editor, changes?: InviteChanges): any => {
 						}
 					]
 				}
-			: undefined,
-		changes
-			? {
-					name: CRB_XPROPS.CHANGES,
-					value: JSON.stringify(changes)
-				}
 			: undefined
 	]);
 
@@ -440,9 +441,9 @@ export const normalizeSoapMessageFromEditor = (msg: Editor, changes?: InviteChan
 							}
 						: undefined,
 					e: generateParticipantInformation(msg),
-					inv: generateInvite(msg, changes),
+					inv: generateInvite(msg),
 					l: msg?.calendar?.id,
-					mp: generateMp(msg),
+					mp: generateMp(msg, changes),
 					su: msg?.title
 				},
 				isNil

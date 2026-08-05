@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getInviteChanges } from '../get-invite-changes';
+import { getTimeStrings } from '../../hooks/use-get-date-range-converted-to-timezone';
 import { Editor } from '../../types/editor';
+
+const dateTimeLabel = (start: number, end: number): string =>
+	getTimeStrings({ start, end, options: {} });
 
 const buildEditor = (overrides: Partial<Editor> = {}): Editor =>
 	({
@@ -47,8 +51,8 @@ describe('getInviteChanges', () => {
 		const current = buildEditor({ start: 1500, end: 2500 });
 		expect(getInviteChanges(original, current)).toEqual({
 			dateTime: {
-				before: { start: 1000, end: 2000 },
-				after: { start: 1500, end: 2500 }
+				before: dateTimeLabel(1000, 2000),
+				after: dateTimeLabel(1500, 2500)
 			}
 		});
 	});
@@ -58,8 +62,8 @@ describe('getInviteChanges', () => {
 		const current = buildEditor({ start: 1000, end: 2500 });
 		expect(getInviteChanges(original, current)).toEqual({
 			dateTime: {
-				before: { start: 1000, end: 2000 },
-				after: { start: 1000, end: 2500 }
+				before: dateTimeLabel(1000, 2000),
+				after: dateTimeLabel(1000, 2500)
 			}
 		});
 	});
@@ -146,8 +150,8 @@ describe('getInviteChanges', () => {
 		expect(getInviteChanges(original, current)).toEqual({
 			message: { before: 'before', after: 'after' },
 			dateTime: {
-				before: { start: 1000, end: 2000 },
-				after: { start: 1500, end: 2500 }
+				before: dateTimeLabel(1000, 2000),
+				after: dateTimeLabel(1500, 2500)
 			},
 			participants: {
 				added: [{ a: 'new@test.com', d: 'New' }],

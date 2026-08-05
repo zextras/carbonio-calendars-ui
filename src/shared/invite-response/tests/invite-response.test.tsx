@@ -13,6 +13,7 @@ import { parse } from 'date-fns';
 import { keyBy, values } from 'lodash';
 
 import * as handler from '../../../commons/get-appointment';
+import { formatInviteChangesText } from '../../../commons/invite-changes-text';
 import { CALENDAR_BOARD_ID } from '../../../constants';
 import * as mockshell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
@@ -1621,19 +1622,15 @@ describe('invite response component', () => {
 	});
 
 	describe('invite changes banner', () => {
-		test('is shown when the mail-embedded invite carries an X-CRB-CHANGES xprop', async () => {
+		test('is shown when the mail-embedded invite description carries a changes block', async () => {
 			setupFoldersStore();
+			const changes = { message: { before: 'old', after: 'new' } };
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
 				invite: [
 					{
 						comp: [
 							{
-								xprop: [
-									{
-										name: 'X-CRB-CHANGES',
-										value: JSON.stringify({ message: { before: 'old', after: 'new' } })
-									}
-								]
+								desc: [{ _content: `Subject: test\n\n${formatInviteChangesText(changes)}` }]
 							}
 						]
 					}
@@ -1651,7 +1648,7 @@ describe('invite response component', () => {
 			expect(await screen.findByText('old → new')).toBeVisible();
 		});
 
-		test('is not shown when the mail-embedded invite has no X-CRB-CHANGES xprop', async () => {
+		test('is not shown when the mail-embedded invite description has no changes block', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			createSoapAPIInterceptor('GetAppointment', {});

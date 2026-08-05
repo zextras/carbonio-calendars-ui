@@ -6,8 +6,11 @@
  */
 
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { extractBody } from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
 import { getIdentityItems } from '../../commons/get-identity-items';
+import { parseInviteChangesFromText } from '../../commons/invite-changes-text';
+import { ROOM_DIVIDER } from '../../constants';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { ParticipationStatus } from '../../types/store/invite';
 import {
@@ -1174,7 +1177,7 @@ describe('normalize soap message from editor', () => {
 	});
 
 	describe('xprop', () => {
-		test('has no xprop when there is no room and no changes', () => {
+		test('has no xprop when there is no room', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
 			shell.getUserAccount.mockImplementation(() => userAccount);
 
@@ -1187,7 +1190,7 @@ describe('normalize soap message from editor', () => {
 			expect(body.m.inv.comp[0].xprop).toBeUndefined();
 		});
 
-		test('adds an X-CRB-CHANGES xprop with the serialized diff when changes are provided', () => {
+		test('does not use xprop for the invite-changes diff anymore', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
 			shell.getUserAccount.mockImplementation(() => userAccount);
 
@@ -1198,37 +1201,83 @@ describe('normalize soap message from editor', () => {
 
 			const body = normalizeSoapMessageFromEditor(editor, changes);
 
-			expect(body.m.inv.comp[0].xprop).toEqual([
-				{ name: 'X-CRB-CHANGES', value: JSON.stringify(changes) }
-			]);
+			expect(body.m.inv.comp[0].xprop).toBeUndefined();
 		});
+	});
 
-		test('keeps the existing meeting-room xprop when changes are also provided', () => {
+	describe('invite changes embedded in the body', () => {
+		test('generateBodyRequest embeds the formatted changes block within the room divider wrapper', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });
 			shell.getUserAccount.mockImplementation(() => userAccount);
 
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
 			const editor = generateEditor({
 				context: {
+					attendees,
+					optionalAttendees: [],
 					folders: {},
 					dispatch: vi.fn(),
-					room: { label: 'Virtual Room', link: 'https://meet.example.com/room123' }
+					plainText: 'Meeting description'
 				}
 			});
 			const changes = { message: { before: 'old', after: 'new' } };
 
-			const body = normalizeSoapMessageFromEditor(editor, changes);
+			const result = generateBodyRequest(editor, changes);
+			const [firstDivider, secondDivider] = result
+				.split('\n')
+				.filter((line) => line === ROOM_DIVIDER);
 
-			expect(body.m.inv.comp[0].xprop).toEqual([
-				{
-					name: 'X-CRB-MEETING-ROOM',
-					value: 'X-CRB-MEETING-ROOM',
-					xparam: [
-						{ name: 'ROOM-LINK', value: 'https://meet.example.com/room123' },
-						{ name: 'ROOM-NAME', value: 'Virtual Room' }
-					]
-				},
-				{ name: 'X-CRB-CHANGES', value: JSON.stringify(changes) }
-			]);
+			expect(firstDivider).toBeDefined();
+			expect(secondDivider).toBeDefined();
+			expect(result).toContain('What changed:');
+			expect(parseInviteChangesFromText(result)).toEqual(changes);
+			// the wrapped block (including the changes) is what body-message-renderer strips before display
+			expect(extractBody(result)).toBe('Meeting description');
+		});
+
+		test('generateBodyRequest does not embed a changes block when there are no changes', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					plainText: 'Meeting description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).not.toContain('What changed:');
+			expect(parseInviteChangesFromText(result)).toBeUndefined();
+		});
+
+		test('generateHtmlBodyRequest embeds the formatted changes block', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					richText: '<b>Meeting description</b>'
+				}
+			});
+			const changes = {
+				participants: { added: [{ a: 'added@test.com', d: 'Added' }], removed: [] }
+			};
+
+			const result = generateHtmlBodyRequest(editor, changes);
+
+			expect(result).toContain('What changed:');
+			expect(result).toContain('added@test.com');
 		});
 	});
 });

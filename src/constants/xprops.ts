@@ -5,8 +5,7 @@
  */
 // eslint-disable-next-line no-shadow
 export enum CRB_XPROPS {
-	MEETING_ROOM = 'X-CRB-MEETING-ROOM',
-	CHANGES = 'X-CRB-CHANGES'
+	MEETING_ROOM = 'X-CRB-MEETING-ROOM'
 }
 // eslint-disable-next-line no-shadow
 export enum CRB_XPARAMS {
