@@ -108,10 +108,17 @@ const parseDateTime = (text: string): { before: string; after: string } | undefi
 	return match ? { before: match[1], after: match[2] } : undefined;
 };
 
-export const parseInviteChangesFromText = (text: string | undefined): InviteChanges | undefined => {
-	if (!text || !text.includes(CHANGES_TAG)) {
+export const parseInviteChangesFromText = (
+	rawText: string | undefined
+): InviteChanges | undefined => {
+	if (!rawText || !rawText.includes(CHANGES_TAG)) {
 		return undefined;
 	}
+
+	// The mail transport layer may normalize line endings to CRLF. Every line
+	// boundary below is matched as a bare "\n", so normalize once up front
+	// rather than accounting for a possible trailing "\r" everywhere.
+	const text = rawText.replaceAll(/\r\n?/g, '\n');
 
 	const changes: InviteChanges = {};
 

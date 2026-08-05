@@ -134,4 +134,17 @@ ${message.after}`;
 		const wrapped = `Subject: test\nOrganizer: Someone\n\nInvitees: a@test.com\n${formatted}\n\nActual user message here`;
 		expect(parseInviteChangesFromText(wrapped)).toEqual(changes);
 	});
+
+	it('still parses added/removed participants and the message diff when the mail transport normalized line endings to CRLF', () => {
+		const changes: InviteChanges = {
+			participants: {
+				added: [{ a: 'user107@test.com', d: 'User 107' }],
+				removed: []
+			},
+			message: { before: 'wef', after: 'wef asf af' }
+		};
+		const formatted = formatInviteChangesText(changes).replaceAll(/\n/g, '\r\n');
+		const wrapped = `Subject: test\r\nInvitees: x@test.com\r\n${formatted}`;
+		expect(parseInviteChangesFromText(wrapped)).toEqual(changes);
+	});
 });
