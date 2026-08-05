@@ -100,8 +100,16 @@ describe('InviteChangesBanner', () => {
 			expect(screen.queryByText('Message:')).not.toBeInTheDocument();
 			expect(screen.queryByText('updated')).not.toBeInTheDocument();
 			expect(screen.getByText('Message')).toBeVisible();
-			expect(screen.getByText(`Previous: ${longBefore}`)).toBeVisible();
-			expect(screen.getByText(`Updated: ${longAfter}`)).toBeVisible();
+
+			// Previous and Updated are on separate rows, each with a bold label
+			// and the text wrapped in quotes
+			const previousRow = within(screen.getByTestId('invite-changes-message-previous'));
+			expect(previousRow.getByText('Previous:')).toBeVisible();
+			expect(previousRow.getByText(`"${longBefore}"`)).toBeVisible();
+
+			const updatedRow = within(screen.getByTestId('invite-changes-message-updated'));
+			expect(updatedRow.getByText('Updated:')).toBeVisible();
+			expect(updatedRow.getByText(`"${longAfter}"`)).toBeVisible();
 		});
 
 		it('shows a downward chevron when collapsed and an upward one after expanding', async () => {
