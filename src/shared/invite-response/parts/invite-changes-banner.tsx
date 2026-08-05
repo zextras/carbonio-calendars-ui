@@ -9,7 +9,6 @@ import styled from '@emotion/styled';
 import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import ParticipantChip from './participant-chip';
 import type { InviteChangeParticipant, InviteChanges } from '../../../types/invite-changes';
 
 const PARTICIPANTS_INLINE_THRESHOLD = 3;
@@ -83,6 +82,15 @@ const isMessageDetailed = (message: NonNullable<InviteChanges['message']>): bool
 const formatParticipant = (participant: InviteChangeParticipant): string =>
 	participant.d ?? participant.a;
 
+const formatParticipantLine = (prefix: '+' | '-', participant: InviteChangeParticipant): string =>
+	`${prefix} ${formatParticipant(participant)}`;
+
+const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): ReactElement => (
+	<Container crossAlignment="flex-start" padding={{ top: 'extrasmall', left: 'large' }}>
+		{children}
+	</Container>
+);
+
 export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 	changes
 }): ReactElement | null => {
@@ -140,24 +148,26 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 									/>
 								</Row>
 								{isParticipantsExpanded && (
-									<Row width="100%" wrap="wrap" padding={{ top: 'extrasmall' }}>
-										{[...changes.participants.added, ...changes.participants.removed].map(
-											(participant, index) => (
-												<Row
-													key={`${participant.a}-${index}`}
-													padding={{ right: 'extrasmall', bottom: 'extrasmall' }}
-												>
-													<ParticipantChip participant={participant} />
-												</Row>
-											)
-										)}
-									</Row>
+									<DetailedContent>
+										{[
+											...changes.participants.added.map((participant, index) => (
+												<Text key={`added-${index}`} size="small" overflow="break-word">
+													{formatParticipantLine('+', participant)}
+												</Text>
+											)),
+											...changes.participants.removed.map((participant, index) => (
+												<Text key={`removed-${index}`} size="small" overflow="break-word">
+													{formatParticipantLine('-', participant)}
+												</Text>
+											))
+										]}
+									</DetailedContent>
 								)}
 							</Row>
 						) : (
 							[
-								...changes.participants.added.map((p) => `+ ${formatParticipant(p)}`),
-								...changes.participants.removed.map((p) => `- ${formatParticipant(p)}`)
+								...changes.participants.added.map((p) => formatParticipantLine('+', p)),
+								...changes.participants.removed.map((p) => formatParticipantLine('-', p))
 							].join(', ')
 						)}
 					</FieldRow>
@@ -180,14 +190,14 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 									/>
 								</Row>
 								{isMessageExpanded && (
-									<Container crossAlignment="flex-start" padding={{ top: 'extrasmall' }}>
+									<DetailedContent>
 										<Text size="small" overflow="break-word">
 											{t('label.before', 'Before')}: {changes.message.before}
 										</Text>
 										<Text size="small" overflow="break-word">
 											{t('label.after', 'After')}: {changes.message.after}
 										</Text>
-									</Container>
+									</DetailedContent>
 								)}
 							</Row>
 						) : (
