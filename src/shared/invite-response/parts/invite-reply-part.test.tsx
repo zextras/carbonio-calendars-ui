@@ -439,4 +439,15 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			expect(screen.queryByText(/^Trash$/i)).not.toBeInTheDocument();
 		});
 	});
+
+	describe('reply buttons row layout', () => {
+		test('does not allow the buttons row to shrink below its content size', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
+
+			const buttonsRow = await screen.findByTestId('invite-reply-buttons-row');
+
+			expect(buttonsRow).toHaveStyle('flex-shrink: 0');
+		});
+	});
 });

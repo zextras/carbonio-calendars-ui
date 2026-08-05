@@ -252,10 +252,12 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 				</Container>
 			</Row>
 			<Row
+				data-testid="invite-reply-buttons-row"
 				width="fill"
 				height="fit"
 				style={{
 					flexGrow: 1,
+					flexShrink: 0,
 					flexBasis: 'fit-content',
 					whiteSpace: 'nowrap',
 					overflow: 'hidden'

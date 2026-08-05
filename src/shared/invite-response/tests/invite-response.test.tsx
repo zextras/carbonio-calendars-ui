@@ -1619,4 +1619,50 @@ describe('invite response component', () => {
 			});
 		});
 	});
+
+	describe('invite changes banner', () => {
+		test('is shown when the mail-embedded invite carries an X-CRB-CHANGES xprop', async () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+				invite: [
+					{
+						comp: [
+							{
+								xprop: [
+									{
+										name: 'X-CRB-CHANGES',
+										value: JSON.stringify({ message: { before: 'old', after: 'new' } })
+									}
+								]
+							}
+						]
+					}
+				]
+			} as any);
+			createSoapAPIInterceptor('GetAppointment', {});
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+				store
+			});
+
+			const banner = await screen.findByTestId('invite-changes-banner');
+
+			expect(banner).toBeVisible();
+			expect(await screen.findByText('old → new')).toBeVisible();
+		});
+
+		test('is not shown when the mail-embedded invite has no X-CRB-CHANGES xprop', async () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			createSoapAPIInterceptor('GetAppointment', {});
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+				store
+			});
+
+			await screen.findByTestId('invite-response');
+
+			expect(screen.queryByTestId('invite-changes-banner')).not.toBeInTheDocument();
+		});
+	});
 });
