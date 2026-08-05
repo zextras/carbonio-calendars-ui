@@ -46,14 +46,14 @@ describe('InviteChangesBanner', () => {
 			expect(labels).toEqual(['Participants:', 'Message:']);
 		});
 
-		it('shows the message change inline', () => {
+		it('shows the message change inline, quoted', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('old text → new text')).toBeVisible();
+			expect(screen.getByText('"old text" → "new text"')).toBeVisible();
 		});
 
-		it('shows a placeholder for an empty message side instead of a blank string', () => {
+		it('shows a quoted placeholder for an empty message side instead of a blank string', () => {
 			setupTest(<InviteChangesBanner changes={{ message: { before: '', after: 'aasd' } }} />);
-			expect(screen.getByText('(no message) → aasd')).toBeVisible();
+			expect(screen.getByText('"(no message)" → "aasd"')).toBeVisible();
 		});
 
 		it('shows the pre-formatted date/time change joined by an arrow', () => {

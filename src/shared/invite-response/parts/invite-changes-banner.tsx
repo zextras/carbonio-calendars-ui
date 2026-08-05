@@ -176,9 +176,11 @@ const MessageDiffLine: FC<{ label: string; text: string; testId: string }> = ({
 		<Text weight="bold" size="small">
 			{label}:
 		</Text>
-		<Text size="small" overflow="break-word">
-			&nbsp;&quot;{text}&quot;
-		</Text>
+		<Row padding={{ left: 'small' }}>
+			<Text size="small" overflow="break-word">
+				&quot;{text}&quot;
+			</Text>
+		</Row>
 	</Row>
 );
 
@@ -274,7 +276,7 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 						</Container>
 					) : (
 						<FieldRow label={t('label.message', 'Message')}>
-							{`${formatMessageSide(changes.message.before)} → ${formatMessageSide(changes.message.after)}`}
+							{`"${formatMessageSide(changes.message.before)}" → "${formatMessageSide(changes.message.after)}"`}
 						</FieldRow>
 					))}
 			</Container>
