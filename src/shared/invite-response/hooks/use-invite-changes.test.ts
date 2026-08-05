@@ -73,6 +73,19 @@ describe('useInviteChanges', () => {
 			expect(result.current).toEqual(changes);
 		});
 
+		it('still parses when the newline escape arrives with a single backslash instead of doubled', () => {
+			// The JSON string's own "\n" escape is 2 chars (backslash, n). If the
+			// server's ICS encoder doesn't double the pre-existing backslash, the
+			// value reaches us as a single "\n" — indistinguishable from an
+			// RFC 5545-encoded literal newline, so unescapeIcsText decodes it to a
+			// real newline. That real newline must still be recoverable by JSON.parse.
+			const rawValue = '{"message":{"before":"line1\\nline2"\\,"after":"new"}}';
+			const { result } = setupHook(useInviteChanges, {
+				initialProps: [buildMailMsg([{ name: 'X-CRB-CHANGES', value: rawValue }])]
+			});
+			expect(result.current).toEqual({ message: { before: 'line1\nline2', after: 'new' } });
+		});
+
 		it('parses the exact escaped value produced by a real invitation email', () => {
 			const rawValue =
 				'{"message":{"before":"\\\\""\\,"after":"asd"}\\,"participants":{"added":[{"a":"user106@dt2-dev1-srv1.demo.zextras.io"\\,"d":"User 106"}]\\,"removed":[]}}';

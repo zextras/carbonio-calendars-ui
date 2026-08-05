@@ -15,7 +15,9 @@ import type { InviteChanges } from '../../../types/invite-changes';
 // us still iCalendar-escaped instead of the plain JSON string that was
 // originally embedded.
 const unescapeIcsText = (value: string): string =>
-	value.replaceAll(/\\(.)/g, (_match, next: string) => (next === 'n' || next === 'N' ? '\n' : next));
+	value.replaceAll(/\\(.)/g, (_match, next: string) =>
+		next === 'n' || next === 'N' ? '\n' : next
+	);
 
 // The calendar server has been observed appending a stray trailing character
 // after the JSON object when round-tripping this X-property (e.g. a trailing
@@ -47,9 +49,17 @@ const extractBalancedJsonObject = (value: string): string | undefined => {
 	return undefined;
 };
 
+// JSON string literals can't contain raw control characters. The ICS
+// unescape step above can leave a literal newline in place of the JSON
+// string's own `\n` escape (when the server didn't double the backslash
+// before it), so re-escape any control chars before parsing.
+const CONTROL_CHAR_ESCAPES: Record<string, string> = { '\n': '\\n', '\r': '\\r', '\t': '\\t' };
+const escapeControlChars = (value: string): string =>
+	value.replaceAll(/[\n\r\t]/g, (char) => CONTROL_CHAR_ESCAPES[char]);
+
 const tryParseJson = (value: string): InviteChanges | undefined => {
 	try {
-		return JSON.parse(value);
+		return JSON.parse(escapeControlChars(value));
 	} catch {
 		return undefined;
 	}
@@ -63,12 +73,13 @@ const parseInviteChanges = (mailMsg: MailMsg): InviteChanges | undefined => {
 	}
 	const raw: string = changesXprop.value;
 	const unescaped = unescapeIcsText(raw);
-	const candidates = [
+	const allOfThem = [
 		raw,
 		unescaped,
 		extractBalancedJsonObject(raw),
 		extractBalancedJsonObject(unescaped)
-	].filter((candidate): candidate is string => !!candidate);
+	];
+	const candidates = allOfThem.filter((candidate): candidate is string => !!candidate);
 	return candidates.map(tryParseJson).find((parsed): parsed is InviteChanges => !!parsed);
 };
 
