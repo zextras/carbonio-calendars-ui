@@ -1645,7 +1645,7 @@ describe('invite response component', () => {
 			const banner = await screen.findByTestId('invite-changes-banner');
 
 			expect(banner).toBeVisible();
-			expect(await screen.findByText('old → new')).toBeVisible();
+			expect(await screen.findByText('"old" → "new"')).toBeVisible();
 		});
 
 		test('is shown when the changes block is only in the MIME parts (a GetMsg-fetched invitation email)', async () => {
@@ -1669,7 +1669,7 @@ describe('invite response component', () => {
 			const banner = await screen.findByTestId('invite-changes-banner');
 
 			expect(banner).toBeVisible();
-			expect(await screen.findByText('old → new')).toBeVisible();
+			expect(await screen.findByText('"old" → "new"')).toBeVisible();
 		});
 
 		test('is not shown when the mail-embedded invite description has no changes block', async () => {
