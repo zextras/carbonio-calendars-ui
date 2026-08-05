@@ -10,6 +10,7 @@ import {
 	Padding,
 	Button,
 	Divider,
+	Icon,
 	Text,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
@@ -192,47 +193,52 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 
 	return (
 		<>
-			<Container
-				orientation="horizontal"
-				crossAlignment="flex-start"
-				mainAlignment="flex-start"
-				width="fill"
-				height="fit"
-				padding={{ vertical: 'small' }}
-			>
-				<Padding right="small" vertical="medium">
-					<Button
-						type="outlined"
-						label={t('event.action.accept', 'Accept')}
-						icon="CheckmarkOutline"
-						color="success"
-						onClick={acceptProposedTime}
-						disabled={isAccepted || isSubmitting}
-						loading={isSubmitting}
-					/>
-				</Padding>
-				<Padding right="small" vertical="medium">
-					<Button
-						type="outlined"
-						label={t('event.action.decline', 'Decline')}
-						icon="Close"
-						color="error"
-						onClick={declineProposedTime}
-						disabled={isAccepted || isSubmitting}
-					/>
-				</Padding>
-			</Container>
-			{isAccepted && (
+			{isAccepted ? (
 				<Container
+					orientation="horizontal"
+					crossAlignment="center"
+					mainAlignment="flex-start"
+					width="fill"
+					height="fit"
+					padding={{ vertical: 'small' }}
+				>
+					<Padding right="small">
+						<Icon icon="CheckmarkOutline" color="success" size="large" />
+					</Padding>
+					<Text color="success" weight="bold" size="small">
+						{t('label.proposed_time_accepted', 'You have accepted the proposed new time.')}
+					</Text>
+				</Container>
+			) : (
+				<Container
+					orientation="horizontal"
 					crossAlignment="flex-start"
 					mainAlignment="flex-start"
 					width="fill"
 					height="fit"
-					padding={{ bottom: 'small' }}
+					padding={{ vertical: 'small' }}
 				>
-					<Text color="secondary" size="small">
-						{t('label.proposed_time_accepted', 'You accepted the proposed time')}
-					</Text>
+					<Padding right="small" vertical="medium">
+						<Button
+							type="outlined"
+							label={t('event.action.accept', 'Accept')}
+							icon="CheckmarkOutline"
+							color="success"
+							onClick={acceptProposedTime}
+							disabled={isSubmitting}
+							loading={isSubmitting}
+						/>
+					</Padding>
+					<Padding right="small" vertical="medium">
+						<Button
+							type="outlined"
+							label={t('event.action.decline', 'Decline')}
+							icon="Close"
+							color="error"
+							onClick={declineProposedTime}
+							disabled={isSubmitting}
+						/>
+					</Padding>
 				</Container>
 			)}
 			<Divider />

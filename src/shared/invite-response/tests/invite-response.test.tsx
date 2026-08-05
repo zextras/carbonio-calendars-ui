@@ -1265,7 +1265,7 @@ describe('invite response component', () => {
 
 							modifyAppointmentSpy.mockClear();
 						});
-						test('both buttons are disabled and a confirmation is shown once accepted', async () => {
+						test('the buttons are replaced by a confirmation once accepted', async () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
 							setupFoldersStore();
 							const mailMsg = buildMailMessageType(
@@ -1289,13 +1289,10 @@ describe('invite response component', () => {
 							});
 
 							await waitFor(() => {
-								expect(acceptProposedTimeButton).toBeDisabled();
+								expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
 							});
-							expect(screen.getByRole('button', { name: /Decline/i })).toBeDisabled();
-							// the snackbar carries the same label, so more than one match is expected
-							expect(screen.getAllByText('You accepted the proposed time').length).toBeGreaterThan(
-								0
-							);
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+							expect(screen.getByText('You have accepted the proposed new time.')).toBeVisible();
 						});
 						test('stays accepted when the panel is re-created after the counter mail is trashed', async () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
@@ -1325,11 +1322,11 @@ describe('invite response component', () => {
 								store
 							});
 
-							const acceptAfterRemount = await screen.findByRole('button', { name: /Accept/i });
-							await waitFor(() => {
-								expect(acceptAfterRemount).toBeDisabled();
-							});
-							expect(screen.getByRole('button', { name: /Decline/i })).toBeDisabled();
+							expect(
+								await screen.findByText('You have accepted the proposed new time.')
+							).toBeVisible();
+							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
 
 							modifyAppointmentSpy.mockClear();
@@ -1357,12 +1354,11 @@ describe('invite response component', () => {
 								store
 							});
 
-							const accept = await screen.findByRole('button', { name: /Accept/i });
-							await waitFor(() => {
-								expect(accept).toBeDisabled();
-							});
-							expect(screen.getByRole('button', { name: /Decline/i })).toBeDisabled();
-							expect(screen.getByText('You accepted the proposed time')).toBeVisible();
+							expect(
+								await screen.findByText('You have accepted the proposed new time.')
+							).toBeVisible();
+							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 						});
 						test('shows an error and keeps the counter mail when the appointment cannot be retrieved', async () => {
 							setupFoldersStore();
