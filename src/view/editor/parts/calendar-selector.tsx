@@ -10,15 +10,20 @@ import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import {
 	ROOT_NAME,
 	FOLDERS,
+	Folders,
+	getFolderIdParts,
+	getFolderOtherOwnerAccountName,
 	getRootAccountId,
+	isLink,
 	useFoldersMap,
 	useFoldersMapByRoot,
+	useRootsMap,
 	isTrashOrNestedInIt,
 	Folder,
 	LinkFolder,
 	hasId
 } from '@zextras/carbonio-ui-commons';
-import { filter, find, map, reject } from 'lodash';
+import { filter, find, map, reject, sortBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
@@ -35,7 +40,35 @@ type CalendarSelectorProps = {
 	excludeTrash?: boolean;
 	showCalWithWritePerm?: boolean;
 	disabled?: boolean;
+	allowAllAccounts?: boolean;
 };
+
+/**
+ * Keeps the flat list readable when calendars of several accounts are mixed together:
+ * the user's own calendars come first, then the shares mounted in their root, then the
+ * calendars of every shared account, grouped by owning account.
+ */
+const getSortCriteria =
+	(roots: Folders) =>
+	(folder: Folder): string => {
+		const { zid } = getFolderIdParts(folder.id);
+		const name = folder.name.toLowerCase();
+
+		if (zid) {
+			const accountName = getFolderOtherOwnerAccountName(folder.id, roots) ?? zid;
+			return `4000-${accountName.toLowerCase()}-${name}`;
+		}
+
+		if (isLink(folder)) {
+			return `3000-${name}`;
+		}
+
+		if (hasId(folder, FOLDERS.CALENDAR)) {
+			return '1000';
+		}
+
+		return `2000-${name}`;
+	};
 
 export const CalendarSelector = ({
 	calendarId,
@@ -43,7 +76,8 @@ export const CalendarSelector = ({
 	label,
 	excludeTrash = false,
 	showCalWithWritePerm = true,
-	disabled
+	disabled,
+	allowAllAccounts = false
 }: CalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const rootAccountId = getRootAccountId(calendarId);
@@ -52,11 +86,12 @@ export const CalendarSelector = ({
 	const allCalendars = useFoldersMap();
 
 	const calendars = reject(
-		rootAccountId?.includes(':') ? allCalendarsByRoot : allCalendars,
+		!allowAllAccounts && rootAccountId?.includes(':') ? allCalendarsByRoot : allCalendars,
 		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
 	);
 
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
+	const roots = useRootsMap();
 
 	const calWithWritePerm = useMemo(
 		() =>
@@ -70,10 +105,13 @@ export const CalendarSelector = ({
 
 	const requiredCalendars = useMemo(
 		() =>
-			excludeTrash
-				? filter(calWithWritePerm, (cal) => !isTrashOrNestedInIt(cal))
-				: calWithWritePerm,
-		[calWithWritePerm, excludeTrash]
+			sortBy(
+				excludeTrash
+					? filter(calWithWritePerm, (cal) => !isTrashOrNestedInIt(cal))
+					: calWithWritePerm,
+				getSortCriteria(roots)
+			),
+		[calWithWritePerm, excludeTrash, roots]
 	);
 	const calendarItems = useMemo(
 		() =>
