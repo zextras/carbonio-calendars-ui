@@ -1,3 +1,7 @@
+## <small>1.31.1 (2026-08-06)</small>
+
+* fix: use locale language in the propose new time message (#827) ([d3942d7](https://github.com/zextras/carbonio-calendars-ui/commit/d3942d7)), closes [#827](https://github.com/zextras/carbonio-calendars-ui/issues/827)
+
 ## 1.31.0 (2026-08-03)
 
 * feat(CO-3662): show original time alongside proposed new time in counter proposals (#821) ([dffab4a](https://github.com/zextras/carbonio-calendars-ui/commit/dffab4a)), closes [#821](https://github.com/zextras/carbonio-calendars-ui/issues/821)
