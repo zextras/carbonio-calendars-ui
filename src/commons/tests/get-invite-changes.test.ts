@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getInviteChanges } from '../get-invite-changes';
-import { getTimeStrings } from '../../hooks/use-get-date-range-converted-to-timezone';
+import { formatCompactDateTimeRange, getInviteChanges } from '../get-invite-changes';
 import { Editor } from '../../types/editor';
 
 const dateTimeLabel = (start: number, end: number, allDay = false): string =>
-	getTimeStrings({ start, end, options: { allDay, compact: true } });
+	formatCompactDateTimeRange(start, end, allDay);
 
 const buildEditor = (overrides: Partial<Editor> = {}): Editor =>
 	({
@@ -68,34 +67,42 @@ describe('getInviteChanges', () => {
 		});
 	});
 
-	it('detects an added resource (meeting room or equipment)', () => {
+	it('detects an added meeting room and an added equipment item as separate fields', () => {
 		const original = buildEditor({ meetingRoom: [], equipment: [] });
 		const current = buildEditor({
 			meetingRoom: [{ email: 'room@test.com', label: 'Room A' }],
 			equipment: [{ email: 'projector@test.com', label: 'Projector' }]
 		});
 		expect(getInviteChanges(original, current)).toEqual({
-			resources: {
-				added: [
-					{ a: 'room@test.com', d: 'Room A' },
-					{ a: 'projector@test.com', d: 'Projector' }
-				],
-				removed: []
-			}
+			meetingRooms: { added: [{ a: 'room@test.com', d: 'Room A' }], removed: [] },
+			equipment: { added: [{ a: 'projector@test.com', d: 'Projector' }], removed: [] }
 		});
 	});
 
-	it('detects a removed resource', () => {
+	it('detects a removed meeting room', () => {
 		const original = buildEditor({ meetingRoom: [{ email: 'room@test.com', label: 'Room A' }] });
 		const current = buildEditor({ meetingRoom: [] });
 		expect(getInviteChanges(original, current)).toEqual({
-			resources: { added: [], removed: [{ a: 'room@test.com', d: 'Room A' }] }
+			meetingRooms: { added: [], removed: [{ a: 'room@test.com', d: 'Room A' }] }
 		});
 	});
 
-	it('ignores resources without an email', () => {
-		const original = buildEditor({ meetingRoom: [] });
-		const current = buildEditor({ meetingRoom: [{ email: '', label: 'Deleted Room' }] as never });
+	it('detects a removed equipment item', () => {
+		const original = buildEditor({
+			equipment: [{ email: 'projector@test.com', label: 'Projector' }]
+		});
+		const current = buildEditor({ equipment: [] });
+		expect(getInviteChanges(original, current)).toEqual({
+			equipment: { added: [], removed: [{ a: 'projector@test.com', d: 'Projector' }] }
+		});
+	});
+
+	it('ignores meeting rooms/equipment without an email', () => {
+		const original = buildEditor({ meetingRoom: [], equipment: [] });
+		const current = buildEditor({
+			meetingRoom: [{ email: '', label: 'Deleted Room' }] as never,
+			equipment: [{ email: '', label: 'Deleted Equipment' }] as never
+		});
 		expect(getInviteChanges(original, current)).toBeUndefined();
 	});
 
