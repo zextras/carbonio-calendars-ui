@@ -6,16 +6,24 @@
 
 export type InviteChangeParticipant = { a: string; d?: string };
 
-// Order mirrors the editor's own field order (src/view/editor/editor-panel.tsx):
-// title, location, resources, virtual room, participants, date/time, all day, message.
+// Order mirrors how the banner displays the fields: title, location, virtual
+// room, meeting rooms, equipment, participants, date/time, all day, message.
+// Meeting rooms and equipment used to be a single combined "resources" field
+// (editor-resources.tsx manages both together); the banner now shows them as
+// two separate rows, matching the read-only event summary view's own
+// meeting-rooms-row.tsx / equipments-row.tsx split.
 export type InviteChanges = {
 	title?: { before: string; after: string };
 	location?: { before: string; after: string };
-	resources?: {
+	virtualRoom?: { before: string; after: string };
+	meetingRooms?: {
 		added: InviteChangeParticipant[];
 		removed: InviteChangeParticipant[];
 	};
-	virtualRoom?: { before: string; after: string };
+	equipment?: {
+		added: InviteChangeParticipant[];
+		removed: InviteChangeParticipant[];
+	};
 	participants?: {
 		added: InviteChangeParticipant[];
 		removed: InviteChangeParticipant[];

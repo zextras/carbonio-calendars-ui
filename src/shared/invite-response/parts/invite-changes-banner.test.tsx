@@ -11,6 +11,9 @@ import { InviteChangesBanner } from './invite-changes-banner';
 import type { InviteChanges } from '../../../types/invite-changes';
 import { setupTest } from '@test-setup';
 
+const sectionOrder = (): (string | null)[] =>
+	screen.getAllByTestId(/^invite-changes-section-/).map((el) => el.getAttribute('data-testid'));
+
 describe('InviteChangesBanner', () => {
 	it('renders nothing when there are no changes at all', () => {
 		setupTest(<InviteChangesBanner changes={{}} />);
@@ -35,46 +38,17 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByText('This invitation was updated')).toBeVisible();
 		});
 
-		it('never shows a toggle for the whole banner', () => {
+		it('never shows the show more/less toggle with 3 sections or fewer', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.queryByTestId('invite-changes-toggle')).not.toBeInTheDocument();
+			expect(screen.queryByTestId('invite-changes-banner-toggle')).not.toBeInTheDocument();
 		});
 
-		it('shows the participants field before the message field', () => {
+		it('shows the participants section before the message section', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			const labels = screen.getAllByText(/^(Participants|Message):$/).map((el) => el.textContent);
-			expect(labels).toEqual(['Participants:', 'Message:']);
-		});
-
-		it('renders every field in the same order as the editor', () => {
-			const allFieldsChanges: InviteChanges = {
-				title: { before: 'Old title', after: 'New title' },
-				location: { before: 'Room A', after: 'Room B' },
-				resources: {
-					added: [{ a: 'room@test.com', d: 'Room A' }],
-					removed: []
-				},
-				virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' },
-				participants: {
-					added: [{ a: 'added@test.com', d: 'Added' }],
-					removed: []
-				},
-				dateTime: { before: 'before-label', after: 'after-label' },
-				allDay: { before: false, after: true },
-				message: { before: 'old', after: 'new' }
-			};
-			setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
-			const labels = screen
-				.getAllByText(/^(Title|Location|Resources|Virtual room|Participants|Date & Time|Message):$/)
-				.map((el) => el.textContent);
-			expect(labels).toEqual([
-				'Title:',
-				'Location:',
-				'Resources:',
-				'Virtual room:',
-				'Participants:',
-				'Date & Time:',
-				'Message:'
+			expect(sectionOrder()).toEqual([
+				'invite-changes-section-participants',
+				'invite-changes-section-dateTime',
+				'invite-changes-section-message'
 			]);
 		});
 
@@ -88,16 +62,18 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByText('"(no message)" → "aasd"')).toBeVisible();
 		});
 
-		it('shows the pre-formatted date/time change joined by an arrow', () => {
+		it('shows the pre-formatted date/time change joined by an arrow, next to a clock icon', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
 			expect(
 				screen.getByText('Dec 31, 2025, 09:00 – 10:00 AM → Jan 01, 2026, 09:00 – 10:00 AM')
 			).toBeVisible();
+			expect(screen.getByTestId('icon: ClockOutline')).toBeVisible();
 		});
 
-		it('shows the participants change inline with +/- prefixes', () => {
+		it('shows the participants change inline with +/- prefixes, next to a people icon', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
 			expect(screen.getByText('+ Maria Rossi, - Paolo Grande')).toBeVisible();
+			expect(screen.getByTestId('icon: PeopleOutline')).toBeVisible();
 		});
 
 		it('does not show expand toggles for message or participants', () => {
@@ -108,35 +84,53 @@ describe('InviteChangesBanner', () => {
 	});
 
 	describe('new simple fields', () => {
-		it('shows a title change', () => {
+		it('shows a title change, quoted, with a text label (not an icon)', () => {
 			setupTest(
 				<InviteChangesBanner changes={{ title: { before: 'Old title', after: 'New title' } }} />
 			);
 			expect(screen.getByText('"Old title" → "New title"')).toBeVisible();
+			expect(screen.getByText('Title:')).toBeVisible();
 		});
 
-		it('shows a location change', () => {
+		it('shows a location change, unquoted, next to a pin icon', () => {
 			setupTest(
 				<InviteChangesBanner changes={{ location: { before: 'Room A', after: 'Room B' } }} />
 			);
-			expect(screen.getByText('"Room A" → "Room B"')).toBeVisible();
+			expect(screen.getByText('Room A → Room B')).toBeVisible();
+			expect(screen.getByTestId('icon: PinOutline')).toBeVisible();
 		});
 
-		it('shows added/removed resources inline with +/- prefixes, no chips', () => {
+		it('shows added/removed meeting rooms inline with +/- prefixes, next to a building icon', () => {
 			setupTest(
 				<InviteChangesBanner
 					changes={{
-						resources: {
+						meetingRooms: {
 							added: [{ a: 'room@test.com', d: 'Room A' }],
-							removed: [{ a: 'projector@test.com', d: 'Projector' }]
+							removed: [{ a: 'room2@test.com', d: 'Room B' }]
 						}
 					}}
 				/>
 			);
-			expect(screen.getByText('+ Room A, - Projector')).toBeVisible();
+			expect(screen.getByText('+ Room A, - Room B')).toBeVisible();
+			expect(screen.getByTestId('icon: BuildingOutline')).toBeVisible();
 		});
 
-		it('shows a virtual room link change', () => {
+		it('shows added/removed equipment inline with +/- prefixes, next to a briefcase icon', () => {
+			setupTest(
+				<InviteChangesBanner
+					changes={{
+						equipment: {
+							added: [{ a: 'projector@test.com', d: 'Projector' }],
+							removed: [{ a: 'laptop@test.com', d: 'Laptop' }]
+						}
+					}}
+				/>
+			);
+			expect(screen.getByText('+ Projector, - Laptop')).toBeVisible();
+			expect(screen.getByTestId('icon: BriefcaseOutline')).toBeVisible();
+		});
+
+		it('shows a virtual room link change, unquoted, next to a video icon', () => {
 			setupTest(
 				<InviteChangesBanner
 					changes={{
@@ -145,6 +139,7 @@ describe('InviteChangesBanner', () => {
 				/>
 			);
 			expect(screen.getByText('https://old.example.com → https://new.example.com')).toBeVisible();
+			expect(screen.getByTestId('icon: VideoOutline')).toBeVisible();
 		});
 
 		it('appends "all day" to the Date & Time row when the event became all day', () => {
@@ -173,7 +168,7 @@ describe('InviteChangesBanner', () => {
 
 		it('shows just "all day" with no dash on the Date & Time row when only all-day changed', () => {
 			setupTest(<InviteChangesBanner changes={{ allDay: { before: false, after: true } }} />);
-			expect(screen.getByText('Date & Time:')).toBeVisible();
+			expect(screen.getByTestId('icon: ClockOutline')).toBeVisible();
 			expect(screen.getByText('all day')).toBeVisible();
 		});
 	});
@@ -185,11 +180,12 @@ describe('InviteChangesBanner', () => {
 			message: { before: longBefore, after: longAfter }
 		};
 
-		it('shows the label and the summary as separate text nodes, and a Compare full text toggle instead of the raw text', () => {
+		it('shows the summary next to a message icon, and a View details toggle instead of the raw text', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('Message:')).toBeVisible();
+			expect(screen.getByTestId('icon: MessageSquareOutline')).toBeVisible();
 			expect(screen.getByText('updated')).toBeVisible();
 			expect(screen.getByTestId('invite-changes-message-toggle')).toBeVisible();
+			expect(screen.getByText('View details')).toBeVisible();
 			expect(screen.queryByText(`${longBefore} → ${longAfter}`)).not.toBeInTheDocument();
 		});
 
@@ -198,9 +194,8 @@ describe('InviteChangesBanner', () => {
 
 			await user.click(screen.getByTestId('invite-changes-message-toggle'));
 
-			expect(screen.queryByText('Message:')).not.toBeInTheDocument();
 			expect(screen.queryByText('updated')).not.toBeInTheDocument();
-			expect(screen.getByText('Message')).toBeVisible();
+			expect(screen.getByText('Hide details')).toBeVisible();
 
 			// Previous and Updated are on separate rows, each with a bold label
 			// and the text wrapped in quotes
@@ -237,22 +232,23 @@ describe('InviteChangesBanner', () => {
 			}
 		};
 
-		it('shows a bold label, a regular-weight count summary, and a View names toggle instead of the raw list', () => {
+		it('shows a people icon, a count summary, and a View details toggle instead of the raw list', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('Participants:')).toBeVisible();
+			expect(screen.getByTestId('icon: PeopleOutline')).toBeVisible();
 			expect(screen.getByText('3 added, 1 removed')).toBeVisible();
 			expect(screen.getByTestId('invite-changes-participants-toggle')).toBeVisible();
+			expect(screen.getByText('View details')).toBeVisible();
 		});
 
-		it('drops the summary and reveals names on the same row (no chips) after clicking View names', async () => {
+		it('drops the summary and reveals names on the same row (no chips) after clicking the toggle', async () => {
 			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
 
 			await user.click(screen.getByTestId('invite-changes-participants-toggle'));
 
 			expect(screen.queryByText('3 added, 1 removed')).not.toBeInTheDocument();
-			// same row as the label and the toggle, not a separate block below it
+			expect(screen.getByText('Hide details')).toBeVisible();
+			// same row as the marker and the toggle, not a separate block below it
 			const row = within(screen.getByTestId('invite-changes-participants-toggle-content'));
-			expect(row.getByText('Participants:')).toBeVisible();
 			expect(
 				row.getByText('+ Attendee One, + Attendee Two, + Attendee Three, - Removed One')
 			).toBeVisible();
@@ -274,7 +270,7 @@ describe('InviteChangesBanner', () => {
 		const longBefore = 'a'.repeat(60);
 		const longAfter = 'b'.repeat(60);
 
-		it('collapses a long title change behind a Compare full text toggle, quoted when expanded', async () => {
+		it('collapses a long title change behind a View details toggle, quoted when expanded', async () => {
 			const { user } = setupTest(
 				<InviteChangesBanner changes={{ title: { before: longBefore, after: longAfter } }} />
 			);
@@ -330,32 +326,127 @@ describe('InviteChangesBanner', () => {
 		});
 	});
 
-	describe('detailed resources case', () => {
-		const changes: InviteChanges = {
-			resources: {
-				added: [
-					{ a: 'r1@test.com', d: 'Room One' },
-					{ a: 'r2@test.com', d: 'Room Two' },
-					{ a: 'r3@test.com', d: 'Room Three' }
-				],
-				removed: [{ a: 'r4@test.com', d: 'Room Four' }]
-			}
+	describe('detailed meeting rooms / equipment case', () => {
+		const meetingRooms: InviteChanges['meetingRooms'] = {
+			added: [
+				{ a: 'r1@test.com', d: 'Room One' },
+				{ a: 'r2@test.com', d: 'Room Two' },
+				{ a: 'r3@test.com', d: 'Room Three' }
+			],
+			removed: [{ a: 'r4@test.com', d: 'Room Four' }]
+		};
+		const equipment: InviteChanges['equipment'] = {
+			added: [
+				{ a: 'e1@test.com', d: 'Projector' },
+				{ a: 'e2@test.com', d: 'Laptop' },
+				{ a: 'e3@test.com', d: 'Webcam' }
+			],
+			removed: [{ a: 'e4@test.com', d: 'Whiteboard' }]
 		};
 
-		it('shows a count summary and a View names toggle instead of the raw list', () => {
-			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('Resources:')).toBeVisible();
+		it('shows a count summary and a toggle instead of the raw list for meeting rooms', () => {
+			setupTest(<InviteChangesBanner changes={{ meetingRooms }} />);
+			expect(screen.getByTestId('icon: BuildingOutline')).toBeVisible();
 			expect(screen.getByText('3 added, 1 removed')).toBeVisible();
-			expect(screen.getByTestId('invite-changes-resources-toggle')).toBeVisible();
+			expect(screen.getByTestId('invite-changes-meetingrooms-toggle')).toBeVisible();
 		});
 
-		it('reveals the full list on the same row after clicking View names', async () => {
-			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
+		it('reveals the full meeting rooms list on the same row after clicking the toggle', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={{ meetingRooms }} />);
 
-			await user.click(screen.getByTestId('invite-changes-resources-toggle'));
+			await user.click(screen.getByTestId('invite-changes-meetingrooms-toggle'));
 
-			const row = within(screen.getByTestId('invite-changes-resources-toggle-content'));
+			const row = within(screen.getByTestId('invite-changes-meetingrooms-toggle-content'));
 			expect(row.getByText('+ Room One, + Room Two, + Room Three, - Room Four')).toBeVisible();
+		});
+
+		it('shows a count summary and a toggle instead of the raw list for equipment', () => {
+			setupTest(<InviteChangesBanner changes={{ equipment }} />);
+			expect(screen.getByTestId('icon: BriefcaseOutline')).toBeVisible();
+			expect(screen.getByText('3 added, 1 removed')).toBeVisible();
+			expect(screen.getByTestId('invite-changes-equipment-toggle')).toBeVisible();
+		});
+
+		it('reveals the full equipment list on the same row after clicking the toggle', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={{ equipment }} />);
+
+			await user.click(screen.getByTestId('invite-changes-equipment-toggle'));
+
+			const row = within(screen.getByTestId('invite-changes-equipment-toggle-content'));
+			expect(row.getByText('+ Projector, + Laptop, + Webcam, - Whiteboard')).toBeVisible();
+		});
+	});
+
+	describe('show more / show less', () => {
+		const allFieldsChanges: InviteChanges = {
+			title: { before: 'Old title', after: 'New title' },
+			location: { before: 'Room A', after: 'Room B' },
+			virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' },
+			meetingRooms: { added: [{ a: 'room@test.com', d: 'Room A' }], removed: [] },
+			equipment: { added: [{ a: 'projector@test.com', d: 'Projector' }], removed: [] },
+			participants: { added: [{ a: 'added@test.com', d: 'Added' }], removed: [] },
+			dateTime: { before: 'before-label', after: 'after-label' },
+			allDay: { before: false, after: true },
+			message: { before: 'old', after: 'new' }
+		};
+
+		it('shows only the first 3 sections (title counts as one of them) when collapsed', () => {
+			setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			expect(sectionOrder()).toEqual([
+				'invite-changes-section-title',
+				'invite-changes-section-location',
+				'invite-changes-section-virtualRoom'
+			]);
+		});
+
+		it('shows a Show more toggle when there are more than 3 sections', () => {
+			setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			expect(screen.getByText('Show more')).toBeVisible();
+		});
+
+		it('reveals every remaining section, in display order, after clicking Show more', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+
+			await user.click(screen.getByTestId('invite-changes-banner-toggle'));
+
+			expect(sectionOrder()).toEqual([
+				'invite-changes-section-title',
+				'invite-changes-section-location',
+				'invite-changes-section-virtualRoom',
+				'invite-changes-section-meetingRooms',
+				'invite-changes-section-equipment',
+				'invite-changes-section-participants',
+				'invite-changes-section-dateTime',
+				'invite-changes-section-message'
+			]);
+			expect(screen.getByText('Show less')).toBeVisible();
+		});
+
+		it('collapses back to the first 3 sections after clicking Show less', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+
+			await user.click(screen.getByTestId('invite-changes-banner-toggle'));
+			await user.click(screen.getByTestId('invite-changes-banner-toggle'));
+
+			expect(sectionOrder()).toEqual([
+				'invite-changes-section-title',
+				'invite-changes-section-location',
+				'invite-changes-section-virtualRoom'
+			]);
+			expect(screen.getByText('Show more')).toBeVisible();
+		});
+
+		it('does not show the show more/less toggle with exactly 3 sections', () => {
+			setupTest(
+				<InviteChangesBanner
+					changes={{
+						title: { before: 'Old title', after: 'New title' },
+						location: { before: 'Room A', after: 'Room B' },
+						virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' }
+					}}
+				/>
+			);
+			expect(screen.queryByTestId('invite-changes-banner-toggle')).not.toBeInTheDocument();
 		});
 	});
 });

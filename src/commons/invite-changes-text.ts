@@ -12,9 +12,11 @@ import type { InviteChangeParticipant, InviteChanges } from '../types/invite-cha
 // starting on the line right after. Parsing anchors only on these tags.
 const TITLE_TAG = '[title]';
 const LOCATION_TAG = '[location]';
-const RESOURCES_ADDED_TAG = '[resourceadded]';
-const RESOURCES_REMOVED_TAG = '[resourceremoved]';
 const VIRTUAL_ROOM_TAG = '[virtualroom]';
+const MEETING_ROOMS_ADDED_TAG = '[meetingroomadded]';
+const MEETING_ROOMS_REMOVED_TAG = '[meetingroomremoved]';
+const EQUIPMENT_ADDED_TAG = '[equipmentadded]';
+const EQUIPMENT_REMOVED_TAG = '[equipmentremoved]';
 const PARTICIPANTS_ADDED_TAG = '[added]';
 const PARTICIPANTS_REMOVED_TAG = '[removed]';
 const DATE_TIME_TAG = '[datetime]';
@@ -47,13 +49,19 @@ export const formatInviteChangesText = (changes: InviteChanges): string => {
 	const sections = compact([
 		formatSimpleDiff(TITLE_TAG, changes.title),
 		formatSimpleDiff(LOCATION_TAG, changes.location),
-		changes.resources
-			? formatParticipantsSection(RESOURCES_ADDED_TAG, '+', changes.resources.added)
-			: undefined,
-		changes.resources
-			? formatParticipantsSection(RESOURCES_REMOVED_TAG, '-', changes.resources.removed)
-			: undefined,
 		formatSimpleDiff(VIRTUAL_ROOM_TAG, changes.virtualRoom),
+		changes.meetingRooms
+			? formatParticipantsSection(MEETING_ROOMS_ADDED_TAG, '+', changes.meetingRooms.added)
+			: undefined,
+		changes.meetingRooms
+			? formatParticipantsSection(MEETING_ROOMS_REMOVED_TAG, '-', changes.meetingRooms.removed)
+			: undefined,
+		changes.equipment
+			? formatParticipantsSection(EQUIPMENT_ADDED_TAG, '+', changes.equipment.added)
+			: undefined,
+		changes.equipment
+			? formatParticipantsSection(EQUIPMENT_REMOVED_TAG, '-', changes.equipment.removed)
+			: undefined,
 		changes.participants
 			? formatParticipantsSection(PARTICIPANTS_ADDED_TAG, '+', changes.participants.added)
 			: undefined,
@@ -164,15 +172,21 @@ export const parseInviteChangesFromText = (
 		changes.location = location;
 	}
 
-	const addedResources = parseParticipantsSection(text, RESOURCES_ADDED_TAG);
-	const removedResources = parseParticipantsSection(text, RESOURCES_REMOVED_TAG);
-	if (addedResources.length > 0 || removedResources.length > 0) {
-		changes.resources = { added: addedResources, removed: removedResources };
-	}
-
 	const virtualRoom = parseSimpleDiff(text, VIRTUAL_ROOM_TAG);
 	if (virtualRoom) {
 		changes.virtualRoom = virtualRoom;
+	}
+
+	const addedMeetingRooms = parseParticipantsSection(text, MEETING_ROOMS_ADDED_TAG);
+	const removedMeetingRooms = parseParticipantsSection(text, MEETING_ROOMS_REMOVED_TAG);
+	if (addedMeetingRooms.length > 0 || removedMeetingRooms.length > 0) {
+		changes.meetingRooms = { added: addedMeetingRooms, removed: removedMeetingRooms };
+	}
+
+	const addedEquipment = parseParticipantsSection(text, EQUIPMENT_ADDED_TAG);
+	const removedEquipment = parseParticipantsSection(text, EQUIPMENT_REMOVED_TAG);
+	if (addedEquipment.length > 0 || removedEquipment.length > 0) {
+		changes.equipment = { added: addedEquipment, removed: removedEquipment };
 	}
 
 	const added = parseParticipantsSection(text, PARTICIPANTS_ADDED_TAG);

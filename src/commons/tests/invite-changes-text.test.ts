@@ -40,11 +40,22 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
-	it('round-trips added and removed resources', () => {
+	it('round-trips added and removed meeting rooms', () => {
 		const changes: InviteChanges = {
-			resources: {
+			meetingRooms: {
 				added: [{ a: 'room@test.com', d: 'Room A' }],
-				removed: [{ a: 'projector@test.com', d: 'Projector' }]
+				removed: [{ a: 'room2@test.com', d: 'Room B' }]
+			}
+		};
+		const formatted = formatInviteChangesText(changes);
+		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
+	});
+
+	it('round-trips added and removed equipment', () => {
+		const changes: InviteChanges = {
+			equipment: {
+				added: [{ a: 'projector@test.com', d: 'Projector' }],
+				removed: [{ a: 'laptop@test.com', d: 'Laptop' }]
 			}
 		};
 		const formatted = formatInviteChangesText(changes);
@@ -66,24 +77,29 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
-	it('does not confuse resources with participants when both are present', () => {
+	it('does not confuse meeting rooms/equipment with participants when both are present', () => {
 		const changes: InviteChanges = {
-			resources: { added: [{ a: 'room@test.com', d: 'Room A' }], removed: [] },
+			meetingRooms: { added: [{ a: 'room@test.com', d: 'Room A' }], removed: [] },
+			equipment: { added: [{ a: 'projector@test.com', d: 'Projector' }], removed: [] },
 			participants: { added: [{ a: 'person@test.com', d: 'Person' }], removed: [] }
 		};
 		const formatted = formatInviteChangesText(changes);
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
-	it('round-trips every field together, in editor field order', () => {
+	it('round-trips every field together, in display order', () => {
 		const changes: InviteChanges = {
 			title: { before: 'Old title', after: 'New title' },
 			location: { before: 'Room A', after: 'Room B' },
-			resources: {
-				added: [{ a: 'room@test.com', d: 'Room A' }],
-				removed: [{ a: 'projector@test.com', d: 'Projector' }]
-			},
 			virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' },
+			meetingRooms: {
+				added: [{ a: 'room@test.com', d: 'Room A' }],
+				removed: [{ a: 'room2@test.com', d: 'Room B' }]
+			},
+			equipment: {
+				added: [{ a: 'projector@test.com', d: 'Projector' }],
+				removed: [{ a: 'laptop@test.com', d: 'Laptop' }]
+			},
 			participants: {
 				added: [{ a: 'added@test.com', d: 'Added' }],
 				removed: [{ a: 'removed@test.com', d: 'Removed' }]
@@ -95,9 +111,14 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		const formatted = formatInviteChangesText(changes);
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 		expect(formatted.indexOf('[title]')).toBeLessThan(formatted.indexOf('[location]'));
-		expect(formatted.indexOf('[location]')).toBeLessThan(formatted.indexOf('[resourceadded]'));
-		expect(formatted.indexOf('[resourceremoved]')).toBeLessThan(formatted.indexOf('[virtualroom]'));
-		expect(formatted.indexOf('[virtualroom]')).toBeLessThan(formatted.indexOf('[added]'));
+		expect(formatted.indexOf('[location]')).toBeLessThan(formatted.indexOf('[virtualroom]'));
+		expect(formatted.indexOf('[virtualroom]')).toBeLessThan(
+			formatted.indexOf('[meetingroomadded]')
+		);
+		expect(formatted.indexOf('[meetingroomremoved]')).toBeLessThan(
+			formatted.indexOf('[equipmentadded]')
+		);
+		expect(formatted.indexOf('[equipmentremoved]')).toBeLessThan(formatted.indexOf('[added]'));
 		expect(formatted.indexOf('[removed]')).toBeLessThan(formatted.indexOf('[datetime]'));
 		expect(formatted.indexOf('[datetime]')).toBeLessThan(formatted.indexOf('[allday]'));
 		expect(formatted.indexOf('[allday]')).toBeLessThan(formatted.indexOf('[before]'));

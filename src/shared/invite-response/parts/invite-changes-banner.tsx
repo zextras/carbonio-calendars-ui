@@ -7,12 +7,15 @@ import React, { FC, ReactElement, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import type { InviteChangeParticipant, InviteChanges } from '../../../types/invite-changes';
 
 const ADDED_REMOVED_INLINE_THRESHOLD = 3;
 const DIFF_INLINE_MAX_LENGTH = 80;
+// Title always counts as one of the visible sections.
+const SECTIONS_INLINE_THRESHOLD = 3;
 
 const BannerContainer = styled(Container)`
 	background-color: ${({ theme }): string => theme.palette.infoBanner.regular};
@@ -30,6 +33,14 @@ const ToggleRow = styled(Row)`
 
 const ToggleText = styled(Text)`
 	text-decoration: underline;
+`;
+
+const BannerToggleRow = styled(Row)`
+	cursor: pointer;
+`;
+
+const BannerToggleText = styled(Text)`
+	text-transform: uppercase;
 `;
 
 const ExpandToggle: FC<{
@@ -53,10 +64,27 @@ const ExpandToggle: FC<{
 	</ToggleRow>
 );
 
-const FieldRow: FC<{ label: string; children: ReactElement | string }> = ({
+// Every section but Title identifies itself with an icon instead of a text
+// label (Title keeps the bold text label, in both its collapsed "Title:" and
+// expanded "Title" forms — icons have no such state to show).
+const SectionMarker: FC<{ label?: string; icon?: string; expanded?: boolean }> = ({
 	label,
-	children
-}): ReactElement => (
+	icon,
+	expanded
+}): ReactElement =>
+	icon ? (
+		<Icon icon={icon} size="medium" />
+	) : (
+		<Text weight="bold" size="small">
+			{expanded ? label : `${label}:`}
+		</Text>
+	);
+
+const FieldRow: FC<{
+	label?: string;
+	icon?: string;
+	children: ReactElement | string;
+}> = ({ label, icon, children }): ReactElement => (
 	<Row
 		width="100%"
 		mainAlignment="flex-start"
@@ -64,9 +92,7 @@ const FieldRow: FC<{ label: string; children: ReactElement | string }> = ({
 		padding={{ top: 'extrasmall' }}
 	>
 		<Row padding={{ right: 'extrasmall' }}>
-			<Text weight="bold" size="small">
-				{label}:
-			</Text>
+			<SectionMarker label={label} icon={icon} />
 		</Row>
 		<Row takeAvailableSpace mainAlignment="flex-start">
 			{typeof children === 'string' ? (
@@ -80,16 +106,17 @@ const FieldRow: FC<{ label: string; children: ReactElement | string }> = ({
 	</Row>
 );
 
-// Header for a field that can be expanded: collapsed shows "label: summary",
-// expanded drops the summary and shows just the label, per design.
+// Header for a field that can be expanded: collapsed shows "marker: summary",
+// expanded drops the summary and shows just the marker, per design.
 const ExpandableFieldHeader: FC<{
-	label: string;
+	label?: string;
+	icon?: string;
 	summary: string;
 	expanded: boolean;
 	onToggle: () => void;
 	toggleLabel: string;
 	testId: string;
-}> = ({ label, summary, expanded, onToggle, toggleLabel, testId }): ReactElement => (
+}> = ({ label, icon, summary, expanded, onToggle, toggleLabel, testId }): ReactElement => (
 	<Row
 		width="100%"
 		mainAlignment="space-between"
@@ -97,9 +124,7 @@ const ExpandableFieldHeader: FC<{
 		padding={{ top: 'extrasmall' }}
 	>
 		<Row>
-			<Text weight="bold" size="small">
-				{expanded ? label : `${label}:`}
-			</Text>
+			<SectionMarker label={label} icon={icon} expanded={expanded} />
 			{!expanded && (
 				<Text size="small" overflow="break-word">
 					&nbsp;{summary}
@@ -111,17 +136,18 @@ const ExpandableFieldHeader: FC<{
 );
 
 // Participants'/resources' expanded content is always inline on the same row
-// as the label and the toggle (unlike a text diff, whose Previous/Updated
+// as the marker and the toggle (unlike a text diff, whose Previous/Updated
 // text is too long to stay on one line and therefore goes on separate rows
 // below).
 const InlineFieldHeader: FC<{
-	label: string;
+	label?: string;
+	icon?: string;
 	content: string;
 	expanded: boolean;
 	onToggle: () => void;
 	toggleLabel: string;
 	testId: string;
-}> = ({ label, content, expanded, onToggle, toggleLabel, testId }): ReactElement => (
+}> = ({ label, icon, content, expanded, onToggle, toggleLabel, testId }): ReactElement => (
 	<Row
 		width="100%"
 		mainAlignment="space-between"
@@ -134,9 +160,7 @@ const InlineFieldHeader: FC<{
 			mainAlignment="flex-start"
 			data-testid={`${testId}-content`}
 		>
-			<Text weight="bold" size="small">
-				{label}:
-			</Text>
+			<SectionMarker label={label} icon={icon} />
 			<Text size="small" overflow="break-word">
 				&nbsp;{content}
 			</Text>
@@ -188,23 +212,29 @@ const DiffLine: FC<{ label: string; text: string; quote: boolean; testId: string
 	</Row>
 );
 
-const AddedRemovedField: FC<{ label: string; entities: AddedRemoved; testId: string }> = ({
-	label,
-	entities,
-	testId
-}): ReactElement => {
+const AddedRemovedField: FC<{
+	label?: string;
+	icon?: string;
+	entities: AddedRemoved;
+	testId: string;
+}> = ({ label, icon, entities, testId }): ReactElement => {
 	const [t] = useTranslation();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const count = entities.added.length + entities.removed.length;
 
 	if (count <= ADDED_REMOVED_INLINE_THRESHOLD) {
-		return <FieldRow label={label}>{formatParticipantsLine(entities)}</FieldRow>;
+		return (
+			<FieldRow label={label} icon={icon}>
+				{formatParticipantsLine(entities)}
+			</FieldRow>
+		);
 	}
 
 	return (
 		<InlineFieldHeader
 			testId={testId}
 			label={label}
+			icon={icon}
 			content={
 				isExpanded
 					? formatParticipantsLine(entities)
@@ -215,23 +245,28 @@ const AddedRemovedField: FC<{ label: string; entities: AddedRemoved; testId: str
 			}
 			expanded={isExpanded}
 			onToggle={(): void => setIsExpanded((prev) => !prev)}
-			toggleLabel={isExpanded ? t('label.hide', 'Hide') : t('label.view_names', 'View names')}
+			toggleLabel={
+				isExpanded
+					? t('label.hide_details', 'Hide details')
+					: t('label.view_details', 'View details')
+			}
 		/>
 	);
 };
 
 // Any before/after text diff (title, location, virtual room, date/time,
-// message): inline as "label: before → after" while it fits, otherwise
-// collapsed to "label: updated" with a toggle that reveals Previous/Updated
-// as quoted paragraph text below the label, same as the message field.
+// message): inline as "marker: before → after" while it fits, otherwise
+// collapsed to "marker: updated" with a toggle that reveals Previous/Updated
+// as quoted paragraph text below the marker, same as the message field.
 const SimpleDiffField: FC<{
-	label: string;
+	label?: string;
+	icon?: string;
 	before: string;
 	after: string;
 	quote?: boolean;
 	emptyPlaceholder?: string;
 	testId: string;
-}> = ({ label, before, after, quote = false, emptyPlaceholder, testId }): ReactElement => {
+}> = ({ label, icon, before, after, quote = false, emptyPlaceholder, testId }): ReactElement => {
 	const [t] = useTranslation();
 	const [isExpanded, setIsExpanded] = useState(false);
 
@@ -242,7 +277,11 @@ const SimpleDiffField: FC<{
 	};
 
 	if (!isDiffDetailed(before, after)) {
-		return <FieldRow label={label}>{`${formatSide(before)} → ${formatSide(after)}`}</FieldRow>;
+		return (
+			<FieldRow label={label} icon={icon}>
+				{`${formatSide(before)} → ${formatSide(after)}`}
+			</FieldRow>
+		);
 	}
 
 	return (
@@ -250,11 +289,14 @@ const SimpleDiffField: FC<{
 			<ExpandableFieldHeader
 				testId={`${testId}-toggle`}
 				label={label}
+				icon={icon}
 				summary={t('label.updated', 'updated')}
 				expanded={isExpanded}
 				onToggle={(): void => setIsExpanded((prev) => !prev)}
 				toggleLabel={
-					isExpanded ? t('label.hide', 'Hide') : t('label.compare_full_text', 'Compare full text')
+					isExpanded
+						? t('label.hide_details', 'Hide details')
+						: t('label.view_details', 'View details')
 				}
 			/>
 			{isExpanded && (
@@ -277,10 +319,142 @@ const SimpleDiffField: FC<{
 	);
 };
 
+// Each section is wrapped with a stable testid so its position in the list
+// can be asserted regardless of whether it renders a text label (Title) or
+// an icon (everything else).
+const section = (key: string, element: ReactElement): ReactElement => (
+	<Container
+		key={key}
+		data-testid={`invite-changes-section-${key}`}
+		crossAlignment="flex-start"
+		width="100%"
+	>
+		{element}
+	</Container>
+);
+
+const buildSections = (
+	changes: InviteChanges,
+	t: TFunction,
+	noMessageLabel: string,
+	dateTimeAfter: string | undefined,
+	allDayWord: string | undefined
+): ReactElement[] => {
+	const sections: ReactElement[] = [];
+	if (changes.title) {
+		sections.push(
+			section(
+				'title',
+				<SimpleDiffField
+					testId="invite-changes-title"
+					label={t('label.title', 'Title')}
+					before={changes.title.before}
+					after={changes.title.after}
+					quote
+				/>
+			)
+		);
+	}
+	if (changes.location) {
+		sections.push(
+			section(
+				'location',
+				<SimpleDiffField
+					testId="invite-changes-location"
+					icon="PinOutline"
+					before={changes.location.before}
+					after={changes.location.after}
+				/>
+			)
+		);
+	}
+	if (changes.virtualRoom) {
+		sections.push(
+			section(
+				'virtualRoom',
+				<SimpleDiffField
+					testId="invite-changes-virtualroom"
+					icon="VideoOutline"
+					before={changes.virtualRoom.before}
+					after={changes.virtualRoom.after}
+				/>
+			)
+		);
+	}
+	if (changes.meetingRooms) {
+		sections.push(
+			section(
+				'meetingRooms',
+				<AddedRemovedField
+					testId="invite-changes-meetingrooms-toggle"
+					icon="BuildingOutline"
+					entities={changes.meetingRooms}
+				/>
+			)
+		);
+	}
+	if (changes.equipment) {
+		sections.push(
+			section(
+				'equipment',
+				<AddedRemovedField
+					testId="invite-changes-equipment-toggle"
+					icon="BriefcaseOutline"
+					entities={changes.equipment}
+				/>
+			)
+		);
+	}
+	if (changes.participants) {
+		sections.push(
+			section(
+				'participants',
+				<AddedRemovedField
+					testId="invite-changes-participants-toggle"
+					icon="PeopleOutline"
+					entities={changes.participants}
+				/>
+			)
+		);
+	}
+	if (changes.dateTime) {
+		sections.push(
+			section(
+				'dateTime',
+				<SimpleDiffField
+					testId="invite-changes-datetime"
+					icon="ClockOutline"
+					before={changes.dateTime.before}
+					after={dateTimeAfter ?? changes.dateTime.after}
+				/>
+			)
+		);
+	} else if (allDayWord) {
+		sections.push(section('dateTime', <FieldRow icon="ClockOutline">{allDayWord}</FieldRow>));
+	}
+	if (changes.message) {
+		sections.push(
+			section(
+				'message',
+				<SimpleDiffField
+					testId="invite-changes-message"
+					icon="MessageSquareOutline"
+					before={changes.message.before}
+					after={changes.message.after}
+					quote
+					emptyPlaceholder={noMessageLabel}
+				/>
+			)
+		);
+	}
+	return sections;
+};
+
 export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 	changes
 }): ReactElement | null => {
 	const [t] = useTranslation();
+	const [isBannerExpanded, setIsBannerExpanded] = useState(false);
 	const noMessageLabel = t('label.no_message', '(no message)');
 
 	// The all-day flag is shown as a suffix on the Date & Time row rather than
@@ -300,19 +474,15 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 			? `${changes.dateTime.after} - ${allDayWord}`
 			: changes.dateTime?.after;
 
-	const hasAnyChange = !!(
-		changes.title ||
-		changes.location ||
-		changes.resources ||
-		changes.virtualRoom ||
-		changes.participants ||
-		changes.dateTime ||
-		changes.allDay ||
-		changes.message
-	);
-	if (!hasAnyChange) {
+	const sections = buildSections(changes, t, noMessageLabel, dateTimeAfter, allDayWord);
+
+	if (sections.length === 0) {
 		return null;
 	}
+
+	const visibleSections = isBannerExpanded
+		? sections
+		: sections.slice(0, SECTIONS_INLINE_THRESHOLD);
 
 	return (
 		<BannerContainer data-testid="invite-changes-banner" width="100%" crossAlignment="flex-start">
@@ -323,68 +493,23 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 				<Text weight="bold">{t('label.invitation_updated', 'This invitation was updated')}</Text>
 			</Row>
 			<Container crossAlignment="flex-start" padding={{ top: 'small' }}>
-				{changes.title && (
-					<SimpleDiffField
-						testId="invite-changes-title"
-						label={t('label.title', 'Title')}
-						before={changes.title.before}
-						after={changes.title.after}
-						quote
-					/>
-				)}
-				{changes.location && (
-					<SimpleDiffField
-						testId="invite-changes-location"
-						label={t('label.location', 'Location')}
-						before={changes.location.before}
-						after={changes.location.after}
-						quote
-					/>
-				)}
-				{changes.resources && (
-					<AddedRemovedField
-						testId="invite-changes-resources-toggle"
-						label={t('label.resources', 'Resources')}
-						entities={changes.resources}
-					/>
-				)}
-				{changes.virtualRoom && (
-					<SimpleDiffField
-						testId="invite-changes-virtualroom"
-						label={t('label.virtual_room', 'Virtual room')}
-						before={changes.virtualRoom.before}
-						after={changes.virtualRoom.after}
-					/>
-				)}
-				{changes.participants && (
-					<AddedRemovedField
-						testId="invite-changes-participants-toggle"
-						label={t('label.participants', 'Participants')}
-						entities={changes.participants}
-					/>
-				)}
-				{changes.dateTime && (
-					<SimpleDiffField
-						testId="invite-changes-datetime"
-						label={t('label.date_and_time', 'Date & Time')}
-						before={changes.dateTime.before}
-						after={dateTimeAfter ?? changes.dateTime.after}
-					/>
-				)}
-				{!changes.dateTime && allDayWord && (
-					<FieldRow label={t('label.date_and_time', 'Date & Time')}>{allDayWord}</FieldRow>
-				)}
-				{changes.message && (
-					<SimpleDiffField
-						testId="invite-changes-message"
-						label={t('label.message', 'Message')}
-						before={changes.message.before}
-						after={changes.message.after}
-						quote
-						emptyPlaceholder={noMessageLabel}
-					/>
-				)}
+				{visibleSections}
 			</Container>
+			{sections.length > SECTIONS_INLINE_THRESHOLD && (
+				<BannerToggleRow
+					data-testid="invite-changes-banner-toggle"
+					onClick={(): void => setIsBannerExpanded((prev) => !prev)}
+					width="100%"
+					mainAlignment="flex-start"
+					padding={{ top: 'small' }}
+				>
+					<BannerToggleText color="info" size="small" weight="bold">
+						{isBannerExpanded
+							? t('label.show_less_sections', 'Show less')
+							: t('label.show_more_sections', 'Show more')}
+					</BannerToggleText>
+				</BannerToggleRow>
+			)}
 		</BannerContainer>
 	);
 };
