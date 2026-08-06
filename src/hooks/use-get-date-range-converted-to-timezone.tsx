@@ -24,13 +24,17 @@ type TimeStringsType = {
 		allDay?: boolean;
 		allDayLabel?: string;
 		locale?: string;
+		// Drops the weekday, spells the month short, and omits the GMT
+		// offset/timezone id — for places that need a terse range rather than
+		// the full "Weekday, Month day, year, HH:mm GMT+offset Timezone" form.
+		compact?: boolean;
 	};
 };
 
 export const getTimeStrings = ({ start, end, options }: TimeStringsType): string => {
 	const rangeOptions = {
-		weekday: 'long',
-		month: 'long',
+		weekday: options?.compact ? undefined : 'long',
+		month: options?.compact ? 'short' : 'long',
 		day: '2-digit',
 		year: 'numeric',
 		minute: options?.allDay ? undefined : '2-digit',
@@ -56,9 +60,11 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 	const formattedRange = dateTimeFormat.formatRange(start, end);
 	const formatParts = dateGmtTimeFormat.formatToParts(start);
 
-	const timezoneGmt = formatParts.find((part) => part.type === 'timeZoneName')?.value;
+	const timezoneGmt = options?.compact
+		? undefined
+		: formatParts.find((part) => part.type === 'timeZoneName')?.value;
 
-	const timezoneString = options?.allDay ? undefined : options?.timeZone;
+	const timezoneString = options?.allDay || options?.compact ? undefined : options?.timeZone;
 
 	return compact([formattedRange, timezoneGmt, timezoneString, options?.allDayLabel]).join(' ');
 };

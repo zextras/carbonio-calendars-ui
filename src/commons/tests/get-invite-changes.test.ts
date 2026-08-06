@@ -7,8 +7,8 @@ import { getInviteChanges } from '../get-invite-changes';
 import { getTimeStrings } from '../../hooks/use-get-date-range-converted-to-timezone';
 import { Editor } from '../../types/editor';
 
-const dateTimeLabel = (start: number, end: number): string =>
-	getTimeStrings({ start, end, options: {} });
+const dateTimeLabel = (start: number, end: number, allDay = false): string =>
+	getTimeStrings({ start, end, options: { allDay, compact: true } });
 
 const buildEditor = (overrides: Partial<Editor> = {}): Editor =>
 	({
@@ -175,6 +175,17 @@ describe('getInviteChanges', () => {
 				removed: [{ a: 'old@test.com', d: 'Old Person' }]
 			}
 		});
+	});
+
+	it('omits the time of day once the event becomes all day', () => {
+		const original = buildEditor({ start: 1000, end: 2000, allDay: false });
+		const current = buildEditor({ start: 1000 + 86400000, end: 2000 + 86400000, allDay: true });
+		const changes = getInviteChanges(original, current);
+		expect(changes?.dateTime).toEqual({
+			before: dateTimeLabel(1000, 2000, false),
+			after: dateTimeLabel(1000 + 86400000, 2000 + 86400000, true)
+		});
+		expect(changes?.dateTime?.after).not.toMatch(/\d{1,2}:\d{2}/);
 	});
 
 	it('detects added and removed participants together, including optional attendees', () => {
