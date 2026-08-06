@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { format, isSameDay } from 'date-fns';
 import { differenceBy, unionBy } from 'lodash';
 
-import { getTimeStrings } from '../hooks/use-get-date-range-converted-to-timezone';
+import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
 import { Editor, Resource } from '../types/editor';
 import { InviteChangeParticipant, InviteChanges } from '../types/invite-changes';
 import { EditorChipAttendees } from '../types/store/invite';
@@ -33,13 +34,42 @@ const toChangeResource = (resource: Resource): InviteChangeParticipant => ({
 	d: resource.label
 });
 
-const getAllResources = (editor: Editor | undefined): Resource[] =>
-	unionBy(
-		[...(editor?.meetingRoom ?? []), ...(editor?.equipment ?? [])].filter(
-			(resource) => !!resource?.email
-		),
-		byLowerCaseEmail
-	);
+const getResourceList = (resources: Resource[] | undefined): Resource[] =>
+	(resources ?? []).filter((resource) => !!resource?.email);
+
+const diffResourceList = (
+	before: Resource[],
+	after: Resource[]
+): { added: InviteChangeParticipant[]; removed: InviteChangeParticipant[] } | undefined => {
+	const added = differenceBy(after, before, byLowerCaseEmail);
+	const removed = differenceBy(before, after, byLowerCaseEmail);
+	return added.length > 0 || removed.length > 0
+		? { added: added.map(toChangeResource), removed: removed.map(toChangeResource) }
+		: undefined;
+};
+
+// A terse "EEE, MMM d · time – time" range, e.g. "Wed, Jul 29 · 8:30–9:00 PM".
+// Kept separate from the app's other (Intl-based) date range formatter: this
+// one is only ever baked into the invitation-changes diff text, so it favors
+// a compact, always-short-weekday form over that formatter's fuller output.
+export const formatCompactDateTimeRange = (start: number, end: number, allDay: boolean): string => {
+	const locale = getDateFnsLocale();
+	const startDate = new Date(start);
+	const endDate = new Date(end);
+	const formatDay = (date: Date): string => format(date, 'EEE, MMM d', { locale });
+
+	if (allDay) {
+		return isSameDay(startDate, endDate)
+			? formatDay(startDate)
+			: `${formatDay(startDate)} – ${formatDay(endDate)}`;
+	}
+
+	const formatTime = (date: Date): string => format(date, 'p', { locale });
+	if (isSameDay(startDate, endDate)) {
+		return `${formatDay(startDate)} · ${formatTime(startDate)}–${formatTime(endDate)}`;
+	}
+	return `${formatDay(startDate)} · ${formatTime(startDate)} – ${formatDay(endDate)} · ${formatTime(endDate)}`;
+};
 
 export const getInviteChanges = (
 	original: Editor | undefined,
@@ -63,21 +93,26 @@ export const getInviteChanges = (
 		changes.location = { before: beforeLocation, after: afterLocation };
 	}
 
-	const beforeResources = getAllResources(original);
-	const afterResources = getAllResources(current);
-	const addedResources = differenceBy(afterResources, beforeResources, byLowerCaseEmail);
-	const removedResources = differenceBy(beforeResources, afterResources, byLowerCaseEmail);
-	if (addedResources.length > 0 || removedResources.length > 0) {
-		changes.resources = {
-			added: addedResources.map(toChangeResource),
-			removed: removedResources.map(toChangeResource)
-		};
-	}
-
 	const beforeRoomLink = original.room?.link ?? '';
 	const afterRoomLink = current.room?.link ?? '';
 	if (beforeRoomLink !== afterRoomLink) {
 		changes.virtualRoom = { before: beforeRoomLink, after: afterRoomLink };
+	}
+
+	const meetingRoomsDiff = diffResourceList(
+		getResourceList(original.meetingRoom),
+		getResourceList(current.meetingRoom)
+	);
+	if (meetingRoomsDiff) {
+		changes.meetingRooms = meetingRoomsDiff;
+	}
+
+	const equipmentDiff = diffResourceList(
+		getResourceList(original.equipment),
+		getResourceList(current.equipment)
+	);
+	if (equipmentDiff) {
+		changes.equipment = equipmentDiff;
 	}
 
 	const beforeAttendees = getAllAttendees(original);
@@ -93,16 +128,8 @@ export const getInviteChanges = (
 
 	if (original.start !== current.start || original.end !== current.end) {
 		changes.dateTime = {
-			before: getTimeStrings({
-				start: original.start ?? 0,
-				end: original.end ?? 0,
-				options: { allDay: !!original.allDay, compact: true }
-			}),
-			after: getTimeStrings({
-				start: current.start ?? 0,
-				end: current.end ?? 0,
-				options: { allDay: !!current.allDay, compact: true }
-			})
+			before: formatCompactDateTimeRange(original.start ?? 0, original.end ?? 0, !!original.allDay),
+			after: formatCompactDateTimeRange(current.start ?? 0, current.end ?? 0, !!current.allDay)
 		};
 	}
 
