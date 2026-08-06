@@ -1,3 +1,7 @@
+## 1.32.0 (2026-08-06)
+
+* feat(CO-4077): prevent duplicate notifications when accepting a proposed new time (#826) ([d851251](https://github.com/zextras/carbonio-calendars-ui/commit/d851251)), closes [#826](https://github.com/zextras/carbonio-calendars-ui/issues/826)
+
 ## <small>1.31.1 (2026-08-06)</small>
 
 * fix: use locale language in the propose new time message (#827) ([d3942d7](https://github.com/zextras/carbonio-calendars-ui/commit/d3942d7)), closes [#827](https://github.com/zextras/carbonio-calendars-ui/issues/827)
