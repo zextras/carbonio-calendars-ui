@@ -20,6 +20,7 @@ import InviteHeaderPart from './parts/invite-header-part';
 import InviteReplyPart from './parts/invite-reply-part';
 import { ParticipantsList } from './parts/participants-list';
 import ProposedTimeReply from './parts/proposed-time-reply';
+import { isProposalAlreadyApplied } from './proposal-status';
 import { useFetchInvite } from './useFetchInvite';
 import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { MESSAGE_METHOD } from '../../constants/api';
@@ -75,6 +76,12 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const proposedStartTime = mailMsg.invite[0]?.comp?.[0]?.s?.[0]?.d;
 	const proposedEndTime = mailMsg.invite[0]?.comp?.[0]?.e?.[0]?.d;
 
+	// a proposal accepted in an earlier session is only visible in the appointment itself
+	const proposalApplied = useMemo(
+		() => isProposalAlreadyApplied({ fetchedInvites: fetchedInv, counterInvite: mailMsg.invite }),
+		[fetchedInv, mailMsg.invite]
+	);
+
 	const inviteId =
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
@@ -128,6 +135,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						to={to}
 						msg={mailMsg}
 						fragment={invite?.fragment}
+						proposalApplied={proposalApplied}
 					/>
 				)}
 				{method !== MESSAGE_METHOD.COUNTER && isAttendee && (
