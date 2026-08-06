@@ -73,7 +73,7 @@ const SectionMarker: FC<{ label?: string; icon?: string; expanded?: boolean }> =
 	expanded
 }): ReactElement =>
 	icon ? (
-		<Icon icon={icon} size="small" />
+		<Icon icon={icon} size="medium" />
 	) : (
 		<Text weight="bold" size="small">
 			{expanded ? label : `${label}:`}
