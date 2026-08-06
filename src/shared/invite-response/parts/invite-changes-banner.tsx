@@ -11,8 +11,8 @@ import { useTranslation } from 'react-i18next';
 
 import type { InviteChangeParticipant, InviteChanges } from '../../../types/invite-changes';
 
-const PARTICIPANTS_INLINE_THRESHOLD = 3;
-const MESSAGE_INLINE_MAX_LENGTH = 80;
+const ADDED_REMOVED_INLINE_THRESHOLD = 3;
+const DIFF_INLINE_MAX_LENGTH = 80;
 
 const BannerContainer = styled(Container)`
 	background-color: ${({ theme }): string => theme.palette.infoBanner.regular};
@@ -110,9 +110,10 @@ const ExpandableFieldHeader: FC<{
 	</Row>
 );
 
-// Participants' expanded content is always inline on the same row as the
-// label and the toggle (unlike message, whose Previous/Updated text is too
-// long to stay on one line and therefore goes on separate rows below).
+// Participants'/resources' expanded content is always inline on the same row
+// as the label and the toggle (unlike a text diff, whose Previous/Updated
+// text is too long to stay on one line and therefore goes on separate rows
+// below).
 const InlineFieldHeader: FC<{
 	label: string;
 	content: string;
@@ -144,10 +145,10 @@ const InlineFieldHeader: FC<{
 	</Row>
 );
 
-const isMessageDetailed = (message: NonNullable<InviteChanges['message']>): boolean =>
-	message.before.length + message.after.length > MESSAGE_INLINE_MAX_LENGTH ||
-	message.before.includes('\n') ||
-	message.after.includes('\n');
+const isDiffDetailed = (before: string, after: string): boolean =>
+	before.length + after.length > DIFF_INLINE_MAX_LENGTH ||
+	before.includes('\n') ||
+	after.includes('\n');
 
 type AddedRemoved = { added: InviteChangeParticipant[]; removed: InviteChangeParticipant[] };
 
@@ -174,41 +175,42 @@ const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): React
 // the whole text to its own line or hang-indent every wrapped line under
 // where the quote started. Plain inline flow wraps like a normal paragraph:
 // only the overflow moves down, flush with the label's own left edge.
-const MessageDiffLine: FC<{ label: string; text: string; testId: string }> = ({
+const DiffLine: FC<{ label: string; text: string; quote: boolean; testId: string }> = ({
 	label,
 	text,
+	quote,
 	testId
 }): ReactElement => (
 	<Row width="100%" mainAlignment="flex-start" padding={{ top: 'extrasmall' }} data-testid={testId}>
 		<Text size="small" overflow="break-word">
-			<b>{label}:</b> <span>&quot;{text}&quot;</span>
+			<b>{label}:</b> <span>{quote ? `"${text}"` : text}</span>
 		</Text>
 	</Row>
 );
 
-const ParticipantsField: FC<{ participants: AddedRemoved }> = ({ participants }): ReactElement => {
+const AddedRemovedField: FC<{ label: string; entities: AddedRemoved; testId: string }> = ({
+	label,
+	entities,
+	testId
+}): ReactElement => {
 	const [t] = useTranslation();
 	const [isExpanded, setIsExpanded] = useState(false);
-	const count = participants.added.length + participants.removed.length;
+	const count = entities.added.length + entities.removed.length;
 
-	if (count <= PARTICIPANTS_INLINE_THRESHOLD) {
-		return (
-			<FieldRow label={t('label.participants', 'Participants')}>
-				{formatParticipantsLine(participants)}
-			</FieldRow>
-		);
+	if (count <= ADDED_REMOVED_INLINE_THRESHOLD) {
+		return <FieldRow label={label}>{formatParticipantsLine(entities)}</FieldRow>;
 	}
 
 	return (
 		<InlineFieldHeader
-			testId="invite-changes-participants-toggle"
-			label={t('label.participants', 'Participants')}
+			testId={testId}
+			label={label}
 			content={
 				isExpanded
-					? formatParticipantsLine(participants)
+					? formatParticipantsLine(entities)
 					: t('label.participants_added_removed', '{{added}} added, {{removed}} removed', {
-							added: participants.added.length,
-							removed: participants.removed.length
+							added: entities.added.length,
+							removed: entities.removed.length
 						})
 			}
 			expanded={isExpanded}
@@ -218,27 +220,36 @@ const ParticipantsField: FC<{ participants: AddedRemoved }> = ({ participants })
 	);
 };
 
-const MessageField: FC<{ message: NonNullable<InviteChanges['message']> }> = ({
-	message
-}): ReactElement => {
+// Any before/after text diff (title, location, virtual room, date/time,
+// message): inline as "label: before → after" while it fits, otherwise
+// collapsed to "label: updated" with a toggle that reveals Previous/Updated
+// as quoted paragraph text below the label, same as the message field.
+const SimpleDiffField: FC<{
+	label: string;
+	before: string;
+	after: string;
+	quote?: boolean;
+	emptyPlaceholder?: string;
+	testId: string;
+}> = ({ label, before, after, quote = false, emptyPlaceholder, testId }): ReactElement => {
 	const [t] = useTranslation();
 	const [isExpanded, setIsExpanded] = useState(false);
-	const noMessageLabel = t('label.no_message', '(no message)');
-	const formatMessageSide = (text: string): string => text || noMessageLabel;
 
-	if (!isMessageDetailed(message)) {
-		return (
-			<FieldRow label={t('label.message', 'Message')}>
-				{`"${formatMessageSide(message.before)}" → "${formatMessageSide(message.after)}"`}
-			</FieldRow>
-		);
+	const resolve = (text: string): string => text || (emptyPlaceholder ?? text);
+	const formatSide = (text: string): string => {
+		const resolved = resolve(text);
+		return quote ? `"${resolved}"` : resolved;
+	};
+
+	if (!isDiffDetailed(before, after)) {
+		return <FieldRow label={label}>{`${formatSide(before)} → ${formatSide(after)}`}</FieldRow>;
 	}
 
 	return (
 		<Container crossAlignment="flex-start" width="100%">
 			<ExpandableFieldHeader
-				testId="invite-changes-message-toggle"
-				label={t('label.message', 'Message')}
+				testId={`${testId}-toggle`}
+				label={label}
 				summary={t('label.updated', 'updated')}
 				expanded={isExpanded}
 				onToggle={(): void => setIsExpanded((prev) => !prev)}
@@ -248,15 +259,17 @@ const MessageField: FC<{ message: NonNullable<InviteChanges['message']> }> = ({
 			/>
 			{isExpanded && (
 				<DetailedContent>
-					<MessageDiffLine
-						testId="invite-changes-message-previous"
+					<DiffLine
+						testId={`${testId}-previous`}
 						label={t('label.previous', 'Previous')}
-						text={message.before}
+						text={resolve(before)}
+						quote={quote}
 					/>
-					<MessageDiffLine
-						testId="invite-changes-message-updated"
+					<DiffLine
+						testId={`${testId}-updated`}
 						label={t('label.updated_value', 'Updated')}
-						text={message.after}
+						text={resolve(after)}
+						quote={quote}
 					/>
 				</DetailedContent>
 			)}
@@ -268,25 +281,24 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 	changes
 }): ReactElement | null => {
 	const [t] = useTranslation();
+	const noMessageLabel = t('label.no_message', '(no message)');
 
 	// The all-day flag is shown as a suffix on the Date & Time row rather than
 	// as a field of its own — with a "-" connector only when it's actually
 	// joining onto a date/time range, not when all-day is the only change.
+	// It's folded into the "after" side (rather than appended once to the
+	// whole row) so it survives the field's own expand/collapse the same way
+	// the rest of the date/time text does.
 	let allDayWord: string | undefined;
 	if (changes.allDay) {
 		allDayWord = changes.allDay.after
 			? t('label.all_day', 'all day')
 			: t('label.not_all_day', 'not all day');
 	}
-	let dateTimeLabel: string | undefined;
-	if (changes.dateTime) {
-		dateTimeLabel = `${changes.dateTime.before} → ${changes.dateTime.after}`;
-		if (allDayWord) {
-			dateTimeLabel += ` - ${allDayWord}`;
-		}
-	} else if (allDayWord) {
-		dateTimeLabel = allDayWord;
-	}
+	const dateTimeAfter =
+		changes.dateTime && allDayWord
+			? `${changes.dateTime.after} - ${allDayWord}`
+			: changes.dateTime?.after;
 
 	const hasAnyChange = !!(
 		changes.title ||
@@ -312,30 +324,66 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 			</Row>
 			<Container crossAlignment="flex-start" padding={{ top: 'small' }}>
 				{changes.title && (
-					<FieldRow label={t('label.title', 'Title')}>
-						{`"${changes.title.before}" → "${changes.title.after}"`}
-					</FieldRow>
+					<SimpleDiffField
+						testId="invite-changes-title"
+						label={t('label.title', 'Title')}
+						before={changes.title.before}
+						after={changes.title.after}
+						quote
+					/>
 				)}
 				{changes.location && (
-					<FieldRow label={t('label.location', 'Location')}>
-						{`"${changes.location.before}" → "${changes.location.after}"`}
-					</FieldRow>
+					<SimpleDiffField
+						testId="invite-changes-location"
+						label={t('label.location', 'Location')}
+						before={changes.location.before}
+						after={changes.location.after}
+						quote
+					/>
 				)}
 				{changes.resources && (
-					<FieldRow label={t('label.resources', 'Resources')}>
-						{formatParticipantsLine(changes.resources)}
-					</FieldRow>
+					<AddedRemovedField
+						testId="invite-changes-resources-toggle"
+						label={t('label.resources', 'Resources')}
+						entities={changes.resources}
+					/>
 				)}
 				{changes.virtualRoom && (
-					<FieldRow label={t('label.virtual_room', 'Virtual room')}>
-						{`${changes.virtualRoom.before} → ${changes.virtualRoom.after}`}
-					</FieldRow>
+					<SimpleDiffField
+						testId="invite-changes-virtualroom"
+						label={t('label.virtual_room', 'Virtual room')}
+						before={changes.virtualRoom.before}
+						after={changes.virtualRoom.after}
+					/>
 				)}
-				{changes.participants && <ParticipantsField participants={changes.participants} />}
-				{dateTimeLabel && (
-					<FieldRow label={t('label.date_and_time', 'Date & Time')}>{dateTimeLabel}</FieldRow>
+				{changes.participants && (
+					<AddedRemovedField
+						testId="invite-changes-participants-toggle"
+						label={t('label.participants', 'Participants')}
+						entities={changes.participants}
+					/>
 				)}
-				{changes.message && <MessageField message={changes.message} />}
+				{changes.dateTime && (
+					<SimpleDiffField
+						testId="invite-changes-datetime"
+						label={t('label.date_and_time', 'Date & Time')}
+						before={changes.dateTime.before}
+						after={dateTimeAfter ?? changes.dateTime.after}
+					/>
+				)}
+				{!changes.dateTime && allDayWord && (
+					<FieldRow label={t('label.date_and_time', 'Date & Time')}>{allDayWord}</FieldRow>
+				)}
+				{changes.message && (
+					<SimpleDiffField
+						testId="invite-changes-message"
+						label={t('label.message', 'Message')}
+						before={changes.message.before}
+						after={changes.message.after}
+						quote
+						emptyPlaceholder={noMessageLabel}
+					/>
+				)}
 			</Container>
 		</BannerContainer>
 	);

@@ -93,8 +93,16 @@ export const getInviteChanges = (
 
 	if (original.start !== current.start || original.end !== current.end) {
 		changes.dateTime = {
-			before: getTimeStrings({ start: original.start ?? 0, end: original.end ?? 0, options: {} }),
-			after: getTimeStrings({ start: current.start ?? 0, end: current.end ?? 0, options: {} })
+			before: getTimeStrings({
+				start: original.start ?? 0,
+				end: original.end ?? 0,
+				options: { allDay: !!original.allDay, compact: true }
+			}),
+			after: getTimeStrings({
+				start: current.start ?? 0,
+				end: current.end ?? 0,
+				options: { allDay: !!current.allDay, compact: true }
+			})
 		};
 	}
 

@@ -21,8 +21,8 @@ describe('InviteChangesBanner', () => {
 		const changes: InviteChanges = {
 			message: { before: 'old text', after: 'new text' },
 			dateTime: {
-				before: 'Wednesday, December 31, 2025, 09:00 – 10:00 AM',
-				after: 'Thursday, January 01, 2026, 09:00 – 10:00 AM'
+				before: 'Dec 31, 2025, 09:00 – 10:00 AM',
+				after: 'Jan 01, 2026, 09:00 – 10:00 AM'
 			},
 			participants: {
 				added: [{ a: 'maria@test.com', d: 'Maria Rossi' }],
@@ -91,9 +91,7 @@ describe('InviteChangesBanner', () => {
 		it('shows the pre-formatted date/time change joined by an arrow', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
 			expect(
-				screen.getByText(
-					'Wednesday, December 31, 2025, 09:00 – 10:00 AM → Thursday, January 01, 2026, 09:00 – 10:00 AM'
-				)
+				screen.getByText('Dec 31, 2025, 09:00 – 10:00 AM → Jan 01, 2026, 09:00 – 10:00 AM')
 			).toBeVisible();
 		});
 
@@ -269,6 +267,95 @@ describe('InviteChangesBanner', () => {
 			await user.click(toggle);
 
 			expect(within(toggle).getByTestId('icon: ChevronUpOutline')).toBeVisible();
+		});
+	});
+
+	describe('detailed simple field case', () => {
+		const longBefore = 'a'.repeat(60);
+		const longAfter = 'b'.repeat(60);
+
+		it('collapses a long title change behind a Compare full text toggle, quoted when expanded', async () => {
+			const { user } = setupTest(
+				<InviteChangesBanner changes={{ title: { before: longBefore, after: longAfter } }} />
+			);
+
+			expect(screen.getByText('Title:')).toBeVisible();
+			expect(screen.getByText('updated')).toBeVisible();
+			expect(screen.queryByText(`${longBefore} → ${longAfter}`)).not.toBeInTheDocument();
+
+			await user.click(screen.getByTestId('invite-changes-title-toggle'));
+
+			const previousRow = within(screen.getByTestId('invite-changes-title-previous'));
+			expect(previousRow.getByText('Previous:')).toBeVisible();
+			expect(previousRow.getByText(`"${longBefore}"`)).toBeVisible();
+
+			const updatedRow = within(screen.getByTestId('invite-changes-title-updated'));
+			expect(updatedRow.getByText('Updated:')).toBeVisible();
+			expect(updatedRow.getByText(`"${longAfter}"`)).toBeVisible();
+		});
+
+		it('collapses a long virtual room change behind a toggle, unquoted when expanded', async () => {
+			const before = `https://example.com/${'a'.repeat(60)}`;
+			const after = `https://example.com/${'b'.repeat(60)}`;
+			const { user } = setupTest(
+				<InviteChangesBanner changes={{ virtualRoom: { before, after } }} />
+			);
+
+			await user.click(screen.getByTestId('invite-changes-virtualroom-toggle'));
+
+			const previousRow = within(screen.getByTestId('invite-changes-virtualroom-previous'));
+			expect(previousRow.getByText('Previous:')).toBeVisible();
+			expect(previousRow.getByText(before)).toBeVisible();
+
+			const updatedRow = within(screen.getByTestId('invite-changes-virtualroom-updated'));
+			expect(updatedRow.getByText('Updated:')).toBeVisible();
+			expect(updatedRow.getByText(after)).toBeVisible();
+		});
+
+		it('collapses a long date/time change behind a toggle, keeping the all-day suffix on the updated side', async () => {
+			const { user } = setupTest(
+				<InviteChangesBanner
+					changes={{
+						dateTime: { before: longBefore, after: longAfter },
+						allDay: { before: false, after: true }
+					}}
+				/>
+			);
+
+			await user.click(screen.getByTestId('invite-changes-datetime-toggle'));
+
+			const updatedRow = within(screen.getByTestId('invite-changes-datetime-updated'));
+			expect(updatedRow.getByText('Updated:')).toBeVisible();
+			expect(updatedRow.getByText(`${longAfter} - all day`)).toBeVisible();
+		});
+	});
+
+	describe('detailed resources case', () => {
+		const changes: InviteChanges = {
+			resources: {
+				added: [
+					{ a: 'r1@test.com', d: 'Room One' },
+					{ a: 'r2@test.com', d: 'Room Two' },
+					{ a: 'r3@test.com', d: 'Room Three' }
+				],
+				removed: [{ a: 'r4@test.com', d: 'Room Four' }]
+			}
+		};
+
+		it('shows a count summary and a View names toggle instead of the raw list', () => {
+			setupTest(<InviteChangesBanner changes={changes} />);
+			expect(screen.getByText('Resources:')).toBeVisible();
+			expect(screen.getByText('3 added, 1 removed')).toBeVisible();
+			expect(screen.getByTestId('invite-changes-resources-toggle')).toBeVisible();
+		});
+
+		it('reveals the full list on the same row after clicking View names', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={changes} />);
+
+			await user.click(screen.getByTestId('invite-changes-resources-toggle'));
+
+			const row = within(screen.getByTestId('invite-changes-resources-toggle-content'));
+			expect(row.getByText('+ Room One, + Room Two, + Room Three, - Room Four')).toBeVisible();
 		});
 	});
 });
