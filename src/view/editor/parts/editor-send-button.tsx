@@ -130,7 +130,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 			createModal(
 				{
 					id: modalId,
-					size: 'medium',
+					size: 'small',
 					children: (
 						<StoreProvider>
 							<SendUpdateModal onClose={(): void => closeModal(modalId)} onConfirm={onConfirm} />

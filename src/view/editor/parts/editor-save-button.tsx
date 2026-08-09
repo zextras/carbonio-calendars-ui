@@ -142,7 +142,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 			createModal(
 				{
 					id: modalId,
-					size: 'medium',
+					size: 'small',
 					children: (
 						<StoreProvider>
 							<SendUpdateModal

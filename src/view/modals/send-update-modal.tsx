@@ -41,12 +41,11 @@ const OptionCard = ({
 	onSelect
 }: OptionCardProps): ReactElement => (
 	<Container
-		padding={{ all: 'small' }}
-		borderRadius="regular"
+		padding={{ vertical: 'medium', horizontal: 'large' }}
 		background={isSelected ? 'highlight' : 'gray6'}
-		borderColor={isSelected ? 'primary' : 'gray3'}
+		borderColor={isSelected ? 'primary' : 'gray2.regular'}
 		width="fill"
-		style={{ cursor: 'pointer' }}
+		style={{ cursor: 'pointer', borderRadius: '0.25rem' }}
 		onClick={(): void => onSelect(value)}
 	>
 		<Radio
@@ -55,11 +54,11 @@ const OptionCard = ({
 			iconColor="primary"
 			onClick={(): void => onSelect(value)}
 			label={
-				<Container width="fill" crossAlignment="flex-start" padding={{ left: 'small' }}>
-					<Text overflow="break-word" weight="bold">
+				<Container width="fill" crossAlignment="center" gap="0.125rem" padding={{ left: 'small' }}>
+					<Text overflow="break-word" weight="regular" textAlign="center">
 						{title}
 					</Text>
-					<Text overflow="break-word" size="small" color="secondary">
+					<Text overflow="break-word" size="small" color="gray1.active" textAlign="center">
 						{description}
 					</Text>
 				</Container>
@@ -91,7 +90,7 @@ export const SendUpdateModal = ({
 					)}
 				</Text>
 				<Padding top="small" />
-				<Text overflow="break-word" size="small" color="secondary">
+				<Text overflow="break-word" size="small" color="gray1.active">
 					{t(
 						'message.send_update_unsure_hint',
 						"If you're unsure everyone has received the invitation, choose All attendees."
