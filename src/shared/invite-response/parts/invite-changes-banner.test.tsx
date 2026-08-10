@@ -72,9 +72,9 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByTestId('icon: ClockOutline')).toBeVisible();
 		});
 
-		it('shows the participants change inline with +/- prefixes, next to a people icon', () => {
+		it('shows the participants change inline with +/– prefixes, next to a people icon', () => {
 			setupTest(<InviteChangesBanner changes={changes} />);
-			expect(screen.getByText('+ Maria Rossi, - Paolo Grande')).toBeVisible();
+			expect(screen.getByText('+ Maria Rossi, – Paolo Grande')).toBeVisible();
 			expect(screen.getByTestId('icon: PeopleOutline')).toBeVisible();
 		});
 
@@ -107,12 +107,12 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByText('+ "casa"')).toBeVisible();
 		});
 
-		it('shows a location removed entirely with a - marker and quotes, no arrow', () => {
+		it('shows a location removed entirely with a – marker and quotes, no arrow', () => {
 			setupTest(<InviteChangesBanner changes={{ location: { before: 'casa', after: '' } }} />);
-			expect(screen.getByText('- "casa"')).toBeVisible();
+			expect(screen.getByText('– "casa"')).toBeVisible();
 		});
 
-		it('shows added/removed meeting rooms inline with +/- prefixes, next to a building icon', () => {
+		it('shows added/removed meeting rooms inline with +/– prefixes, next to a building icon', () => {
 			setupTest(
 				<InviteChangesBanner
 					changes={{
@@ -123,11 +123,11 @@ describe('InviteChangesBanner', () => {
 					}}
 				/>
 			);
-			expect(screen.getByText('+ Room A, - Room B')).toBeVisible();
+			expect(screen.getByText('+ Room A, – Room B')).toBeVisible();
 			expect(screen.getByTestId('icon: BuildingOutline')).toBeVisible();
 		});
 
-		it('shows added/removed equipment inline with +/- prefixes, next to a briefcase icon', () => {
+		it('shows added/removed equipment inline with +/– prefixes, next to a briefcase icon', () => {
 			setupTest(
 				<InviteChangesBanner
 					changes={{
@@ -138,7 +138,7 @@ describe('InviteChangesBanner', () => {
 					}}
 				/>
 			);
-			expect(screen.getByText('+ Projector, - Laptop')).toBeVisible();
+			expect(screen.getByText('+ Projector, – Laptop')).toBeVisible();
 			expect(screen.getByTestId('icon: BriefcaseOutline')).toBeVisible();
 		});
 
@@ -265,7 +265,7 @@ describe('InviteChangesBanner', () => {
 			// same row as the marker and the toggle, not a separate block below it
 			const row = within(screen.getByTestId('invite-changes-participants-toggle-content'));
 			expect(
-				row.getByText('+ Attendee One, + Attendee Two, + Attendee Three, - Removed One')
+				row.getByText('+ Attendee One, + Attendee Two, + Attendee Three, – Removed One')
 			).toBeVisible();
 		});
 
@@ -332,7 +332,7 @@ describe('InviteChangesBanner', () => {
 			expect(screen.queryByText('Previous:')).not.toBeInTheDocument();
 			expect(screen.queryByText('Updated:')).not.toBeInTheDocument();
 			const valueRow = within(screen.getByTestId('invite-changes-location-value'));
-			expect(valueRow.getByText(`- "${longValue}"`)).toBeVisible();
+			expect(valueRow.getByText(`– "${longValue}"`)).toBeVisible();
 		});
 
 		it('collapses a long virtual room change behind a toggle, unquoted when expanded', async () => {
@@ -406,7 +406,7 @@ describe('InviteChangesBanner', () => {
 			await user.click(screen.getByTestId('invite-changes-meetingrooms-toggle'));
 
 			const row = within(screen.getByTestId('invite-changes-meetingrooms-toggle-content'));
-			expect(row.getByText('+ Room One, + Room Two, + Room Three, - Room Four')).toBeVisible();
+			expect(row.getByText('+ Room One, + Room Two, + Room Three, – Room Four')).toBeVisible();
 		});
 
 		it('shows a count summary and a toggle instead of the raw list for equipment', () => {
@@ -422,7 +422,7 @@ describe('InviteChangesBanner', () => {
 			await user.click(screen.getByTestId('invite-changes-equipment-toggle'));
 
 			const row = within(screen.getByTestId('invite-changes-equipment-toggle-content'));
-			expect(row.getByText('+ Projector, + Laptop, + Webcam, - Whiteboard')).toBeVisible();
+			expect(row.getByText('+ Projector, + Laptop, + Webcam, – Whiteboard')).toBeVisible();
 		});
 	});
 
