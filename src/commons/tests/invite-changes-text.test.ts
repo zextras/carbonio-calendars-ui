@@ -70,10 +70,17 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
-	it('round-trips an all day change', () => {
-		const changes: InviteChanges = { allDay: { before: false, after: true } };
+	it('round-trips a date/time change that also flips the all-day flags', () => {
+		const changes: InviteChanges = {
+			dateTime: {
+				before: 'Wed, Jul 29, 8:30 – 9:00 PM',
+				after: 'Thu, Jul 30',
+				beforeAllDay: false,
+				afterAllDay: true
+			}
+		};
 		const formatted = formatInviteChangesText(changes);
-		expect(formatted).toBe('[allday]\nfalse -> true');
+		expect(formatted).toBe('[datetime]\nWed, Jul 29, 8:30 – 9:00 PM -> Thu, Jul 30\nfalse true');
 		expect(parseInviteChangesFromText(formatted)).toEqual(changes);
 	});
 
@@ -104,8 +111,12 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 				added: [{ a: 'added@test.com', d: 'Added' }],
 				removed: [{ a: 'removed@test.com', d: 'Removed' }]
 			},
-			dateTime: { before: 'before-label', after: 'after-label' },
-			allDay: { before: false, after: true },
+			dateTime: {
+				before: 'before-label',
+				after: 'after-label',
+				beforeAllDay: false,
+				afterAllDay: true
+			},
 			message: { before: 'old', after: 'new' }
 		};
 		const formatted = formatInviteChangesText(changes);
@@ -120,15 +131,16 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		);
 		expect(formatted.indexOf('[equipmentremoved]')).toBeLessThan(formatted.indexOf('[added]'));
 		expect(formatted.indexOf('[removed]')).toBeLessThan(formatted.indexOf('[datetime]'));
-		expect(formatted.indexOf('[datetime]')).toBeLessThan(formatted.indexOf('[allday]'));
-		expect(formatted.indexOf('[allday]')).toBeLessThan(formatted.indexOf('[before]'));
+		expect(formatted.indexOf('[datetime]')).toBeLessThan(formatted.indexOf('[before]'));
 	});
 
 	it('round-trips a date/time change', () => {
 		const changes: InviteChanges = {
 			dateTime: {
 				before: 'Tuesday, August 04, 2026, 11:00 – 11:30 AM',
-				after: 'Wednesday, August 05, 2026, 09:00 – 09:30 AM'
+				after: 'Wednesday, August 05, 2026, 09:00 – 09:30 AM',
+				beforeAllDay: false,
+				afterAllDay: false
 			}
 		};
 		const formatted = formatInviteChangesText(changes);
@@ -172,7 +184,12 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 	it('round-trips a combination of message, date/time, and participant changes', () => {
 		const changes: InviteChanges = {
 			message: { before: 'old', after: 'new' },
-			dateTime: { before: 'before-label', after: 'after-label' },
+			dateTime: {
+				before: 'before-label',
+				after: 'after-label',
+				beforeAllDay: false,
+				afterAllDay: false
+			},
 			participants: {
 				added: [{ a: 'added@test.com', d: 'Added' }],
 				removed: [{ a: 'removed@test.com', d: 'Removed' }]
@@ -191,10 +208,19 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 
 	it('puts each tag on its own line, with the value(s) starting on the next line', () => {
 		const changes: InviteChanges = {
-			dateTime: { before: 'before-label', after: 'after-label' }
+			dateTime: {
+				before: 'before-label',
+				after: 'after-label',
+				beforeAllDay: false,
+				afterAllDay: false
+			}
 		};
 		const formatted = formatInviteChangesText(changes);
-		expect(formatted.split('\n')).toEqual(['[datetime]', 'before-label -> after-label']);
+		expect(formatted.split('\n')).toEqual([
+			'[datetime]',
+			'before-label -> after-label',
+			'false false'
+		]);
 	});
 
 	it('still parses correctly even if surrounding prose on the tag line were translated', () => {
@@ -202,11 +228,12 @@ describe('formatInviteChangesText / parseInviteChangesFromText', () => {
 		const dateTime = { before: 'prima-label', after: 'dopo-label' };
 		const changes: InviteChanges = {
 			message,
-			dateTime,
+			dateTime: { ...dateTime, beforeAllDay: false, afterAllDay: true },
 			participants: { added: [{ a: 'a@test.com', d: 'A' }], removed: [] }
 		};
 		const localized = `Data e ora [datetime]
 ${dateTime.before} -> ${dateTime.after}
+false true
 Partecipanti aggiunti [added]
 + A <a@test.com>
 Messaggio prima [before]
@@ -214,6 +241,17 @@ ${message.before}
 Messaggio dopo [after]
 ${message.after}`;
 		expect(parseInviteChangesFromText(localized)).toEqual(changes);
+	});
+
+	it('defaults both all-day flags to false when the date/time flags line is missing', () => {
+		expect(parseInviteChangesFromText('[datetime]\nbefore-label -> after-label')).toEqual({
+			dateTime: {
+				before: 'before-label',
+				after: 'after-label',
+				beforeAllDay: false,
+				afterAllDay: false
+			}
+		});
 	});
 
 	it('still parses correctly when embedded inside surrounding boilerplate text', () => {

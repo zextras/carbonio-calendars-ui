@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 
 import { InviteChangesBanner } from './invite-changes-banner';
 import type { InviteChanges } from '../../../types/invite-changes';
@@ -25,7 +25,9 @@ describe('InviteChangesBanner', () => {
 			message: { before: 'old text', after: 'new text' },
 			dateTime: {
 				before: 'Dec 31, 2025, 09:00 – 10:00 AM',
-				after: 'Jan 01, 2026, 09:00 – 10:00 AM'
+				after: 'Jan 01, 2026, 09:00 – 10:00 AM',
+				beforeAllDay: false,
+				afterAllDay: false
 			},
 			participants: {
 				added: [{ a: 'maria@test.com', d: 'Maria Rossi' }],
@@ -57,9 +59,9 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByText('"old text" → "new text"')).toBeVisible();
 		});
 
-		it('shows a quoted placeholder for an empty message side instead of a blank string', () => {
+		it('shows a message added from scratch with a + marker instead of an arrow from a blank string', () => {
 			setupTest(<InviteChangesBanner changes={{ message: { before: '', after: 'aasd' } }} />);
-			expect(screen.getByText('"(no message)" → "aasd"')).toBeVisible();
+			expect(screen.getByText('+ "aasd"')).toBeVisible();
 		});
 
 		it('shows the pre-formatted date/time change joined by an arrow, next to a clock icon', () => {
@@ -142,34 +144,37 @@ describe('InviteChangesBanner', () => {
 			expect(screen.getByTestId('icon: VideoOutline')).toBeVisible();
 		});
 
-		it('appends "all day" to the Date & Time row when the event became all day', () => {
+		it('appends ", All day" to the updated side of the date/time row when the event became all day', () => {
 			setupTest(
 				<InviteChangesBanner
 					changes={{
-						dateTime: { before: 'before-label', after: 'after-label' },
-						allDay: { before: false, after: true }
+						dateTime: {
+							before: 'before-label',
+							after: 'after-label',
+							beforeAllDay: false,
+							afterAllDay: true
+						}
 					}}
 				/>
 			);
-			expect(screen.getByText('before-label → after-label - all day')).toBeVisible();
-		});
-
-		it('appends "not all day" to the Date & Time row when the event stopped being all day', () => {
-			setupTest(
-				<InviteChangesBanner
-					changes={{
-						dateTime: { before: 'before-label', after: 'after-label' },
-						allDay: { before: true, after: false }
-					}}
-				/>
-			);
-			expect(screen.getByText('before-label → after-label - not all day')).toBeVisible();
-		});
-
-		it('shows just "all day" with no dash on the Date & Time row when only all-day changed', () => {
-			setupTest(<InviteChangesBanner changes={{ allDay: { before: false, after: true } }} />);
+			expect(screen.getByText('before-label → after-label, All day')).toBeVisible();
 			expect(screen.getByTestId('icon: ClockOutline')).toBeVisible();
-			expect(screen.getByText('all day')).toBeVisible();
+		});
+
+		it('appends ", All day" to the previous side of the date/time row when the event stopped being all day', () => {
+			setupTest(
+				<InviteChangesBanner
+					changes={{
+						dateTime: {
+							before: 'before-label',
+							after: 'after-label',
+							beforeAllDay: true,
+							afterAllDay: false
+						}
+					}}
+				/>
+			);
+			expect(screen.getByText('before-label, All day → after-label')).toBeVisible();
 		});
 	});
 
@@ -312,8 +317,12 @@ describe('InviteChangesBanner', () => {
 			const { user } = setupTest(
 				<InviteChangesBanner
 					changes={{
-						dateTime: { before: longBefore, after: longAfter },
-						allDay: { before: false, after: true }
+						dateTime: {
+							before: longBefore,
+							after: longAfter,
+							beforeAllDay: false,
+							afterAllDay: true
+						}
 					}}
 				/>
 			);
@@ -322,7 +331,7 @@ describe('InviteChangesBanner', () => {
 
 			const updatedRow = within(screen.getByTestId('invite-changes-datetime-updated'));
 			expect(updatedRow.getByText('Updated:')).toBeVisible();
-			expect(updatedRow.getByText(`${longAfter} - all day`)).toBeVisible();
+			expect(updatedRow.getByText(`${longAfter}, All day`)).toBeVisible();
 		});
 	});
 
@@ -385,8 +394,12 @@ describe('InviteChangesBanner', () => {
 			meetingRooms: { added: [{ a: 'room@test.com', d: 'Room A' }], removed: [] },
 			equipment: { added: [{ a: 'projector@test.com', d: 'Projector' }], removed: [] },
 			participants: { added: [{ a: 'added@test.com', d: 'Added' }], removed: [] },
-			dateTime: { before: 'before-label', after: 'after-label' },
-			allDay: { before: false, after: true },
+			dateTime: {
+				before: 'before-label',
+				after: 'after-label',
+				beforeAllDay: false,
+				afterAllDay: true
+			},
 			message: { before: 'old', after: 'new' }
 		};
 
@@ -447,6 +460,99 @@ describe('InviteChangesBanner', () => {
 				/>
 			);
 			expect(screen.queryByTestId('invite-changes-banner-toggle')).not.toBeInTheDocument();
+		});
+	});
+
+	describe('icon tooltips', () => {
+		const allFieldsChanges: InviteChanges = {
+			location: { before: 'Room A', after: 'Room B' },
+			virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' },
+			meetingRooms: {
+				added: [{ a: 'room@test.com', d: 'Room A' }],
+				removed: []
+			},
+			equipment: {
+				added: [{ a: 'projector@test.com', d: 'Projector' }],
+				removed: []
+			},
+			participants: {
+				added: [{ a: 'maria@test.com', d: 'Maria Rossi' }],
+				removed: []
+			},
+			dateTime: {
+				before: 'Dec 31, 2025, 09:00 – 10:00 AM',
+				after: 'Jan 01, 2026, 09:00 – 10:00 AM',
+				beforeAllDay: false,
+				afterAllDay: false
+			},
+			message: { before: 'old text', after: 'new text' }
+		};
+
+		const hoverAndFindTooltip = async (
+			user: ReturnType<typeof setupTest>['user'],
+			iconTestId: string,
+			label: string
+		): Promise<void> => {
+			const showMoreToggle = screen.queryByTestId('invite-changes-banner-toggle');
+			if (showMoreToggle) {
+				await user.click(showMoreToggle);
+			}
+			await user.hover(screen.getByTestId(iconTestId));
+			act(() => {
+				vi.advanceTimersByTime(3000);
+			});
+			expect(await screen.findByText(label)).toBeVisible();
+		};
+
+		it('shows a "Location" tooltip on hovering the pin icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: PinOutline', 'Location');
+		});
+
+		it('shows a "Virtual room" tooltip on hovering the video icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: VideoOutline', 'Virtual room');
+		});
+
+		it('shows a "MeetingRooms" tooltip on hovering the building icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: BuildingOutline', 'MeetingRooms');
+		});
+
+		it('shows an "Equipment" tooltip on hovering the briefcase icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: BriefcaseOutline', 'Equipment');
+		});
+
+		it('shows a "Participants" tooltip on hovering the people icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: PeopleOutline', 'Participants');
+		});
+
+		it('shows a "Date and time" tooltip on hovering the clock icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: ClockOutline', 'Date and time');
+		});
+
+		it('shows a "Message" tooltip on hovering the message icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: MessageSquareOutline', 'Message');
+		});
+
+		it('shows a "Date and time" tooltip on hovering the clock icon for an all-day-only change', async () => {
+			const { user } = setupTest(
+				<InviteChangesBanner
+					changes={{
+						dateTime: {
+							before: 'before-label',
+							after: 'after-label',
+							beforeAllDay: false,
+							afterAllDay: true
+						}
+					}}
+				/>
+			);
+			await hoverAndFindTooltip(user, 'icon: ClockOutline', 'Date and time');
 		});
 	});
 });

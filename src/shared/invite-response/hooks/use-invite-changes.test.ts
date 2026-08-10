@@ -67,7 +67,12 @@ describe('useInviteChanges', () => {
 	it('parses a full combination of message, date/time, and participant changes', () => {
 		const changes = {
 			message: { before: 'old text', after: 'new text\nwith a second line' },
-			dateTime: { before: 'before-label', after: 'after-label' },
+			dateTime: {
+				before: 'before-label',
+				after: 'after-label',
+				beforeAllDay: false,
+				afterAllDay: false
+			},
 			participants: {
 				added: [{ a: 'added@test.com', d: 'Added' }],
 				removed: [{ a: 'removed@test.com', d: 'Removed' }]

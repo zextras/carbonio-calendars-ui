@@ -20,14 +20,23 @@ const EQUIPMENT_REMOVED_TAG = '[equipmentremoved]';
 const PARTICIPANTS_ADDED_TAG = '[added]';
 const PARTICIPANTS_REMOVED_TAG = '[removed]';
 const DATE_TIME_TAG = '[datetime]';
-const ALL_DAY_TAG = '[allday]';
 const MESSAGE_BEFORE_TAG = '[before]';
 const MESSAGE_AFTER_TAG = '[after]';
 
 type SimpleDiff = { before: string; after: string };
+type DateTimeDiff = SimpleDiff & { beforeAllDay: boolean; afterAllDay: boolean };
 
 const formatSimpleDiff = (tag: string, diff?: SimpleDiff): string | undefined =>
 	diff ? `${tag}\n${diff.before} -> ${diff.after}` : undefined;
+
+// The all-day flags travel as a second line right after the before/after
+// line, rather than as a separate tagged section: they're meaningless
+// without the date/time diff they belong to, so keeping them physically
+// attached avoids the two ever getting out of sync while parsing.
+const formatDateTimeDiff = (diff?: DateTimeDiff): string | undefined =>
+	diff
+		? `${DATE_TIME_TAG}\n${diff.before} -> ${diff.after}\n${diff.beforeAllDay} ${diff.afterAllDay}`
+		: undefined;
 
 const formatParticipantLine = (prefix: '+' | '-', participant: InviteChangeParticipant): string =>
 	participant.d ? `${prefix} ${participant.d} <${participant.a}>` : `${prefix} ${participant.a}`;
@@ -68,13 +77,7 @@ export const formatInviteChangesText = (changes: InviteChanges): string => {
 		changes.participants
 			? formatParticipantsSection(PARTICIPANTS_REMOVED_TAG, '-', changes.participants.removed)
 			: undefined,
-		formatSimpleDiff(DATE_TIME_TAG, changes.dateTime),
-		changes.allDay
-			? formatSimpleDiff(ALL_DAY_TAG, {
-					before: String(changes.allDay.before),
-					after: String(changes.allDay.after)
-				})
-			: undefined,
+		formatDateTimeDiff(changes.dateTime),
 		changes.message
 			? `${MESSAGE_BEFORE_TAG}\n${changes.message.before}\n${MESSAGE_AFTER_TAG}\n${changes.message.after}`
 			: undefined
@@ -140,12 +143,24 @@ const parseSimpleDiff = (text: string, tag: string): SimpleDiff | undefined => {
 	return match ? { before: match[1], after: match[2] } : undefined;
 };
 
-const parseBooleanDiff = (
-	text: string,
-	tag: string
-): { before: boolean; after: boolean } | undefined => {
-	const diff = parseSimpleDiff(text, tag);
-	return diff ? { before: diff.before === 'true', after: diff.after === 'true' } : undefined;
+// The all-day flags line sits right after the before/after line written by
+// formatDateTimeDiff; parseSimpleDiff already lands valueEnd at the end of
+// that first line, so the flags line starts right after it.
+const parseDateTimeDiff = (text: string): DateTimeDiff | undefined => {
+	const diff = parseSimpleDiff(text, DATE_TIME_TAG);
+	if (!diff) {
+		return undefined;
+	}
+	const tagIndex = text.indexOf(DATE_TIME_TAG);
+	const diffLineEnd = lineEnd(text, lineEnd(text, tagIndex) + 1);
+	const flagsLineStart = diffLineEnd + 1;
+	const flagsLineEnd = lineEnd(text, flagsLineStart);
+	const flagsMatch = /^(true|false) (true|false)$/.exec(text.slice(flagsLineStart, flagsLineEnd));
+	return {
+		...diff,
+		beforeAllDay: flagsMatch ? flagsMatch[1] === 'true' : false,
+		afterAllDay: flagsMatch ? flagsMatch[2] === 'true' : false
+	};
 };
 
 export const parseInviteChangesFromText = (
@@ -195,14 +210,9 @@ export const parseInviteChangesFromText = (
 		changes.participants = { added, removed };
 	}
 
-	const dateTime = parseSimpleDiff(text, DATE_TIME_TAG);
+	const dateTime = parseDateTimeDiff(text);
 	if (dateTime) {
 		changes.dateTime = dateTime;
-	}
-
-	const allDay = parseBooleanDiff(text, ALL_DAY_TAG);
-	if (allDay) {
-		changes.allDay = allDay;
 	}
 
 	const message = parseMessage(text);
