@@ -152,10 +152,14 @@ const ExpandableFieldHeader: FC<{
 	</Row>
 );
 
-// Participants'/resources' expanded content is always inline on the same row
-// as the marker and the toggle (unlike a text diff, whose Previous/Updated
-// text is too long to stay on one line and therefore goes on separate rows
-// below).
+// Participants'/resources' expanded content, next to the toggle. Icon and
+// text are two nested Rows (icon fixed, text takeAvailableSpace) rather than
+// two wrap="wrap" siblings of the same row: flexbox wraps by whole item, so
+// two same-level wrap-able siblings means the *entire* text item jumps to
+// its own line the moment it doesn't fit next to the icon, instead of
+// filling the remaining space on the icon's line first. Nesting the text in
+// its own takeAvailableSpace column (same structure as FieldRow) lets the
+// text itself wrap on its own within that column as soon as it doesn't fit.
 const InlineFieldHeader: FC<{
 	label?: string;
 	icon?: string;
@@ -183,14 +187,18 @@ const InlineFieldHeader: FC<{
 	>
 		<Row
 			takeAvailableSpace
-			wrap="wrap"
 			mainAlignment="flex-start"
+			crossAlignment="flex-start"
 			data-testid={`${testId}-content`}
 		>
-			<SectionMarker label={label} icon={icon} tooltipLabel={tooltipLabel} />
-			<Text size="small" overflow="break-word">
-				&nbsp;{content}
-			</Text>
+			<Row padding={{ right: 'extrasmall' }}>
+				<SectionMarker label={label} icon={icon} tooltipLabel={tooltipLabel} />
+			</Row>
+			<Row takeAvailableSpace mainAlignment="flex-start">
+				<Text size="small" overflow="break-word">
+					{content}
+				</Text>
+			</Row>
 		</Row>
 		<ExpandToggle testId={testId} expanded={expanded} onClick={onToggle} label={toggleLabel} />
 	</Row>
@@ -200,6 +208,12 @@ const isDiffDetailed = (before: string, after: string): boolean =>
 	before.length + after.length > DIFF_INLINE_MAX_LENGTH ||
 	before.includes('\n') ||
 	after.includes('\n');
+
+const isValueDetailed = (value: string): boolean =>
+	value.length > DIFF_INLINE_MAX_LENGTH || value.includes('\n');
+
+const getToggleLabel = (isExpanded: boolean, t: TFunction): string =>
+	isExpanded ? t('label.hide_details', 'Hide details') : t('label.view_details', 'View details');
 
 type AddedRemoved = { added: InviteChangeParticipant[]; removed: InviteChangeParticipant[] };
 
@@ -225,19 +239,30 @@ const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): React
 // Text block, not separate Row flex items — a flex layout would either drop
 // the whole text to its own line or hang-indent every wrapped line under
 // where the quote started. Plain inline flow wraps like a normal paragraph:
-// only the overflow moves down, flush with the label's own left edge.
-const DiffLine: FC<{ label: string; text: string; quote: boolean; testId: string }> = ({
-	label,
-	text,
-	quote,
-	testId
-}): ReactElement => (
-	<Row width="100%" mainAlignment="flex-start" padding={{ top: 'extrasmall' }} data-testid={testId}>
-		<Text size="small" overflow="break-word">
-			<b>{label}:</b> <span>{quote ? `"${text}"` : text}</span>
-		</Text>
-	</Row>
-);
+// only the overflow moves down, flush with the label's own left edge. A
+// marker (+/–), when given, sits right before the text's opening quote —
+// same convention as the compact single-value diff below.
+const DiffLine: FC<{
+	label: string;
+	text: string;
+	quote: boolean;
+	marker?: '+' | '–';
+	testId: string;
+}> = ({ label, text, quote, marker, testId }): ReactElement => {
+	const content = quote ? `"${text}"` : text;
+	return (
+		<Row
+			width="100%"
+			mainAlignment="flex-start"
+			padding={{ top: 'extrasmall' }}
+			data-testid={testId}
+		>
+			<Text size="small" overflow="break-word">
+				<b>{label}:</b> <span>{marker ? `${marker} ${content}` : content}</span>
+			</Text>
+		</Row>
+	);
+};
 
 const AddedRemovedField: FC<{
 	label?: string;
@@ -274,46 +299,28 @@ const AddedRemovedField: FC<{
 			}
 			expanded={isExpanded}
 			onToggle={(): void => setIsExpanded((prev) => !prev)}
-			toggleLabel={
-				isExpanded
-					? t('label.hide_details', 'Hide details')
-					: t('label.view_details', 'View details')
-			}
+			toggleLabel={getToggleLabel(isExpanded, t)}
 		/>
 	);
 };
 
-// Any before/after text diff (title, location, virtual room, date/time,
-// message): inline as "marker: before → after" while it fits, otherwise
-// collapsed to "marker: updated" with a toggle that reveals Previous/Updated
-// as quoted paragraph text below the marker, same as the message field.
-const SimpleDiffField: FC<{
+// A field that genuinely changed from one value to another (both sides
+// non-empty): inline as "before → after" while it fits, otherwise collapsed
+// to "updated" with a toggle that reveals Previous/Updated as quoted
+// paragraph text below the marker.
+const TwoSidedDiffField: FC<{
 	label?: string;
 	icon?: string;
 	tooltipLabel?: string;
 	before: string;
 	after: string;
-	quote?: boolean;
-	emptyPlaceholder?: string;
+	quote: boolean;
 	testId: string;
-}> = ({
-	label,
-	icon,
-	tooltipLabel,
-	before,
-	after,
-	quote = false,
-	emptyPlaceholder,
-	testId
-}): ReactElement => {
+}> = ({ label, icon, tooltipLabel, before, after, quote, testId }): ReactElement => {
 	const [t] = useTranslation();
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	const resolve = (text: string): string => text || (emptyPlaceholder ?? text);
-	const formatSide = (text: string): string => {
-		const resolved = resolve(text);
-		return quote ? `"${resolved}"` : resolved;
-	};
+	const formatSide = (text: string): string => (quote ? `"${text}"` : text);
 
 	if (!isDiffDetailed(before, after)) {
 		return (
@@ -333,29 +340,133 @@ const SimpleDiffField: FC<{
 				summary={t('label.updated', 'updated')}
 				expanded={isExpanded}
 				onToggle={(): void => setIsExpanded((prev) => !prev)}
-				toggleLabel={
-					isExpanded
-						? t('label.hide_details', 'Hide details')
-						: t('label.view_details', 'View details')
-				}
+				toggleLabel={getToggleLabel(isExpanded, t)}
 			/>
 			{isExpanded && (
 				<DetailedContent>
 					<DiffLine
 						testId={`${testId}-previous`}
 						label={t('label.previous', 'Previous')}
-						text={resolve(before)}
+						text={before}
 						quote={quote}
 					/>
 					<DiffLine
 						testId={`${testId}-updated`}
 						label={t('label.updated_value', 'Updated')}
-						text={resolve(after)}
+						text={after}
 						quote={quote}
 					/>
 				</DetailedContent>
 			)}
 		</Container>
+	);
+};
+
+// A field that was added from scratch (no previous value) or removed
+// entirely (no replacement): a "before → after" arrow implies a genuine
+// modification of an existing value, which isn't what happened here, so it
+// shows a single +/– marked value instead, both inline and — with the same
+// marker right before the opening quote — in the expanded Previous/Updated
+// view for long values.
+const SingleValueDiffField: FC<{
+	label?: string;
+	icon?: string;
+	tooltipLabel?: string;
+	marker: '+' | '–';
+	value: string;
+	quote: boolean;
+	testId: string;
+}> = ({ label, icon, tooltipLabel, marker, value, quote, testId }): ReactElement => {
+	const [t] = useTranslation();
+	const [isExpanded, setIsExpanded] = useState(false);
+	const isAddition = marker === '+';
+
+	const formatted = quote ? `"${value}"` : value;
+
+	if (!isValueDetailed(value)) {
+		return (
+			<FieldRow label={label} icon={icon} tooltipLabel={tooltipLabel}>
+				{`${marker} ${formatted}`}
+			</FieldRow>
+		);
+	}
+
+	return (
+		<Container crossAlignment="flex-start" width="100%">
+			<ExpandableFieldHeader
+				testId={`${testId}-toggle`}
+				label={label}
+				icon={icon}
+				tooltipLabel={tooltipLabel}
+				summary={t('label.updated', 'updated')}
+				expanded={isExpanded}
+				onToggle={(): void => setIsExpanded((prev) => !prev)}
+				toggleLabel={getToggleLabel(isExpanded, t)}
+			/>
+			{isExpanded && (
+				<DetailedContent>
+					<DiffLine
+						testId={`${testId}-${isAddition ? 'updated' : 'previous'}`}
+						label={
+							isAddition ? t('label.updated_value', 'Updated') : t('label.previous', 'Previous')
+						}
+						text={value}
+						quote={quote}
+						marker={marker}
+					/>
+				</DetailedContent>
+			)}
+		</Container>
+	);
+};
+
+// Dispatches to whichever of the two above actually applies: an empty side
+// means the field was added from or removed to nothing, not "changed".
+const SimpleDiffField: FC<{
+	label?: string;
+	icon?: string;
+	tooltipLabel?: string;
+	before: string;
+	after: string;
+	quote?: boolean;
+	testId: string;
+}> = ({ label, icon, tooltipLabel, before, after, quote = false, testId }): ReactElement => {
+	if (!before && after) {
+		return (
+			<SingleValueDiffField
+				testId={testId}
+				label={label}
+				icon={icon}
+				tooltipLabel={tooltipLabel}
+				marker="+"
+				value={after}
+				quote={quote}
+			/>
+		);
+	}
+	if (before && !after) {
+		return (
+			<SingleValueDiffField
+				testId={testId}
+				label={label}
+				icon={icon}
+				tooltipLabel={tooltipLabel}
+				marker="–"
+				value={before}
+				quote={quote}
+			/>
+		);
+	}
+	return (
+		<TwoSidedDiffField
+			testId={testId}
+			label={label}
+			icon={icon}
+			tooltipLabel={tooltipLabel}
+			before={before}
+			after={after}
+			quote={quote}
+		/>
 	);
 };
 
@@ -373,13 +484,14 @@ const section = (key: string, element: ReactElement): ReactElement => (
 	</Container>
 );
 
-const buildSections = (
-	changes: InviteChanges,
-	t: TFunction,
-	noMessageLabel: string,
-	dateTimeAfter: string | undefined,
-	allDayWord: string | undefined
-): ReactElement[] => {
+// The all-day flag travels alongside the already-formatted date/time string
+// (see InviteChanges.dateTime) rather than as a field of its own, so this
+// just appends the translated word — in the viewer's own locale — onto
+// whichever side of the range it applies to.
+const withAllDaySuffix = (text: string, isAllDay: boolean, t: TFunction): string =>
+	isAllDay ? `${text}, ${t('label.all_day', 'All day')}` : text;
+
+const buildSections = (changes: InviteChanges, t: TFunction): ReactElement[] => {
 	const sections: ReactElement[] = [];
 	if (changes.title) {
 		sections.push(
@@ -470,18 +582,9 @@ const buildSections = (
 					testId="invite-changes-datetime"
 					icon="ClockOutline"
 					tooltipLabel={t('tooltip.date_time', 'Date and time')}
-					before={changes.dateTime.before}
-					after={dateTimeAfter ?? changes.dateTime.after}
+					before={withAllDaySuffix(changes.dateTime.before, changes.dateTime.beforeAllDay, t)}
+					after={withAllDaySuffix(changes.dateTime.after, changes.dateTime.afterAllDay, t)}
 				/>
-			)
-		);
-	} else if (allDayWord) {
-		sections.push(
-			section(
-				'dateTime',
-				<FieldRow icon="ClockOutline" tooltipLabel={t('tooltip.date_time', 'Date and time')}>
-					{allDayWord}
-				</FieldRow>
 			)
 		);
 	}
@@ -496,7 +599,6 @@ const buildSections = (
 					before={changes.message.before}
 					after={changes.message.after}
 					quote
-					emptyPlaceholder={noMessageLabel}
 				/>
 			)
 		);
@@ -509,26 +611,8 @@ export const InviteChangesBanner: FC<{ changes: InviteChanges }> = ({
 }): ReactElement | null => {
 	const [t] = useTranslation();
 	const [isBannerExpanded, setIsBannerExpanded] = useState(false);
-	const noMessageLabel = t('label.no_message', '(no message)');
 
-	// The all-day flag is shown as a suffix on the Date & Time row rather than
-	// as a field of its own — with a "-" connector only when it's actually
-	// joining onto a date/time range, not when all-day is the only change.
-	// It's folded into the "after" side (rather than appended once to the
-	// whole row) so it survives the field's own expand/collapse the same way
-	// the rest of the date/time text does.
-	let allDayWord: string | undefined;
-	if (changes.allDay) {
-		allDayWord = changes.allDay.after
-			? t('label.all_day', 'all day')
-			: t('label.not_all_day', 'not all day');
-	}
-	const dateTimeAfter =
-		changes.dateTime && allDayWord
-			? `${changes.dateTime.after} - ${allDayWord}`
-			: changes.dateTime?.after;
-
-	const sections = buildSections(changes, t, noMessageLabel, dateTimeAfter, allDayWord);
+	const sections = buildSections(changes, t);
 
 	if (sections.length === 0) {
 		return null;
