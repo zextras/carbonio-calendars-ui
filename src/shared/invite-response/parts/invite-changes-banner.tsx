@@ -6,7 +6,7 @@
 import React, { FC, ReactElement, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
+import { Container, Icon, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
@@ -66,14 +66,20 @@ const ExpandToggle: FC<{
 
 // Every section but Title identifies itself with an icon instead of a text
 // label (Title keeps the bold text label, in both its collapsed "Title:" and
-// expanded "Title" forms — icons have no such state to show).
-const SectionMarker: FC<{ label?: string; icon?: string; expanded?: boolean }> = ({
-	label,
-	icon,
-	expanded
-}): ReactElement =>
+// expanded "Title" forms — icons have no such state to show). Icon-led
+// sections carry a tooltip since the icon alone doesn't name the field.
+const SectionMarker: FC<{
+	label?: string;
+	icon?: string;
+	tooltipLabel?: string;
+	expanded?: boolean;
+}> = ({ label, icon, tooltipLabel, expanded }): ReactElement =>
 	icon ? (
-		<Icon icon={icon} size="medium" />
+		<Tooltip label={tooltipLabel} placement="top">
+			<Row>
+				<Icon icon={icon} size="medium" />
+			</Row>
+		</Tooltip>
 	) : (
 		<Text weight="bold" size="small">
 			{expanded ? label : `${label}:`}
@@ -83,8 +89,9 @@ const SectionMarker: FC<{ label?: string; icon?: string; expanded?: boolean }> =
 const FieldRow: FC<{
 	label?: string;
 	icon?: string;
+	tooltipLabel?: string;
 	children: ReactElement | string;
-}> = ({ label, icon, children }): ReactElement => (
+}> = ({ label, icon, tooltipLabel, children }): ReactElement => (
 	<Row
 		width="100%"
 		mainAlignment="flex-start"
@@ -92,7 +99,7 @@ const FieldRow: FC<{
 		padding={{ top: 'extrasmall' }}
 	>
 		<Row padding={{ right: 'extrasmall' }}>
-			<SectionMarker label={label} icon={icon} />
+			<SectionMarker label={label} icon={icon} tooltipLabel={tooltipLabel} />
 		</Row>
 		<Row takeAvailableSpace mainAlignment="flex-start">
 			{typeof children === 'string' ? (
@@ -111,12 +118,22 @@ const FieldRow: FC<{
 const ExpandableFieldHeader: FC<{
 	label?: string;
 	icon?: string;
+	tooltipLabel?: string;
 	summary: string;
 	expanded: boolean;
 	onToggle: () => void;
 	toggleLabel: string;
 	testId: string;
-}> = ({ label, icon, summary, expanded, onToggle, toggleLabel, testId }): ReactElement => (
+}> = ({
+	label,
+	icon,
+	tooltipLabel,
+	summary,
+	expanded,
+	onToggle,
+	toggleLabel,
+	testId
+}): ReactElement => (
 	<Row
 		width="100%"
 		mainAlignment="space-between"
@@ -124,7 +141,7 @@ const ExpandableFieldHeader: FC<{
 		padding={{ top: 'extrasmall' }}
 	>
 		<Row>
-			<SectionMarker label={label} icon={icon} expanded={expanded} />
+			<SectionMarker label={label} icon={icon} tooltipLabel={tooltipLabel} expanded={expanded} />
 			{!expanded && (
 				<Text size="small" overflow="break-word">
 					&nbsp;{summary}
@@ -142,12 +159,22 @@ const ExpandableFieldHeader: FC<{
 const InlineFieldHeader: FC<{
 	label?: string;
 	icon?: string;
+	tooltipLabel?: string;
 	content: string;
 	expanded: boolean;
 	onToggle: () => void;
 	toggleLabel: string;
 	testId: string;
-}> = ({ label, icon, content, expanded, onToggle, toggleLabel, testId }): ReactElement => (
+}> = ({
+	label,
+	icon,
+	tooltipLabel,
+	content,
+	expanded,
+	onToggle,
+	toggleLabel,
+	testId
+}): ReactElement => (
 	<Row
 		width="100%"
 		mainAlignment="space-between"
@@ -160,7 +187,7 @@ const InlineFieldHeader: FC<{
 			mainAlignment="flex-start"
 			data-testid={`${testId}-content`}
 		>
-			<SectionMarker label={label} icon={icon} />
+			<SectionMarker label={label} icon={icon} tooltipLabel={tooltipLabel} />
 			<Text size="small" overflow="break-word">
 				&nbsp;{content}
 			</Text>
@@ -215,16 +242,17 @@ const DiffLine: FC<{ label: string; text: string; quote: boolean; testId: string
 const AddedRemovedField: FC<{
 	label?: string;
 	icon?: string;
+	tooltipLabel?: string;
 	entities: AddedRemoved;
 	testId: string;
-}> = ({ label, icon, entities, testId }): ReactElement => {
+}> = ({ label, icon, tooltipLabel, entities, testId }): ReactElement => {
 	const [t] = useTranslation();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const count = entities.added.length + entities.removed.length;
 
 	if (count <= ADDED_REMOVED_INLINE_THRESHOLD) {
 		return (
-			<FieldRow label={label} icon={icon}>
+			<FieldRow label={label} icon={icon} tooltipLabel={tooltipLabel}>
 				{formatParticipantsLine(entities)}
 			</FieldRow>
 		);
@@ -235,6 +263,7 @@ const AddedRemovedField: FC<{
 			testId={testId}
 			label={label}
 			icon={icon}
+			tooltipLabel={tooltipLabel}
 			content={
 				isExpanded
 					? formatParticipantsLine(entities)
@@ -261,12 +290,22 @@ const AddedRemovedField: FC<{
 const SimpleDiffField: FC<{
 	label?: string;
 	icon?: string;
+	tooltipLabel?: string;
 	before: string;
 	after: string;
 	quote?: boolean;
 	emptyPlaceholder?: string;
 	testId: string;
-}> = ({ label, icon, before, after, quote = false, emptyPlaceholder, testId }): ReactElement => {
+}> = ({
+	label,
+	icon,
+	tooltipLabel,
+	before,
+	after,
+	quote = false,
+	emptyPlaceholder,
+	testId
+}): ReactElement => {
 	const [t] = useTranslation();
 	const [isExpanded, setIsExpanded] = useState(false);
 
@@ -278,7 +317,7 @@ const SimpleDiffField: FC<{
 
 	if (!isDiffDetailed(before, after)) {
 		return (
-			<FieldRow label={label} icon={icon}>
+			<FieldRow label={label} icon={icon} tooltipLabel={tooltipLabel}>
 				{`${formatSide(before)} → ${formatSide(after)}`}
 			</FieldRow>
 		);
@@ -290,6 +329,7 @@ const SimpleDiffField: FC<{
 				testId={`${testId}-toggle`}
 				label={label}
 				icon={icon}
+				tooltipLabel={tooltipLabel}
 				summary={t('label.updated', 'updated')}
 				expanded={isExpanded}
 				onToggle={(): void => setIsExpanded((prev) => !prev)}
@@ -362,6 +402,7 @@ const buildSections = (
 				<SimpleDiffField
 					testId="invite-changes-location"
 					icon="PinOutline"
+					tooltipLabel={t('tooltip.location', 'Location')}
 					before={changes.location.before}
 					after={changes.location.after}
 				/>
@@ -375,6 +416,7 @@ const buildSections = (
 				<SimpleDiffField
 					testId="invite-changes-virtualroom"
 					icon="VideoOutline"
+					tooltipLabel={t('tooltip.virtual_room', 'Virtual room')}
 					before={changes.virtualRoom.before}
 					after={changes.virtualRoom.after}
 				/>
@@ -388,6 +430,7 @@ const buildSections = (
 				<AddedRemovedField
 					testId="invite-changes-meetingrooms-toggle"
 					icon="BuildingOutline"
+					tooltipLabel={t('tooltip.meetingRooms', 'MeetingRooms')}
 					entities={changes.meetingRooms}
 				/>
 			)
@@ -400,6 +443,7 @@ const buildSections = (
 				<AddedRemovedField
 					testId="invite-changes-equipment-toggle"
 					icon="BriefcaseOutline"
+					tooltipLabel={t('tooltip.equipment', 'Equipment')}
 					entities={changes.equipment}
 				/>
 			)
@@ -412,6 +456,7 @@ const buildSections = (
 				<AddedRemovedField
 					testId="invite-changes-participants-toggle"
 					icon="PeopleOutline"
+					tooltipLabel={t('tooltip.participants', 'Participants')}
 					entities={changes.participants}
 				/>
 			)
@@ -424,13 +469,21 @@ const buildSections = (
 				<SimpleDiffField
 					testId="invite-changes-datetime"
 					icon="ClockOutline"
+					tooltipLabel={t('tooltip.date_time', 'Date and time')}
 					before={changes.dateTime.before}
 					after={dateTimeAfter ?? changes.dateTime.after}
 				/>
 			)
 		);
 	} else if (allDayWord) {
-		sections.push(section('dateTime', <FieldRow icon="ClockOutline">{allDayWord}</FieldRow>));
+		sections.push(
+			section(
+				'dateTime',
+				<FieldRow icon="ClockOutline" tooltipLabel={t('tooltip.date_time', 'Date and time')}>
+					{allDayWord}
+				</FieldRow>
+			)
+		);
 	}
 	if (changes.message) {
 		sections.push(
@@ -439,6 +492,7 @@ const buildSections = (
 				<SimpleDiffField
 					testId="invite-changes-message"
 					icon="MessageSquareOutline"
+					tooltipLabel={t('tooltip.message', 'Message')}
 					before={changes.message.before}
 					after={changes.message.after}
 					quote

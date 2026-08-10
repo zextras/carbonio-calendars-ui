@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 
 import { InviteChangesBanner } from './invite-changes-banner';
 import type { InviteChanges } from '../../../types/invite-changes';
@@ -447,6 +447,88 @@ describe('InviteChangesBanner', () => {
 				/>
 			);
 			expect(screen.queryByTestId('invite-changes-banner-toggle')).not.toBeInTheDocument();
+		});
+	});
+
+	describe('icon tooltips', () => {
+		const allFieldsChanges: InviteChanges = {
+			location: { before: 'Room A', after: 'Room B' },
+			virtualRoom: { before: 'https://old.example.com', after: 'https://new.example.com' },
+			meetingRooms: {
+				added: [{ a: 'room@test.com', d: 'Room A' }],
+				removed: []
+			},
+			equipment: {
+				added: [{ a: 'projector@test.com', d: 'Projector' }],
+				removed: []
+			},
+			participants: {
+				added: [{ a: 'maria@test.com', d: 'Maria Rossi' }],
+				removed: []
+			},
+			dateTime: {
+				before: 'Dec 31, 2025, 09:00 – 10:00 AM',
+				after: 'Jan 01, 2026, 09:00 – 10:00 AM'
+			},
+			message: { before: 'old text', after: 'new text' }
+		};
+
+		const hoverAndFindTooltip = async (
+			user: ReturnType<typeof setupTest>['user'],
+			iconTestId: string,
+			label: string
+		): Promise<void> => {
+			const showMoreToggle = screen.queryByTestId('invite-changes-banner-toggle');
+			if (showMoreToggle) {
+				await user.click(showMoreToggle);
+			}
+			await user.hover(screen.getByTestId(iconTestId));
+			act(() => {
+				vi.advanceTimersByTime(3000);
+			});
+			expect(await screen.findByText(label)).toBeVisible();
+		};
+
+		it('shows a "Location" tooltip on hovering the pin icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: PinOutline', 'Location');
+		});
+
+		it('shows a "Virtual room" tooltip on hovering the video icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: VideoOutline', 'Virtual room');
+		});
+
+		it('shows a "MeetingRooms" tooltip on hovering the building icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: BuildingOutline', 'MeetingRooms');
+		});
+
+		it('shows an "Equipment" tooltip on hovering the briefcase icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: BriefcaseOutline', 'Equipment');
+		});
+
+		it('shows a "Participants" tooltip on hovering the people icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: PeopleOutline', 'Participants');
+		});
+
+		it('shows a "Date and time" tooltip on hovering the clock icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: ClockOutline', 'Date and time');
+		});
+
+		it('shows a "Message" tooltip on hovering the message icon', async () => {
+			const { user } = setupTest(<InviteChangesBanner changes={allFieldsChanges} />);
+			await hoverAndFindTooltip(user, 'icon: MessageSquareOutline', 'Message');
+		});
+
+		it('shows a "Date and time" tooltip on hovering the clock icon for an all-day-only change', async () => {
+			const { user } = setupTest(
+				<InviteChangesBanner changes={{ allDay: { before: false, after: true } }} />
+			);
+			await hoverAndFindTooltip(user, 'icon: ClockOutline', 'Date and time');
 		});
 	});
 });
