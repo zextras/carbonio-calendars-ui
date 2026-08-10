@@ -305,23 +305,23 @@ describe('InviteChangesBanner', () => {
 			expect(updatedRow.getByText(`"${longAfter}"`)).toBeVisible();
 		});
 
-		it('collapses a long location added from scratch behind a toggle, with a + marker before the quote when expanded', async () => {
+		it('collapses a long location added from scratch behind a toggle, with no Previous/Updated subtitle when expanded', async () => {
 			const longValue = 'a'.repeat(90);
 			const { user } = setupTest(
 				<InviteChangesBanner changes={{ location: { before: '', after: longValue } }} />
 			);
 
-			expect(screen.queryByTestId('invite-changes-location-previous')).not.toBeInTheDocument();
+			expect(screen.queryByTestId('invite-changes-location-value')).not.toBeInTheDocument();
 
 			await user.click(screen.getByTestId('invite-changes-location-toggle'));
 
-			expect(screen.queryByTestId('invite-changes-location-previous')).not.toBeInTheDocument();
-			const updatedRow = within(screen.getByTestId('invite-changes-location-updated'));
-			expect(updatedRow.getByText('Updated:')).toBeVisible();
-			expect(updatedRow.getByText(`+ "${longValue}"`)).toBeVisible();
+			expect(screen.queryByText('Previous:')).not.toBeInTheDocument();
+			expect(screen.queryByText('Updated:')).not.toBeInTheDocument();
+			const valueRow = within(screen.getByTestId('invite-changes-location-value'));
+			expect(valueRow.getByText(`+ "${longValue}"`)).toBeVisible();
 		});
 
-		it('collapses a long location removed entirely behind a toggle, with a - marker before the quote when expanded', async () => {
+		it('collapses a long location removed entirely behind a toggle, with no Previous/Updated subtitle when expanded', async () => {
 			const longValue = 'a'.repeat(90);
 			const { user } = setupTest(
 				<InviteChangesBanner changes={{ location: { before: longValue, after: '' } }} />
@@ -329,10 +329,10 @@ describe('InviteChangesBanner', () => {
 
 			await user.click(screen.getByTestId('invite-changes-location-toggle'));
 
-			expect(screen.queryByTestId('invite-changes-location-updated')).not.toBeInTheDocument();
-			const previousRow = within(screen.getByTestId('invite-changes-location-previous'));
-			expect(previousRow.getByText('Previous:')).toBeVisible();
-			expect(previousRow.getByText(`- "${longValue}"`)).toBeVisible();
+			expect(screen.queryByText('Previous:')).not.toBeInTheDocument();
+			expect(screen.queryByText('Updated:')).not.toBeInTheDocument();
+			const valueRow = within(screen.getByTestId('invite-changes-location-value'));
+			expect(valueRow.getByText(`- "${longValue}"`)).toBeVisible();
 		});
 
 		it('collapses a long virtual room change behind a toggle, unquoted when expanded', async () => {
