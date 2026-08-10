@@ -73,6 +73,45 @@ describe('normalize soap message from editor', () => {
 
 		expect(body.comp).toBe(4);
 	});
+	describe('subject prefix for updated invites', () => {
+		test('leaves the subject untouched when no changes are passed', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.su).toBe('Test Meeting');
+		});
+
+		test('leaves the subject untouched when changes is an empty object', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor, {});
+
+			expect(body.m.su).toBe('Test Meeting');
+		});
+
+		test('prepends "[Updated]" to the subject when at least one change is detected', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor, {
+				title: { before: 'Old', after: 'Test Meeting' }
+			});
+
+			expect(body.m.su).toBe('[Updated] Test Meeting');
+		});
+	});
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
 			test('when one of the attendee/optionalAttendee has changed the appointment status(ptst), the ptst should be preserved in normalization', () => {

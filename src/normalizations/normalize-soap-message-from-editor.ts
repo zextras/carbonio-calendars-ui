@@ -426,6 +426,24 @@ const generateInvite = (editor: Editor): any => {
 	};
 };
 
+// Kept as a fixed, untranslated marker rather than a localized string: like
+// "RE:"/"FWD:" prefixes, it's baked into the subject at send time and shown
+// to every recipient regardless of their own locale, so translating it to
+// the organizer's language would only make it look inconsistent to everyone
+// else.
+const UPDATED_SUBJECT_PREFIX = '[Updated]';
+
+const buildSubject = (
+	title: string | undefined,
+	changes: InviteChanges | undefined
+): string | undefined => {
+	if (title == null) {
+		return title;
+	}
+	const hasChanges = !!changes && Object.keys(changes).length > 0;
+	return hasChanges ? `${UPDATED_SUBJECT_PREFIX} ${title}` : title;
+};
+
 export const normalizeSoapMessageFromEditor = (msg: Editor, changes?: InviteChanges): any =>
 	omitBy(
 		{
@@ -444,7 +462,7 @@ export const normalizeSoapMessageFromEditor = (msg: Editor, changes?: InviteChan
 					inv: generateInvite(msg),
 					l: msg?.calendar?.id,
 					mp: generateMp(msg, changes),
-					su: msg?.title
+					su: buildSubject(msg?.title, changes)
 				},
 				isNil
 			),
