@@ -97,7 +97,7 @@ describe('EditExternalCalendarModal', () => {
 
 		const nameInput = screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL });
 		await user.clear(nameInput);
-		await user.type(nameInput, 'Team calendar');
+		await user.pasteInto(nameInput, 'Team calendar');
 
 		expect(screen.getByText('A calendar with the same name already exists')).toBeVisible();
 		expect(screen.getByRole('button', { name: SAVE_CHANGES_LABEL })).toBeDisabled();
@@ -166,7 +166,7 @@ describe('EditExternalCalendarModal', () => {
 
 		const nameInput = screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL });
 		await user.clear(nameInput);
-		await user.type(nameInput, 'Renamed rgb-only external calendar');
+		await user.pasteInto(nameInput, 'Renamed rgb-only external calendar');
 		await user.click(screen.getByRole('button', { name: SAVE_CHANGES_LABEL }));
 
 		await waitFor(() => {
@@ -188,7 +188,7 @@ describe('EditExternalCalendarModal', () => {
 
 		const nameInput = screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL });
 		await user.clear(nameInput);
-		await user.type(nameInput, 'Renamed external calendar');
+		await user.pasteInto(nameInput, 'Renamed external calendar');
 		await user.click(screen.getByRole('button', { name: SAVE_CHANGES_LABEL }));
 
 		await waitFor(() => {
@@ -213,7 +213,7 @@ describe('EditExternalCalendarModal', () => {
 
 		const nameInput = screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL });
 		await user.clear(nameInput);
-		await user.type(nameInput, 'Broken save name');
+		await user.pasteInto(nameInput, 'Broken save name');
 		await user.click(screen.getByRole('button', { name: SAVE_CHANGES_LABEL }));
 
 		await waitFor(() => {
@@ -233,7 +233,7 @@ describe('EditExternalCalendarModal', () => {
 
 		const nameInput = screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL });
 		await user.clear(nameInput);
-		await user.type(nameInput, 'Retry name');
+		await user.pasteInto(nameInput, 'Retry name');
 		const saveButton = screen.getByRole('button', { name: SAVE_CHANGES_LABEL });
 		await user.click(saveButton);
 
