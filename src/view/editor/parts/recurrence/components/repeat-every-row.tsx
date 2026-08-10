@@ -7,6 +7,7 @@ import React, { ReactElement, useCallback, useContext, useState } from 'react';
 
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { shallowEqual } from 'react-redux';
 
 import { FrequencySelect } from './frequency-select';
 import { IntervalInput } from './interval-input';
@@ -21,7 +22,10 @@ type RepeatEveryRowProps = {
 export const RepeatEveryRow = ({ editorId }: RepeatEveryRowProps): ReactElement => {
 	const recurrenceContext = useContext(RecurrenceContext);
 
-	const editorRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const editorRecurrenceInterval = useAppSelector(
+		selectEditorRecurrenceInterval(editorId),
+		shallowEqual
+	);
 
 	const [intervalValue, setIntervalValue] = useState(() =>
 		editorRecurrenceInterval?.ival ? editorRecurrenceInterval.ival.toString() : '1'
