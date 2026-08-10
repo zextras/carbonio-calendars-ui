@@ -122,11 +122,16 @@ describe('getInviteChanges', () => {
 		});
 	});
 
-	it('detects an all day change', () => {
+	it('detects a pure all-day toggle as a date/time change, since start/end alone stay untouched', () => {
 		const original = buildEditor({ allDay: false });
 		const current = buildEditor({ allDay: true });
 		expect(getInviteChanges(original, current)).toEqual({
-			allDay: { before: false, after: true }
+			dateTime: {
+				before: dateTimeLabel(1000, 2000, false),
+				after: dateTimeLabel(1000, 2000, true),
+				beforeAllDay: false,
+				afterAllDay: true
+			}
 		});
 	});
 
@@ -142,7 +147,9 @@ describe('getInviteChanges', () => {
 		expect(getInviteChanges(original, current)).toEqual({
 			dateTime: {
 				before: dateTimeLabel(1000, 2000),
-				after: dateTimeLabel(1500, 2500)
+				after: dateTimeLabel(1500, 2500),
+				beforeAllDay: false,
+				afterAllDay: false
 			}
 		});
 	});
@@ -153,7 +160,9 @@ describe('getInviteChanges', () => {
 		expect(getInviteChanges(original, current)).toEqual({
 			dateTime: {
 				before: dateTimeLabel(1000, 2000),
-				after: dateTimeLabel(1000, 2500)
+				after: dateTimeLabel(1000, 2500),
+				beforeAllDay: false,
+				afterAllDay: false
 			}
 		});
 	});
@@ -190,7 +199,9 @@ describe('getInviteChanges', () => {
 		const changes = getInviteChanges(original, current);
 		expect(changes?.dateTime).toEqual({
 			before: dateTimeLabel(1000, 2000, false),
-			after: dateTimeLabel(1000 + 86400000, 2000 + 86400000, true)
+			after: dateTimeLabel(1000 + 86400000, 2000 + 86400000, true),
+			beforeAllDay: false,
+			afterAllDay: true
 		});
 		expect(changes?.dateTime?.after).not.toMatch(/\d{1,2}:\d{2}/);
 	});
@@ -252,12 +263,48 @@ describe('getInviteChanges', () => {
 			message: { before: 'before', after: 'after' },
 			dateTime: {
 				before: dateTimeLabel(1000, 2000),
-				after: dateTimeLabel(1500, 2500)
+				after: dateTimeLabel(1500, 2500),
+				beforeAllDay: false,
+				afterAllDay: false
 			},
 			participants: {
 				added: [{ a: 'new@test.com', d: 'New' }],
 				removed: [{ a: 'old@test.com', d: 'Old' }]
 			}
 		});
+	});
+});
+
+describe('formatCompactDateTimeRange', () => {
+	it('shows AM/PM only once when start and end share the same period on the same day', () => {
+		const start = new Date(2026, 6, 29, 20, 30).getTime();
+		const end = new Date(2026, 6, 29, 21, 0).getTime();
+		expect(formatCompactDateTimeRange(start, end, false)).toBe('Wed, Jul 29, 8:30 – 9:00 PM');
+	});
+
+	it('shows AM/PM on both sides when start and end fall in different periods on the same day', () => {
+		const start = new Date(2026, 6, 29, 11, 30).getTime();
+		const end = new Date(2026, 6, 29, 13, 30).getTime();
+		expect(formatCompactDateTimeRange(start, end, false)).toBe('Wed, Jul 29, 11:30 AM – 1:30 PM');
+	});
+
+	it('shows the full date and AM/PM on both sides when start and end are on different days', () => {
+		const start = new Date(2026, 6, 29, 20, 30).getTime();
+		const end = new Date(2026, 6, 30, 9, 0).getTime();
+		expect(formatCompactDateTimeRange(start, end, false)).toBe(
+			'Wed, Jul 29, 8:30 PM – Thu, Jul 30, 9:00 AM'
+		);
+	});
+
+	it('drops the time entirely for a same-day all-day range', () => {
+		const start = new Date(2026, 6, 29, 0, 0).getTime();
+		const end = new Date(2026, 6, 29, 23, 59).getTime();
+		expect(formatCompactDateTimeRange(start, end, true)).toBe('Wed, Jul 29');
+	});
+
+	it('shows a day range with no time for a multi-day all-day range', () => {
+		const start = new Date(2026, 6, 29, 0, 0).getTime();
+		const end = new Date(2026, 6, 30, 23, 59).getTime();
+		expect(formatCompactDateTimeRange(start, end, true)).toBe('Wed, Jul 29 – Thu, Jul 30');
 	});
 });

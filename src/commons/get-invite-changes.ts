@@ -48,7 +48,12 @@ const diffResourceList = (
 		: undefined;
 };
 
-// A terse "EEE, MMM d · time – time" range, e.g. "Wed, Jul 29 · 8:30–9:00 PM".
+// A terse "EEE, MMM d, time – time" range, e.g. "Wed, Jul 29, 8:30 – 9:00 PM",
+// matching the format used below the appointment title itself: short
+// weekday/month, a comma (not "·") between the date and the time, and AM/PM
+// shown only once when both ends share the same period. All-day ranges drop
+// the time entirely (e.g. "Wed, Jul 29"); the "All day" word itself is
+// appended by the caller, not baked in here — see InviteChanges.dateTime.
 // Kept separate from the app's other (Intl-based) date range formatter: this
 // one is only ever baked into the invitation-changes diff text, so it favors
 // a compact, always-short-weekday form over that formatter's fuller output.
@@ -64,11 +69,17 @@ export const formatCompactDateTimeRange = (start: number, end: number, allDay: b
 			: `${formatDay(startDate)} – ${formatDay(endDate)}`;
 	}
 
-	const formatTime = (date: Date): string => format(date, 'p', { locale });
+	const formatTimeWithPeriod = (date: Date): string => format(date, 'h:mm a', { locale });
+	const formatTimeNoPeriod = (date: Date): string => format(date, 'h:mm', { locale });
+	const formatPeriod = (date: Date): string => format(date, 'a', { locale });
+
 	if (isSameDay(startDate, endDate)) {
-		return `${formatDay(startDate)} · ${formatTime(startDate)}–${formatTime(endDate)}`;
+		if (formatPeriod(startDate) === formatPeriod(endDate)) {
+			return `${formatDay(startDate)}, ${formatTimeNoPeriod(startDate)} – ${formatTimeNoPeriod(endDate)} ${formatPeriod(endDate)}`;
+		}
+		return `${formatDay(startDate)}, ${formatTimeWithPeriod(startDate)} – ${formatTimeWithPeriod(endDate)}`;
 	}
-	return `${formatDay(startDate)} · ${formatTime(startDate)} – ${formatDay(endDate)} · ${formatTime(endDate)}`;
+	return `${formatDay(startDate)}, ${formatTimeWithPeriod(startDate)} – ${formatDay(endDate)}, ${formatTimeWithPeriod(endDate)}`;
 };
 
 export const getInviteChanges = (
@@ -126,15 +137,22 @@ export const getInviteChanges = (
 		};
 	}
 
-	if (original.start !== current.start || original.end !== current.end) {
+	// A pure all-day toggle doesn't touch start/end (see
+	// editEditorAllDayReducer), so it has to be checked on its own here too —
+	// otherwise flipping all-day with nothing else changed would report no
+	// date/time change at all, even though the event's actual schedule
+	// (a full day vs. a specific time range) did change.
+	if (
+		original.start !== current.start ||
+		original.end !== current.end ||
+		!!original.allDay !== !!current.allDay
+	) {
 		changes.dateTime = {
 			before: formatCompactDateTimeRange(original.start ?? 0, original.end ?? 0, !!original.allDay),
-			after: formatCompactDateTimeRange(current.start ?? 0, current.end ?? 0, !!current.allDay)
+			after: formatCompactDateTimeRange(current.start ?? 0, current.end ?? 0, !!current.allDay),
+			beforeAllDay: !!original.allDay,
+			afterAllDay: !!current.allDay
 		};
-	}
-
-	if (!!original.allDay !== !!current.allDay) {
-		changes.allDay = { before: !!original.allDay, after: !!current.allDay };
 	}
 
 	const beforeMessage = original.plainText?.trim() ?? '';
