@@ -240,13 +240,13 @@ const DetailedContent: FC<{ children: React.ReactNode }> = ({ children }): React
 // the whole text to its own line or hang-indent every wrapped line under
 // where the quote started. Plain inline flow wraps like a normal paragraph:
 // only the overflow moves down, flush with the label's own left edge. A
-// marker (+/–), when given, sits right before the text's opening quote —
+// marker (+/-), when given, sits right before the text's opening quote —
 // same convention as the compact single-value diff below.
 const DiffLine: FC<{
 	label: string;
 	text: string;
 	quote: boolean;
-	marker?: '+' | '–';
+	marker?: '+' | '-';
 	testId: string;
 }> = ({ label, text, quote, marker, testId }): ReactElement => {
 	const content = quote ? `"${text}"` : text;
@@ -365,14 +365,14 @@ const TwoSidedDiffField: FC<{
 // A field that was added from scratch (no previous value) or removed
 // entirely (no replacement): a "before → after" arrow implies a genuine
 // modification of an existing value, which isn't what happened here, so it
-// shows a single +/– marked value instead, both inline and — with the same
+// shows a single +/- marked value instead, both inline and — with the same
 // marker right before the opening quote — in the expanded Previous/Updated
 // view for long values.
 const SingleValueDiffField: FC<{
 	label?: string;
 	icon?: string;
 	tooltipLabel?: string;
-	marker: '+' | '–';
+	marker: '+' | '-';
 	value: string;
 	quote: boolean;
 	testId: string;
@@ -451,7 +451,7 @@ const SimpleDiffField: FC<{
 				label={label}
 				icon={icon}
 				tooltipLabel={tooltipLabel}
-				marker="–"
+				marker="-"
 				value={before}
 				quote={quote}
 			/>
@@ -517,6 +517,7 @@ const buildSections = (changes: InviteChanges, t: TFunction): ReactElement[] => 
 					tooltipLabel={t('tooltip.location', 'Location')}
 					before={changes.location.before}
 					after={changes.location.after}
+					quote
 				/>
 			)
 		);
