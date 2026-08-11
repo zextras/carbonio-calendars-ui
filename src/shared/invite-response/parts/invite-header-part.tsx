@@ -6,6 +6,7 @@
 
 import React, { FC, ReactElement, useMemo } from 'react';
 
+import styled from '@emotion/styled';
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { Trans, useTranslation } from 'react-i18next';
@@ -15,6 +16,13 @@ import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-con
 import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
 import { isSentOnBehalfOf } from 'utils/organizer';
+
+// keeps the indicator in the text flow, so it follows the last line instead of dropping below it
+const InlineTimezoneIndicator = styled.span`
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: ${({ theme }): string => theme.sizes.padding.extrasmall};
+`;
 
 type InviteHeaderPartProps = {
 	mailMsg: any;
@@ -55,14 +63,28 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 		allDay
 	});
 
-	const counterDate = useGetDateRangeConvertedToTimezone(
-		proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0,
-		proposedEndTime ? parseDateFromICS(proposedEndTime).getTime() : 0,
-		{
-			allDay,
-			timeZone
-		}
+	const proposedStart = useMemo(
+		() => (proposedStartTime ? parseDateFromICS(proposedStartTime).getTime() : 0),
+		[proposedStartTime]
 	);
+
+	const proposedEnd = useMemo(
+		() => (proposedEndTime ? parseDateFromICS(proposedEndTime).getTime() : 0),
+		[proposedEndTime]
+	);
+
+	const counterDate = useGetDateRangeConvertedToTimezone(proposedStart, proposedEnd, {
+		allDay,
+		timeZone
+	});
+
+	// In a counter proposal the invite holds the current appointment times, while the
+	// mail message holds the attendee's proposed ones: show both when they differ.
+	const showOriginalTime =
+		method === MESSAGE_METHOD.COUNTER &&
+		mailMsg.parent !== FOLDERS.SENT &&
+		localStartTime !== 0 &&
+		(proposedStart !== localStartTime || proposedEnd !== localEndTime);
 
 	const showTimezoneIndicator = convertedDate !== originalDate;
 
@@ -111,26 +133,44 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 						/>
 					))}
 			</Row>
-			<Row width="100%" mainAlignment="flex-start">
-				{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{counterDate}
-					</Text>
-				)}
-				{method !== MESSAGE_METHOD.COUNTER && (
+			{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (
+				<>
+					{showOriginalTime && (
+						<Row width="100%" mainAlignment="flex-start" padding={{ bottom: 'small' }}>
+							<Text overflow="break-word" color="gray1" weight="bold" size="small">
+								{`${t('label.original', 'Original')}: ${originalDate}`}
+							</Text>
+						</Row>
+					)}
+					<Row width="100%" mainAlignment="flex-start">
+						<Text overflow="break-word" color="warning.focus" size="small">
+							{`${t('label.proposed', 'Proposed')}: ${counterDate}`}
+							{showTimezoneIndicator && (
+								<Tooltip label={timezoneTooltip}>
+									<InlineTimezoneIndicator>
+										<Icon icon="GlobeOutline" color="gray1" />
+									</InlineTimezoneIndicator>
+								</Tooltip>
+							)}
+						</Text>
+					</Row>
+				</>
+			)}
+			{method !== MESSAGE_METHOD.COUNTER && (
+				<Row width="100%" mainAlignment="flex-start">
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
 						{convertedDate}
 					</Text>
-				)}
 
-				{showTimezoneIndicator && (
-					<Tooltip label={timezoneTooltip}>
-						<Padding left="small">
-							<Icon icon="GlobeOutline" color="gray1" />
-						</Padding>
-					</Tooltip>
-				)}
-			</Row>
+					{showTimezoneIndicator && (
+						<Tooltip label={timezoneTooltip}>
+							<Padding left="small">
+								<Icon icon="GlobeOutline" color="gray1" />
+							</Padding>
+						</Tooltip>
+					)}
+				</Row>
+			)}
 		</>
 	);
 };

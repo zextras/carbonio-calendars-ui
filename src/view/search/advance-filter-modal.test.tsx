@@ -201,7 +201,7 @@ describe('AdvancedFilterModal', () => {
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
 
 		const keywordInputEle = screen.getByPlaceholderText('Keywords');
-		await user.type(keywordInputEle, 'test');
+		await user.pasteInto(keywordInputEle, 'test');
 		await user.type(keywordInputEle, '[Enter]');
 
 		const searchButton = screen.getByRole('button', { name: /search/i });
@@ -330,7 +330,7 @@ describe('AdvancedFilterModal', () => {
 		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
 
 		const keywordInputEle = screen.getByPlaceholderText('Keywords');
-		await user.type(keywordInputEle, 'test');
+		await user.pasteInto(keywordInputEle, 'test');
 		await user.type(keywordInputEle, '[Enter]');
 
 		expect(properties.updateQuery).not.toHaveBeenCalled();
