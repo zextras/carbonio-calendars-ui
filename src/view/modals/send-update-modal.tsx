@@ -54,11 +54,11 @@ const OptionCard = ({
 			iconColor="primary"
 			onClick={(): void => onSelect(value)}
 			label={
-				<Container width="fill" crossAlignment="center" gap="0.125rem" padding={{ left: 'small' }}>
-					<Text overflow="break-word" weight="regular" textAlign="center">
+				<Container width="fill" crossAlignment="start" gap="0.125rem" padding={{ left: 'small' }}>
+					<Text overflow="break-word" weight="regular" textAlign="start">
 						{title}
 					</Text>
-					<Text overflow="break-word" size="small" color="gray1.active" textAlign="center">
+					<Text overflow="break-word" size="small" color="gray1.active" textAlign="start">
 						{description}
 					</Text>
 				</Container>
