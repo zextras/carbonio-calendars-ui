@@ -8,6 +8,7 @@ import React, { ReactElement, useCallback, useContext, useEffect, useRef, useSta
 import { Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { getDay } from 'date-fns';
+import { shallowEqual } from 'react-redux';
 
 import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
 import { RecurrenceContext } from 'commons/recurrence-context';
@@ -54,8 +55,14 @@ const checkboxesInitialValue = (
 export const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const editorEventRecurrenceFrequency = useAppSelector(selectEditorRecurrenceFrequency(editorId));
-	const editorEventRecurrenceInterval = useAppSelector(selectEditorRecurrenceInterval(editorId));
-	const editorEventRecurrenceByDay = useAppSelector(selectEditorRecurrenceByDay(editorId));
+	const editorEventRecurrenceInterval = useAppSelector(
+		selectEditorRecurrenceInterval(editorId),
+		shallowEqual
+	);
+	const editorEventRecurrenceByDay = useAppSelector(
+		selectEditorRecurrenceByDay(editorId),
+		shallowEqual
+	);
 	const editorEventStartDate = useAppSelector(selectEditorStart(editorId));
 
 	const hasInitializedRef = useRef(false);

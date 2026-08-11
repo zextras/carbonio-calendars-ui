@@ -7,13 +7,15 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { parse } from 'date-fns';
 import { keyBy, values } from 'lodash';
+import { http, HttpResponse } from 'msw';
 
 import * as handler from '../../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../../constants';
+import { getSetupServer } from '@jest-setup';
 import * as mockshell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
@@ -31,6 +33,7 @@ import * as moveAppointmentHandler from 'store/actions/move-appointment';
 import * as modifyAppointmentHandler from 'store/actions/new-modify-appointment';
 import * as sendInviteResponseHandler from 'store/actions/send-invite-response';
 import { reducers } from 'store/redux';
+import { useAcceptedProposalsStore } from 'store/zustand/accepted-proposals-store';
 import mockedData from 'test/generators';
 import {
 	exceptionAppointmentAllDayResponse,
@@ -46,6 +49,7 @@ import {
 	singleGetMsgAllDayResponse,
 	singleGetMsgResponse
 } from 'test/mocks/network/msw/handle-get-invite';
+import { handleModifyAppointmentRequest } from 'test/mocks/network/msw/handle-modify-appointment';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -62,6 +66,11 @@ const setupFoldersStore = (): void => {
 };
 
 describe('invite response component', () => {
+	beforeEach(() => {
+		// the store is module scoped on purpose, so it has to be cleared between tests
+		useAcceptedProposalsStore.setState({ acceptedProposals: {} });
+	});
+
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', async () => {
 			setupFoldersStore();
@@ -1015,7 +1024,9 @@ describe('invite response component', () => {
 				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 
 				expect(
-					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
+					screen.getByText(
+						'Proposed: Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+					)
 				).toBeVisible();
 			});
 			test('a string with the user local time of the event', async () => {
@@ -1028,7 +1039,7 @@ describe('invite response component', () => {
 				});
 
 				const localTimeString = await screen.findByText(
-					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+					'Proposed: Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
 				);
 
 				expect(localTimeString).toBeVisible();
@@ -1044,14 +1055,15 @@ describe('invite response component', () => {
 					store
 				});
 
-				expect(await screen.findByText('Original:')).toBeVisible();
 				expect(
-					screen.getByText('Monday, February 05, 2024, 4:00 – 4:30 PM GMT+01:00 Europe/Berlin')
+					await screen.findByText(
+						'Original: Monday, February 05, 2024, 4:00 – 4:30 PM GMT+01:00 Europe/Berlin'
+					)
 				).toBeVisible();
-
-				expect(screen.getByText('Proposed:')).toBeVisible();
 				expect(
-					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
+					screen.getByText(
+						'Proposed: Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+					)
 				).toBeVisible();
 			});
 			test('does not show the original time when the appointment details are unavailable', async () => {
@@ -1063,9 +1075,9 @@ describe('invite response component', () => {
 					store
 				});
 
-				await screen.findByText('Proposed:');
+				await screen.findByText(/^Proposed:/);
 
-				expect(screen.queryByText('Original:')).not.toBeInTheDocument();
+				expect(screen.queryByText(/^Original:/)).not.toBeInTheDocument();
 			});
 			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
@@ -1088,14 +1100,14 @@ describe('invite response component', () => {
 
 				await user.hover(timezoneIcon);
 
-				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
-
-				const tooltipLocalTime = await screen.findByText(
-					'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT+05:30 Asia/Kolkata'
+				// the proposed date is rendered inline in the same timezone, so the tooltip has to be
+				// matched by its title and date together to avoid matching that row instead
+				const creationDate = 'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT\\+05:30 Asia/Kolkata';
+				const tooltip = await screen.findByText(
+					new RegExp(`Date and time on creation timezone:.*${creationDate}`)
 				);
 
-				expect(tooltipTitleString).toBeVisible();
-				expect(tooltipLocalTime).toBeVisible();
+				expect(tooltip).toBeVisible();
 			});
 			describe('two different buttons to reply to the counter appointment: ', () => {
 				describe('a button to accept the counter appointment', () => {
@@ -1121,7 +1133,7 @@ describe('invite response component', () => {
 					test.todo('has text color green');
 					// icon: CheckmarkOutline
 					test.todo('has a checkmark icon');
-					test('it is always enabled', async () => {
+					test('it is enabled before any action is taken', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.COUNTER,
@@ -1223,6 +1235,206 @@ describe('invite response component', () => {
 							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
 
 							modifyAppointmentSpy.mockClear();
+						});
+						test('clicking twice in rapid succession sends a single ModifyAppointment request', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const modifyAppointmentSpy = vi.spyOn(modifyAppointmentHandler, 'modifyAppointment');
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
+
+							// fireEvent instead of user.click: both clicks must land in the same tick,
+							// before React can commit the disabled state, otherwise the test would pass
+							// even without the guard
+							/* eslint-disable testing-library/no-unnecessary-act, testing-library/prefer-user-event */
+							await act(async () => {
+								fireEvent.click(acceptProposedTimeButton);
+								fireEvent.click(acceptProposedTimeButton);
+							});
+							/* eslint-enable testing-library/no-unnecessary-act, testing-library/prefer-user-event */
+
+							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
+
+							modifyAppointmentSpy.mockClear();
+						});
+						test('the buttons are replaced by a confirmation once accepted', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
+							await act(async () => {
+								await user.click(acceptProposedTimeButton);
+							});
+
+							await waitFor(() => {
+								expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							});
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+							expect(screen.getByText('You have accepted the proposed new time.')).toBeVisible();
+						});
+						test('stays accepted when the panel is re-created after the counter mail is trashed', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const modifyAppointmentSpy = vi.spyOn(modifyAppointmentHandler, 'modifyAppointment');
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user, unmount } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							await act(async () => {
+								await user.click(await screen.findByRole('button', { name: /Accept/i }));
+							});
+							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
+
+							// the mails module re-creates the panel once the mail is moved to trash
+							unmount();
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							expect(
+								await screen.findByText('You have accepted the proposed new time.')
+							).toBeVisible();
+							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
+
+							modifyAppointmentSpy.mockClear();
+						});
+						test('is already accepted when the appointment sits at the proposed time', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const appointmentComp = singleAppointmentResponse.appt[0].inv[0].comp[0];
+							// a proposal accepted before this session shows up only in the appointment
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false,
+								{
+									invite: [
+										{
+											tz: [],
+											comp: [{ apptId: '1484', s: appointmentComp.s, e: appointmentComp.e }]
+										}
+									]
+								} as never
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							expect(
+								await screen.findByText('You have accepted the proposed new time.')
+							).toBeVisible();
+							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+						});
+						test('shows an error and keeps the counter mail when the appointment cannot be retrieved', async () => {
+							setupFoldersStore();
+							const moveToTrash = vi.fn();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							createSoapAPIInterceptor('GetAppointment', {});
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={moveToTrash} />,
+								{
+									store
+								}
+							);
+
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
+							await act(async () => {
+								await user.click(acceptProposedTimeButton);
+							});
+
+							expect(
+								await screen.findByText('Something went wrong, please try again')
+							).toBeVisible();
+							expect(moveToTrash).not.toHaveBeenCalled();
+							// the button must not stay stuck in the submitting state
+							await waitFor(() => {
+								expect(acceptProposedTimeButton).toBeEnabled();
+							});
+						});
+						test('does not move the counter mail to trash when the modify request fails', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							getSetupServer().use(
+								http.post('/service/soap/ModifyAppointmentRequest', async () =>
+									HttpResponse.json({ Body: { Fault: {} } })
+								)
+							);
+							setupFoldersStore();
+							const moveToTrash = vi.fn();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={moveToTrash} />,
+								{
+									store
+								}
+							);
+
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
+							await act(async () => {
+								await user.click(acceptProposedTimeButton);
+							});
+
+							expect(
+								await screen.findByText('Something went wrong, please try again')
+							).toBeVisible();
+							expect(moveToTrash).not.toHaveBeenCalled();
+
+							// runtime handlers are only reset in afterAll, so the failing one must be
+							// replaced here or it would leak into every following test
+							getSetupServer().use(
+								http.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest)
+							);
 						});
 						test('if the event is non recurrent a non recurrent editor is created', async () => {
 							setupFoldersStore();
@@ -1430,7 +1642,7 @@ describe('invite response component', () => {
 					test.todo('has text color red');
 					// icon: CloseOutline
 					test.todo('has a close icon');
-					test('it is always enabled', async () => {
+					test('it is enabled before any action is taken', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.COUNTER,
