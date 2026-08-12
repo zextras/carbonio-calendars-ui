@@ -3,7 +3,36 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { isEqual, omit } from 'lodash';
+
+import { Editor } from '../types/editor';
 import { EditorChipAttendees } from '../types/store/invite';
+
+export const EDITOR_METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
+	'id',
+	'isDirty',
+	'disabled',
+	'panel',
+	'isNew',
+	'originalStart',
+	'originalEnd',
+	'compNum',
+	'inviteId',
+	'uid',
+	'ridZ',
+	'exceptId',
+	'isSeries',
+	'isInstance',
+	'isException',
+	'searchPanel',
+	'isProposeNewTime',
+	'draft'
+];
+
+export const EDITOR_ATTENDEE_FIELDS: ReadonlyArray<keyof Editor> = [
+	'attendees',
+	'optionalAttendees'
+];
 
 const toEmailSet = (attendees: EditorChipAttendees[] | undefined): Set<string> =>
 	new Set((attendees ?? []).map((attendee) => attendee.email.toLowerCase()));
@@ -26,4 +55,15 @@ export const getNewlyAddedAttendees = (
 ): EditorChipAttendees[] => {
 	const originalEmails = toEmailSet(original);
 	return (current ?? []).filter((attendee) => !originalEmails.has(attendee.email.toLowerCase()));
+};
+
+export const haveNonAttendeeFieldsChanged = (
+	current: Editor | undefined,
+	original: Editor | undefined
+): boolean => {
+	if (!current || !original) {
+		return true;
+	}
+	const excludedFields = [...EDITOR_METADATA_FIELDS, ...EDITOR_ATTENDEE_FIELDS];
+	return !isEqual(omit(current, excludedFields), omit(original, excludedFields));
 };

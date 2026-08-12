@@ -14,7 +14,7 @@ import { Mock } from 'vitest';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { onSave } from '../../../../commons/editor-save-send-fns';
 import { reducers } from '../../../../store/redux';
-import { editEditorAttendees } from '../../../../store/slices/editor-slice';
+import { editEditorAttendees, editEditorTitle } from '../../../../store/slices/editor-slice';
 import { EditorSaveButton } from '../editor-save-button';
 import { setupTest } from '@test-setup';
 
@@ -218,6 +218,38 @@ describe('EditorSaveButton', () => {
 				await screen.findByText("You've changed the attendee list. Who should get the update?")
 			).toBeInTheDocument();
 			expect(onSave).not.toHaveBeenCalled();
+		});
+
+		it('does not open the send-update modal when an attendee is added together with another field change', async () => {
+			(onSave as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+			store.dispatch(editEditorTitle({ id: editor.id, title: 'Updated meeting title' }));
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true }));
+			});
+			expect(
+				screen.queryByText("You've changed the attendee list. Who should get the update?")
+			).not.toBeInTheDocument();
 		});
 
 		it('does not open the send-update modal when attendees are unchanged', async () => {

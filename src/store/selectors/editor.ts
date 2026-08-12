@@ -60,6 +60,11 @@ export const selectEditorOptionalAttendees =
 	(state: RootState): Editor['optionalAttendees'] =>
 		state?.editor?.editors?.[id]?.optionalAttendees;
 
+export const selectOriginalEditor =
+	(id: string) =>
+	(state: RootState): Editor | undefined =>
+		state?.editor?.originalEditors?.[id];
+
 export const selectOriginalEditorAttendees =
 	(id: string) =>
 	(state: RootState): Editor['attendees'] =>

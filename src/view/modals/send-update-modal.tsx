@@ -45,14 +45,15 @@ const OptionCard = ({
 		background={isSelected ? 'highlight' : 'gray6'}
 		borderColor={isSelected ? 'primary' : 'gray2.regular'}
 		width="fill"
-		style={{ cursor: 'pointer', borderRadius: '0.25rem' }}
+		style={{ cursor: 'pointer', borderRadius: '.5rem' }}
 		onClick={(): void => onSelect(value)}
 	>
 		<Radio
 			value={value}
 			checked={isSelected}
-			iconColor="primary"
+			iconColor={isSelected ? 'primary' : 'gray0.regular'}
 			onClick={(): void => onSelect(value)}
+			padding={{ bottom: '0' }}
 			label={
 				<Container width="fill" crossAlignment="start" gap="0.125rem" padding={{ left: 'small' }}>
 					<Text overflow="break-word" weight="regular" textAlign="start">

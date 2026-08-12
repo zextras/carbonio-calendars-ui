@@ -18,11 +18,12 @@ import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditor,
 	selectEditorIsNew,
+	selectOriginalEditor,
 	selectOriginalEditorAttendees,
 	selectOriginalEditorOptionalAttendees
 } from 'store/selectors/editor';
 import { EditorProps, NotifyAttendeesOverride } from 'types/editor';
-import { getNewlyAddedAttendees } from 'utils/attendees';
+import { getNewlyAddedAttendees, haveNonAttendeeFieldsChanged } from 'utils/attendees';
 import {
 	SendUpdateModal,
 	SEND_UPDATE_OPTIONS,
@@ -33,6 +34,7 @@ import { SeriesEditWarningModal } from 'view/modals/series-edit-warning-modal';
 export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
+	const originalEditor = useAppSelector(selectOriginalEditor(editorId));
 	const originalAttendees = useAppSelector(selectOriginalEditorAttendees(editorId));
 	const originalOptionalAttendees = useAppSelector(selectOriginalEditorOptionalAttendees(editorId));
 	const { createModal, closeModal } = useModal();
@@ -112,7 +114,9 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 			originalOptionalAttendees
 		);
 		const attendeesAdded =
-			!isNew && (newlyAddedAttendees.length > 0 || newlyAddedOptionalAttendees.length > 0);
+			!isNew &&
+			(newlyAddedAttendees.length > 0 || newlyAddedOptionalAttendees.length > 0) &&
+			!haveNonAttendeeFieldsChanged(editor, originalEditor);
 
 		if (attendeesAdded) {
 			const modalId = 'send-update';
@@ -130,7 +134,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 			createModal(
 				{
 					id: modalId,
-					size: 'small',
+					size: 'medium',
 					children: (
 						<StoreProvider>
 							<SendUpdateModal onClose={(): void => closeModal(modalId)} onConfirm={onConfirm} />
@@ -148,10 +152,10 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	}, [
 		closeModal,
 		createModal,
-		editor.attendees,
-		editor.optionalAttendees,
+		editor,
 		isNew,
 		originalAttendees,
+		originalEditor,
 		originalOptionalAttendees,
 		proceedWithSend
 	]);

@@ -14,7 +14,7 @@ import { Mock } from 'vitest';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { onSend } from '../../../../commons/editor-save-send-fns';
 import { reducers } from '../../../../store/redux';
-import { editEditorAttendees } from '../../../../store/slices/editor-slice';
+import { editEditorAttendees, editEditorTitle } from '../../../../store/slices/editor-slice';
 import { EditorSendButton } from '../editor-send-button';
 import { setupTest } from '@test-setup';
 
@@ -237,6 +237,38 @@ describe('EditorSendButton', () => {
 				await screen.findByText("You've changed the attendee list. Who should get the update?")
 			).toBeInTheDocument();
 			expect(onSend).not.toHaveBeenCalled();
+		});
+
+		it('does not open the send-update modal when an attendee is added together with another field change', async () => {
+			(onSend as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+			store.dispatch(editEditorTitle({ id: editor.id, title: 'Updated meeting title' }));
+
+			const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /send/i }));
+
+			await waitFor(() => {
+				expect(onSend).toHaveBeenCalled();
+			});
+			expect(
+				screen.queryByText("You've changed the attendee list. Who should get the update?")
+			).not.toBeInTheDocument();
 		});
 
 		it('does not open the send-update modal for a new appointment even if attendees changed', async () => {
