@@ -282,9 +282,9 @@ describe('EditGroupModal', () => {
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, 'altered group name');
+			await user.pasteInto(input, 'altered group name');
 			await user.clear(input);
-			await user.type(input, group.name);
+			await user.pasteInto(input, group.name);
 
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeDisabled();
 		});
@@ -294,7 +294,7 @@ describe('EditGroupModal', () => {
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, 'Updated group name');
+			await user.pasteInto(input, 'Updated group name');
 
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
 		});
@@ -304,7 +304,7 @@ describe('EditGroupModal', () => {
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, 'Updated group name');
+			await user.pasteInto(input, 'Updated group name');
 
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
 		});
@@ -392,7 +392,7 @@ describe('EditGroupModal', () => {
 
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, `Updated ${group.name}`);
+			await user.pasteInto(input, `Updated ${group.name}`);
 			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
 			await user.click(confirmButton);
 			await apiCallInterceptor;
@@ -416,7 +416,7 @@ describe('EditGroupModal', () => {
 				<EditGroupModal {...buildProps({ groupId: group.id, onClose })} />
 			);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, `Updated ${group.name}`);
+			await user.pasteInto(input, `Updated ${group.name}`);
 			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
 			await act(() => user.click(confirmButton));
 			await apiCallInterceptor;
@@ -434,7 +434,7 @@ describe('EditGroupModal', () => {
 
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, `Updated ${group.name}`);
+			await user.pasteInto(input, `Updated ${group.name}`);
 			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
 			await user.click(confirmButton);
 			await apiCallInterceptor;
@@ -458,7 +458,7 @@ describe('EditGroupModal', () => {
 				<EditGroupModal {...buildProps({ groupId: group.id, onClose })} />
 			);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, groupName);
+			await user.pasteInto(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
 			await user.click(confirmButton);
 			await screen.findByText(/Something went wrong, please try again/i);
