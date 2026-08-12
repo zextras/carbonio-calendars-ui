@@ -1,3 +1,9 @@
+## <small>1.32.1 (2026-08-12)</small>
+
+* fix: remove unbalanced quote around organizer name in invite body text (#830) ([a6979e4](https://github.com/zextras/carbonio-calendars-ui/commit/a6979e4)), closes [#830](https://github.com/zextras/carbonio-calendars-ui/issues/830)
+* chore(deps): update vitest to v4.1.10 (#811) ([63b5426](https://github.com/zextras/carbonio-calendars-ui/commit/63b5426)), closes [#811](https://github.com/zextras/carbonio-calendars-ui/issues/811)
+* Speed up recurrence modal and ci workers (#825) ([1d45e2f](https://github.com/zextras/carbonio-calendars-ui/commit/1d45e2f)), closes [#825](https://github.com/zextras/carbonio-calendars-ui/issues/825)
+
 ## 1.32.0 (2026-08-06)
 
 * feat(CO-4077): prevent duplicate notifications when accepting a proposed new time (#826) ([d851251](https://github.com/zextras/carbonio-calendars-ui/commit/d851251)), closes [#826](https://github.com/zextras/carbonio-calendars-ui/issues/826)

@@ -266,7 +266,7 @@ export function generateBodyRequest(app: Editor): string {
 
 	const meetingMessage = `${ROOM_DIVIDER}\n${
 		organizer.name ?? ''
-	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
+	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: ${
 		organizer.name
 	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
