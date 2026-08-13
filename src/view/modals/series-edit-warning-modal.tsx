@@ -17,7 +17,7 @@ import {
 	selectEditorEquipment,
 	selectEditorMeetingRoom
 } from '../../store/selectors/editor';
-import { Editor } from '../../types/editor';
+import { Editor, NotifyAttendeesOverride } from '../../types/editor';
 
 type ModalProps = {
 	onClose: () => void;
@@ -26,6 +26,8 @@ type ModalProps = {
 	isSending?: boolean;
 	editorId: string;
 	editor: Editor;
+	notifyAttendees?: NotifyAttendeesOverride;
+	draftOverride?: boolean;
 };
 
 export const SeriesEditWarningModal = ({
@@ -34,7 +36,9 @@ export const SeriesEditWarningModal = ({
 	isSending = false,
 	isNew,
 	editorId,
-	editor
+	editor,
+	notifyAttendees,
+	draftOverride
 }: ModalProps): JSX.Element => {
 	const message = useMemo(
 		() =>
@@ -58,7 +62,7 @@ export const SeriesEditWarningModal = ({
 
 	const onConfirm = useCallback(() => {
 		isSending
-			? action({ isNew, editor, dispatch }).then(({ response }: any) => {
+			? action({ isNew, editor, dispatch, notifyAttendees }).then(({ response }: any) => {
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -72,10 +76,11 @@ export const SeriesEditWarningModal = ({
 					onClose();
 				})
 			: action({
-					draft: !!attendeesLength || !!meetingRoomLength || !!equipmentsLength,
+					draft: draftOverride ?? (!!attendeesLength || !!meetingRoomLength || !!equipmentsLength),
 					isNew,
 					editor,
-					dispatch
+					dispatch,
+					notifyAttendees
 				}).then(({ response }: any) => {
 					createSnackbar({
 						key: `calendar-moved-root`,
@@ -94,11 +99,13 @@ export const SeriesEditWarningModal = ({
 		attendeesLength,
 		createSnackbar,
 		dispatch,
+		draftOverride,
 		editor,
 		equipmentsLength,
 		isNew,
 		isSending,
 		meetingRoomLength,
+		notifyAttendees,
 		onClose
 	]);
 

@@ -15,13 +15,28 @@ import { onSend } from 'commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from 'constants/index';
 import { StoreProvider } from 'store/redux';
 import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
-import { selectEditor, selectEditorIsNew } from 'store/selectors/editor';
-import { EditorProps } from 'types/editor';
+import {
+	selectEditor,
+	selectEditorIsNew,
+	selectOriginalEditor,
+	selectOriginalEditorAttendees,
+	selectOriginalEditorOptionalAttendees
+} from 'store/selectors/editor';
+import { EditorProps, NotifyAttendeesOverride } from 'types/editor';
+import { getNewlyAddedAttendees, haveNonAttendeeFieldsChanged } from 'utils/attendees';
+import {
+	SendUpdateModal,
+	SEND_UPDATE_OPTIONS,
+	SendUpdateOption
+} from 'view/modals/send-update-modal';
 import { SeriesEditWarningModal } from 'view/modals/series-edit-warning-modal';
 
 export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
+	const originalEditor = useAppSelector(selectOriginalEditor(editorId));
+	const originalAttendees = useAppSelector(selectOriginalEditorAttendees(editorId));
+	const originalOptionalAttendees = useAppSelector(selectOriginalEditorOptionalAttendees(editorId));
 	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
 	const board = useBoard();
@@ -31,23 +46,98 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		useEditorSendButtonState(editorId);
 	const [t] = useTranslation();
 
+	const proceedWithSend = useCallback(
+		(notifyAttendees?: NotifyAttendeesOverride) => {
+			if (editor.isSeries && !isNew && !editor.isInstance) {
+				const modalId = 'series-edit-warning';
+				createModal(
+					{
+						id: modalId,
+						size: 'large',
+						children: (
+							<StoreProvider>
+								<SeriesEditWarningModal
+									action={onSend}
+									isSending
+									onClose={(): void => closeModal(modalId)}
+									isNew={isNew}
+									editorId={editorId}
+									editor={editor}
+									notifyAttendees={notifyAttendees}
+								/>
+							</StoreProvider>
+						),
+						onClose: () => {
+							closeModal(modalId);
+						}
+					},
+					true
+				);
+			} else
+				onSend({ isNew, editor, dispatch, notifyAttendees }).then(({ response }) => {
+					if (editor?.panel && response) {
+						replaceHistory(`/${CALENDAR_ROUTE}`);
+					}
+					if (board && response) {
+						closeBoard(board?.id);
+					}
+					createSnackbar({
+						key: `calendar-moved-root`,
+						replace: true,
+						severity: response ? 'info' : 'warning',
+						hideButton: true,
+						label: !response
+							? t('label.error_try_again', 'Something went wrong, please try again')
+							: t('message.appointment_invitation_sent', 'Appointment invitation sent'),
+						autoHideTimeout: 3000
+					});
+				});
+		},
+		[
+			board,
+			closeModal,
+			createModal,
+			createSnackbar,
+			dispatch,
+			editor,
+			editorId,
+			isNew,
+			replaceHistory,
+			t
+		]
+	);
+
 	const onClick = useCallback(() => {
-		if (editor.isSeries && !isNew && !editor.isInstance) {
-			const modalId = 'series-edit-warning';
+		const newlyAddedAttendees = getNewlyAddedAttendees(editor.attendees, originalAttendees);
+		const newlyAddedOptionalAttendees = getNewlyAddedAttendees(
+			editor.optionalAttendees,
+			originalOptionalAttendees
+		);
+		const attendeesAdded =
+			!isNew &&
+			(newlyAddedAttendees.length > 0 || newlyAddedOptionalAttendees.length > 0) &&
+			!haveNonAttendeeFieldsChanged(editor, originalEditor);
+
+		if (attendeesAdded) {
+			const modalId = 'send-update';
+			const onConfirm = (option: SendUpdateOption): void => {
+				closeModal(modalId);
+				proceedWithSend(
+					option === SEND_UPDATE_OPTIONS.ADDED_OR_REMOVED
+						? {
+								attendees: newlyAddedAttendees,
+								optionalAttendees: newlyAddedOptionalAttendees
+							}
+						: undefined
+				);
+			};
 			createModal(
 				{
 					id: modalId,
-					size: 'large',
+					size: 'medium',
 					children: (
 						<StoreProvider>
-							<SeriesEditWarningModal
-								action={onSend}
-								isSending
-								onClose={(): void => closeModal(modalId)}
-								isNew={isNew}
-								editorId={editorId}
-								editor={editor}
-							/>
+							<SendUpdateModal onClose={(): void => closeModal(modalId)} onConfirm={onConfirm} />
 						</StoreProvider>
 					),
 					onClose: () => {
@@ -56,36 +146,18 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 				},
 				true
 			);
-		} else
-			onSend({ isNew, editor, dispatch }).then(({ response }) => {
-				if (editor?.panel && response) {
-					replaceHistory(`/${CALENDAR_ROUTE}`);
-				}
-				if (board && response) {
-					closeBoard(board?.id);
-				}
-				createSnackbar({
-					key: `calendar-moved-root`,
-					replace: true,
-					severity: response ? 'info' : 'warning',
-					hideButton: true,
-					label: !response
-						? t('label.error_try_again', 'Something went wrong, please try again')
-						: t('message.appointment_invitation_sent', 'Appointment invitation sent'),
-					autoHideTimeout: 3000
-				});
-			});
+		} else {
+			proceedWithSend();
+		}
 	}, [
-		board,
 		closeModal,
 		createModal,
-		createSnackbar,
-		dispatch,
 		editor,
-		editorId,
 		isNew,
-		replaceHistory,
-		t
+		originalAttendees,
+		originalEditor,
+		originalOptionalAttendees,
+		proceedWithSend
 	]);
 
 	return (
