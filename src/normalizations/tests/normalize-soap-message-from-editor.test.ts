@@ -850,6 +850,96 @@ describe('normalize soap message from editor', () => {
 			});
 		});
 	});
+	describe('notifyOnlyAttendees', () => {
+		test('when not provided, all current attendees/optionalAttendees are notified (legacy behavior)', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'existing@example.com' })];
+			const optionalAttendees = [generateAttendee({ email: 'existing_optional@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees,
+					folders: {},
+					dispatch: vi.fn()
+				}
+			});
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.e).toContainEqual(
+				expect.objectContaining({ a: 'existing@example.com', t: 't' })
+			);
+			expect(body.m.e).toContainEqual(
+				expect.objectContaining({ a: 'existing_optional@example.com', t: 't' })
+			);
+			expect(body.m.inv.comp[0].at).toHaveLength(2);
+		});
+
+		test('when provided, only overrides the notified recipients (m.e), leaving the full roster (inv.at) untouched', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const existingAttendee = generateAttendee({ email: 'existing@example.com' });
+			const newAttendee = generateAttendee({ email: 'new@example.com' });
+			const existingOptionalAttendee = generateAttendee({
+				email: 'existing_optional@example.com'
+			});
+
+			const editor = generateEditor({
+				context: {
+					attendees: [existingAttendee, newAttendee],
+					optionalAttendees: [existingOptionalAttendee],
+					folders: {},
+					dispatch: vi.fn()
+				}
+			});
+			const body = normalizeSoapMessageFromEditor({
+				...editor,
+				notifyOnlyAttendees: { attendees: [newAttendee], optionalAttendees: [] }
+			});
+
+			const notifiedEmails = body.m.e.map((participant: { a: string }) => participant.a);
+			expect(notifiedEmails).toContain('new@example.com');
+			expect(notifiedEmails).not.toContain('existing@example.com');
+			expect(notifiedEmails).not.toContain('existing_optional@example.com');
+
+			const rosterEmails = body.m.inv.comp[0].at.map((attendee: { a: string }) => attendee.a);
+			expect(rosterEmails).toEqual(
+				expect.arrayContaining([
+					'existing@example.com',
+					'new@example.com',
+					'existing_optional@example.com'
+				])
+			);
+			expect(body.m.inv.comp[0].at).toHaveLength(3);
+		});
+
+		test('when the override is empty, only the organizer/sender participants are notified', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'existing@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn()
+				}
+			});
+			const body = normalizeSoapMessageFromEditor({
+				...editor,
+				notifyOnlyAttendees: { attendees: [], optionalAttendees: [] }
+			});
+
+			expect(body.m.e).not.toContainEqual(expect.objectContaining({ a: 'existing@example.com' }));
+			expect(body.m.inv.comp[0].at).toHaveLength(1);
+		});
+	});
+
 	describe('setAlarmValue', () => {
 		test('It will set a week value if possible', () => {
 			const reminder = '20160';
@@ -908,6 +998,29 @@ describe('normalize soap message from editor', () => {
 			expect(result).toContain('Test Meeting');
 			expect(result).toContain('attendee1@example.com, attendee2@example.com');
 			expect(result).toContain('Meeting description');
+		});
+
+		test('does not leave an unbalanced quote around the organizer name', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					title: 'Test Meeting',
+					plainText: 'Meeting description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).not.toContain('Organizer: "');
+			expect((result.match(/"/g) ?? []).length % 2).toBe(0);
 		});
 
 		test('should generate virtual room message when room is present', () => {

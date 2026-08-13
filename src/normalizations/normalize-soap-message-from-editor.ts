@@ -13,7 +13,13 @@ import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } 
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { getTimeStrings } from '../hooks/use-get-date-range-converted-to-timezone';
-import { CalendarEditor, CalendarOrganizer, CalendarSender, Editor } from '../types/editor';
+import {
+	CalendarEditor,
+	CalendarOrganizer,
+	CalendarSender,
+	Editor,
+	NotifyAttendeesOverride
+} from '../types/editor';
 import { InviteChanges } from '../types/invite-changes';
 import {
 	isDaysInMinutes,
@@ -104,12 +110,17 @@ export const setAlarmValue = (reminderInMinutes: string): { related: 'START'; ne
 	};
 };
 
-export const generateParticipantInformation = (resource: Editor): Array<Partial<Participants>> => {
+export const generateParticipantInformation = (
+	resource: Editor & { notifyOnlyAttendees?: NotifyAttendeesOverride }
+): Array<Partial<Participants>> => {
 	const user = getUserAccount();
 	const iAmOrganizer = isEventSentFromOrganizer(user?.name ?? '', resource.sender);
 	const isSameIdentity = isTheSameIdentity(resource.organizer, resource.sender);
 	const isNotMyCalendar = resource.calendar?.owner;
 	const isSharedAccount = isTheSameEmail(resource.calendar?.owner ?? '', resource.sender);
+	const attendeesToNotify = resource.notifyOnlyAttendees?.attendees ?? resource?.attendees;
+	const optionalAttendeesToNotify =
+		resource.notifyOnlyAttendees?.optionalAttendees ?? resource?.optionalAttendees;
 
 	const mainAccountOrganizer = omitBy<Participants>(
 		{
@@ -144,8 +155,8 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 		: concat<Partial<Participants>>(
 				map(
 					concat(
-						resource?.attendees,
-						resource?.optionalAttendees,
+						attendeesToNotify,
+						optionalAttendeesToNotify,
 						(resource?.meetingRoom ?? []).filter((c) => !!c?.email),
 						(resource?.equipment ?? []).filter((c) => !!c?.email)
 					),
@@ -260,7 +271,7 @@ export function generateBodyRequest(app: Editor, changes?: InviteChanges): strin
 
 	const meetingMessage = `${ROOM_DIVIDER}\n${
 		organizer.name ?? ''
-	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
+	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: ${
 		organizer.name
 	} \n\nTime: ${date}\n \nInvitees: ${attendees} ${changesText}\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
@@ -444,7 +455,10 @@ const buildSubject = (
 	return hasChanges ? `${UPDATED_SUBJECT_PREFIX} ${title}` : title;
 };
 
-export const normalizeSoapMessageFromEditor = (msg: Editor, changes?: InviteChanges): any =>
+export const normalizeSoapMessageFromEditor = (
+	msg: Editor & { notifyOnlyAttendees?: NotifyAttendeesOverride },
+	changes?: InviteChanges
+): any =>
 	omitBy(
 		{
 			echo: '1',

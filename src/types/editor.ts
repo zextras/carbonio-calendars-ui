@@ -13,6 +13,11 @@ export type CalendarEditor = {
 	owner?: string;
 };
 
+export type NotifyAttendeesOverride = {
+	attendees: EditorChipAttendees[];
+	optionalAttendees: EditorChipAttendees[];
+};
+
 export type Count = { count: { num: number } };
 export type Until = {
 	until: {
