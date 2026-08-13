@@ -47,7 +47,7 @@ export default defineConfig({
 		clearMocks: true,
 		// mockReset: true,
 		restoreMocks: true,
-		maxWorkers: '50%',
+		maxWorkers: 2,
 		testTimeout: 10000,
 		reporters: ['default', junitReporter],
 		coverage: {
