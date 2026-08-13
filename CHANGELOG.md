@@ -1,3 +1,7 @@
+## <small>1.33.1 (2026-08-13)</small>
+
+* fix: select the matching occurrence when GetAppointment returns exceptions (#828) ([0f52ccf](https://github.com/zextras/carbonio-calendars-ui/commit/0f52ccf)), closes [#828](https://github.com/zextras/carbonio-calendars-ui/issues/828)
+
 ## 1.33.0 (2026-08-13)
 
 * Merge branch 'devel' into CO-3665 ([eed95ae](https://github.com/zextras/carbonio-calendars-ui/commit/eed95ae))
