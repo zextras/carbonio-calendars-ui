@@ -8,7 +8,7 @@ import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { AppDispatch } from '../store/redux';
 import { updateEditor } from '../store/slices/editor-slice';
-import { Editor } from '../types/editor';
+import { Editor, NotifyAttendeesOverride } from '../types/editor';
 
 const createAppointmentFn = ({
 	draft,
@@ -30,13 +30,15 @@ const createAppointmentFn = ({
 const modifyAppointmentFn = ({
 	draft,
 	editor,
-	dispatch
+	dispatch,
+	notifyAttendees
 }: {
 	draft: boolean;
 	editor: Editor;
 	dispatch: AppDispatch;
+	notifyAttendees?: NotifyAttendeesOverride;
 }): Promise<any> =>
-	dispatch(modifyAppointment({ draft, editor })).then(({ payload }) => {
+	dispatch(modifyAppointment({ draft, editor, notifyAttendees })).then(({ payload }) => {
 		const { response, error } = payload;
 		if (response && !error) {
 			dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
@@ -67,26 +69,30 @@ export const onSave = ({
 	draft = true,
 	isNew = true,
 	editor,
-	dispatch
+	dispatch,
+	notifyAttendees
 }: {
 	draft?: boolean;
 	isNew?: boolean;
 	editor: Editor;
 	dispatch: AppDispatch;
+	notifyAttendees?: NotifyAttendeesOverride;
 }): Promise<any> =>
 	isNew
 		? createAppointmentFn({ draft, editor, dispatch })
-		: modifyAppointmentFn({ draft, editor, dispatch });
+		: modifyAppointmentFn({ draft, editor, dispatch, notifyAttendees });
 
 export const onSend = ({
 	isNew,
 	editor,
-	dispatch
+	dispatch,
+	notifyAttendees
 }: {
 	isNew: boolean;
 	editor: Editor;
 	dispatch: AppDispatch;
+	notifyAttendees?: NotifyAttendeesOverride;
 }): Promise<any> =>
 	editor?.isProposeNewTime
 		? onProposeNewTime({ editorId: editor.id, dispatch })
-		: onSave({ draft: false, isNew, editor, dispatch });
+		: onSave({ draft: false, isNew, editor, dispatch, notifyAttendees });
