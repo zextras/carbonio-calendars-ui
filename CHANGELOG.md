@@ -1,3 +1,15 @@
+## 1.33.0 (2026-08-13)
+
+* Merge branch 'devel' into CO-3665 ([eed95ae](https://github.com/zextras/carbonio-calendars-ui/commit/eed95ae))
+* Merge branch 'devel' into CO-3665 ([6faef51](https://github.com/zextras/carbonio-calendars-ui/commit/6faef51))
+* Merge pull request #806 from zextras/CO-3665 ([2b35ed4](https://github.com/zextras/carbonio-calendars-ui/commit/2b35ed4)), closes [#806](https://github.com/zextras/carbonio-calendars-ui/issues/806)
+* Merge remote-tracking branch 'origin/devel' into CO-3665 ([c9797c4](https://github.com/zextras/carbonio-calendars-ui/commit/c9797c4))
+* fix: send update modal ([6440e80](https://github.com/zextras/carbonio-calendars-ui/commit/6440e80))
+* fix: send update modal ([202ca0e](https://github.com/zextras/carbonio-calendars-ui/commit/202ca0e))
+* fix: send update modal behaviour ([02b895e](https://github.com/zextras/carbonio-calendars-ui/commit/02b895e))
+* fix: text alignment ([7e25f53](https://github.com/zextras/carbonio-calendars-ui/commit/7e25f53))
+* feat(CO-3665): let organizer choose who to notify when editing attendees ([e209589](https://github.com/zextras/carbonio-calendars-ui/commit/e209589))
+
 ## <small>1.32.1 (2026-08-12)</small>
 
 * fix: remove unbalanced quote around organizer name in invite body text (#830) ([a6979e4](https://github.com/zextras/carbonio-calendars-ui/commit/a6979e4)), closes [#830](https://github.com/zextras/carbonio-calendars-ui/issues/830)
