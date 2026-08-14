@@ -16,6 +16,7 @@ import { CALENDAR_ROUTE, PREFS_DEFAULTS } from '../constants';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { reducers } from '../store/redux';
 import { useAppStatusStore } from '../store/zustand/store';
+import type { Editor } from '../types/editor';
 import mockedData from '../test/generators';
 import { singleGetMsgResponse } from '../test/mocks/network/msw/handle-get-invite';
 import { getSetupServer } from '@jest-setup';
@@ -39,8 +40,10 @@ const SELECT_START = '2024-01-15T10:00:00';
 const SELECT_END = '2024-01-15T11:00:00';
 const ONE_HOUR_MS = 3_600_000;
 
-const buildStore = (): ReturnType<typeof configureStore> =>
-	configureStore({ reducer: combineReducers(reducers) });
+const rootReducer = combineReducers(reducers);
+
+const buildStore = (): ReturnType<typeof configureStore<ReturnType<typeof rootReducer>>> =>
+	configureStore({ reducer: rootReducer });
 
 describe('useCalendarComponentUtils', () => {
 	beforeEach(() => {
@@ -505,6 +508,28 @@ describe('useCalendarComponentUtils', () => {
 			expect(onSave).toHaveBeenCalledWith(
 				expect.objectContaining({ editor: expect.objectContaining({ allDay: false }) })
 			);
+		});
+
+		it('registers the pre-drop date/time as the original editor, so the invitation-changes banner can detect the move', async () => {
+			const event = mockedData.getEvent({ allDay: false, resource: { isRecurrent: false } });
+			const store = buildStore();
+			const { result } = setupHook(useCalendarComponentUtils, { store });
+
+			act(() => {
+				result.current.onEventDropOrResize({
+					start: new Date(event.start.valueOf() + ONE_HOUR_MS),
+					end: new Date(event.end.valueOf() + ONE_HOUR_MS),
+					event
+				});
+			});
+
+			await waitFor(() => expect(onSave).toHaveBeenCalled());
+			const { editor } = vi.mocked(onSave).mock.calls[0][0] as { editor: Editor };
+			const originalEditor = store.getState().editor.originalEditors[editor.id];
+
+			expect(originalEditor).toBeDefined();
+			expect(originalEditor.start).not.toEqual(editor.start);
+			expect(originalEditor.end).not.toEqual(editor.end);
 		});
 	});
 });

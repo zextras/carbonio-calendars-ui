@@ -193,29 +193,35 @@ export const useCalendarComponentUtils = (): {
 					};
 
 					const onConfirm = (draft: boolean, context?: { text: Array<string> }): void => {
-						const contextObj = {
-							dispatch,
-							folders: calendarFolders,
-							start: startTime,
-							end: endTime,
-							allDay: resolvedAllDay,
-							panel: false
-						};
+						// generateEditor snapshots its result as the invitation's "original"
+						// baseline (createNewEditor sets originalEditors[id] to the very
+						// editor it just built). Passing the already-dropped/resized
+						// start/end/allDay in its context would bake them into that baseline
+						// too, making before and after identical — which is why the
+						// invitation-changes banner never appeared for drag/resize edits.
+						// Build the editor from the untouched invite first, then merge the
+						// drop's new values only into the object handed to onSave.
 						const editor = generateEditor({
 							event,
 							invite,
-							context: {
-								...contextObj,
-								...omitBy(
-									{
-										richText: context?.text?.[1],
-										plainText: context?.text?.[0]
-									},
-									isNil
-								)
-							}
+							context: { dispatch, folders: calendarFolders, panel: false }
 						});
-						onSave({ draft, editor, isNew: false, dispatch }).then(handleSaveResponse);
+						const updatedEditor = {
+							...editor,
+							start: startTime,
+							end: endTime,
+							allDay: resolvedAllDay,
+							...omitBy(
+								{
+									richText: context?.text?.[1],
+									plainText: context?.text?.[0]
+								},
+								isNil
+							)
+						};
+						onSave({ draft, editor: updatedEditor, isNew: false, dispatch }).then(
+							handleSaveResponse
+						);
 					};
 					if (
 						size(invite.participants) > 0 &&

@@ -12,8 +12,10 @@ import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio
 import { endOfDay } from 'date-fns';
 import { filter, includes } from 'lodash';
 
+import { useInviteChanges } from './hooks/use-invite-changes';
 import { AvailabilityChecker } from './parts/availability-checker';
 import { EventDetails } from './parts/event-details';
+import { InviteChangesBanner } from './parts/invite-changes-banner';
 import InviteHeaderPart from './parts/invite-header-part';
 import InviteReplyPart from './parts/invite-reply-part';
 import { ParticipantsList } from './parts/participants-list';
@@ -41,6 +43,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const account = useUserAccount();
 
 	const method = mailMsg.invite[0]?.comp[0].method;
+	const changes = useInviteChanges(mailMsg);
 	const { invite: fetchedInv, loading: fetchingInvite } = useFetchInvite(mailMsg, false);
 	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
 	const root = useRoot(rootAccountId);
@@ -95,6 +98,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	return (
 		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
+				{changes && <InviteChangesBanner changes={changes} />}
 				<InviteHeaderPart
 					invite={invite}
 					mailMsg={mailMsg}
