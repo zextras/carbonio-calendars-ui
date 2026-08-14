@@ -1,3 +1,7 @@
+## 1.34.0 (2026-08-14)
+
+* feat(CO-3686): highlight what changed in an updated appointment invitation (#829) ([9492ec9](https://github.com/zextras/carbonio-calendars-ui/commit/9492ec9)), closes [#829](https://github.com/zextras/carbonio-calendars-ui/issues/829)
+
 ## <small>1.33.1 (2026-08-13)</small>
 
 * fix: select the matching occurrence when GetAppointment returns exceptions (#828) ([0f52ccf](https://github.com/zextras/carbonio-calendars-ui/commit/0f52ccf)), closes [#828](https://github.com/zextras/carbonio-calendars-ui/issues/828)
