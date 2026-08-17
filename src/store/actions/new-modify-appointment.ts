@@ -6,18 +6,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
+import { getInviteChanges } from '../../commons/get-invite-changes';
 import { publishQuotaChangedEvent } from '../../event-bus/quota-changed';
 import {
 	findAttachments,
 	retrieveAttachmentsType
 } from '../../normalizations/normalizations-utils';
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
-import { Editor } from '../../types/editor';
+import { Editor, NotifyAttendeesOverride } from '../../types/editor';
 import { getEditorAttachmentsSize } from '../../utils/attachments-size';
 import { getInstanceExceptionId } from '../../utils/event';
 
 export type ModifyAppointmentReturnType = { res: { calItemId: string; echo: any }; editor: Editor };
-export type ModifyAppointmentArguments = { draft: boolean; editor: Editor };
+export type ModifyAppointmentArguments = {
+	draft: boolean;
+	editor: Editor;
+	notifyAttendees?: NotifyAttendeesOverride;
+};
 
 export const modifyAppointment = createAsyncThunk<
 	ModifyAppointmentReturnType,
@@ -25,8 +30,10 @@ export const modifyAppointment = createAsyncThunk<
 	{ rejectValue: any }
 >(
 	'appointment/modify appointment',
-	async ({ draft, editor }, { rejectWithValue }: any): Promise<any> => {
+	async ({ draft, editor, notifyAttendees }, { getState, rejectWithValue }: any): Promise<any> => {
 		if (editor) {
+			const originalEditor = getState()?.editor?.originalEditors?.[editor.id];
+			const changes = getInviteChanges(originalEditor, editor);
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
 				const exceptId =
 					editor?.exceptId ??
@@ -35,7 +42,10 @@ export const modifyAppointment = createAsyncThunk<
 						allDay: editor.allDay,
 						tz: editor.timezone
 					});
-				const body = normalizeSoapMessageFromEditor({ ...editor, draft, exceptId });
+				const body = normalizeSoapMessageFromEditor(
+					{ ...editor, draft, exceptId, notifyOnlyAttendees: notifyAttendees },
+					changes
+				);
 				const res: { calItemId: string; invId: string } = await legacySoapFetch(
 					'CreateAppointmentException',
 					body
@@ -57,7 +67,10 @@ export const modifyAppointment = createAsyncThunk<
 				publishQuotaChangedEvent(getEditorAttachmentsSize(editor));
 				return { response, editor: updatedEditor };
 			}
-			const body = normalizeSoapMessageFromEditor({ ...editor, draft });
+			const body = normalizeSoapMessageFromEditor(
+				{ ...editor, draft, notifyOnlyAttendees: notifyAttendees },
+				changes
+			);
 			const res: { calItemId: string; echo: any } = await legacySoapFetch(
 				'ModifyAppointment',
 				body

@@ -14,6 +14,7 @@ import { Mock } from 'vitest';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { onSave } from '../../../../commons/editor-save-send-fns';
 import { reducers } from '../../../../store/redux';
+import { editEditorAttendees, editEditorTitle } from '../../../../store/slices/editor-slice';
 import { EditorSaveButton } from '../editor-save-button';
 import { setupTest } from '@test-setup';
 
@@ -128,5 +129,252 @@ describe('EditorSaveButton', () => {
 
 		const button = screen.getByRole('button', { name: /save/i });
 		expect(button).toBeDisabled();
+	});
+
+	describe('send update modal for existing appointments', () => {
+		it('opens the send-update modal (with the "save without sending" option) when attendees changed', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+
+			expect(
+				await screen.findByText("You've changed the attendee list. Who should get the update?")
+			).toBeInTheDocument();
+			expect(screen.getByText('Save without sending')).toBeInTheDocument();
+			expect(onSave).not.toHaveBeenCalled();
+		});
+
+		it('does not open the send-update modal when an attendee is only removed', async () => {
+			(onSave as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE, { email: 'removed-attendee@test.com' }]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE]
+				})
+			);
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true }));
+			});
+			expect(
+				screen.queryByText("You've changed the attendee list. Who should get the update?")
+			).not.toBeInTheDocument();
+		});
+
+		it('opens the send-update modal when an attendee is removed and another is added', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE, { email: 'removed-attendee@test.com' }]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+
+			expect(
+				await screen.findByText("You've changed the attendee list. Who should get the update?")
+			).toBeInTheDocument();
+			expect(onSave).not.toHaveBeenCalled();
+		});
+
+		it('does not open the send-update modal when an attendee is added together with another field change', async () => {
+			(onSave as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+			store.dispatch(editEditorTitle({ id: editor.id, title: 'Updated meeting title' }));
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true }));
+			});
+			expect(
+				screen.queryByText("You've changed the attendee list. Who should get the update?")
+			).not.toBeInTheDocument();
+		});
+
+		it('does not open the send-update modal when attendees are unchanged', async () => {
+			(onSave as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ draft: true }));
+			});
+			expect(
+				screen.queryByText("You've changed the attendee list. Who should get the update?")
+			).not.toBeInTheDocument();
+		});
+
+		it('calls onSave with draft:false and only the new attendee when "only added" is confirmed', async () => {
+			(onSave as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+			await user.click(await screen.findByRole('button', { name: 'Confirm' }));
+
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(
+					expect.objectContaining({
+						draft: false,
+						notifyAttendees: expect.objectContaining({
+							attendees: [expect.objectContaining({ email: 'new-attendee@test.com' })]
+						})
+					})
+				);
+			});
+		});
+
+		it('calls onSave with draft:false and no override when "All attendees" is confirmed', async () => {
+			(onSave as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+			await user.click(await screen.findByText('All attendees'));
+			await user.click(screen.getByRole('button', { name: 'Confirm' }));
+
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(
+					expect.objectContaining({ draft: false, notifyAttendees: undefined })
+				);
+			});
+		});
+
+		it('calls onSave with draft:true when "Save without sending" is confirmed', async () => {
+			(onSave as Mock).mockResolvedValue({ response: true });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					isNew: false,
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			store.dispatch(
+				editEditorAttendees({
+					id: editor.id,
+					attendees: [DEFAULT_ATTENDEE, { email: 'new-attendee@test.com' }]
+				})
+			);
+
+			const { user } = setupTest(<EditorSaveButton editorId={editor.id} />, { store });
+			await user.click(screen.getByRole('button', { name: /save/i }));
+			await user.click(await screen.findByText('Save without sending'));
+			await user.click(screen.getByRole('button', { name: 'Confirm' }));
+
+			await waitFor(() => {
+				expect(onSave).toHaveBeenCalledWith(
+					expect.objectContaining({ draft: true, notifyAttendees: undefined })
+				);
+			});
+		});
 	});
 });

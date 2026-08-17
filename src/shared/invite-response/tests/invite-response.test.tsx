@@ -14,6 +14,7 @@ import { keyBy, values } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
 import * as handler from '../../../commons/get-appointment';
+import { formatInviteChangesText } from '../../../commons/invite-changes-text';
 import { CALENDAR_BOARD_ID } from '../../../constants';
 import { getSetupServer } from '@jest-setup';
 import * as mockshell from '@test-mocks/@zextras/carbonio-shell-ui';
@@ -1829,6 +1830,72 @@ describe('invite response component', () => {
 					expect(messageString).toBeVisible();
 				});
 			});
+		});
+	});
+
+	describe('invite changes banner', () => {
+		test('is shown when the mail-embedded invite description carries a changes block', async () => {
+			setupFoldersStore();
+			const changes = { message: { before: 'old', after: 'new' } };
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+				invite: [
+					{
+						comp: [
+							{
+								desc: [{ _content: `Subject: test\n\n${formatInviteChangesText(changes)}` }]
+							}
+						]
+					}
+				]
+			} as any);
+			createSoapAPIInterceptor('GetAppointment', {});
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+				store
+			});
+
+			const banner = await screen.findByTestId('invite-changes-banner');
+
+			expect(banner).toBeVisible();
+			expect(await screen.findByText('"old" → "new"')).toBeVisible();
+		});
+
+		test('is shown when the changes block is only in the MIME parts (a GetMsg-fetched invitation email)', async () => {
+			setupFoldersStore();
+			const changes = { message: { before: 'old', after: 'new' } };
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+				invite: [{ comp: [{ desc: [] }] }],
+				parts: [
+					{
+						contentType: 'text/plain',
+						content: `Subject: test\n\n${formatInviteChangesText(changes)}`
+					}
+				]
+			} as any);
+			createSoapAPIInterceptor('GetAppointment', {});
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+				store
+			});
+
+			const banner = await screen.findByTestId('invite-changes-banner');
+
+			expect(banner).toBeVisible();
+			expect(await screen.findByText('"old" → "new"')).toBeVisible();
+		});
+
+		test('is not shown when the mail-embedded invite description has no changes block', async () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			createSoapAPIInterceptor('GetAppointment', {});
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+				store
+			});
+
+			await screen.findByTestId('invite-response');
+
+			expect(screen.queryByTestId('invite-changes-banner')).not.toBeInTheDocument();
 		});
 	});
 });

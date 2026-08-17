@@ -6,8 +6,11 @@
  */
 
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { extractBody } from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
 import { getIdentityItems } from '../../commons/get-identity-items';
+import { parseInviteChangesFromText } from '../../commons/invite-changes-text';
+import { ROOM_DIVIDER } from '../../constants';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { ParticipationStatus } from '../../types/store/invite';
 import {
@@ -69,6 +72,45 @@ describe('normalize soap message from editor', () => {
 		const body = normalizeSoapMessageFromEditor(editor);
 
 		expect(body.comp).toBe(4);
+	});
+	describe('subject prefix for updated invites', () => {
+		test('leaves the subject untouched when no changes are passed', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.su).toBe('Test Meeting');
+		});
+
+		test('leaves the subject untouched when changes is an empty object', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor, {});
+
+			expect(body.m.su).toBe('Test Meeting');
+		});
+
+		test('prepends "[Updated]" to the subject when at least one change is detected', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor, {
+				title: { before: 'Old', after: 'Test Meeting' }
+			});
+
+			expect(body.m.su).toBe('[Updated] Test Meeting');
+		});
 	});
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
@@ -808,6 +850,96 @@ describe('normalize soap message from editor', () => {
 			});
 		});
 	});
+	describe('notifyOnlyAttendees', () => {
+		test('when not provided, all current attendees/optionalAttendees are notified (legacy behavior)', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'existing@example.com' })];
+			const optionalAttendees = [generateAttendee({ email: 'existing_optional@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees,
+					folders: {},
+					dispatch: vi.fn()
+				}
+			});
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.e).toContainEqual(
+				expect.objectContaining({ a: 'existing@example.com', t: 't' })
+			);
+			expect(body.m.e).toContainEqual(
+				expect.objectContaining({ a: 'existing_optional@example.com', t: 't' })
+			);
+			expect(body.m.inv.comp[0].at).toHaveLength(2);
+		});
+
+		test('when provided, only overrides the notified recipients (m.e), leaving the full roster (inv.at) untouched', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const existingAttendee = generateAttendee({ email: 'existing@example.com' });
+			const newAttendee = generateAttendee({ email: 'new@example.com' });
+			const existingOptionalAttendee = generateAttendee({
+				email: 'existing_optional@example.com'
+			});
+
+			const editor = generateEditor({
+				context: {
+					attendees: [existingAttendee, newAttendee],
+					optionalAttendees: [existingOptionalAttendee],
+					folders: {},
+					dispatch: vi.fn()
+				}
+			});
+			const body = normalizeSoapMessageFromEditor({
+				...editor,
+				notifyOnlyAttendees: { attendees: [newAttendee], optionalAttendees: [] }
+			});
+
+			const notifiedEmails = body.m.e.map((participant: { a: string }) => participant.a);
+			expect(notifiedEmails).toContain('new@example.com');
+			expect(notifiedEmails).not.toContain('existing@example.com');
+			expect(notifiedEmails).not.toContain('existing_optional@example.com');
+
+			const rosterEmails = body.m.inv.comp[0].at.map((attendee: { a: string }) => attendee.a);
+			expect(rosterEmails).toEqual(
+				expect.arrayContaining([
+					'existing@example.com',
+					'new@example.com',
+					'existing_optional@example.com'
+				])
+			);
+			expect(body.m.inv.comp[0].at).toHaveLength(3);
+		});
+
+		test('when the override is empty, only the organizer/sender participants are notified', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'existing@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn()
+				}
+			});
+			const body = normalizeSoapMessageFromEditor({
+				...editor,
+				notifyOnlyAttendees: { attendees: [], optionalAttendees: [] }
+			});
+
+			expect(body.m.e).not.toContainEqual(expect.objectContaining({ a: 'existing@example.com' }));
+			expect(body.m.inv.comp[0].at).toHaveLength(1);
+		});
+	});
+
 	describe('setAlarmValue', () => {
 		test('It will set a week value if possible', () => {
 			const reminder = '20160';
@@ -866,6 +998,29 @@ describe('normalize soap message from editor', () => {
 			expect(result).toContain('Test Meeting');
 			expect(result).toContain('attendee1@example.com, attendee2@example.com');
 			expect(result).toContain('Meeting description');
+		});
+
+		test('does not leave an unbalanced quote around the organizer name', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					title: 'Test Meeting',
+					plainText: 'Meeting description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).not.toContain('Organizer: "');
+			expect((result.match(/"/g) ?? []).length % 2).toBe(0);
 		});
 
 		test('should generate virtual room message when room is present', () => {
@@ -1147,6 +1302,111 @@ describe('normalize soap message from editor', () => {
 
 			expect(result).toContain('required@example.com, optional@example.com');
 			expect(result).toContain('<p>Meeting with optional attendees</p>');
+		});
+	});
+
+	describe('xprop', () => {
+		test('has no xprop when there is no room', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn() }
+			});
+
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.inv.comp[0].xprop).toBeUndefined();
+		});
+
+		test('does not use xprop for the invite-changes diff anymore', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn() }
+			});
+			const changes = { message: { before: 'old', after: 'new' } };
+
+			const body = normalizeSoapMessageFromEditor(editor, changes);
+
+			expect(body.m.inv.comp[0].xprop).toBeUndefined();
+		});
+	});
+
+	describe('invite changes embedded in the body', () => {
+		test('generateBodyRequest embeds the formatted changes block within the room divider wrapper', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					plainText: 'Meeting description'
+				}
+			});
+			const changes = { message: { before: 'old', after: 'new' } };
+
+			const result = generateBodyRequest(editor, changes);
+			const [firstDivider, secondDivider] = result
+				.split('\n')
+				.filter((line) => line === ROOM_DIVIDER);
+
+			expect(firstDivider).toBeDefined();
+			expect(secondDivider).toBeDefined();
+			expect(result).toContain('[before]');
+			expect(parseInviteChangesFromText(result)).toEqual(changes);
+			// the wrapped block (including the changes) is what body-message-renderer strips before display
+			expect(extractBody(result)).toBe('Meeting description');
+		});
+
+		test('generateBodyRequest does not embed a changes block when there are no changes', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					plainText: 'Meeting description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).not.toContain('[before]');
+			expect(parseInviteChangesFromText(result)).toBeUndefined();
+		});
+
+		test('generateHtmlBodyRequest embeds the formatted changes block', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					richText: '<b>Meeting description</b>'
+				}
+			});
+			const changes = {
+				participants: { added: [{ a: 'added@test.com', d: 'Added' }], removed: [] }
+			};
+
+			const result = generateHtmlBodyRequest(editor, changes);
+
+			expect(result).toContain('[added]');
+			expect(result).toContain('added@test.com');
 		});
 	});
 });

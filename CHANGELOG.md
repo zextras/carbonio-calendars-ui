@@ -1,3 +1,29 @@
+## 1.34.0 (2026-08-14)
+
+* feat(CO-3686): highlight what changed in an updated appointment invitation (#829) ([9492ec9](https://github.com/zextras/carbonio-calendars-ui/commit/9492ec9)), closes [#829](https://github.com/zextras/carbonio-calendars-ui/issues/829)
+
+## <small>1.33.1 (2026-08-13)</small>
+
+* fix: select the matching occurrence when GetAppointment returns exceptions (#828) ([0f52ccf](https://github.com/zextras/carbonio-calendars-ui/commit/0f52ccf)), closes [#828](https://github.com/zextras/carbonio-calendars-ui/issues/828)
+
+## 1.33.0 (2026-08-13)
+
+* Merge branch 'devel' into CO-3665 ([eed95ae](https://github.com/zextras/carbonio-calendars-ui/commit/eed95ae))
+* Merge branch 'devel' into CO-3665 ([6faef51](https://github.com/zextras/carbonio-calendars-ui/commit/6faef51))
+* Merge pull request #806 from zextras/CO-3665 ([2b35ed4](https://github.com/zextras/carbonio-calendars-ui/commit/2b35ed4)), closes [#806](https://github.com/zextras/carbonio-calendars-ui/issues/806)
+* Merge remote-tracking branch 'origin/devel' into CO-3665 ([c9797c4](https://github.com/zextras/carbonio-calendars-ui/commit/c9797c4))
+* fix: send update modal ([6440e80](https://github.com/zextras/carbonio-calendars-ui/commit/6440e80))
+* fix: send update modal ([202ca0e](https://github.com/zextras/carbonio-calendars-ui/commit/202ca0e))
+* fix: send update modal behaviour ([02b895e](https://github.com/zextras/carbonio-calendars-ui/commit/02b895e))
+* fix: text alignment ([7e25f53](https://github.com/zextras/carbonio-calendars-ui/commit/7e25f53))
+* feat(CO-3665): let organizer choose who to notify when editing attendees ([e209589](https://github.com/zextras/carbonio-calendars-ui/commit/e209589))
+
+## <small>1.32.1 (2026-08-12)</small>
+
+* fix: remove unbalanced quote around organizer name in invite body text (#830) ([a6979e4](https://github.com/zextras/carbonio-calendars-ui/commit/a6979e4)), closes [#830](https://github.com/zextras/carbonio-calendars-ui/issues/830)
+* chore(deps): update vitest to v4.1.10 (#811) ([63b5426](https://github.com/zextras/carbonio-calendars-ui/commit/63b5426)), closes [#811](https://github.com/zextras/carbonio-calendars-ui/issues/811)
+* Speed up recurrence modal and ci workers (#825) ([1d45e2f](https://github.com/zextras/carbonio-calendars-ui/commit/1d45e2f)), closes [#825](https://github.com/zextras/carbonio-calendars-ui/issues/825)
+
 ## 1.32.0 (2026-08-06)
 
 * feat(CO-4077): prevent duplicate notifications when accepting a proposed new time (#826) ([d851251](https://github.com/zextras/carbonio-calendars-ui/commit/d851251)), closes [#826](https://github.com/zextras/carbonio-calendars-ui/issues/826)
