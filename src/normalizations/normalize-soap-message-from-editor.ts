@@ -7,6 +7,7 @@ import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { formatInTimeZone } from 'date-fns-tz';
 import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 
+import { formatInviteChangesText } from '../commons/invite-changes-text';
 import { Rel } from './normalizations-utils';
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../constants/api';
@@ -19,6 +20,7 @@ import {
 	Editor,
 	NotifyAttendeesOverride
 } from '../types/editor';
+import { InviteChanges } from '../types/invite-changes';
 import {
 	isDaysInMinutes,
 	isHoursInMinutes,
@@ -219,7 +221,7 @@ const getOrganizer = ({
 	};
 };
 
-export function generateHtmlBodyRequest(app: Editor): string {
+export function generateHtmlBodyRequest(app: Editor, changes?: InviteChanges): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
@@ -231,7 +233,8 @@ export function generateHtmlBodyRequest(app: Editor): string {
 		end: app.end ?? 0,
 		options: { allDay: app.allDay, allDayLabel: 'allDay' }
 	});
-	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
+	const changesHtml = changes ? `<pre>${formatInviteChangesText(changes)}</pre>` : '';
+	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p>${changesHtml}<br/>${ROOM_DIVIDER}`;
 	const virtualRoomHtml = app?.room?.label
 		? `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a virtual meeting on Carbonio Chats.</h3><p>Join here when it's time: <a href="${app.room.link}">${app.room.label}</a></p><br/>${ROOM_DIVIDER}`
 		: '';
@@ -242,7 +245,7 @@ export function generateHtmlBodyRequest(app: Editor): string {
 		: app.richText;
 }
 
-export function generateBodyRequest(app: Editor): string {
+export function generateBodyRequest(app: Editor, changes?: InviteChanges): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
@@ -264,33 +267,38 @@ export function generateBodyRequest(app: Editor): string {
 			}\n\n${app.room.link} \n\n${ROOM_DIVIDER}\n`
 		: '';
 
+	const changesText = changes ? `\n${formatInviteChangesText(changes)}` : '';
+
 	const meetingMessage = `${ROOM_DIVIDER}\n${
 		organizer.name ?? ''
 	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: ${
 		organizer.name
-	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
+	} \n\nTime: ${date}\n \nInvitees: ${attendees} ${changesText}\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
 
 	return attendees?.length ? `${defaultMessage}\n${app.plainText}` : app.plainText;
 }
 
-const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content: string }> } => ({
+const generateMp = (
+	msg: Editor,
+	changes?: InviteChanges
+): { ct: string; mp: Array<{ ct: string; content: string }> } => ({
 	ct: 'multipart/alternative',
 	mp: msg.isRichText
 		? [
 				{
 					ct: 'text/html',
-					content: generateHtmlBodyRequest(msg)
+					content: generateHtmlBodyRequest(msg, changes)
 				},
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg)
+					content: generateBodyRequest(msg, changes)
 				}
 			]
 		: [
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg)
+					content: generateBodyRequest(msg, changes)
 				}
 			]
 });
@@ -358,6 +366,25 @@ const generateInvite = (editor: Editor): any => {
 				}))
 		);
 
+	const xprop = compact([
+		editor?.room
+			? {
+					name: CRB_XPROPS.MEETING_ROOM,
+					value: CRB_XPROPS.MEETING_ROOM,
+					xparam: [
+						{
+							name: CRB_XPARAMS.ROOM_LINK,
+							value: editor.room.link
+						},
+						{
+							name: CRB_XPARAMS.ROOM_NAME,
+							value: editor.room.label
+						}
+					]
+				}
+			: undefined
+	]);
+
 	return {
 		comp: [
 			{
@@ -372,24 +399,7 @@ const generateInvite = (editor: Editor): any => {
 								}
 							]
 						: undefined,
-				xprop: editor?.room
-					? [
-							{
-								name: CRB_XPROPS.MEETING_ROOM,
-								value: CRB_XPROPS.MEETING_ROOM,
-								xparam: [
-									{
-										name: CRB_XPARAMS.ROOM_LINK,
-										value: editor.room.link
-									},
-									{
-										name: CRB_XPARAMS.ROOM_NAME,
-										value: editor.room.label
-									}
-								]
-							}
-						]
-					: undefined,
+				xprop: xprop.length > 0 ? xprop : undefined,
 				at,
 				allDay: editor.allDay ? '1' : '0',
 				fb: editor.freeBusy,
@@ -427,8 +437,27 @@ const generateInvite = (editor: Editor): any => {
 	};
 };
 
+// Kept as a fixed, untranslated marker rather than a localized string: like
+// "RE:"/"FWD:" prefixes, it's baked into the subject at send time and shown
+// to every recipient regardless of their own locale, so translating it to
+// the organizer's language would only make it look inconsistent to everyone
+// else.
+const UPDATED_SUBJECT_PREFIX = '[Updated]';
+
+const buildSubject = (
+	title: string | undefined,
+	changes: InviteChanges | undefined
+): string | undefined => {
+	if (title == null) {
+		return title;
+	}
+	const hasChanges = !!changes && Object.keys(changes).length > 0;
+	return hasChanges ? `${UPDATED_SUBJECT_PREFIX} ${title}` : title;
+};
+
 export const normalizeSoapMessageFromEditor = (
-	msg: Editor & { notifyOnlyAttendees?: NotifyAttendeesOverride }
+	msg: Editor & { notifyOnlyAttendees?: NotifyAttendeesOverride },
+	changes?: InviteChanges
 ): any =>
 	omitBy(
 		{
@@ -446,8 +475,8 @@ export const normalizeSoapMessageFromEditor = (
 					e: generateParticipantInformation(msg),
 					inv: generateInvite(msg),
 					l: msg?.calendar?.id,
-					mp: generateMp(msg),
-					su: msg?.title
+					mp: generateMp(msg, changes),
+					su: buildSubject(msg?.title, changes)
 				},
 				isNil
 			),

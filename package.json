@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.33.1",
+	"version": "1.34.0",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"packageManager": "pnpm@10.32.1",

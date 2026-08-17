@@ -6,8 +6,11 @@
  */
 
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { extractBody } from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
 import { getIdentityItems } from '../../commons/get-identity-items';
+import { parseInviteChangesFromText } from '../../commons/invite-changes-text';
+import { ROOM_DIVIDER } from '../../constants';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { ParticipationStatus } from '../../types/store/invite';
 import {
@@ -69,6 +72,45 @@ describe('normalize soap message from editor', () => {
 		const body = normalizeSoapMessageFromEditor(editor);
 
 		expect(body.comp).toBe(4);
+	});
+	describe('subject prefix for updated invites', () => {
+		test('leaves the subject untouched when no changes are passed', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.su).toBe('Test Meeting');
+		});
+
+		test('leaves the subject untouched when changes is an empty object', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor, {});
+
+			expect(body.m.su).toBe('Test Meeting');
+		});
+
+		test('prepends "[Updated]" to the subject when at least one change is detected', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn(), title: 'Test Meeting' }
+			});
+			const body = normalizeSoapMessageFromEditor(editor, {
+				title: { before: 'Old', after: 'Test Meeting' }
+			});
+
+			expect(body.m.su).toBe('[Updated] Test Meeting');
+		});
 	});
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
@@ -1260,6 +1302,111 @@ describe('normalize soap message from editor', () => {
 
 			expect(result).toContain('required@example.com, optional@example.com');
 			expect(result).toContain('<p>Meeting with optional attendees</p>');
+		});
+	});
+
+	describe('xprop', () => {
+		test('has no xprop when there is no room', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn() }
+			});
+
+			const body = normalizeSoapMessageFromEditor(editor);
+
+			expect(body.m.inv.comp[0].xprop).toBeUndefined();
+		});
+
+		test('does not use xprop for the invite-changes diff anymore', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: { folders: {}, dispatch: vi.fn() }
+			});
+			const changes = { message: { before: 'old', after: 'new' } };
+
+			const body = normalizeSoapMessageFromEditor(editor, changes);
+
+			expect(body.m.inv.comp[0].xprop).toBeUndefined();
+		});
+	});
+
+	describe('invite changes embedded in the body', () => {
+		test('generateBodyRequest embeds the formatted changes block within the room divider wrapper', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					plainText: 'Meeting description'
+				}
+			});
+			const changes = { message: { before: 'old', after: 'new' } };
+
+			const result = generateBodyRequest(editor, changes);
+			const [firstDivider, secondDivider] = result
+				.split('\n')
+				.filter((line) => line === ROOM_DIVIDER);
+
+			expect(firstDivider).toBeDefined();
+			expect(secondDivider).toBeDefined();
+			expect(result).toContain('[before]');
+			expect(parseInviteChangesFromText(result)).toEqual(changes);
+			// the wrapped block (including the changes) is what body-message-renderer strips before display
+			expect(extractBody(result)).toBe('Meeting description');
+		});
+
+		test('generateBodyRequest does not embed a changes block when there are no changes', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					plainText: 'Meeting description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).not.toContain('[before]');
+			expect(parseInviteChangesFromText(result)).toBeUndefined();
+		});
+
+		test('generateHtmlBodyRequest embeds the formatted changes block', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					richText: '<b>Meeting description</b>'
+				}
+			});
+			const changes = {
+				participants: { added: [{ a: 'added@test.com', d: 'Added' }], removed: [] }
+			};
+
+			const result = generateHtmlBodyRequest(editor, changes);
+
+			expect(result).toContain('[added]');
+			expect(result).toContain('added@test.com');
 		});
 	});
 });
