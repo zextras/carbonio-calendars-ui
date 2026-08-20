@@ -1,3 +1,8 @@
+## <small>1.34.1 (2026-08-20)</small>
+
+* fix: allow copy appointments to a delegated account's calendar ([91cb6d5](https://github.com/zextras/carbonio-calendars-ui/commit/91cb6d5))
+* fix(ci): cap vitest workers to 2 to prevent k8s CPU saturation ([59fcfae](https://github.com/zextras/carbonio-calendars-ui/commit/59fcfae))
+
 ## 1.34.0 (2026-08-14)
 
 * feat(CO-3686): highlight what changed in an updated appointment invitation (#829) ([9492ec9](https://github.com/zextras/carbonio-calendars-ui/commit/9492ec9)), closes [#829](https://github.com/zextras/carbonio-calendars-ui/issues/829)
