@@ -6,7 +6,9 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
+import { FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
+import { keyBy } from 'lodash';
 import { Provider } from 'react-redux';
 
 import {
@@ -19,6 +21,9 @@ import mockedData from '../../../../test/generators';
 import { Editor } from '../../../../types/editor';
 import { EditorCalendarSelector } from '../editor-calendar-selector';
 import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
+import { getMocksContext } from '@test-utils/utils/mocks-context';
+import { TEST_SELECTORS } from 'constants/test-utils';
 
 describe('EditorCalendarSelector', () => {
 	it('renders null if calendarId is missing', async () => {
@@ -104,4 +109,66 @@ describe('EditorCalendarSelector', () => {
 			});
 		}
 	);
+
+	// CO-3689: copying an appointment out of a delegated calendar used to be confined to the
+	// calendars of the account owning it
+	it('offers the calendars of every account when copying from a delegated calendar', async () => {
+		const OWN_CALENDAR_NAME = 'Personal';
+		const DELEGATED_CALENDAR_NAME = 'Delegated calendar';
+
+		const roots = keyBy(generateRoots(), 'id');
+		const { identities } = getMocksContext();
+		const delegatedAccountRootId = `${identities.sendAs[0].userRootId}:1`;
+
+		const ownCalendar = mockedData.calendars.getCalendar({
+			id: '11',
+			name: OWN_CALENDAR_NAME,
+			parent: FOLDERS.USER_ROOT
+		});
+		const delegatedCalendar = mockedData.calendars.getCalendar({
+			id: `${identities.sendAs[0].userRootId}:200`,
+			name: DELEGATED_CALENDAR_NAME,
+			perm: 'rwidx',
+			l: delegatedAccountRootId,
+			parent: delegatedAccountRootId
+		});
+
+		useFolderStore.setState(() => ({
+			folders: {
+				...roots,
+				[FOLDERS.USER_ROOT]: { ...roots[FOLDERS.USER_ROOT], children: [ownCalendar] },
+				[delegatedAccountRootId]: {
+					...roots[delegatedAccountRootId],
+					children: [delegatedCalendar]
+				},
+				[ownCalendar.id]: ownCalendar,
+				[delegatedCalendar.id]: delegatedCalendar
+			}
+		}));
+
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const context: EditorContext = {
+			folders: { [delegatedCalendar.id]: delegatedCalendar, [ownCalendar.id]: ownCalendar },
+			dispatch: store.dispatch,
+			disabled: disabledFields,
+			isNew: true,
+			calendar: { id: delegatedCalendar.id, name: delegatedCalendar.name }
+		};
+
+		const editor = generateEditor({ context });
+
+		const { user } = setupTest(
+			<Provider store={store}>
+				<EditorCalendarSelector editorId={editor.id} />
+			</Provider>
+		);
+
+		await user.click(screen.getByText(DELEGATED_CALENDAR_NAME));
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.click(within(dropdown).getByText(OWN_CALENDAR_NAME));
+
+		expect(store.getState().editor.editors[editor.id].calendar).toEqual(
+			expect.objectContaining({ id: ownCalendar.id, name: OWN_CALENDAR_NAME })
+		);
+	});
 });
