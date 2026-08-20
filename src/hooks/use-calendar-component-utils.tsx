@@ -367,9 +367,11 @@ export const useCalendarComponentUtils = (): {
 						absFolderPath: resourceFolder?.absFolderPath
 					})
 				: false;
-			const canCreateOnResource = e.resourceId
-				? !!resourceFolder && (resourceFolder.perm ? /w/.test(resourceFolder.perm) : true)
-				: true;
+			let canCreateOnResource = true;
+			if (e.resourceId) {
+				const hasWriteAccess = resourceFolder?.perm ? /w/.test(resourceFolder.perm) : true;
+				canCreateOnResource = !!resourceFolder && hasWriteAccess;
+			}
 
 			if (!summaryViewOpen && !action && canCreateOnResource && !isTrashOrSubItem) {
 				const isAllDay =

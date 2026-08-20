@@ -67,7 +67,7 @@ export const useOnClickNewButton = (): ((
 			const startTime = start.getTime();
 			const endTime = getEndTime({
 				start: startTime,
-				duration: zimbraPrefCalendarDefaultApptDuration as string
+				duration: zimbraPrefCalendarDefaultApptDuration
 			});
 			const editor = generateEditor({
 				context: {
