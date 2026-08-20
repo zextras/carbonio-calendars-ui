@@ -21,6 +21,7 @@ import mockedData from '../test/generators';
 import { singleGetMsgResponse } from '../test/mocks/network/msw/handle-get-invite';
 import { getSetupServer } from '@jest-setup';
 import { setupHook, screen } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
@@ -210,7 +211,7 @@ describe('useCalendarComponentUtils', () => {
 			expect(addBoard).not.toHaveBeenCalled();
 		});
 
-		it('does not open a board when the resource does not belong to the default calendar', () => {
+		it('does not open a board when the resourceId does not resolve to a known calendar', () => {
 			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
 
 			act(() => {
@@ -238,6 +239,75 @@ describe('useCalendarComponentUtils', () => {
 			expect(addBoard).toHaveBeenCalledWith(
 				expect.objectContaining({ boardViewId: 'calendar-board' })
 			);
+		});
+
+		it('opens a board with the clicked resource calendar pre-selected when it has write access', () => {
+			const sharedCalendar = generateFolder({
+				id: 'shared-writable-calendar',
+				view: 'appointment',
+				perm: 'rwidx'
+			});
+			populateFoldersStore({ view: 'appointment', customFolders: [sharedCalendar] });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.handleSelect({
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END),
+					resourceId: sharedCalendar.id
+				});
+			});
+
+			expect(addBoard).toHaveBeenCalledWith(
+				expect.objectContaining({
+					boardViewId: 'calendar-board',
+					editor: expect.objectContaining({
+						calendar: expect.objectContaining({ id: sharedCalendar.id })
+					})
+				})
+			);
+		});
+
+		it('does not open a board when the clicked resource calendar is read-only', () => {
+			const sharedCalendar = generateFolder({
+				id: 'shared-readonly-calendar',
+				view: 'appointment',
+				perm: 'r'
+			});
+			populateFoldersStore({ view: 'appointment', customFolders: [sharedCalendar] });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.handleSelect({
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END),
+					resourceId: sharedCalendar.id
+				});
+			});
+
+			expect(addBoard).not.toHaveBeenCalled();
+		});
+
+		it('does not open a board when the clicked resource is a trashed calendar', () => {
+			const trashedCalendarName = 'trashed-calendar';
+			const trashedCalendar = generateFolder({
+				id: 'trashed-calendar-id',
+				view: 'appointment',
+				name: trashedCalendarName,
+				absFolderPath: `/Trash/${trashedCalendarName}`
+			});
+			populateFoldersStore({ view: 'appointment', customFolders: [trashedCalendar] });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.handleSelect({
+					start: new Date(SELECT_START),
+					end: new Date(SELECT_END),
+					resourceId: trashedCalendar.id
+				});
+			});
+
+			expect(addBoard).not.toHaveBeenCalled();
 		});
 	});
 

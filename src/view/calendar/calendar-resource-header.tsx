@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Row, Text } from '@zextras/carbonio-design-system';
 import type { ResourceHeaderProps } from 'react-big-calendar';
@@ -22,8 +22,23 @@ export const CalendarResourceHeader = (
 	const backgroundColor = setCalendarColor({
 		color: props.resource.color
 	});
+	const rowRef = useRef<HTMLDivElement>(null);
+
+	// react-big-calendar's all-day row (BackgroundCells) never forwards the
+	// resourceId to dayPropGetter, so it can't be themed from there. This is
+	// the only per-resource DOM node rendered as a sibling of that all-day row
+	// under the same `.rbc-time-header-content` column wrapper, so it's used
+	// to set the CSS vars `.rbc-slot-selection`/`.rbc-day-bg.rbc-selected-cell`
+	// read, keeping the all-day drag-selection preview colored like this column.
+	useEffect(() => {
+		const columnContent = rowRef.current?.closest<HTMLElement>('.rbc-time-header-content');
+		columnContent?.style.setProperty('--rbc-slot-selection-border', backgroundColor.color);
+		columnContent?.style.setProperty('--rbc-slot-selection-background', backgroundColor.background);
+	}, [backgroundColor.background, backgroundColor.color]);
+
 	return (
 		<Row
+			ref={rowRef}
 			key={props.resource.id}
 			background={backgroundColor.background}
 			borderColor={backgroundColor.color}
