@@ -7,22 +7,24 @@ import React, { ReactElement, useMemo } from 'react';
 
 import { Container, Row, Text } from '@zextras/carbonio-design-system';
 import { Account, t, useUserAccount } from '@zextras/carbonio-shell-ui';
-import { useFolder } from '@zextras/carbonio-ui-commons';
-import { map, reduce } from 'lodash';
+import { map } from 'lodash';
 import { Trans } from 'react-i18next';
 
-import { isIcsOrCaldavExternalFolder } from 'commons/utilities';
 import { EventType } from 'types/event';
 import { InviteParticipant, InviteParticipants } from 'types/store/invite';
+import { flattenInviteParticipants, isLoggedInUserAmongParticipants } from 'utils/attendees';
+import { SelfResponseStatusText } from './self-response-status-text';
 
-type ParticipantProps = { participant: InviteParticipants; event: EventType };
+type ParticipantProps = { participant: InviteParticipants };
 
-const DisplayParticipantsVisitor = ({ participant }: ParticipantProps): ReactElement => {
-	const users = reduce(
-		participant,
-		(acc, v) => (v ? [...acc, ...v] : acc),
-		[] as Array<InviteParticipant>
-	);
+/**
+ * Flat, unlabeled list of every invitee, with no indication of anyone's response status.
+ * Used both for viewers with no stake in the event (e.g. someone just browsing an ICS/CalDAV
+ * feed they aren't invited to) and for attendees/non-editors, who can't see other participants'
+ * response status (see CO-4136).
+ */
+const SimplifiedParticipantsList = ({ participant }: ParticipantProps): ReactElement => {
+	const users = flattenInviteParticipants(participant);
 	return (
 		<Container
 			orientation="horizontal"
@@ -64,37 +66,6 @@ const DisplayParticipantsVisitor = ({ participant }: ParticipantProps): ReactEle
 		</Container>
 	);
 };
-
-type DisplayMultipleAttendee = {
-	participant: Array<InviteParticipant>;
-	message: string;
-	loggedInUser: Account;
-};
-
-const DisplayMultipleAttendee = ({
-	participant,
-	message,
-	loggedInUser
-}: DisplayMultipleAttendee): ReactElement => (
-	<Row>
-		<Text size="small" color="secondary" overflow="break-word">
-			<strong>
-				{' '}
-				{map(participant, (user, index) => (
-					<React.Fragment key={user.name || user.email}>
-						{user.name === loggedInUser.name || user.email === loggedInUser.name ? (
-							<> {t('message.you', 'You')}</>
-						) : (
-							<> {user.name || user.email} </>
-						)}
-						{index === participant.length - 1 ? null : <>,</>}
-					</React.Fragment>
-				))}
-			</strong>{' '}
-			{message}
-		</Text>
-	</Row>
-);
 
 const calculateSize = (participants: InviteParticipants): number => {
 	let pt = 0;
@@ -141,21 +112,21 @@ type ComponentProps = {
 	participants?: Array<InviteParticipant>;
 	width?: string;
 	message: string;
-	event: EventType;
 	pt: number;
 	loggedInUser: Account;
-	isOrganizerPerspective: boolean;
 };
 
+/**
+ * Renders one response-status category (accepted/declined/tentative/no answer). Only ever
+ * rendered for organizers/editors, who are allowed to see the full breakdown.
+ */
 const Component = ({
 	label,
 	participants = [],
 	width,
 	message,
-	event,
 	pt,
-	loggedInUser,
-	isOrganizerPerspective
+	loggedInUser
 }: ComponentProps): ReactElement | null => {
 	const displayedParticipants = useMemo(
 		() => (
@@ -180,31 +151,12 @@ const Component = ({
 			width={width}
 			padding={{ horizontal: 'medium', bottom: 'extrasmall' }}
 		>
-			{isOrganizerPerspective && (
-				<>
-					{pt > 2 ? (
-						<Text size="small" color="secondary" overflow="break-word">
-							{label}
-						</Text>
-					) : (
-						displayedParticipants
-					)}
-				</>
-			)}
-
-			{!isOrganizerPerspective && !event?.resource?.calendar?.owner && (
-				<>
-					{' '}
-					{pt > 2 ? (
-						<DisplayMultipleAttendee
-							participant={participants}
-							message={message}
-							loggedInUser={loggedInUser}
-						/>
-					) : (
-						displayedParticipants
-					)}{' '}
-				</>
+			{pt > 2 ? (
+				<Text size="small" color="secondary" overflow="break-word">
+					{label}
+				</Text>
+			) : (
+				displayedParticipants
 			)}
 		</Container>
 	) : null;
@@ -213,28 +165,43 @@ const Component = ({
 type ParticipantsDisplayerSmallType = {
 	event: EventType;
 	participants?: InviteParticipants;
+	canSeeResponseStatus: boolean;
 };
 
 export const ParticipantsDisplayerSmall = ({
 	participants,
-	event
+	event,
+	canSeeResponseStatus
 }: ParticipantsDisplayerSmallType): ReactElement | null => {
 	const loggedInUser = useUserAccount();
-	const calendar = useFolder(event.resource.calendar.id);
 
 	if (!participants || Object.keys(participants)?.length === 0) return null;
-	const isExternalCalendar = isIcsOrCaldavExternalFolder(calendar ?? {});
-	const attendees = reduce(
-		participants,
-		(acc, value) => (value ? [...acc, ...value] : acc),
-		[] as Array<InviteParticipant>
-	);
-	const isLoggedInUserAttendee = attendees.some(
-		(attendee) =>
-			attendee?.email === loggedInUser.name || attendee?.name === loggedInUser.displayName
-	);
-	const isOrganizerPerspective =
-		event?.resource?.iAmOrganizer || (isExternalCalendar && !isLoggedInUserAttendee);
+
+	// Response updates are only ever delivered to the organizer: a non-editor attendee can't
+	// reliably know other participants' status, so they only get a flat, unlabeled list plus
+	// their own status (see CO-4136).
+	if (!canSeeResponseStatus) {
+		const attendees = flattenInviteParticipants(participants);
+		const isLoggedInUserAttendee = isLoggedInUserAmongParticipants(attendees, loggedInUser);
+		return (
+			<Container
+				wrap="wrap"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				width="fill"
+				padding={{ horizontal: 'medium' }}
+			>
+				{isLoggedInUserAttendee && (
+					<Row width="100%" padding={{ horizontal: 'medium' }}>
+						<SelfResponseStatusText participationStatus={event.resource.participationStatus} />
+					</Row>
+				)}
+				<SimplifiedParticipantsList participant={participants} />
+			</Container>
+		);
+	}
+
 	const pt = calculateSize(participants);
 	return (
 		<Container
@@ -245,79 +212,65 @@ export const ParticipantsDisplayerSmall = ({
 			width="fill"
 			padding={{ horizontal: 'medium' }}
 		>
-			{isOrganizerPerspective && !event?.resource?.calendar?.owner ? (
-				<DisplayParticipantsVisitor participant={participants} event={event} />
-			) : (
-				<>
-					<Component
-						label={
-							<Trans
-								i18nKey="participants.Attendees_accepted_count"
-								count={participants.AC?.length ?? 0}
-								values={{ count: participants.AC?.length ?? 0 }}
-								defaults="<strong>{{count}} attendee </strong> has accepted"
-							/>
-						}
-						message={t('participants.Accepted', 'accepted')}
-						participants={participants.AC}
-						event={event}
-						pt={pt}
-						loggedInUser={loggedInUser}
-						isOrganizerPerspective={isOrganizerPerspective}
+			<Component
+				label={
+					<Trans
+						i18nKey="participants.Attendees_accepted_count"
+						count={participants.AC?.length ?? 0}
+						values={{ count: participants.AC?.length ?? 0 }}
+						defaults="<strong>{{count}} attendee </strong> has accepted"
 					/>
+				}
+				message={t('participants.Accepted', 'accepted')}
+				participants={participants.AC}
+				pt={pt}
+				loggedInUser={loggedInUser}
+			/>
 
-					<Component
-						label={
-							<Trans
-								i18nKey="participants.Attendees_not_answered_count"
-								count={participants.NE?.length ?? 0}
-								values={{ count: participants.NE?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> has not answered"
-							/>
-						}
-						participants={participants.NE}
-						message={t('participants.Not_answered', "didn't answer")}
-						event={event}
-						pt={pt}
-						loggedInUser={loggedInUser}
-						isOrganizerPerspective={isOrganizerPerspective}
+			<Component
+				label={
+					<Trans
+						i18nKey="participants.Attendees_not_answered_count"
+						count={participants.NE?.length ?? 0}
+						values={{ count: participants.NE?.length ?? 0 }}
+						defaults="<strong>1 attendee </strong> has not answered"
 					/>
+				}
+				participants={participants.NE}
+				message={t('participants.Not_answered', "didn't answer")}
+				pt={pt}
+				loggedInUser={loggedInUser}
+			/>
 
-					<Component
-						label={
-							<Trans
-								i18nKey="participants.Attendees_tentative_count"
-								count={participants.TE?.length ?? 0}
-								values={{ count: participants.TE?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> has accepted as tentative"
-							/>
-						}
-						participants={participants.TE}
-						message={t('participants.Tentative', 'accepted as tentative')}
-						event={event}
-						pt={pt}
-						loggedInUser={loggedInUser}
-						isOrganizerPerspective={isOrganizerPerspective}
+			<Component
+				label={
+					<Trans
+						i18nKey="participants.Attendees_tentative_count"
+						count={participants.TE?.length ?? 0}
+						values={{ count: participants.TE?.length ?? 0 }}
+						defaults="<strong>1 attendee </strong> has accepted as tentative"
 					/>
+				}
+				participants={participants.TE}
+				message={t('participants.Tentative', 'accepted as tentative')}
+				pt={pt}
+				loggedInUser={loggedInUser}
+			/>
 
-					<Component
-						label={
-							<Trans
-								i18nKey="participants.Attendees_declined_count"
-								count={participants.DE?.length ?? 0}
-								values={{ count: participants.DE?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> has declined"
-							/>
-						}
-						participants={participants.DE}
-						message={t('participants.Declined', 'declined')}
-						event={event}
-						pt={pt}
-						loggedInUser={loggedInUser}
-						isOrganizerPerspective={isOrganizerPerspective}
+			<Component
+				label={
+					<Trans
+						i18nKey="participants.Attendees_declined_count"
+						count={participants.DE?.length ?? 0}
+						values={{ count: participants.DE?.length ?? 0 }}
+						defaults="<strong>1 attendee </strong> has declined"
 					/>
-				</>
-			)}
+				}
+				participants={participants.DE}
+				message={t('participants.Declined', 'declined')}
+				pt={pt}
+				loggedInUser={loggedInUser}
+			/>
 		</Container>
 	);
 };

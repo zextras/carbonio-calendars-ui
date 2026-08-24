@@ -15,11 +15,14 @@ import {
 	Button,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
+import { t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
 
+import { SelfResponseStatusText } from './self-response-status-text';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
+import { EventType } from '../../types/event';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
+import { flattenInviteParticipants, isLoggedInUserAmongParticipants } from '../../utils/attendees';
 
 export const DisplayedParticipant = ({
 	participant
@@ -138,13 +141,59 @@ const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement |
 };
 
 export const ParticipantsDisplayer = ({
-	participants
+	participants,
+	event,
+	canSeeResponseStatus
 }: {
 	participants: InviteParticipants;
+	event: EventType;
+	canSeeResponseStatus: boolean;
 }): ReactElement | null => {
+	const loggedInUser = useUserAccount();
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
 	if (isEmpty(participants)) return null;
 	if (Object.keys(participants).length === 0) return null;
+
+	// Response updates are only ever delivered to the organizer: a non-editor attendee can't
+	// reliably know other participants' status, so they only get a flat, unlabeled list plus
+	// their own status (see CO-4136).
+	if (!canSeeResponseStatus) {
+		const allParticipants = flattenInviteParticipants(participants);
+		const isLoggedInUserAttendee = isLoggedInUserAmongParticipants(allParticipants, loggedInUser);
+		return (
+			<Container
+				orientation="vertical"
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				width="fill"
+				height="fit"
+				padding={{ top: 'large' }}
+			>
+				{isLoggedInUserAttendee && (
+					<SelfResponseStatusText participationStatus={event.resource.participationStatus} />
+				)}
+				<Container
+					wrap="wrap"
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					crossAlignment="flex-start"
+					width="fill"
+					height="fit"
+				>
+					<Dropdown
+						label={t('participants.Participants_with_count', {
+							count: allParticipants.length,
+							defaultValue_one: 'Participant',
+							defaultValue_other: 'Participants ({{count}})'
+						}).toUpperCase()}
+						participants={allParticipants}
+						width="100%"
+					/>
+				</Container>
+			</Container>
+		);
+	}
+
 	return (
 		<Container
 			wrap="wrap"
