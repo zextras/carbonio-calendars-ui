@@ -5,45 +5,72 @@
  */
 import React, { ReactElement } from 'react';
 
-import { Row, Text } from '@zextras/carbonio-design-system';
+import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { ParticipationStatus } from '../../types/store/invite';
 
+type StatusMeta = { icon: string; color: string; label: string };
+
+const getStatusMeta = (participationStatus: ParticipationStatus | undefined): StatusMeta => {
+	switch (participationStatus) {
+		case PARTICIPATION_STATUS.ACCEPTED:
+			return {
+				icon: 'StatusAccept',
+				color: 'success',
+				label: t('message.you_accepted', 'You accepted')
+			};
+		case PARTICIPATION_STATUS.DECLINED:
+			return {
+				icon: 'StatusDenied',
+				color: 'error',
+				label: t('message.you_declined', 'You declined')
+			};
+		case PARTICIPATION_STATUS.TENTATIVE:
+			return {
+				icon: 'StatusMaybe',
+				color: 'warning',
+				label: t('message.you_accepted_as_tentative', 'You accepted as tentative')
+			};
+		default:
+			return {
+				icon: 'CalendarWarning',
+				color: 'primary',
+				label: t('message.you_did_not_answer', "You didn't answer")
+			};
+	}
+};
+
 /**
- * Attendees can't see other participants' response status (CO-4136), since replies are
- * only ever delivered to the organizer. They must still be able to see their own, so this
- * renders a self-status line regardless of the viewer's permissions.
+ * Tells the attendee their own response status, above the reply buttons (Figma spec,
+ * CO-4136 follow-up) - replies are only ever delivered to the organizer, so this is the
+ * one place a non-editor attendee can reliably see (and manage, via the buttons below)
+ * their own status.
  */
 export const SelfResponseStatusText = ({
 	participationStatus
 }: {
 	participationStatus?: ParticipationStatus;
 }): ReactElement => {
-	const labelsByStatus: Partial<Record<ParticipationStatus, string>> = {
-		[PARTICIPATION_STATUS.ACCEPTED]: t('message.you_accepted', 'You accepted'),
-		[PARTICIPATION_STATUS.DECLINED]: t('message.you_declined', 'You declined'),
-		[PARTICIPATION_STATUS.TENTATIVE]: t(
-			'message.you_accepted_as_tentative',
-			'You accepted as tentative'
-		),
-		[PARTICIPATION_STATUS.NEED_ACTION]: t('message.you_did_not_answer', "You didn't answer")
-	};
-	const label =
-		(participationStatus && labelsByStatus[participationStatus]) ||
-		labelsByStatus[PARTICIPATION_STATUS.NEED_ACTION];
+	const meta = getStatusMeta(participationStatus);
 
 	return (
-		<Row
+		<Container
 			data-testid="SelfResponseStatusText"
+			orientation="horizontal"
+			crossAlignment="center"
 			mainAlignment="flex-start"
 			width="fill"
-			padding={{ top: 'small', bottom: 'extrasmall' }}
+			height="fit"
+			padding={{ horizontal: 'large', top: 'small' }}
 		>
-			<Text size="small" color="secondary">
-				{label}
+			<Padding right="small">
+				<Icon icon={meta.icon} color={meta.color} size="large" />
+			</Padding>
+			<Text color={meta.color} weight="bold" size="small">
+				{meta.label}
 			</Text>
-		</Row>
+		</Container>
 	);
 };

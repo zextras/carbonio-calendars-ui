@@ -11,7 +11,6 @@ import { OrganizerPart } from '../organizer-part';
 import { ParticipantsDisplayerSmall } from '../participants-displayer-small';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { screen, setupTest } from '@test-setup';
-import { PARTICIPATION_STATUS } from 'constants/api';
 import * as utilities from 'commons/utilities';
 
 vi.mock('@zextras/carbonio-ui-commons', async () => {
@@ -89,14 +88,6 @@ describe('external calendar perspective', () => {
 	test('ParticipantsDisplayerSmall shows a simplified list (no status breakdown) for a non-editor viewer of an external calendar', () => {
 		setupTest(
 			<ParticipantsDisplayerSmall
-				event={
-					{
-						resource: {
-							iAmOrganizer: false,
-							calendar: { id: 'ext-cal' }
-						}
-					} as never
-				}
 				participants={
 					{
 						NE: [{ name: 'Default User', email: 'default@example.com' }]
@@ -113,14 +104,6 @@ describe('external calendar perspective', () => {
 	test('ParticipantsDisplayerSmall hides the response-status breakdown for a plain (non-editor) attendee', () => {
 		setupTest(
 			<ParticipantsDisplayerSmall
-				event={
-					{
-						resource: {
-							iAmOrganizer: false,
-							calendar: { id: 'int-cal' }
-						}
-					} as never
-				}
 				participants={
 					{
 						NE: [{ name: 'Default User', email: 'default@example.com' }]
@@ -137,14 +120,6 @@ describe('external calendar perspective', () => {
 	test('ParticipantsDisplayerSmall shows the organizer/editor the full response-status breakdown', () => {
 		setupTest(
 			<ParticipantsDisplayerSmall
-				event={
-					{
-						resource: {
-							iAmOrganizer: true,
-							calendar: { id: 'int-cal' }
-						}
-					} as never
-				}
 				participants={
 					{
 						NE: [{ name: 'Default User', email: 'default@example.com' }]
@@ -158,18 +133,9 @@ describe('external calendar perspective', () => {
 		expect(screen.queryByText('participants.Invited_Visitor')).not.toBeInTheDocument();
 	});
 
-	test('ParticipantsDisplayerSmall shows a self-response status line for the logged-in attendee among multiple invitees, without leaking anyone else’s status', () => {
+	test('ParticipantsDisplayerSmall never shows a self-response status line here, even when the logged-in user is among the attendees (it lives above the reply buttons instead)', () => {
 		setupTest(
 			<ParticipantsDisplayerSmall
-				event={
-					{
-						resource: {
-							iAmOrganizer: false,
-							calendar: { id: 'int-cal' },
-							participationStatus: PARTICIPATION_STATUS.NEED_ACTION
-						}
-					} as never
-				}
 				participants={
 					{
 						NE: [
@@ -183,34 +149,8 @@ describe('external calendar perspective', () => {
 			/>
 		);
 
-		expect(screen.getByTestId('SelfResponseStatusText')).toBeVisible();
-		expect(screen.getByText('message.you_did_not_answer')).toBeVisible();
-		expect(screen.queryByText('participants.Not_answered')).not.toBeInTheDocument();
-	});
-
-	test('ParticipantsDisplayerSmall does not show a self-response status line when the logged-in user is not an invitee', () => {
-		setupTest(
-			<ParticipantsDisplayerSmall
-				event={
-					{
-						resource: {
-							iAmOrganizer: false,
-							calendar: { id: 'int-cal', owner: 'shared-owner@example.com' }
-						}
-					} as never
-				}
-				participants={
-					{
-						NE: [{ name: 'Default User', email: 'default@example.com' }]
-					} as never
-				}
-				canSeeResponseStatus={false}
-			/>
-		);
-
 		expect(screen.queryByTestId('SelfResponseStatusText')).not.toBeInTheDocument();
-		expect(screen.getByText('participants.Invited_Visitor')).toBeVisible();
-		expect(screen.queryByText('participants.Not_answered')).not.toBeInTheDocument();
+		expect(screen.getByText(/and other 1 attendees/i)).toBeVisible();
 	});
 
 	test('OrganizerPart does not show "invited you" for CalDAV calendar when logged user is not attendee', () => {
@@ -267,14 +207,6 @@ describe('external calendar perspective', () => {
 	test('ParticipantsDisplayerSmall shows a simplified list for a non-editor viewer of a CalDAV calendar', () => {
 		setupTest(
 			<ParticipantsDisplayerSmall
-				event={
-					{
-						resource: {
-							iAmOrganizer: false,
-							calendar: { id: 'caldav-cal' }
-						}
-					} as never
-				}
 				participants={
 					{
 						NE: [{ name: 'Default User', email: 'default@example.com' }]

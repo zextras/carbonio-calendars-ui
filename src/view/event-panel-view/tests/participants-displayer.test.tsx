@@ -90,32 +90,18 @@ describe('ParticipantsDisplayer - response status visibility (CO-4136)', () => {
 
 	test('shows the full response-status breakdown to an organizer/editor', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(
-			<ParticipantsDisplayer
-				participants={participants as never}
-				event={{ resource: { calendar: {}, participationStatus: undefined } } as never}
-				canSeeResponseStatus
-			/>,
-			{ store }
-		);
+		setupTest(<ParticipantsDisplayer participants={participants as never} canSeeResponseStatus />, {
+			store
+		});
 
 		expect(screen.getByText('PARTICIPANTS.AC_WITH_COUNT')).toBeVisible();
 		expect(screen.getByText('PARTICIPANTS.NE_WITH_COUNT')).toBeVisible();
-		expect(screen.queryByTestId('SelfResponseStatusText')).not.toBeInTheDocument();
 	});
 
 	test('hides the response-status breakdown from a non-editor attendee and shows a flat list instead', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupTest(
-			<ParticipantsDisplayer
-				participants={participants as never}
-				event={
-					{
-						resource: { calendar: {}, participationStatus: PARTICIPATION_STATUS.NEED_ACTION }
-					} as never
-				}
-				canSeeResponseStatus={false}
-			/>,
+			<ParticipantsDisplayer participants={participants as never} canSeeResponseStatus={false} />,
 			{ store }
 		);
 
@@ -124,11 +110,9 @@ describe('ParticipantsDisplayer - response status visibility (CO-4136)', () => {
 		expect(screen.getByText('PARTICIPANTS.ATTENDEES_WITH_COUNT')).toBeVisible();
 		expect(screen.getByText('alice@example.com')).toBeVisible();
 		expect(screen.getByText('bob@example.com')).toBeVisible();
-		// "Me" isn't among these participants, so there's nothing to self-report.
-		expect(screen.queryByTestId('SelfResponseStatusText')).not.toBeInTheDocument();
 	});
 
-	test('still shows the logged-in attendee their own response status, without leaking others’', () => {
+	test('never shows a self-response status line here, even when the logged-in user is among the attendees (it lives above the reply buttons instead)', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const participantsWithSelf = {
 			...participants,
@@ -137,18 +121,11 @@ describe('ParticipantsDisplayer - response status visibility (CO-4136)', () => {
 		setupTest(
 			<ParticipantsDisplayer
 				participants={participantsWithSelf as never}
-				event={
-					{
-						resource: { calendar: {}, participationStatus: PARTICIPATION_STATUS.ACCEPTED }
-					} as never
-				}
 				canSeeResponseStatus={false}
 			/>,
 			{ store }
 		);
 
-		expect(screen.getByTestId('SelfResponseStatusText')).toBeVisible();
-		expect(screen.getByText('message.you_accepted')).toBeVisible();
-		expect(screen.queryByText('PARTICIPANTS.NE_WITH_COUNT')).not.toBeInTheDocument();
+		expect(screen.queryByTestId('SelfResponseStatusText')).not.toBeInTheDocument();
 	});
 });

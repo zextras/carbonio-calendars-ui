@@ -5,15 +5,13 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
-import { Container, Row, Text } from '@zextras/carbonio-design-system';
+import { Container, Text } from '@zextras/carbonio-design-system';
 import { Account, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import { Trans } from 'react-i18next';
 
-import { EventType } from 'types/event';
 import { InviteParticipant, InviteParticipants } from 'types/store/invite';
-import { flattenInviteParticipants, isLoggedInUserAmongParticipants } from 'utils/attendees';
-import { SelfResponseStatusText } from './self-response-status-text';
+import { flattenInviteParticipants } from 'utils/attendees';
 
 type ParticipantProps = { participant: InviteParticipants };
 
@@ -163,14 +161,12 @@ const Component = ({
 };
 
 type ParticipantsDisplayerSmallType = {
-	event: EventType;
 	participants?: InviteParticipants;
 	canSeeResponseStatus: boolean;
 };
 
 export const ParticipantsDisplayerSmall = ({
 	participants,
-	event,
 	canSeeResponseStatus
 }: ParticipantsDisplayerSmallType): ReactElement | null => {
 	const loggedInUser = useUserAccount();
@@ -178,11 +174,9 @@ export const ParticipantsDisplayerSmall = ({
 	if (!participants || Object.keys(participants)?.length === 0) return null;
 
 	// Response updates are only ever delivered to the organizer: a non-editor attendee can't
-	// reliably know other participants' status, so they only get a flat, unlabeled list plus
-	// their own status (see CO-4136).
+	// reliably know other participants' status, so they only get a flat, unlabeled list
+	// instead (see CO-4136). Their own status is shown above the reply buttons instead.
 	if (!canSeeResponseStatus) {
-		const attendees = flattenInviteParticipants(participants);
-		const isLoggedInUserAttendee = isLoggedInUserAmongParticipants(attendees, loggedInUser);
 		return (
 			<Container
 				wrap="wrap"
@@ -192,11 +186,6 @@ export const ParticipantsDisplayerSmall = ({
 				width="fill"
 				padding={{ horizontal: 'medium' }}
 			>
-				{isLoggedInUserAttendee && (
-					<Row width="100%" padding={{ horizontal: 'medium' }}>
-						<SelfResponseStatusText participationStatus={event.resource.participationStatus} />
-					</Row>
-				)}
 				<SimplifiedParticipantsList participant={participants} />
 			</Container>
 		);

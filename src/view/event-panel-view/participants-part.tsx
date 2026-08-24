@@ -61,13 +61,11 @@ export const ParticipantsPart = ({
 			{isSummary ? (
 				<ParticipantsDisplayerSmall
 					participants={participants}
-					event={event}
 					canSeeResponseStatus={canSeeResponseStatus}
 				/>
 			) : (
 				<ParticipantsDisplayer
 					participants={participants}
-					event={event}
 					canSeeResponseStatus={canSeeResponseStatus}
 				/>
 			)}
