@@ -12,12 +12,8 @@ export const isOrganizerOrHaveEqualRights = (
 	event: EventType,
 	absFolderPath: string | undefined
 ): boolean => {
-    const rawAlias = getUserSettings()?.attrs?.zimbraMailAlias;
-    const emails = [getUserAccount()?.name, rawAlias].flat().filter(Boolean) as string[];
     const resource = event.resource;
-    const organizerEmail = event.resource.organizer?.email;
-    const calendarOwner = event.resource.calendar.owner;
-    if (!resource.organizer) {
+    if (!resource.organizer || event?.haveWriteAccess) {
         return true;
     }
 
@@ -25,17 +21,16 @@ export const isOrganizerOrHaveEqualRights = (
         return false;
     }
 
-    if (event?.haveWriteAccess === false) {
+    const rawAlias = getUserSettings()?.attrs?.zimbraMailAlias;
+    const emails = [getUserAccount()?.name, rawAlias].flat().filter(Boolean) as string[];
+    const organizerEmail = event.resource.organizer?.email;
+    const calendarOwner = event.resource.calendar.owner;
+    const isUserOrganizer = organizerEmail ? emails.includes(organizerEmail) : event.resource.iAmOrganizer;
+    const isUserOwner = calendarOwner ? emails.includes(calendarOwner) : false;
+
+    if (!isUserOwner && !isUserOrganizer) {
         return false;
     }
-
-    const isUserOrganizer = organizerEmail ? emails.includes(organizerEmail) : false;
-
-    if (isUserOrganizer || resource.iAmOrganizer) {
-        return true;
-    }
-
-    const isUserOwner = calendarOwner ? emails.includes(calendarOwner) : false;
 
     if (calendarOwner && calendarOwner !== organizerEmail) {
         return isUserOwner && isUserOrganizer;
