@@ -121,7 +121,7 @@ describe('ParticipantsDisplayer - response status visibility (CO-4136)', () => {
 
 		expect(screen.queryByText('PARTICIPANTS.AC_WITH_COUNT')).not.toBeInTheDocument();
 		expect(screen.queryByText('PARTICIPANTS.NE_WITH_COUNT')).not.toBeInTheDocument();
-		expect(screen.getByText('PARTICIPANTS.PARTICIPANTS_WITH_COUNT')).toBeVisible();
+		expect(screen.getByText('PARTICIPANTS.ATTENDEES_WITH_COUNT')).toBeVisible();
 		expect(screen.getByText('alice@example.com')).toBeVisible();
 		expect(screen.getByText('bob@example.com')).toBeVisible();
 		// "Me" isn't among these participants, so there's nothing to self-report.

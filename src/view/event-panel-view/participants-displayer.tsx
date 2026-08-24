@@ -25,9 +25,11 @@ import { InviteParticipant, InviteParticipants } from '../../types/store/invite'
 import { flattenInviteParticipants, isLoggedInUserAmongParticipants } from '../../utils/attendees';
 
 export const DisplayedParticipant = ({
-	participant
+	participant,
+	width
 }: {
 	participant: InviteParticipant;
+	width?: string;
 }): ReactElement => {
 	const createSnackbar = useSnackbar();
 	return (
@@ -36,6 +38,7 @@ export const DisplayedParticipant = ({
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			padding={{ vertical: 'small' }}
+			width={width}
 		>
 			<Avatar
 				label={participant.name || participant.email}
@@ -95,9 +98,15 @@ type DropdownProps = {
 	label: string;
 	participants?: Array<InviteParticipant>;
 	width: string;
+	itemWidth?: string;
 };
 
-const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement | null => {
+const Dropdown = ({
+	label,
+	participants,
+	width,
+	itemWidth
+}: DropdownProps): ReactElement | null => {
 	const [isExpanded, setIsExpanded] = useState(true);
 	const toggleExpanded = useCallback(() => setIsExpanded((prevExpanded) => !prevExpanded), []);
 
@@ -105,11 +114,15 @@ const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement |
 		() => (
 			<Container mainAlignment="space-between" crossAlignment="flex-start" wrap="wrap" width="fill">
 				{participants?.map((participant) => (
-					<DisplayedParticipant participant={participant} key={participant.email} />
+					<DisplayedParticipant
+						participant={participant}
+						key={participant.email}
+						width={itemWidth}
+					/>
 				))}
 			</Container>
 		),
-		[participants]
+		[participants, itemWidth]
 	);
 
 	return participants ? (
@@ -181,13 +194,14 @@ export const ParticipantsDisplayer = ({
 					height="fit"
 				>
 					<Dropdown
-						label={t('participants.Participants_with_count', {
+						label={t('participants.Attendees_with_count', {
 							count: allParticipants.length,
-							defaultValue_one: 'Participant',
-							defaultValue_other: 'Participants ({{count}})'
+							defaultValue_one: 'Attendee',
+							defaultValue_other: 'Attendees ({{count}})'
 						}).toUpperCase()}
 						participants={allParticipants}
 						width="100%"
+						itemWidth="50%"
 					/>
 				</Container>
 			</Container>

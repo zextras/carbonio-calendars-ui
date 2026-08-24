@@ -75,7 +75,7 @@ describe('ParticipantsPart - response status visibility (CO-4136)', () => {
 
 		expect(screen.queryByText('PARTICIPANTS.AC_WITH_COUNT')).not.toBeInTheDocument();
 		expect(screen.queryByText('PARTICIPANTS.NE_WITH_COUNT')).not.toBeInTheDocument();
-		expect(screen.getByText('PARTICIPANTS.PARTICIPANTS_WITH_COUNT')).toBeVisible();
+		expect(screen.getByText('PARTICIPANTS.ATTENDEES_WITH_COUNT')).toBeVisible();
 	});
 
 	test('returns null when there is no organizer', () => {
