@@ -1,3 +1,7 @@
+## <small>1.34.2 (2026-08-25)</small>
+
+* fix(CO-3699): make appointment creation from Day View respect context (#834) ([29438db](https://github.com/zextras/carbonio-calendars-ui/commit/29438db)), closes [#834](https://github.com/zextras/carbonio-calendars-ui/issues/834)
+
 ## <small>1.34.1 (2026-08-20)</small>
 
 * fix: allow copy appointments to a delegated account's calendar ([91cb6d5](https://github.com/zextras/carbonio-calendars-ui/commit/91cb6d5))
