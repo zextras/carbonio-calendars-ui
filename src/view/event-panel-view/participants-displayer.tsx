@@ -61,6 +61,7 @@ export const DisplayedParticipant = ({
 						color="text"
 						data-testid={'Chip'}
 						hasAvatar={false}
+						maxWidth="100%"
 						actions={[
 							{
 								id: 'action1',
