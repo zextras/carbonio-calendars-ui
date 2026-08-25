@@ -1,3 +1,8 @@
+## <small>1.34.3 (2026-08-25)</small>
+
+* Co 4136 Hide attendee response status for non-organizers in event view (#835) ([c6d4940](https://github.com/zextras/carbonio-calendars-ui/commit/c6d4940)), closes [#835](https://github.com/zextras/carbonio-calendars-ui/issues/835)
+* fix(ci): run Docker build stages as root (#836) ([31987b5](https://github.com/zextras/carbonio-calendars-ui/commit/31987b5)), closes [#836](https://github.com/zextras/carbonio-calendars-ui/issues/836)
+
 ## <small>1.34.2 (2026-08-25)</small>
 
 * fix(CO-3699): make appointment creation from Day View respect context (#834) ([29438db](https://github.com/zextras/carbonio-calendars-ui/commit/29438db)), closes [#834](https://github.com/zextras/carbonio-calendars-ui/issues/834)
