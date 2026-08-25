@@ -20,11 +20,14 @@ import { isEmpty } from 'lodash';
 
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
+import { flattenInviteParticipants } from '../../utils/attendees';
 
 export const DisplayedParticipant = ({
-	participant
+	participant,
+	width
 }: {
 	participant: InviteParticipant;
+	width?: string;
 }): ReactElement => {
 	const createSnackbar = useSnackbar();
 	return (
@@ -33,6 +36,7 @@ export const DisplayedParticipant = ({
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			padding={{ vertical: 'small' }}
+			width={width}
 		>
 			<Avatar
 				label={participant.name || participant.email}
@@ -57,6 +61,7 @@ export const DisplayedParticipant = ({
 						color="text"
 						data-testid={'Chip'}
 						hasAvatar={false}
+						maxWidth="100%"
 						actions={[
 							{
 								id: 'action1',
@@ -92,21 +97,38 @@ type DropdownProps = {
 	label: string;
 	participants?: Array<InviteParticipant>;
 	width: string;
+	itemWidth?: string;
 };
 
-const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement | null => {
+const Dropdown = ({
+	label,
+	participants,
+	width,
+	itemWidth
+}: DropdownProps): ReactElement | null => {
 	const [isExpanded, setIsExpanded] = useState(true);
 	const toggleExpanded = useCallback(() => setIsExpanded((prevExpanded) => !prevExpanded), []);
 
 	const displayedParticipants = useMemo(
 		() => (
-			<Container mainAlignment="space-between" crossAlignment="flex-start" wrap="wrap" width="fill">
+			<Container
+				orientation={itemWidth ? 'horizontal' : 'vertical'}
+				mainAlignment="space-between"
+				crossAlignment="flex-start"
+				wrap="wrap"
+				width="fill"
+				gap={itemWidth ? '0 0.5rem' : undefined}
+			>
 				{participants?.map((participant) => (
-					<DisplayedParticipant participant={participant} key={participant.email} />
+					<DisplayedParticipant
+						participant={participant}
+						key={participant.email}
+						width={itemWidth}
+					/>
 				))}
 			</Container>
 		),
-		[participants]
+		[participants, itemWidth]
 	);
 
 	return participants ? (
@@ -138,13 +160,45 @@ const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement |
 };
 
 export const ParticipantsDisplayer = ({
-	participants
+	participants,
+	canSeeResponseStatus
 }: {
 	participants: InviteParticipants;
+	canSeeResponseStatus: boolean;
 }): ReactElement | null => {
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
 	if (isEmpty(participants)) return null;
 	if (Object.keys(participants).length === 0) return null;
+
+	// Response updates are only ever delivered to the organizer: a non-editor attendee can't
+	// reliably know other participants' status, so they only get a flat, unlabeled list
+	// instead (see CO-4136). Their own status is shown above the reply buttons instead.
+	if (!canSeeResponseStatus) {
+		const allParticipants = flattenInviteParticipants(participants);
+		return (
+			<Container
+				wrap="wrap"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				width="fill"
+				height="fit"
+				padding={{ top: 'large' }}
+			>
+				<Dropdown
+					label={t('participants.Attendees_with_count', {
+						count: allParticipants.length,
+						defaultValue_one: 'Attendee',
+						defaultValue_other: 'Attendees ({{count}})'
+					}).toUpperCase()}
+					participants={allParticipants}
+					width="100%"
+					itemWidth="calc(50% - 0.25rem)"
+				/>
+			</Container>
+		);
+	}
+
 	return (
 		<Container
 			wrap="wrap"
