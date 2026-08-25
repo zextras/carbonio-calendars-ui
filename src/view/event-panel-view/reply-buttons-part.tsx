@@ -41,60 +41,73 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 	return (
 		<Container
 			orientation="vertical"
-			crossAlignment="flex-start"
+			crossAlignment="center"
 			mainAlignment="flex-start"
 			width="fill"
 			height="fit"
 			background={'gray6'}
 		>
-			<SelfResponseStatusText participationStatus={event.resource.participationStatus} />
 			<Container
-				orientation="horizontal"
+				orientation="vertical"
 				crossAlignment="flex-start"
-				mainAlignment="center"
-				width="fill"
+				mainAlignment="flex-start"
+				width="fit"
 				height="fit"
-				padding={{ all: 'large' }}
 			>
-				<Button
-					type="outlined"
-					label={t('event.action.accept', 'Accept')}
-					icon="CheckmarkOutline"
-					color="success"
-					onClick={acceptAsAction({ actionType: InviteReplyVerb.ACCEPT, event, invite, context })}
-					disabled={event.resource.participationStatus === PARTICIPATION_STATUS.ACCEPTED}
-				/>
-				<Padding horizontal="small" />
-				<Button
-					type="outlined"
-					label={t('label.tentative', 'Tentative')}
-					icon="QuestionMarkOutline"
-					color="warning"
-					onClick={acceptAsAction({
-						actionType: InviteReplyVerb.TENTATIVE,
-						event,
-						invite,
-						context
-					})}
-					disabled={event.resource.participationStatus === PARTICIPATION_STATUS.TENTATIVE}
-				/>
-				<Padding horizontal="small" />
-				<Button
-					type="outlined"
-					label={t('event.action.decline', 'Decline')}
-					icon="CloseOutline"
-					color="error"
-					onClick={acceptAsAction({ actionType: InviteReplyVerb.DECLINE, event, invite, context })}
-					disabled={event.resource.participationStatus === PARTICIPATION_STATUS.DECLINED}
-				/>
-				<Padding horizontal="small" />
-				<Button
-					type="outlined"
-					label={t('label.propose_new_time', 'Propose new time')}
-					icon="ClockOutline"
-					color="primary"
-					onClick={proposeNewTimeFn({ event, invite, context })}
-				/>
+				<SelfResponseStatusText participationStatus={event.resource.participationStatus} />
+				<Container
+					orientation="horizontal"
+					crossAlignment="flex-start"
+					mainAlignment="flex-start"
+					width="fit"
+					height="fit"
+					padding={{ all: 'large' }}
+				>
+					<Button
+						type="outlined"
+						label={t('event.action.accept', 'Accept')}
+						icon="CheckmarkOutline"
+						color="success"
+						onClick={acceptAsAction({ actionType: InviteReplyVerb.ACCEPT, event, invite, context })}
+						disabled={event.resource.participationStatus === PARTICIPATION_STATUS.ACCEPTED}
+					/>
+					<Padding horizontal="small" />
+					<Button
+						type="outlined"
+						label={t('label.tentative', 'Tentative')}
+						icon="QuestionMarkOutline"
+						color="warning"
+						onClick={acceptAsAction({
+							actionType: InviteReplyVerb.TENTATIVE,
+							event,
+							invite,
+							context
+						})}
+						disabled={event.resource.participationStatus === PARTICIPATION_STATUS.TENTATIVE}
+					/>
+					<Padding horizontal="small" />
+					<Button
+						type="outlined"
+						label={t('event.action.decline', 'Decline')}
+						icon="CloseOutline"
+						color="error"
+						onClick={acceptAsAction({
+							actionType: InviteReplyVerb.DECLINE,
+							event,
+							invite,
+							context
+						})}
+						disabled={event.resource.participationStatus === PARTICIPATION_STATUS.DECLINED}
+					/>
+					<Padding horizontal="small" />
+					<Button
+						type="outlined"
+						label={t('label.propose_new_time', 'Propose new time')}
+						icon="ClockOutline"
+						color="primary"
+						onClick={proposeNewTimeFn({ event, invite, context })}
+					/>
+				</Container>
 			</Container>
 		</Container>
 	);
