@@ -110,7 +110,14 @@ const Dropdown = ({
 
 	const displayedParticipants = useMemo(
 		() => (
-			<Container mainAlignment="space-between" crossAlignment="flex-start" wrap="wrap" width="fill">
+			<Container
+				orientation={itemWidth ? 'horizontal' : 'vertical'}
+				mainAlignment="space-between"
+				crossAlignment="flex-start"
+				wrap="wrap"
+				width="fill"
+				gap={itemWidth ? '0 0.5rem' : undefined}
+			>
 				{participants?.map((participant) => (
 					<DisplayedParticipant
 						participant={participant}
@@ -185,7 +192,7 @@ export const ParticipantsDisplayer = ({
 					}).toUpperCase()}
 					participants={allParticipants}
 					width="100%"
-					itemWidth="50%"
+					itemWidth="calc(50% - 0.25rem)"
 				/>
 			</Container>
 		);
