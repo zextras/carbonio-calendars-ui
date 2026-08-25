@@ -7,7 +7,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard } from '@zextras/carbonio-shell-ui';
-import { useHistoryNavigation, useFoldersMap, usePrefs } from '@zextras/carbonio-ui-commons';
+import {
+	useHistoryNavigation,
+	useFoldersMap,
+	usePrefs,
+	isTrashOrNestedInIt
+} from '@zextras/carbonio-ui-commons';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { endOfDay, getHours, getMinutes, isSameDay, startOfDay, subDays } from 'date-fns';
 import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
@@ -19,6 +24,7 @@ import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_BOARD_ID, CALENDAR_ROUTE } from '../constants';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { EVENT_ACTIONS } from '../constants/event-actions';
+import { normalizeCalendarEditor } from '../normalizations/normalize-editor';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
@@ -27,7 +33,8 @@ import {
 	useCalendarDate,
 	useCalendarView,
 	useIsSummaryViewOpen,
-	useSetRange
+	useSetRange,
+	useSetVisibleRange
 } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventType } from '../types/event';
@@ -59,6 +66,7 @@ export const useCalendarComponentUtils = (): {
 	const calendarFolders = useFoldersMap();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const setRange = useSetRange();
+	const setVisibleRange = useSetVisibleRange();
 	const { action } = useParams<{
 		action: typeof EVENT_ACTIONS.EXPAND | typeof EVENT_ACTIONS.EDIT | undefined;
 	}>();
@@ -352,11 +360,20 @@ export const useCalendarComponentUtils = (): {
 
 	const handleSelect = useCallback(
 		(e: { resourceId?: string | number; end: Date; start: Date }) => {
-			const isDefaultCalendar = e.resourceId
-				? String(e.resourceId) === zimbraPrefDefaultCalendarId
-				: true;
+			const resourceFolder = e.resourceId ? calendarFolders[String(e.resourceId)] : undefined;
+			const isTrashOrSubItem = e.resourceId
+				? isTrashOrNestedInIt({
+						id: String(e.resourceId),
+						absFolderPath: resourceFolder?.absFolderPath
+					})
+				: false;
+			let canCreateOnResource = true;
+			if (e.resourceId) {
+				const hasWriteAccess = resourceFolder?.perm ? /w/.test(resourceFolder.perm) : true;
+				canCreateOnResource = !!resourceFolder && hasWriteAccess;
+			}
 
-			if (!summaryViewOpen && !action && isDefaultCalendar) {
+			if (!summaryViewOpen && !action && canCreateOnResource && !isTrashOrSubItem) {
 				const isAllDay =
 					getHours(e.end) === getHours(e.start) &&
 					getMinutes(e.end) === getMinutes(e.start) &&
@@ -372,7 +389,8 @@ export const useCalendarComponentUtils = (): {
 						end: end.getTime(),
 						allDay: isAllDay ?? false,
 						freeBusy: isAllDay ? EVENT_DISPLAY_STATUS.FREE : EVENT_DISPLAY_STATUS.BUSY,
-						panel: false
+						panel: false,
+						...(resourceFolder ? { calendar: normalizeCalendarEditor(resourceFolder) } : {})
 					}
 				});
 				addBoard({
@@ -384,7 +402,7 @@ export const useCalendarComponentUtils = (): {
 				});
 			}
 		},
-		[action, calendarFolders, dispatch, summaryViewOpen, zimbraPrefDefaultCalendarId]
+		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
 	const onRangeChange = useCallback(
@@ -393,19 +411,23 @@ export const useCalendarComponentUtils = (): {
 				if (range?.length) {
 					const min = datesMin(...range);
 					const max = datesMax(...range);
-					setRange({
+					const visibleRange = {
 						start: startOfDay(new Date(min)).getTime(),
 						end: endOfDay(new Date(max)).getTime()
-					});
+					};
+					setRange(visibleRange);
+					setVisibleRange(visibleRange);
 				}
 			} else {
-				setRange({
+				const visibleRange = {
 					start: startOfDay(new Date(range.start)).getTime(),
 					end: endOfDay(new Date(range.end)).getTime()
-				});
+				};
+				setRange(visibleRange);
+				setVisibleRange(visibleRange);
 			}
 		},
-		[setRange]
+		[setRange, setVisibleRange]
 	);
 
 	const onNavigate = useCallback(
