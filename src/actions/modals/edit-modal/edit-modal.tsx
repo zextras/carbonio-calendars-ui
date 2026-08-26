@@ -66,9 +66,9 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 
 	useEffect(() => {
 		const updateFolder = getUpdateFolder();
-		getFolderRequest({ id: folderId }).then((res: [Folder]) => {
-			if (res?.[0]?.acl?.grant) {
-				updateFolder(folderId, { acl: { grant: res?.[0]?.acl?.grant } });
+		getFolderRequest({ id: folderId }).then((res: { folder?: Folder[] }) => {
+			if (res?.folder?.[0]?.acl?.grant) {
+				updateFolder(folderId, { acl: { grant: res.folder[0].acl.grant } });
 			}
 		});
 	}, [folderId]);
@@ -90,17 +90,20 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 		return () => window.removeEventListener('keydown', onKey, { capture: true });
 	}, [modal, onClose, onGoBack]);
 
+	const contextValue = useMemo(
+		() => ({
+			setModal,
+			onClose,
+			roleOptions,
+			setActiveGrant,
+			isColorPickerOpen,
+			setIsColorPickerOpen
+		}),
+		[onClose, roleOptions, isColorPickerOpen]
+	);
+
 	return (
-		<EditModalContext.Provider
-			value={{
-				setModal,
-				onClose,
-				roleOptions,
-				setActiveGrant,
-				isColorPickerOpen,
-				setIsColorPickerOpen
-			}}
-		>
+		<EditModalContext.Provider value={contextValue}>
 			{modal === 'main' && folder && (
 				<MainEditModal folder={folder} totalAppointments={folder?.n ?? 0} grant={grant ?? []} />
 			)}

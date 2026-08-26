@@ -134,9 +134,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		// modals: a partial update that only sets `color` doesn't clear a previously-set
 		// `rgb`, so the calendar would stay stuck on the old custom color.
 		const actionColor: FolderAction | undefined =
-			selectedColorHex !== defaultColorHex
-				? { op: FOLDER_OPERATIONS.COLOR, rgb: selectedColorHex, id: folder.id }
-				: undefined;
+			selectedColorHex === defaultColorHex
+				? undefined
+				: { op: FOLDER_OPERATIONS.COLOR, rgb: selectedColorHex, id: folder.id };
 		const actionFreeBusy =
 			freeBusy !== defaultFreeBusy
 				? {

@@ -137,6 +137,36 @@ describe('the edit calendar modal is composed by', () => {
 
 			expect(screen.getByText('Edit and share calendar')).toBeVisible();
 		});
+		test('it refreshes the folder grants from the server on mount and reflects them in the sharing section', async () => {
+			getSetupServer().use(
+				http.post('/service/soap/GetFolderRequest', () =>
+					HttpResponse.json({
+						Body: {
+							GetFolderResponse: {
+								folder: [
+									{
+										id: systemFolder.id,
+										acl: { grant: grants }
+									}
+								],
+								_jsns: 'urn:zimbraMail'
+							}
+						}
+					})
+				)
+			);
+			const closeFn = vi.fn();
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupFoldersStore();
+
+			setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+				store
+			});
+
+			const sharingSection = await screen.findByText('Internal sharing');
+			expect(sharingSection).toBeVisible();
+			expect(await screen.findByText(`${grants[0].d} - Viewer`)).toBeInTheDocument();
+		});
 		test('the close button, on click will call the modal onclose', async () => {
 			setupFoldersStore();
 			const closeFn = vi.fn();
