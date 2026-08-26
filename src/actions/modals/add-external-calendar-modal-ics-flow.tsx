@@ -16,6 +16,7 @@ type AddExternalCalendarModalIcsFlowProps = {
 	urlDescription?: string;
 	isDuplicateCalendarUrl: boolean;
 	isSubmitting: boolean;
+	isColorPickerOpen?: boolean;
 	calendarName: string;
 	isDuplicateCalendarName: boolean;
 	selectedColorHex: string;
@@ -32,6 +33,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 	urlDescription,
 	isDuplicateCalendarUrl,
 	isSubmitting,
+	isColorPickerOpen = false,
 	calendarName,
 	isDuplicateCalendarName,
 	selectedColorHex,
@@ -57,7 +59,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 					)
 				}
 				value={calendarUrl}
-				disabled={isSubmitting}
+				disabled={isSubmitting || isColorPickerOpen}
 				onChange={(event): void => onCalendarUrlChange(event.target.value)}
 				inputRef={calendarUrlInputRef}
 			/>
@@ -75,7 +77,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 						: undefined
 				}
 				value={calendarName}
-				disabled={isSubmitting}
+				disabled={isSubmitting || isColorPickerOpen}
 				onChange={(event): void => onCalendarNameChange(event.target.value)}
 			/>
 			<Padding top="medium" />

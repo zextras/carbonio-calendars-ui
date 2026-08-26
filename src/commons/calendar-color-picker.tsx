@@ -176,13 +176,8 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 						/>
 					</Tooltip>
 				)}
-				<Tooltip label={t('label.customize_color', 'Customize color')}>
-					<CustomColorTriggerButton
-						ref={colorSwatchRef}
-						type="button"
-						onClick={onToggleTrigger}
-						disabled={disabled}
-					>
+				<Tooltip label={t('label.customize_color', 'Customize color')} triggerRef={colorSwatchRef}>
+					<CustomColorTriggerButton type="button" onClick={onToggleTrigger} disabled={disabled}>
 						<Icon icon="PlusCircleOutline" size="large" color="primary" />
 					</CustomColorTriggerButton>
 				</Tooltip>

@@ -454,6 +454,7 @@ export const AddExternalCalendarModal = ({
 					urlDescription={urlDescription}
 					isDuplicateCalendarUrl={isDuplicateCalendarUrl}
 					isSubmitting={isSubmitting}
+					isColorPickerOpen={isColorPickerOpen}
 					calendarName={calendarName}
 					isDuplicateCalendarName={isDuplicateCalendarName}
 					selectedColorHex={selectedColorHex}
