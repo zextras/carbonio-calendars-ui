@@ -51,6 +51,7 @@ export const NewModal = ({
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const defaultColorHex = resolveCalendarColorHex(0, undefined);
 	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
 	const nameInputRef = useRef<HTMLInputElement>(null);
@@ -117,11 +118,14 @@ export const NewModal = ({
 	};
 
 	const onCloseModal = useCallback(() => {
+		if (isColorPickerOpen) {
+			return;
+		}
 		setInputValue('');
 		setSelectedColorHex(defaultColorHex);
 		setFreeBusy(false);
 		onClose();
-	}, [onClose, defaultColorHex]);
+	}, [onClose, defaultColorHex, isColorPickerOpen]);
 
 	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
 
@@ -149,6 +153,7 @@ export const NewModal = ({
 					setInputValue(e.target.value);
 				}}
 				inputRef={nameInputRef}
+				disabled={isColorPickerOpen}
 			/>
 			{showDupWarning && (
 				<Padding all="small">
@@ -158,11 +163,16 @@ export const NewModal = ({
 				</Padding>
 			)}
 			<Padding vertical="medium" />
-			<CalendarColorPicker value={selectedColorHex} onChange={setSelectedColorHex} />
+			<CalendarColorPicker
+				value={selectedColorHex}
+				onChange={setSelectedColorHex}
+				onOpenChange={setIsColorPickerOpen}
+			/>
 			<Padding vertical="medium" />
 			<Checkbox
 				value={freeBusy}
 				onClick={toggleFreeBusy}
+				disabled={isColorPickerOpen}
 				label={t(
 					'label.exclude_free_busy',
 					'Exclude this calendar when reporting the free/busy times'
@@ -172,12 +182,13 @@ export const NewModal = ({
 				onConfirm={onConfirm}
 				secondaryAction={toggleModal}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
+				secondaryDisabled={isColorPickerOpen}
 				label={
 					event && hasId(event.resource.calendar, FOLDERS.TRASH)
 						? t('folder.modal.restore.footer', 'Create and Restore')
 						: t('label.create', 'Create')
 				}
-				disabled={disabled}
+				disabled={disabled || isColorPickerOpen}
 			/>
 		</Container>
 	);

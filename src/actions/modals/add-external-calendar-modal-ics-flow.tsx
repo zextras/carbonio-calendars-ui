@@ -22,6 +22,7 @@ type AddExternalCalendarModalIcsFlowProps = {
 	onCalendarUrlChange: (value: string) => void;
 	onCalendarNameChange: (value: string) => void;
 	onSelectedColorHexChange: (value: string) => void;
+	onColorPickerOpenChange?: (open: boolean) => void;
 	calendarUrlInputRef?: RefObject<HTMLInputElement>;
 };
 
@@ -37,6 +38,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 	onCalendarUrlChange,
 	onCalendarNameChange,
 	onSelectedColorHexChange,
+	onColorPickerOpenChange,
 	calendarUrlInputRef
 }: AddExternalCalendarModalIcsFlowProps): JSX.Element => {
 	const [t] = useTranslation();
@@ -80,6 +82,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 			<CalendarColorPicker
 				value={selectedColorHex}
 				onChange={onSelectedColorHexChange}
+				onOpenChange={onColorPickerOpenChange}
 				disabled={isSubmitting}
 			/>
 		</>

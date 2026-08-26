@@ -31,7 +31,7 @@ type EditExternalCalendarModalProps = {
 
 export const EditExternalCalendarModal = ({
 	folderId,
-	onClose
+	onClose: onCloseProp
 }: EditExternalCalendarModalProps): JSX.Element => {
 	const [t] = useTranslation();
 	const folder = useFolder(folderId);
@@ -40,6 +40,14 @@ export const EditExternalCalendarModal = ({
 
 	const [calendarName, setCalendarName] = useState(folder?.name ?? '');
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+
+	const onClose = useCallback(() => {
+		if (isColorPickerOpen) {
+			return;
+		}
+		onCloseProp();
+	}, [onCloseProp, isColorPickerOpen]);
 
 	const defaultColorHex = useMemo(
 		() => resolveCalendarColorHex(folder?.color, folder?.rgb),
@@ -206,7 +214,7 @@ export const EditExternalCalendarModal = ({
 						color="primary"
 						icon="Copy"
 						onClick={onCopyUrl}
-						disabled={!folder.url}
+						disabled={!folder.url || isColorPickerOpen}
 						style={{ width: 'max-content' }}
 					/>
 				</Tooltip>
@@ -225,20 +233,23 @@ export const EditExternalCalendarModal = ({
 						: undefined
 				}
 				value={calendarName}
-				disabled={isSubmitting}
+				disabled={isSubmitting || isColorPickerOpen}
 				onChange={(event): void => setCalendarName(event.target.value)}
 			/>
 			<Padding top="medium" />
 			<CalendarColorPicker
 				value={selectedColorHex}
 				onChange={setSelectedColorHex}
+				onOpenChange={setIsColorPickerOpen}
 				disabled={isSubmitting}
 			/>
 			<Padding top="medium" />
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('label.save_changes', 'Save Changes')}
-				disabled={!calendarName.trim() || isSubmitting || isDuplicateCalendarName}
+				disabled={
+					!calendarName.trim() || isSubmitting || isDuplicateCalendarName || isColorPickerOpen
+				}
 			/>
 		</Container>
 	);

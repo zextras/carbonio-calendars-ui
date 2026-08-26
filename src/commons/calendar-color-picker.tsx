@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ColorDot, ColorDotsRow, findExactColorIndex } from './color-dots-row';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
+import { useCloseOnEscape } from 'hooks/use-close-on-escape';
 import { usePreventBackdropClose } from 'hooks/use-prevent-backdrop-close';
 
 const CALENDAR_COLOR_OPTIONS = CALENDARS_STANDARD_COLORS.map((color) => ({
@@ -136,6 +137,8 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 		setIsPopoverOpen(false);
 	}, []);
 
+	useCloseOnEscape(isPopoverOpen, onCancelCustomColor);
+
 	const onToggleTrigger = useCallback(() => {
 		setIsPopoverOpen((prev) => !prev);
 	}, []);
@@ -161,10 +164,10 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 				disabled={disabled || isPopoverOpen}
 			>
 				{lastCustomHex && (
-					<Tooltip label={t('label.custom_color', 'Custom color')}>
+					<Tooltip label={t('label.custom_color', 'Custom color (hex code)')}>
 						<ColorDot
 							type="button"
-							aria-label={t('label.custom_color', 'Custom color')}
+							aria-label={t('label.custom_color', 'Custom color (hex code)')}
 							aria-pressed={isCustomColorSelected}
 							$color={lastCustomHex}
 							$selected={isCustomColorSelected}
@@ -173,14 +176,16 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 						/>
 					</Tooltip>
 				)}
-				<CustomColorTriggerButton
-					ref={colorSwatchRef}
-					type="button"
-					onClick={onToggleTrigger}
-					disabled={disabled}
-				>
-					<Icon icon="PlusCircleOutline" size="large" color="primary" />
-				</CustomColorTriggerButton>
+				<Tooltip label={t('label.customize_color', 'Customize color')}>
+					<CustomColorTriggerButton
+						ref={colorSwatchRef}
+						type="button"
+						onClick={onToggleTrigger}
+						disabled={disabled}
+					>
+						<Icon icon="PlusCircleOutline" size="large" color="primary" />
+					</CustomColorTriggerButton>
+				</Tooltip>
 				<Popover
 					disablePortal
 					anchorEl={colorSwatchRef}

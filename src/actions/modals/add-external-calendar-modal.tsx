@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Container,
@@ -114,7 +114,11 @@ const getCaldavTestErrorMessage = (
 	};
 };
 
-export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
+export const AddExternalCalendarModal = ({
+	onClose: onCloseProp
+}: {
+	onClose: () => void;
+}): JSX.Element => {
 	const [t] = useTranslation();
 	const folders = useFoldersMap();
 	const createSnackbar = useSnackbar();
@@ -129,6 +133,14 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 	const [calendarType, setCalendarType] = useState<CalendarType>(CALENDAR_TYPE_ICS);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+
+	const onClose = useCallback(() => {
+		if (isColorPickerOpen) {
+			return;
+		}
+		onCloseProp();
+	}, [onCloseProp, isColorPickerOpen]);
 
 	const calendarUrlInputRef = useRef<HTMLInputElement>(null);
 	useEffect(() => {
@@ -372,7 +384,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 	// ── ADD button disabled logic ──────────────────────────────────────────────
 	const isAddDisabled = useMemo(() => {
-		if (isSubmitting) return true;
+		if (isSubmitting || isColorPickerOpen) return true;
 		if (calendarType === CALENDAR_TYPE_ICS) {
 			return (
 				!calendarUrl.trim() ||
@@ -403,7 +415,8 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		caldavPassword,
 		caldavHost,
 		caldavFolderName,
-		isDuplicateCaldavFolderName
+		isDuplicateCaldavFolderName,
+		isColorPickerOpen
 	]);
 
 	return (
@@ -423,7 +436,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 				label={t('label.type', 'Type')}
 				items={calendarTypeItems}
 				defaultSelection={calendarTypeItems[0]}
-				disabled={isSubmitting}
+				disabled={isSubmitting || isColorPickerOpen}
 				showCheckbox={false}
 				onChange={(value): void => {
 					if (value) {
@@ -447,6 +460,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 					onCalendarUrlChange={setCalendarUrl}
 					onCalendarNameChange={setCalendarName}
 					onSelectedColorHexChange={setSelectedColorHex}
+					onColorPickerOpenChange={setIsColorPickerOpen}
 					calendarUrlInputRef={calendarUrlInputRef}
 				/>
 			) : (

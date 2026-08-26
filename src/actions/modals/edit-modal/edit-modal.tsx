@@ -74,12 +74,11 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 	}, [folderId]);
 
 	useEffect(() => {
+		// Escape while the color popover is open is handled by CalendarColorPicker itself
+		// (useCloseOnEscape stops the keydown before it reaches this listener at all).
 		const onKey = (e: KeyboardEvent): void => {
 			if (e.key === 'Escape') {
-				if (isColorPickerOpen) {
-					e.preventDefault();
-					setIsColorPickerOpen(false);
-				} else if (modal !== 'main') {
+				if (modal !== 'main') {
 					e.preventDefault();
 					onGoBack();
 				} else {
@@ -89,7 +88,7 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 		};
 		window.addEventListener('keydown', onKey, { capture: true });
 		return () => window.removeEventListener('keydown', onKey, { capture: true });
-	}, [modal, onClose, onGoBack, isColorPickerOpen]);
+	}, [modal, onClose, onGoBack]);
 
 	return (
 		<EditModalContext.Provider

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { Container, Input, Padding, Tooltip, useSnackbar } from '@zextras/carbonio-design-system';
 import { useFolder } from '@zextras/carbonio-ui-commons';
@@ -28,13 +28,21 @@ type EditCaldavChildCalendarModalProps = {
 
 export const EditCaldavChildCalendarModal = ({
 	folderId,
-	onClose
+	onClose: onCloseProp
 }: EditCaldavChildCalendarModalProps): JSX.Element => {
 	const [t] = useTranslation();
 	const folder = useFolder(folderId);
 	const createSnackbar = useSnackbar();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 	const [calendarName, setCalendarName] = useState(folder?.name ?? '');
+
+	const onClose = useCallback(() => {
+		if (isColorPickerOpen) {
+			return;
+		}
+		onCloseProp();
+	}, [onCloseProp, isColorPickerOpen]);
 	const defaultColorHex = useMemo(
 		() => resolveCalendarColorHex(folder?.color, folder?.rgb),
 		[folder?.color, folder?.rgb]
@@ -137,7 +145,7 @@ export const EditCaldavChildCalendarModal = ({
 							: undefined
 					}
 					value={calendarName}
-					disabled={isSubmitting}
+					disabled={isSubmitting || isColorPickerOpen}
 					onChange={(event): void => setCalendarName(event.target.value)}
 				/>
 			)}
@@ -145,13 +153,16 @@ export const EditCaldavChildCalendarModal = ({
 			<CalendarColorPicker
 				value={selectedColorHex}
 				onChange={setSelectedColorHex}
+				onOpenChange={setIsColorPickerOpen}
 				disabled={isSubmitting}
 			/>
 			<Padding top="medium" />
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('label.save_changes', 'Save Changes')}
-				disabled={!calendarName.trim() || isSubmitting || isDuplicateCalendarName}
+				disabled={
+					!calendarName.trim() || isSubmitting || isDuplicateCalendarName || isColorPickerOpen
+				}
 			/>
 		</Container>
 	);
