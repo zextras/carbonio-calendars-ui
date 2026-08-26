@@ -831,6 +831,16 @@ describe('AddExternalCalendarModal', () => {
 			).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
 		});
+		test('close button is a no-op while the color picker custom-color popover is open', async () => {
+			const onClose = vi.fn();
+			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
+
+			await user.click(screen.getByTestId('icon: PlusCircleOutline'));
+			expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
+
+			await user.click(screen.getByTestId('icon: CloseOutline'));
+			expect(onClose).not.toHaveBeenCalled();
+		});
 		test('clears url when switching from ICS to CalDAV and back', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
 			const typeSelect = screen.getByText('ICS');

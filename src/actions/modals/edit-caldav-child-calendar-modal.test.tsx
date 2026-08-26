@@ -88,6 +88,23 @@ describe('EditCaldavChildCalendarModal', () => {
 		await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
 	});
 
+	it('ignores the close button while the color picker custom-color popover is open', async () => {
+		const folder = buildFolder({ perm: 'rw' });
+		(useFolder as Mock).mockReturnValue(folder);
+		populateFoldersStore({ customFolders: [folder] });
+		const onClose = vi.fn();
+
+		const { user } = setupTest(
+			<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />
+		);
+
+		await user.click(screen.getByTestId('icon: PlusCircleOutline'));
+		expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
+
+		await user.click(screen.getByTestId('icon: CloseOutline'));
+		expect(onClose).not.toHaveBeenCalled();
+	});
+
 	it('submits both RENAME and COLOR actions when name and color change', async () => {
 		const folder = buildFolder({ perm: 'rw' });
 		(useFolder as Mock).mockReturnValue(folder);

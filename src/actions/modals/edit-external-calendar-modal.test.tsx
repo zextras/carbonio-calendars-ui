@@ -144,6 +144,20 @@ describe('EditExternalCalendarModal', () => {
 		});
 	});
 
+	test('close button is a no-op while the color picker custom-color popover is open', async () => {
+		setupFolders();
+		const onClose = vi.fn();
+		const { user } = setupTest(
+			<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={onClose} />
+		);
+
+		await user.click(screen.getByTestId('icon: PlusCircleOutline'));
+		expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
+
+		await user.click(screen.getByTestId('icon: CloseOutline'));
+		expect(onClose).not.toHaveBeenCalled();
+	});
+
 	test('closes immediately without submitting when no values changed', async () => {
 		setupFolders({ color: undefined, rgb: '#5AC8FA' });
 		const onClose = vi.fn();
