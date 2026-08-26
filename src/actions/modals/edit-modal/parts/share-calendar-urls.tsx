@@ -16,9 +16,13 @@ import { getCarbonioDomain } from '../../../../utils/domain';
 
 type ShareCalendarUrlsProps = {
 	calendarName: string;
+	disabled?: boolean;
 };
 
-export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }): ReactElement => {
+export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({
+	calendarName,
+	disabled
+}): ReactElement => {
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 	const accounts = useUserAccounts();
@@ -60,6 +64,7 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 						size="small"
 						type="outlined"
 						onClick={createLinkClickHandler(icsLinkLabel, CALENDARS_SHARE_LINK_TYPES.ics)}
+						disabled={disabled}
 					/>
 				</Tooltip>
 
@@ -70,6 +75,7 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 						size="small"
 						type="outlined"
 						onClick={createLinkClickHandler(webcalLinkLabel, CALENDARS_SHARE_LINK_TYPES.webcal)}
+						disabled={disabled}
 					/>
 				</Tooltip>
 
@@ -80,6 +86,7 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 						size="small"
 						type="outlined"
 						onClick={createLinkClickHandler(caldavLinkLabel, CALENDARS_SHARE_LINK_TYPES.caldav)}
+						disabled={disabled}
 					/>
 				</Tooltip>
 			</Container>

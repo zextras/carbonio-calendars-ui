@@ -46,6 +46,7 @@ export const getShareCalendarRoleOptions = ({
 export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 	const [activeGrant, setActiveGrant] = useState({});
 	const [modal, setModal] = useState('main');
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 	const [t] = useTranslation();
 	const folder = useFolder(folderId);
 	const grant = folder?.acl?.grant;
@@ -75,7 +76,10 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent): void => {
 			if (e.key === 'Escape') {
-				if (modal !== 'main') {
+				if (isColorPickerOpen) {
+					e.preventDefault();
+					setIsColorPickerOpen(false);
+				} else if (modal !== 'main') {
 					e.preventDefault();
 					onGoBack();
 				} else {
@@ -85,10 +89,19 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 		};
 		window.addEventListener('keydown', onKey, { capture: true });
 		return () => window.removeEventListener('keydown', onKey, { capture: true });
-	}, [modal, onClose, onGoBack]);
+	}, [modal, onClose, onGoBack, isColorPickerOpen]);
 
 	return (
-		<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
+		<EditModalContext.Provider
+			value={{
+				setModal,
+				onClose,
+				roleOptions,
+				setActiveGrant,
+				isColorPickerOpen,
+				setIsColorPickerOpen
+			}}
+		>
 			{modal === 'main' && folder && (
 				<MainEditModal folder={folder} totalAppointments={folder?.n ?? 0} grant={grant ?? []} />
 			)}

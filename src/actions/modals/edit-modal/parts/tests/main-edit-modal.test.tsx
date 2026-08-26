@@ -25,7 +25,9 @@ const MainEditModalTestWrapper = (props: MainEditModalProps): React.JSX.Element 
 		setModal: vi.fn(),
 		onClose: vi.fn(),
 		roleOptions: [],
-		setActiveGrant: vi.fn()
+		setActiveGrant: vi.fn(),
+		isColorPickerOpen: false,
+		setIsColorPickerOpen: vi.fn()
 	} satisfies EditModalContextType;
 
 	return (
@@ -204,7 +206,9 @@ describe('MainEditModal', () => {
 				setModal,
 				onClose: vi.fn(),
 				roleOptions: [],
-				setActiveGrant: vi.fn()
+				setActiveGrant: vi.fn(),
+				isColorPickerOpen: false,
+				setIsColorPickerOpen: vi.fn()
 			} satisfies EditModalContextType;
 
 			const { user } = setupTest(

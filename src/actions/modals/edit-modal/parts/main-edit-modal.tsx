@@ -7,7 +7,6 @@ import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 're
 
 import styled from '@emotion/styled';
 import {
-	AnyColor,
 	Button,
 	Checkbox,
 	Container,
@@ -18,10 +17,8 @@ import {
 	ModalFooter,
 	ModalHeader,
 	Padding,
+	Popover,
 	Row,
-	Select,
-	SelectItem,
-	SingleSelectionOnChange,
 	Text,
 	Tooltip,
 	useSnackbar
@@ -35,7 +32,8 @@ import {
 	Grant,
 	hasId
 } from '@zextras/carbonio-ui-commons';
-import { compact, find, includes, map } from 'lodash';
+import { compact, includes, map } from 'lodash';
+import { HexColorPicker } from 'react-colorful';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
@@ -45,25 +43,12 @@ import { isCaldavChild } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from 'constants/index';
+import { usePreventBackdropClose } from 'hooks/use-prevent-backdrop-close';
 import { folderAction } from 'store/actions/calendar-actions';
 import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
 import { useAppDispatch } from 'store/redux/hooks';
 import { FolderAction } from 'types/soap/soap-actions';
 import { containPublicShareGrant } from 'utils/calendars-share';
-
-const Square = styled.div<{ $color: AnyColor }>`
-	width: 1.125rem;
-	height: 1.125rem;
-	position: relative;
-	top: -0.1875rem;
-	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-	background: ${({ $color }): string => $color};
-	border-radius: 0.25rem;
-`;
-
-const ColorContainer = styled(Container)`
-	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-`;
 
 const StyledContainer = styled(Container)`
 	min-width: 0;
@@ -71,82 +56,67 @@ const StyledContainer = styled(Container)`
 	flex-grow: 1;
 `;
 
-const TextUpperCase = styled(Text)`
-	text-transform: capitalize;
+const selectedRing = (color: string, theme: { palette: { gray6: { regular: string } } }): string =>
+	`0 0 0 0.125rem ${theme.palette.gray6.regular}, 0 0 0 0.1875rem ${color}`;
+
+const HOVER_SHADOW = '0 0.125rem 0.375rem rgba(0, 0, 0, 0.25)';
+
+const ColorDot = styled.button<{ $color: string; $selected: boolean }>`
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 50%;
+	border: none;
+	background: ${({ $color }): string => $color};
+	cursor: pointer;
+	padding: 0;
+	box-shadow: ${({ $selected, $color, theme }): string =>
+		$selected ? selectedRing($color, theme) : 'none'};
+
+	&:hover {
+		box-shadow: ${({ $selected, $color, theme }): string =>
+			$selected ? `${selectedRing($color, theme)}, ${HOVER_SHADOW}` : HOVER_SHADOW};
+	}
 `;
 
-type LabelFactoryProps = {
-	selected: Array<SelectItem>;
-	label: string | undefined;
-	open: boolean;
-	focus: boolean;
+const CustomColorTriggerButton = styled.button`
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 50%;
+	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
+	background: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	padding: 0;
+`;
+
+const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
+	const normalized =
+		hex.length === 4 ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` : hex;
+	return {
+		r: parseInt(normalized.slice(1, 3), 16),
+		g: parseInt(normalized.slice(3, 5), 16),
+		b: parseInt(normalized.slice(5, 7), 16)
+	};
 };
 
-const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) => {
-	const colorName = useMemo(() => selected?.[0]?.label, [selected]);
-	const squareColor = useMemo(
-		() =>
-			(colorName === 'custom'
-				? selected?.[0]?.value
-				: CALENDARS_STANDARD_COLORS[parseInt(selected[0].value, 10)]?.color) || '',
-		[colorName, selected]
-	) as string;
+const colorDistance = (hexA: string, hexB: string): number => {
+	const a = hexToRgb(hexA);
+	const b = hexToRgb(hexB);
+	return Math.sqrt((a.r - b.r) ** 2 + (a.g - b.g) ** 2 + (a.b - b.b) ** 2);
+};
 
-	return (
-		<ColorContainer
-			orientation="horizontal"
-			width="fill"
-			crossAlignment="center"
-			mainAlignment="space-between"
-			borderRadius="half"
-			background={'gray5'}
-			padding={{
-				all: 'small'
-			}}
-		>
-			<Row width="100%" takeAvailableSpace mainAlignment="space-between">
-				<Row
-					orientation="vertical"
-					crossAlignment="flex-start"
-					mainAlignment="flex-start"
-					padding={{ left: 'small' }}
-				>
-					<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
-						{label}
-					</Text>
-					<TextUpperCase>{colorName}</TextUpperCase>
-				</Row>
-				<Padding right="small">
-					<Square $color={squareColor ?? '0'} />
-				</Padding>
-			</Row>
-			<Icon
-				size="large"
-				icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
-				color={open || focus ? 'primary' : 'secondary'}
-				style={{ alignSelf: 'center' }}
-			/>
-		</ColorContainer>
+// Max possible RGB euclidean distance is ~441.7 (sqrt(255^2 * 3)); this keeps only near-identical shades.
+const SIMILAR_COLOR_THRESHOLD = 48;
+
+const findMatchingStandardColorIndex = (hex: string): number | undefined => {
+	const index = CALENDARS_STANDARD_COLORS.findIndex(
+		(standardColor) => colorDistance(standardColor.color, hex) <= SIMILAR_COLOR_THRESHOLD
 	);
-};
-
-const useGetStatusItems = (): Array<SelectItem> => {
-	const [t] = useTranslation();
-	return CALENDARS_STANDARD_COLORS.map((el, index) => {
-		const colorLabel = t(`colors.${el.label}`);
-		return {
-			label: colorLabel,
-			value: index.toString(),
-			customComponent: (
-				<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
-					<Padding left="small">
-						<TextUpperCase>{colorLabel}</TextUpperCase>
-					</Padding>
-					<Square $color={el.color} />
-				</Container>
-			)
-		};
-	});
+	return index === -1 ? undefined : index;
 };
 
 export type MainEditModalProps = {
@@ -163,18 +133,13 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const userSettings = useUserSettings();
 	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
-	const { setModal, onClose, setActiveGrant } = useEditModalContext();
-
-	const colors = useGetStatusItems();
+	const { setModal, onClose, setActiveGrant, isColorPickerOpen, setIsColorPickerOpen } =
+		useEditModalContext();
 
 	const defaultFreeBusy = /b/.test(folder.f ?? '');
 	const defaultFolderName = folder.name || '';
 
-	const defaultColor = useMemo(
-		() =>
-			find(colors, (color) => color.value === folder.color?.toString()) ?? { label: '', value: '' },
-		[colors, folder.color]
-	);
+	const defaultColorIndex = folder.color ?? 0;
 
 	const defaultSharedWithPublic = useMemo(() => containPublicShareGrant(grant), [grant]);
 	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
@@ -225,29 +190,89 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		[folderName, folder, showDupWarning]
 	);
 
-	const [selectedColor, setSelectedColor] = useState<SelectItem>(defaultColor);
-
-	const onSelectedColorChange = useCallback<SingleSelectionOnChange>(
-		(newColor) => {
-			if (newColor) {
-				const newResult = find(colors, (color) => color.value === newColor);
-				if (newResult) {
-					setSelectedColor(newResult);
-				}
-			}
-		},
-		[colors]
+	const defaultCustomHex = useMemo(
+		() =>
+			folder.rgb ??
+			CALENDARS_STANDARD_COLORS[defaultColorIndex]?.color ??
+			CALENDARS_STANDARD_COLORS[0].color,
+		[folder.rgb, defaultColorIndex]
 	);
+	const defaultIsCustomColorSelected = Boolean(folder.rgb);
+
+	const [selectedColorIndex, setSelectedColorIndex] = useState(defaultColorIndex);
+	const [isCustomColorSelected, setIsCustomColorSelected] = useState(defaultIsCustomColorSelected);
+	const [hasCustomColor, setHasCustomColor] = useState(defaultIsCustomColorSelected);
+	const [customHex, setCustomHex] = useState(defaultCustomHex);
+
+	const colorSwatchRef = useRef<HTMLButtonElement>(null);
+	const popoverContentRef = useRef<HTMLDivElement>(null);
+	const [draftHex, setDraftHex] = useState(customHex);
+	const [hexInputValue, setHexInputValue] = useState(customHex);
+
+	usePreventBackdropClose(isColorPickerOpen, popoverContentRef);
+
+	useEffect(() => {
+		if (isColorPickerOpen) {
+			setDraftHex(customHex);
+			setHexInputValue(customHex);
+		}
+	}, [isColorPickerOpen, customHex]);
+
+	const onSelectStandardColor = useCallback((index: number) => {
+		setSelectedColorIndex(index);
+		setIsCustomColorSelected(false);
+	}, []);
+
+	const onDraftColorChange = useCallback((hex: string) => {
+		setDraftHex(hex);
+		setHexInputValue(hex);
+	}, []);
+
+	const onHexInputChange = useCallback((value: string) => {
+		setHexInputValue(value);
+		if (HEX_COLOR_REGEX.test(value)) {
+			setDraftHex(value);
+		}
+	}, []);
+
+	const onSaveCustomColor = useCallback(() => {
+		const matchingStandardIndex = findMatchingStandardColorIndex(draftHex);
+		if (matchingStandardIndex !== undefined) {
+			setSelectedColorIndex(matchingStandardIndex);
+			setIsCustomColorSelected(false);
+		} else {
+			setCustomHex(draftHex);
+			setIsCustomColorSelected(true);
+			setHasCustomColor(true);
+		}
+		setIsColorPickerOpen(false);
+	}, [draftHex, setIsColorPickerOpen]);
+
+	const onSelectExistingCustomColor = useCallback(() => {
+		setIsCustomColorSelected(true);
+	}, []);
+
+	const onCancelCustomColor = useCallback(() => {
+		setIsColorPickerOpen(false);
+	}, [setIsColorPickerOpen]);
 
 	const onConfirm = useCallback(() => {
 		const actionRename =
 			folderName?.length && folderName !== defaultFolderName
 				? { op: FOLDER_OPERATIONS.RENAME, name: folderName, id: folder.id }
 				: undefined;
-		const actionColor =
-			selectedColor && selectedColor?.value !== defaultColor?.value
-				? { op: FOLDER_OPERATIONS.COLOR, color: selectedColor.value, id: folder.id }
-				: undefined;
+		const originalColorKey = defaultIsCustomColorSelected
+			? `custom:${defaultCustomHex}`
+			: `standard:${defaultColorIndex}`;
+		const currentColorKey = isCustomColorSelected
+			? `custom:${customHex}`
+			: `standard:${selectedColorIndex}`;
+		let actionColor: FolderAction | undefined;
+		if (originalColorKey !== currentColorKey) {
+			actionColor = isCustomColorSelected
+				? { op: FOLDER_OPERATIONS.COLOR, rgb: customHex, id: folder.id }
+				: { op: FOLDER_OPERATIONS.COLOR, color: selectedColorIndex.toString(), id: folder.id };
+		}
 		const actionFreeBusy =
 			freeBusy !== defaultFreeBusy
 				? {
@@ -298,8 +323,12 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		folderName,
 		defaultFolderName,
 		folder.id,
-		selectedColor,
-		defaultColor?.value,
+		selectedColorIndex,
+		defaultColorIndex,
+		isCustomColorSelected,
+		defaultIsCustomColorSelected,
+		customHex,
+		defaultCustomHex,
 		freeBusy,
 		defaultFreeBusy,
 		isSharedWithPublic,
@@ -312,6 +341,10 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const onShare = useCallback(() => {
 		if (setModal) setModal('share');
 	}, [setModal]);
+
+	const onCloseModal = useCallback(() => {
+		if (!isColorPickerOpen) onClose();
+	}, [isColorPickerOpen, onClose]);
 
 	const onRevoke = useCallback(
 		(item: Grant) => {
@@ -439,7 +472,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	return (
 		<Container data-testid="MainEditModal" style={{ overflowY: 'auto' }}>
-			<ModalHeader onClose={onClose} title={title} showCloseIcon />
+			<ModalHeader onClose={onCloseModal} title={title} showCloseIcon />
 			<Divider />
 			<ModalBody>
 				<Container
@@ -477,22 +510,106 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					<Container
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
-						orientation="horizontal"
+						orientation="vertical"
 						height="fit"
+						gap="0.5rem"
 					>
-						<Select
-							label={t('label.calendar_color', 'Calendar color')}
-							onChange={onSelectedColorChange}
-							items={colors}
-							defaultSelection={selectedColor}
-							LabelFactory={LabelFactory}
-						/>
+						<Container
+							mainAlignment="flex-start"
+							crossAlignment="center"
+							orientation="horizontal"
+							height="fit"
+							gap="1rem"
+							wrap="wrap"
+						>
+							{CALENDARS_STANDARD_COLORS.map((standardColor, index) => (
+								<Tooltip key={standardColor.label} label={t(`colors.${standardColor.label}`)}>
+									<ColorDot
+										type="button"
+										aria-label={t(`colors.${standardColor.label}`)}
+										aria-pressed={!isCustomColorSelected && selectedColorIndex === index}
+										$color={standardColor.color}
+										$selected={!isCustomColorSelected && selectedColorIndex === index}
+										onClick={(): void => onSelectStandardColor(index)}
+									/>
+								</Tooltip>
+							))}
+							{hasCustomColor && (
+								<Tooltip label={t('label.custom_color', 'Custom color')}>
+									<ColorDot
+										type="button"
+										aria-label={t('label.custom_color', 'Custom color')}
+										aria-pressed={isCustomColorSelected}
+										$color={customHex}
+										$selected={isCustomColorSelected}
+										onClick={onSelectExistingCustomColor}
+									/>
+								</Tooltip>
+							)}
+							<CustomColorTriggerButton
+								ref={colorSwatchRef}
+								type="button"
+								onClick={(): void => setIsColorPickerOpen(!isColorPickerOpen)}
+							>
+								<Icon icon="PlusCircleOutline" size="small" color="primary" />
+							</CustomColorTriggerButton>
+							<Popover
+								disablePortal
+								anchorEl={colorSwatchRef}
+								open={isColorPickerOpen}
+								onClose={onCancelCustomColor}
+								placement="bottom-start"
+								style={{ zIndex: 1001 }}
+							>
+								<Container
+									ref={popoverContentRef}
+									padding="0.75rem"
+									gap="0.75rem"
+									width="fit"
+									height="fit"
+								>
+									<HexColorPicker color={draftHex} onChange={onDraftColorChange} />
+									<Input
+										label={t('label.hex_color', 'Hex color')}
+										value={hexInputValue}
+										onChange={(e): void => onHexInputChange(e.target.value)}
+									/>
+									<Container
+										orientation="horizontal"
+										mainAlignment="flex-end"
+										crossAlignment="flex-end"
+										height="fit"
+										width="fill"
+										gap="0.5rem"
+									>
+										<Button
+											type="outlined"
+											color="secondary"
+											label={t('label.cancel', 'Cancel')}
+											onClick={onCancelCustomColor}
+										/>
+										<Button
+											color="primary"
+											label={t('label.save', 'Save')}
+											onClick={onSaveCustomColor}
+										/>
+									</Container>
+								</Container>
+							</Popover>
+						</Container>
+						<Text size="small" color="secondary">
+							{t(
+								'label.choose_color_caption',
+								'Choose a color to make this calendar easier to recognize'
+							)}
+						</Text>
 					</Container>
 
 					<Checkbox
 						value={freeBusy}
 						defaultChecked={defaultFreeBusy}
 						onClick={toggleFreeBusy}
+						disabled={isColorPickerOpen}
 						label={t(
 							'label.exclude_free_busy',
 							'Exclude this calendar when reporting the free/busy times'
@@ -523,6 +640,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									icon="Plus"
 									onClick={onShare}
 									size="small"
+									disabled={isColorPickerOpen}
 								/>
 							</Container>
 
@@ -549,6 +667,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 															onEdit(item);
 														}}
 														size="small"
+														disabled={isColorPickerOpen}
 													/>
 												</Tooltip>
 												<Padding horizontal="extrasmall" />
@@ -561,6 +680,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 															onRevoke(item);
 														}}
 														size="small"
+														disabled={isColorPickerOpen}
 													/>
 												</Tooltip>
 												<Padding horizontal="extrasmall" />
@@ -576,6 +696,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 															onResend(item);
 														}}
 														size="small"
+														disabled={isColorPickerOpen}
 													/>
 												</Tooltip>
 											</Container>
@@ -605,13 +726,16 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									hasUserToggledPublicRef.current = true;
 									setIsSharedWithPublic((prev) => !prev);
 								}}
+								disabled={isColorPickerOpen}
 								label={t(
 									'share.options.share_calendar_with.public',
 									'Share with public (view only, no password required)'
 								)}
 							/>
 
-							{isSharedWithPublic && <ShareCalendarUrls calendarName={folder.name} />}
+							{isSharedWithPublic && (
+								<ShareCalendarUrls calendarName={folder.name} disabled={isColorPickerOpen} />
+							)}
 						</Container>
 					)}
 				</Container>
@@ -620,7 +744,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			<ModalFooter
 				onConfirm={onConfirm}
 				confirmLabel={t('label.ok', 'OK')}
-				confirmDisabled={disabled}
+				confirmDisabled={disabled || isColorPickerOpen}
 			/>
 		</Container>
 	);

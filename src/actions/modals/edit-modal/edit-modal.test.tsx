@@ -12,7 +12,6 @@ import { http, HttpResponse } from 'msw';
 
 import { EditModal } from './edit-modal';
 import { FOLDER_OPERATIONS } from '../../../constants/api';
-import { TEST_SELECTORS } from '../../../constants/test-utils';
 import * as BatchAction from '../../../soap/batch-request';
 import * as FolderAction from '../../../soap/folder-action-request';
 import * as SendShare from '../../../store/actions/send-share-calendar-notification';
@@ -237,7 +236,7 @@ describe('the edit calendar modal is composed by', () => {
 			expect(screen.getByText(folder.n)).toBeVisible();
 		});
 		describe('a color selector', () => {
-			test('has the label "Calendar color"', async () => {
+			test('has a caption explaining the color picker', async () => {
 				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
@@ -247,7 +246,9 @@ describe('the edit calendar modal is composed by', () => {
 					store
 				});
 
-				expect(screen.getByText(/calendar color/i)).toBeVisible();
+				expect(
+					screen.getByText(/choose a color to make this calendar easier to recognize/i)
+				).toBeVisible();
 			});
 			test('it is pre-filled with the calendar color', async () => {
 				const closeFn = vi.fn();
@@ -259,7 +260,10 @@ describe('the edit calendar modal is composed by', () => {
 					store
 				});
 
-				expect(screen.getByText(/green/i)).toBeVisible();
+				expect(screen.getByRole('button', { name: /green/i })).toHaveAttribute(
+					'aria-pressed',
+					'true'
+				);
 			});
 		});
 		describe('a section to exclude the calendar from the free busy times, composed by', () => {
@@ -550,8 +554,7 @@ describe('the edit calendar modal is composed by', () => {
 						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 							store
 						});
-						await user.click(screen.getByText(/black/i));
-						await user.click(within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i));
+						await user.click(screen.getByRole('button', { name: /red/i }));
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).toHaveBeenCalledTimes(1);
@@ -572,10 +575,7 @@ describe('the edit calendar modal is composed by', () => {
 							store
 						});
 
-						await user.click(screen.getByText(/black/i));
-						await user.click(
-							within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/black/i)
-						);
+						await user.click(screen.getByRole('button', { name: /black/i }));
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).not.toHaveBeenCalled();
@@ -642,8 +642,7 @@ describe('the edit calendar modal is composed by', () => {
 					await user.clear(title);
 					await user.pasteInto(title, newCalendarName);
 
-					await user.click(screen.getByText(/black/i));
-					await user.click(within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/red/i));
+					await user.click(screen.getByRole('button', { name: /red/i }));
 
 					await user.click(screen.getAllByTestId('icon: Square')[0]);
 					await user.click(screen.getByText('OK'));
