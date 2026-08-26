@@ -326,6 +326,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					setFolderName(e.target.value);
 				}}
 				inputRef={calendarNameInputRef}
+				disabled={isColorPickerOpen}
 			/>
 		);
 	}
