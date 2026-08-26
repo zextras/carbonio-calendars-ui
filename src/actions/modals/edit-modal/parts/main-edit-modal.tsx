@@ -57,7 +57,7 @@ const StyledContainer = styled(Container)`
 `;
 
 const selectedRing = (color: string, theme: { palette: { gray6: { regular: string } } }): string =>
-	`0 0 0 0.125rem ${theme.palette.gray6.regular}, 0 0 0 0.1875rem ${color}`;
+	`0 0 0 0.125rem ${theme.palette.gray6.regular}, 0 0 0 0.25rem ${color}`;
 
 const HOVER_SHADOW = '0 0.125rem 0.375rem rgba(0, 0, 0, 0.25)';
 
@@ -76,13 +76,23 @@ const ColorDot = styled.button<{ $color: string; $selected: boolean }>`
 		box-shadow: ${({ $selected, $color, theme }): string =>
 			$selected ? `${selectedRing($color, theme)}, ${HOVER_SHADOW}` : HOVER_SHADOW};
 	}
+
+	&:disabled {
+		cursor: default;
+		opacity: 0.5;
+
+		&:hover {
+			box-shadow: ${({ $selected, $color, theme }): string =>
+				$selected ? selectedRing($color, theme) : 'none'};
+		}
+	}
 `;
 
 const CustomColorTriggerButton = styled.button`
 	width: 1.5rem;
 	height: 1.5rem;
 	border-radius: 50%;
-	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
+	border: none;
 	background: transparent;
 	display: flex;
 	align-items: center;
@@ -93,28 +103,15 @@ const CustomColorTriggerButton = styled.button`
 
 const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
-const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
-	const normalized =
-		hex.length === 4 ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` : hex;
-	return {
-		r: parseInt(normalized.slice(1, 3), 16),
-		g: parseInt(normalized.slice(3, 5), 16),
-		b: parseInt(normalized.slice(5, 7), 16)
-	};
-};
-
-const colorDistance = (hexA: string, hexB: string): number => {
-	const a = hexToRgb(hexA);
-	const b = hexToRgb(hexB);
-	return Math.sqrt((a.r - b.r) ** 2 + (a.g - b.g) ** 2 + (a.b - b.b) ** 2);
-};
-
-// Max possible RGB euclidean distance is ~441.7 (sqrt(255^2 * 3)); this keeps only near-identical shades.
-const SIMILAR_COLOR_THRESHOLD = 48;
-
-const findMatchingStandardColorIndex = (hex: string): number | undefined => {
+// Saving always writes `rgb` (see onConfirm below), even for a standard color, so on load an
+// exact rgb match against a standard hex means "this is actually a standard color", not custom —
+// same resolution used by edit-external-calendar-modal.tsx for the same reason.
+const findExactStandardColorIndex = (rgb: string | undefined): number | undefined => {
+	if (!rgb) {
+		return undefined;
+	}
 	const index = CALENDARS_STANDARD_COLORS.findIndex(
-		(standardColor) => colorDistance(standardColor.color, hex) <= SIMILAR_COLOR_THRESHOLD
+		(standardColor) => standardColor.color.toLowerCase() === rgb.toLowerCase()
 	);
 	return index === -1 ? undefined : index;
 };
@@ -139,7 +136,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const defaultFreeBusy = /b/.test(folder.f ?? '');
 	const defaultFolderName = folder.name || '';
 
-	const defaultColorIndex = folder.color ?? 0;
+	const matchingStandardIndexFromRgb = findExactStandardColorIndex(folder.rgb);
+	const defaultColorIndex = matchingStandardIndexFromRgb ?? folder.color ?? 0;
 
 	const defaultSharedWithPublic = useMemo(() => containPublicShareGrant(grant), [grant]);
 	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
@@ -197,7 +195,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			CALENDARS_STANDARD_COLORS[0].color,
 		[folder.rgb, defaultColorIndex]
 	);
-	const defaultIsCustomColorSelected = Boolean(folder.rgb);
+	const defaultIsCustomColorSelected =
+		Boolean(folder.rgb) && matchingStandardIndexFromRgb === undefined;
 
 	const [selectedColorIndex, setSelectedColorIndex] = useState(defaultColorIndex);
 	const [isCustomColorSelected, setIsCustomColorSelected] = useState(defaultIsCustomColorSelected);
@@ -236,9 +235,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	}, []);
 
 	const onSaveCustomColor = useCallback(() => {
-		const matchingStandardIndex = findMatchingStandardColorIndex(draftHex);
-		if (matchingStandardIndex !== undefined) {
-			setSelectedColorIndex(matchingStandardIndex);
+		const exactStandardIndex = findExactStandardColorIndex(draftHex);
+		if (exactStandardIndex !== undefined) {
+			setSelectedColorIndex(exactStandardIndex);
 			setIsCustomColorSelected(false);
 		} else {
 			setCustomHex(draftHex);
@@ -269,9 +268,14 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			: `standard:${selectedColorIndex}`;
 		let actionColor: FolderAction | undefined;
 		if (originalColorKey !== currentColorKey) {
-			actionColor = isCustomColorSelected
-				? { op: FOLDER_OPERATIONS.COLOR, rgb: customHex, id: folder.id }
-				: { op: FOLDER_OPERATIONS.COLOR, color: selectedColorIndex.toString(), id: folder.id };
+			// Always send `rgb` (never the numeric `color`), matching the other calendar
+			// color modals: a partial update that only sets `color` doesn't clear a
+			// previously-set `rgb`, so the calendar would stay stuck on the old custom color.
+			const resultingHex = isCustomColorSelected
+				? customHex
+				: (CALENDARS_STANDARD_COLORS[selectedColorIndex]?.color ??
+					CALENDARS_STANDARD_COLORS[0].color);
+			actionColor = { op: FOLDER_OPERATIONS.COLOR, rgb: resultingHex, id: folder.id };
 		}
 		const actionFreeBusy =
 			freeBusy !== defaultFreeBusy
@@ -521,6 +525,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 							height="fit"
 							gap="1rem"
 							wrap="wrap"
+							padding={{ horizontal: '0.25rem' }}
 						>
 							{CALENDARS_STANDARD_COLORS.map((standardColor, index) => (
 								<Tooltip key={standardColor.label} label={t(`colors.${standardColor.label}`)}>
@@ -531,6 +536,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 										$color={standardColor.color}
 										$selected={!isCustomColorSelected && selectedColorIndex === index}
 										onClick={(): void => onSelectStandardColor(index)}
+										disabled={isColorPickerOpen}
 									/>
 								</Tooltip>
 							))}
@@ -543,6 +549,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 										$color={customHex}
 										$selected={isCustomColorSelected}
 										onClick={onSelectExistingCustomColor}
+										disabled={isColorPickerOpen}
 									/>
 								</Tooltip>
 							)}
@@ -551,7 +558,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 								type="button"
 								onClick={(): void => setIsColorPickerOpen(!isColorPickerOpen)}
 							>
-								<Icon icon="PlusCircleOutline" size="small" color="primary" />
+								<Icon icon="PlusCircleOutline" size="large" color="primary" />
 							</CustomColorTriggerButton>
 							<Popover
 								disablePortal

@@ -559,7 +559,7 @@ describe('the edit calendar modal is composed by', () => {
 
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
-							color: '5',
+							rgb: '#FF3B30',
 							id: folder.id,
 							op: FOLDER_OPERATIONS.COLOR
 						});
