@@ -9,18 +9,18 @@ import { RequestFolder } from 'types/soap/createFolder';
 type CreateCalendarRequest = {
 	name: string;
 	parent: '1';
-	color: number;
+	rgb: string;
 	excludeFreeBusy: boolean;
 };
 
 export const createCalendar = async ({
 	name,
 	parent,
-	color,
+	rgb,
 	excludeFreeBusy
 }: CreateCalendarRequest): Promise<any> => {
 	const reqActionParams: RequestFolder = {
-		color,
+		rgb,
 		f: excludeFreeBusy ? 'b#' : '#',
 		l: parent,
 		name,

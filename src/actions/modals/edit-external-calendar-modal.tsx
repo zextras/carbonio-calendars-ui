@@ -10,7 +10,6 @@ import {
 	Container,
 	Input,
 	Padding,
-	Select,
 	Text,
 	Tooltip,
 	useSnackbar
@@ -20,31 +19,14 @@ import { compact, includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
-import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
+import { CalendarColorPicker, resolveCalendarColorHex } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
 import { FOLDER_OPERATIONS } from 'constants/api';
-import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { folderAction } from 'store/actions/calendar-actions';
 
 type EditExternalCalendarModalProps = {
 	folderId: string;
 	onClose: () => void;
-};
-
-// Derive a CALENDARS_STANDARD_COLORS index string from a folder that may carry
-// only an `rgb` hex string (as external ICS calendars do) rather than a numeric
-// `color` index.
-const resolveColorIndex = (color: number | undefined, rgb: string | undefined): string => {
-	if (color !== undefined) {
-		return color.toString();
-	}
-	if (rgb) {
-		const idx = CALENDARS_STANDARD_COLORS.findIndex(
-			(c) => c.color.toLowerCase() === rgb.toLowerCase()
-		);
-		if (idx !== -1) return idx.toString();
-	}
-	return '0';
 };
 
 export const EditExternalCalendarModal = ({
@@ -59,9 +41,11 @@ export const EditExternalCalendarModal = ({
 	const [calendarName, setCalendarName] = useState(folder?.name ?? '');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	// Initialize from rgb when color index is absent (typical for ICS-from-URL calendars).
-	const originalColorIndex = useMemo(() => resolveColorIndex(folder?.color, folder?.rgb), [folder]);
-	const [selectedColor, setSelectedColor] = useState(originalColorIndex);
+	const defaultColorHex = useMemo(
+		() => resolveCalendarColorHex(folder?.color, folder?.rgb),
+		[folder?.color, folder?.rgb]
+	);
+	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
 	const genericErrorLabel = t('label.error_try_again', 'Something went wrong, please try again');
 
 	const appointmentFolderNames = useMemo(
@@ -76,17 +60,6 @@ export const EditExternalCalendarModal = ({
 		() =>
 			isSubmitting ? false : includes(appointmentFolderNames, calendarName.trim().toLowerCase()),
 		[appointmentFolderNames, calendarName, isSubmitting]
-	);
-
-	const colorItems = useMemo(
-		() => buildCalendarColorItems((colorLabel) => t(`colors.${colorLabel}`)),
-		[t]
-	);
-
-	const selectedRgb = useMemo(
-		() =>
-			CALENDARS_STANDARD_COLORS[Number(selectedColor)]?.color ?? CALENDARS_STANDARD_COLORS[0].color,
-		[selectedColor]
 	);
 
 	const onCopyUrl = useCallback((): void => {
@@ -126,8 +99,7 @@ export const EditExternalCalendarModal = ({
 		}
 
 		const hasNameChanged = calendarName.trim() !== folder.name;
-		// Compare against the derived original index so rgb-only folders detect changes correctly.
-		const hasColorChanged = selectedColor !== originalColorIndex;
+		const hasColorChanged = selectedColorHex !== defaultColorHex;
 
 		function successSnackbar(): void {
 			createSnackbar({
@@ -152,7 +124,9 @@ export const EditExternalCalendarModal = ({
 			hasNameChanged
 				? { op: FOLDER_OPERATIONS.RENAME, name: calendarName.trim(), id: folderId }
 				: undefined,
-			hasColorChanged ? { op: FOLDER_OPERATIONS.COLOR, rgb: selectedRgb, id: folderId } : undefined
+			hasColorChanged
+				? { op: FOLDER_OPERATIONS.COLOR, rgb: selectedColorHex, id: folderId }
+				: undefined
 		]);
 
 		if (actions.length > 0) {
@@ -190,14 +164,13 @@ export const EditExternalCalendarModal = ({
 		isSubmitting,
 		folder,
 		calendarName,
-		selectedColor,
-		originalColorIndex,
+		selectedColorHex,
+		defaultColorHex,
 		genericErrorLabel,
 		folderId,
 		onClose,
 		createSnackbar,
-		t,
-		selectedRgb
+		t
 	]);
 
 	if (!folder) {
@@ -256,17 +229,10 @@ export const EditExternalCalendarModal = ({
 				onChange={(event): void => setCalendarName(event.target.value)}
 			/>
 			<Padding top="medium" />
-			<Select
-				label={t('label.select_color', 'Select color')}
-				items={colorItems}
-				defaultSelection={colorItems[Number(originalColorIndex)]}
-				LabelFactory={CalendarColorLabelFactory}
+			<CalendarColorPicker
+				value={selectedColorHex}
+				onChange={setSelectedColorHex}
 				disabled={isSubmitting}
-				onChange={(value): void => {
-					if (value) {
-						setSelectedColor(value);
-					}
-				}}
 			/>
 			<Padding top="medium" />
 			<ModalFooter

@@ -5,10 +5,10 @@
  */
 import React, { RefObject } from 'react';
 
-import { Input, Padding, Select } from '@zextras/carbonio-design-system';
+import { Input, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import { CalendarColorLabelFactory, buildCalendarColorItems } from 'commons/calendar-color-picker';
+import { CalendarColorPicker } from 'commons/calendar-color-picker';
 
 type AddExternalCalendarModalIcsFlowProps = {
 	calendarUrl: string;
@@ -18,11 +18,10 @@ type AddExternalCalendarModalIcsFlowProps = {
 	isSubmitting: boolean;
 	calendarName: string;
 	isDuplicateCalendarName: boolean;
-	selectedColor: string;
-	colorItems: ReturnType<typeof buildCalendarColorItems>;
+	selectedColorHex: string;
 	onCalendarUrlChange: (value: string) => void;
 	onCalendarNameChange: (value: string) => void;
-	onSelectedColorChange: (value: string) => void;
+	onSelectedColorHexChange: (value: string) => void;
 	calendarUrlInputRef?: RefObject<HTMLInputElement>;
 };
 
@@ -34,11 +33,10 @@ export const AddExternalCalendarModalIcsFlow = ({
 	isSubmitting,
 	calendarName,
 	isDuplicateCalendarName,
-	selectedColor,
-	colorItems,
+	selectedColorHex,
 	onCalendarUrlChange,
 	onCalendarNameChange,
-	onSelectedColorChange,
+	onSelectedColorHexChange,
 	calendarUrlInputRef
 }: AddExternalCalendarModalIcsFlowProps): JSX.Element => {
 	const [t] = useTranslation();
@@ -79,17 +77,10 @@ export const AddExternalCalendarModalIcsFlow = ({
 				onChange={(event): void => onCalendarNameChange(event.target.value)}
 			/>
 			<Padding top="medium" />
-			<Select
-				label={t('label.select_color', 'Select color')}
-				items={colorItems}
-				defaultSelection={colorItems.find((item) => item.value === selectedColor) ?? colorItems[0]}
-				LabelFactory={CalendarColorLabelFactory}
+			<CalendarColorPicker
+				value={selectedColorHex}
+				onChange={onSelectedColorHexChange}
 				disabled={isSubmitting}
-				onChange={(value): void => {
-					if (value) {
-						onSelectedColorChange(value);
-					}
-				}}
 			/>
 		</>
 	);

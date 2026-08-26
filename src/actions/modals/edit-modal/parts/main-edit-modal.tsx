@@ -11,13 +11,11 @@ import {
 	Checkbox,
 	Container,
 	Divider,
-	Icon,
 	Input,
 	ModalBody,
 	ModalFooter,
 	ModalHeader,
 	Padding,
-	Popover,
 	Row,
 	Text,
 	Tooltip,
@@ -33,17 +31,15 @@ import {
 	hasId
 } from '@zextras/carbonio-ui-commons';
 import { compact, includes, map } from 'lodash';
-import { HexColorPicker } from 'react-colorful';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';
+import { CalendarColorPicker, resolveCalendarColorHex } from 'commons/calendar-color-picker';
 import { useEditModalContext } from 'commons/edit-modal-context';
 import { isCaldavChild } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
-import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from 'constants/index';
-import { usePreventBackdropClose } from 'hooks/use-prevent-backdrop-close';
 import { folderAction } from 'store/actions/calendar-actions';
 import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
 import { useAppDispatch } from 'store/redux/hooks';
@@ -55,66 +51,6 @@ const StyledContainer = styled(Container)`
 	flex-basis: 0;
 	flex-grow: 1;
 `;
-
-const selectedRing = (color: string, theme: { palette: { gray6: { regular: string } } }): string =>
-	`0 0 0 0.125rem ${theme.palette.gray6.regular}, 0 0 0 0.25rem ${color}`;
-
-const HOVER_SHADOW = '0 0.125rem 0.375rem rgba(0, 0, 0, 0.25)';
-
-const ColorDot = styled.button<{ $color: string; $selected: boolean }>`
-	width: 1.5rem;
-	height: 1.5rem;
-	border-radius: 50%;
-	border: none;
-	background: ${({ $color }): string => $color};
-	cursor: pointer;
-	padding: 0;
-	box-shadow: ${({ $selected, $color, theme }): string =>
-		$selected ? selectedRing($color, theme) : 'none'};
-
-	&:hover {
-		box-shadow: ${({ $selected, $color, theme }): string =>
-			$selected ? `${selectedRing($color, theme)}, ${HOVER_SHADOW}` : HOVER_SHADOW};
-	}
-
-	&:disabled {
-		cursor: default;
-		opacity: 0.5;
-
-		&:hover {
-			box-shadow: ${({ $selected, $color, theme }): string =>
-				$selected ? selectedRing($color, theme) : 'none'};
-		}
-	}
-`;
-
-const CustomColorTriggerButton = styled.button`
-	width: 1.5rem;
-	height: 1.5rem;
-	border-radius: 50%;
-	border: none;
-	background: transparent;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	padding: 0;
-`;
-
-const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
-
-// Saving always writes `rgb` (see onConfirm below), even for a standard color, so on load an
-// exact rgb match against a standard hex means "this is actually a standard color", not custom —
-// same resolution used by edit-external-calendar-modal.tsx for the same reason.
-const findExactStandardColorIndex = (rgb: string | undefined): number | undefined => {
-	if (!rgb) {
-		return undefined;
-	}
-	const index = CALENDARS_STANDARD_COLORS.findIndex(
-		(standardColor) => standardColor.color.toLowerCase() === rgb.toLowerCase()
-	);
-	return index === -1 ? undefined : index;
-};
 
 export type MainEditModalProps = {
 	folder: Folder;
@@ -136,8 +72,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const defaultFreeBusy = /b/.test(folder.f ?? '');
 	const defaultFolderName = folder.name || '';
 
-	const matchingStandardIndexFromRgb = findExactStandardColorIndex(folder.rgb);
-	const defaultColorIndex = matchingStandardIndexFromRgb ?? folder.color ?? 0;
+	const defaultColorHex = resolveCalendarColorHex(folder.color, folder.rgb);
 
 	const defaultSharedWithPublic = useMemo(() => containPublicShareGrant(grant), [grant]);
 	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
@@ -188,95 +123,20 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		[folderName, folder, showDupWarning]
 	);
 
-	const defaultCustomHex = useMemo(
-		() =>
-			folder.rgb ??
-			CALENDARS_STANDARD_COLORS[defaultColorIndex]?.color ??
-			CALENDARS_STANDARD_COLORS[0].color,
-		[folder.rgb, defaultColorIndex]
-	);
-	const defaultIsCustomColorSelected =
-		Boolean(folder.rgb) && matchingStandardIndexFromRgb === undefined;
-
-	const [selectedColorIndex, setSelectedColorIndex] = useState(defaultColorIndex);
-	const [isCustomColorSelected, setIsCustomColorSelected] = useState(defaultIsCustomColorSelected);
-	const [hasCustomColor, setHasCustomColor] = useState(defaultIsCustomColorSelected);
-	const [customHex, setCustomHex] = useState(defaultCustomHex);
-
-	const colorSwatchRef = useRef<HTMLButtonElement>(null);
-	const popoverContentRef = useRef<HTMLDivElement>(null);
-	const [draftHex, setDraftHex] = useState(customHex);
-	const [hexInputValue, setHexInputValue] = useState(customHex);
-
-	usePreventBackdropClose(isColorPickerOpen, popoverContentRef);
-
-	useEffect(() => {
-		if (isColorPickerOpen) {
-			setDraftHex(customHex);
-			setHexInputValue(customHex);
-		}
-	}, [isColorPickerOpen, customHex]);
-
-	const onSelectStandardColor = useCallback((index: number) => {
-		setSelectedColorIndex(index);
-		setIsCustomColorSelected(false);
-	}, []);
-
-	const onDraftColorChange = useCallback((hex: string) => {
-		setDraftHex(hex);
-		setHexInputValue(hex);
-	}, []);
-
-	const onHexInputChange = useCallback((value: string) => {
-		setHexInputValue(value);
-		if (HEX_COLOR_REGEX.test(value)) {
-			setDraftHex(value);
-		}
-	}, []);
-
-	const onSaveCustomColor = useCallback(() => {
-		const exactStandardIndex = findExactStandardColorIndex(draftHex);
-		if (exactStandardIndex !== undefined) {
-			setSelectedColorIndex(exactStandardIndex);
-			setIsCustomColorSelected(false);
-		} else {
-			setCustomHex(draftHex);
-			setIsCustomColorSelected(true);
-			setHasCustomColor(true);
-		}
-		setIsColorPickerOpen(false);
-	}, [draftHex, setIsColorPickerOpen]);
-
-	const onSelectExistingCustomColor = useCallback(() => {
-		setIsCustomColorSelected(true);
-	}, []);
-
-	const onCancelCustomColor = useCallback(() => {
-		setIsColorPickerOpen(false);
-	}, [setIsColorPickerOpen]);
+	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
 
 	const onConfirm = useCallback(() => {
 		const actionRename =
 			folderName?.length && folderName !== defaultFolderName
 				? { op: FOLDER_OPERATIONS.RENAME, name: folderName, id: folder.id }
 				: undefined;
-		const originalColorKey = defaultIsCustomColorSelected
-			? `custom:${defaultCustomHex}`
-			: `standard:${defaultColorIndex}`;
-		const currentColorKey = isCustomColorSelected
-			? `custom:${customHex}`
-			: `standard:${selectedColorIndex}`;
-		let actionColor: FolderAction | undefined;
-		if (originalColorKey !== currentColorKey) {
-			// Always send `rgb` (never the numeric `color`), matching the other calendar
-			// color modals: a partial update that only sets `color` doesn't clear a
-			// previously-set `rgb`, so the calendar would stay stuck on the old custom color.
-			const resultingHex = isCustomColorSelected
-				? customHex
-				: (CALENDARS_STANDARD_COLORS[selectedColorIndex]?.color ??
-					CALENDARS_STANDARD_COLORS[0].color);
-			actionColor = { op: FOLDER_OPERATIONS.COLOR, rgb: resultingHex, id: folder.id };
-		}
+		// Always send `rgb` (never the numeric `color`), matching the other calendar color
+		// modals: a partial update that only sets `color` doesn't clear a previously-set
+		// `rgb`, so the calendar would stay stuck on the old custom color.
+		const actionColor: FolderAction | undefined =
+			selectedColorHex !== defaultColorHex
+				? { op: FOLDER_OPERATIONS.COLOR, rgb: selectedColorHex, id: folder.id }
+				: undefined;
 		const actionFreeBusy =
 			freeBusy !== defaultFreeBusy
 				? {
@@ -327,12 +187,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		folderName,
 		defaultFolderName,
 		folder.id,
-		selectedColorIndex,
-		defaultColorIndex,
-		isCustomColorSelected,
-		defaultIsCustomColorSelected,
-		customHex,
-		defaultCustomHex,
+		selectedColorHex,
+		defaultColorHex,
 		freeBusy,
 		defaultFreeBusy,
 		isSharedWithPublic,
@@ -511,106 +367,11 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					</Container>
 
 					{/* Calendar color */}
-					<Container
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
-						orientation="vertical"
-						height="fit"
-						gap="0.5rem"
-					>
-						<Container
-							mainAlignment="flex-start"
-							crossAlignment="center"
-							orientation="horizontal"
-							height="fit"
-							gap="1rem"
-							wrap="wrap"
-							padding={{ horizontal: '0.25rem' }}
-						>
-							{CALENDARS_STANDARD_COLORS.map((standardColor, index) => (
-								<Tooltip key={standardColor.label} label={t(`colors.${standardColor.label}`)}>
-									<ColorDot
-										type="button"
-										aria-label={t(`colors.${standardColor.label}`)}
-										aria-pressed={!isCustomColorSelected && selectedColorIndex === index}
-										$color={standardColor.color}
-										$selected={!isCustomColorSelected && selectedColorIndex === index}
-										onClick={(): void => onSelectStandardColor(index)}
-										disabled={isColorPickerOpen}
-									/>
-								</Tooltip>
-							))}
-							{hasCustomColor && (
-								<Tooltip label={t('label.custom_color', 'Custom color')}>
-									<ColorDot
-										type="button"
-										aria-label={t('label.custom_color', 'Custom color')}
-										aria-pressed={isCustomColorSelected}
-										$color={customHex}
-										$selected={isCustomColorSelected}
-										onClick={onSelectExistingCustomColor}
-										disabled={isColorPickerOpen}
-									/>
-								</Tooltip>
-							)}
-							<CustomColorTriggerButton
-								ref={colorSwatchRef}
-								type="button"
-								onClick={(): void => setIsColorPickerOpen(!isColorPickerOpen)}
-							>
-								<Icon icon="PlusCircleOutline" size="large" color="primary" />
-							</CustomColorTriggerButton>
-							<Popover
-								disablePortal
-								anchorEl={colorSwatchRef}
-								open={isColorPickerOpen}
-								onClose={onCancelCustomColor}
-								placement="bottom-start"
-								style={{ zIndex: 1001 }}
-							>
-								<Container
-									ref={popoverContentRef}
-									padding="0.75rem"
-									gap="0.75rem"
-									width="fit"
-									height="fit"
-								>
-									<HexColorPicker color={draftHex} onChange={onDraftColorChange} />
-									<Input
-										label={t('label.hex_color', 'Hex color')}
-										value={hexInputValue}
-										onChange={(e): void => onHexInputChange(e.target.value)}
-									/>
-									<Container
-										orientation="horizontal"
-										mainAlignment="flex-end"
-										crossAlignment="flex-end"
-										height="fit"
-										width="fill"
-										gap="0.5rem"
-									>
-										<Button
-											type="outlined"
-											color="secondary"
-											label={t('label.cancel', 'Cancel')}
-											onClick={onCancelCustomColor}
-										/>
-										<Button
-											color="primary"
-											label={t('label.save', 'Save')}
-											onClick={onSaveCustomColor}
-										/>
-									</Container>
-								</Container>
-							</Popover>
-						</Container>
-						<Text size="small" color="secondary">
-							{t(
-								'label.choose_color_caption',
-								'Choose a color to make this calendar easier to recognize'
-							)}
-						</Text>
-					</Container>
+					<CalendarColorPicker
+						value={selectedColorHex}
+						onChange={setSelectedColorHex}
+						onOpenChange={setIsColorPickerOpen}
+					/>
 
 					<Checkbox
 						value={freeBusy}

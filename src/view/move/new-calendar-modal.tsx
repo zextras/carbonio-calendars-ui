@@ -9,7 +9,6 @@ import {
 	Container,
 	Input,
 	Padding,
-	Select,
 	Text,
 	Checkbox,
 	useSnackbar
@@ -19,7 +18,7 @@ import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
-import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
+import { CalendarColorPicker, resolveCalendarColorHex } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
 import { createCalendar } from 'store/actions/create-calendar';
 import { EventType } from 'types/event';
@@ -50,8 +49,8 @@ export const NewModal = ({
 	const [inputValue, setInputValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const colors = useMemo(() => buildCalendarColorItems(), []);
-	const [selectedColor, setSelectedColor] = useState(0);
+	const defaultColorHex = resolveCalendarColorHex(0, undefined);
+	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
 	const nameInputRef = useRef<HTMLInputElement>(null);
@@ -77,7 +76,7 @@ export const NewModal = ({
 			createCalendar({
 				parent: (root?.id as '1') ?? '1',
 				name: inputValue,
-				color: selectedColor,
+				rgb: selectedColorHex,
 				excludeFreeBusy: freeBusy
 			}).then((newCalendarRes) => {
 				if (!newCalendarRes.Fault) {
@@ -112,17 +111,17 @@ export const NewModal = ({
 			});
 		}
 		setInputValue('');
-		setSelectedColor(0);
+		setSelectedColorHex(defaultColorHex);
 		setFreeBusy(false);
 		onClose();
 	};
 
 	const onCloseModal = useCallback(() => {
 		setInputValue('');
-		setSelectedColor(0);
+		setSelectedColorHex(defaultColorHex);
 		setFreeBusy(false);
 		onClose();
-	}, [onClose]);
+	}, [onClose, defaultColorHex]);
 
 	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
 
@@ -159,17 +158,7 @@ export const NewModal = ({
 				</Padding>
 			)}
 			<Padding vertical="medium" />
-			<Select
-				label={'Select color'}
-				onChange={(value): void => {
-					if (value) {
-						setSelectedColor(parseInt(value, 10));
-					}
-				}}
-				items={colors}
-				defaultSelection={colors[0]}
-				LabelFactory={CalendarColorLabelFactory}
-			/>
+			<CalendarColorPicker value={selectedColorHex} onChange={setSelectedColorHex} />
 			<Padding vertical="medium" />
 			<Checkbox
 				value={freeBusy}

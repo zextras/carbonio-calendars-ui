@@ -78,7 +78,9 @@ describe('EditExternalCalendarModal', () => {
 		expect(screen.getByText('Edit calendar')).toBeVisible();
 		expect(screen.getByText(new RegExp(`URL: ${DEFAULT_FOLDER_URL}`, 'i'))).toBeVisible();
 		expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeVisible();
-		expect(screen.getByText('Select color')).toBeVisible();
+		expect(
+			screen.getByText('Choose a color to make this calendar easier to recognize')
+		).toBeVisible();
 	});
 
 	test('shows loading placeholder when folder does not exist', () => {

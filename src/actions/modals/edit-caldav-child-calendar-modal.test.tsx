@@ -22,30 +22,6 @@ vi.mock('@zextras/carbonio-ui-commons', async () => ({
 	useFolder: vi.fn()
 }));
 
-vi.mock('@zextras/carbonio-design-system', async () => {
-	const actual = await vi.importActual('@zextras/carbonio-design-system');
-
-	return {
-		...actual,
-		Select: ({ label, items, disabled, onChange }: any): JSX.Element => (
-			<label>
-				{label}
-				<select
-					data-testid="mock-color-select"
-					disabled={disabled}
-					onChange={(event): void => onChange?.(event.target.value)}
-				>
-					{items?.map((item: { value: string; label: string }) => (
-						<option key={item.value} value={item.value}>
-							{item.label}
-						</option>
-					))}
-				</select>
-			</label>
-		)
-	};
-});
-
 const FOLDER_ID = 'caldav-child-1';
 const FOLDER_NAME = 'Child Calendar';
 
@@ -99,7 +75,7 @@ describe('EditCaldavChildCalendarModal', () => {
 		const { user } = setupTest(
 			<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />
 		);
-		await user.selectOptions(screen.getByTestId('mock-color-select'), '1');
+		await user.click(screen.getByRole('button', { name: /blue/i }));
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
 
 		await waitFor(() => {
@@ -123,7 +99,7 @@ describe('EditCaldavChildCalendarModal', () => {
 		);
 		await user.clear(screen.getByDisplayValue(FOLDER_NAME));
 		await user.type(screen.getByRole('textbox'), 'Renamed Child Calendar');
-		await user.selectOptions(screen.getByTestId('mock-color-select'), '1');
+		await user.click(screen.getByRole('button', { name: /blue/i }));
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
 
 		await waitFor(() => {
