@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import {
@@ -13,8 +13,11 @@ import {
 	Input,
 	Popover,
 	Text,
-	Tooltip
+	Tooltip,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
+import { copyToClipboard } from '@zextras/carbonio-ui-commons';
+import { noop } from 'lodash';
 import { HexColorPicker } from 'react-colorful';
 import { useTranslation } from 'react-i18next';
 
@@ -75,6 +78,7 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 	disabled = false
 }) => {
 	const [t] = useTranslation();
+	const createSnackbar = useSnackbar();
 
 	const colors = useMemo(
 		() =>
@@ -128,6 +132,41 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 			setDraftHex(inputValue);
 		}
 	}, []);
+
+	const onCopyHexColor = useCallback((): void => {
+		copyToClipboard(hexInputValue)
+			.then(() => {
+				createSnackbar({
+					key: 'calendar-color-hex-copied',
+					replace: true,
+					severity: 'success',
+					hideButton: true,
+					label: t('snackbar.hex_color_copied', 'Hex color copied'),
+					autoHideTimeout: 3000
+				});
+			})
+			.catch(() => {
+				createSnackbar({
+					key: 'calendar-color-hex-copy-error',
+					replace: true,
+					severity: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
+			});
+	}, [hexInputValue, createSnackbar, t]);
+
+	const CopyHexColorIcon = useCallback(
+		(): ReactElement => (
+			<Tooltip label={t('tooltip.copy_hex_color', 'Copy hex color')} placement="top">
+				<CustomColorTriggerButton type="button" onClick={onCopyHexColor}>
+					<Icon icon="Copy" size="large" color="primary" />
+				</CustomColorTriggerButton>
+			</Tooltip>
+		),
+		[t, onCopyHexColor]
+	);
 
 	const onSaveCustomColor = useCallback(() => {
 		onChange(draftHex);
@@ -191,7 +230,10 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 					disablePortal
 					anchorEl={colorSwatchRef}
 					open={isPopoverOpen}
-					onClose={onCancelCustomColor}
+					// Popover's own click-outside/Escape handling is a plain bubble-phase document
+					// listener with no notion of "the gesture started inside" — closing is fully owned
+					// by useCloseOnEscape/useOnOutsideClick below instead, which get that right.
+					onClose={noop}
 					placement="bottom-start"
 					style={{ zIndex: 1001 }}
 				>
@@ -207,6 +249,7 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 							label={t('label.hex_color', 'Hex color')}
 							value={hexInputValue}
 							onChange={(e): void => onHexInputChange(e.target.value)}
+							CustomIcon={CopyHexColorIcon}
 						/>
 						<Container
 							orientation="horizontal"
@@ -219,10 +262,14 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 							<Button
 								type="outlined"
 								color="secondary"
-								label={t('label.cancel', 'Cancel')}
+								label={t('label.close', 'Close')}
 								onClick={onCancelCustomColor}
 							/>
-							<Button color="primary" label={t('label.save', 'Save')} onClick={onSaveCustomColor} />
+							<Button
+								color="primary"
+								label={t('label.choose', 'Choose')}
+								onClick={onSaveCustomColor}
+							/>
 						</Container>
 					</Container>
 				</Popover>

@@ -5,6 +5,7 @@
  */
 import React, { FC, useState } from 'react';
 
+import { fireEvent } from '@testing-library/react';
 import { CustomModal } from '@zextras/carbonio-design-system';
 
 import { CalendarColorPicker, CalendarColorPickerProps } from '../calendar-color-picker';
@@ -29,6 +30,9 @@ const getCustomizeTrigger = (): HTMLElement =>
 	screen.getByRoleWithIcon('button', { icon: 'icon: PlusCircleOutline' });
 
 const getHexInput = (): HTMLElement => screen.getByRole('textbox', { name: HEX_INPUT_LABEL });
+
+const getCopyHexButton = (): HTMLElement =>
+	screen.getByRoleWithIcon('button', { icon: 'icon: Copy' });
 
 describe('CalendarColorPicker', () => {
 	test('renders the standard color dots and calls onChange with the clicked hex', async () => {
@@ -79,7 +83,7 @@ describe('CalendarColorPicker', () => {
 		await user.type(getHexInput(), '#abcdef');
 		expect(getHexInput()).toHaveValue('#abcdef');
 
-		await user.click(screen.getByText('Cancel'));
+		await user.click(screen.getByText('Close'));
 		expect(onChange).not.toHaveBeenCalled();
 
 		await user.click(getCustomizeTrigger());
@@ -103,11 +107,38 @@ describe('CalendarColorPicker', () => {
 		// The input still reflects whatever was typed, even though it's not a valid hex.
 		expect(getHexInput()).toHaveValue('zzz');
 
-		await user.click(screen.getByText('Save'));
+		await user.click(screen.getByText('Choose'));
 
 		// The invalid text never became the draft color, so the last valid one is saved instead.
 		expect(onChange).toHaveBeenCalledTimes(1);
 		expect(onChange).toHaveBeenCalledWith('#ff0000');
+	});
+
+	test('copying the hex color writes it to the clipboard and shows a success snackbar', async () => {
+		const { user } = setupTest(
+			<CalendarColorPicker value={STANDARD_COLOR.color} onChange={vi.fn()} />
+		);
+
+		await user.click(getCustomizeTrigger());
+		const writeText = vi.spyOn(window.navigator.clipboard, 'writeText').mockResolvedValue();
+
+		await user.click(getCopyHexButton());
+
+		expect(writeText).toHaveBeenCalledWith(STANDARD_COLOR.color);
+		expect(await screen.findByText('Hex color copied')).toBeVisible();
+	});
+
+	test('shows an error snackbar when copying the hex color fails', async () => {
+		const { user } = setupTest(
+			<CalendarColorPicker value={STANDARD_COLOR.color} onChange={vi.fn()} />
+		);
+
+		await user.click(getCustomizeTrigger());
+		vi.spyOn(window.navigator.clipboard, 'writeText').mockRejectedValue(new Error('denied'));
+
+		await user.click(getCopyHexButton());
+
+		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
 	});
 
 	test('saving closes the popover and calls onChange with the draft color', async () => {
@@ -120,7 +151,7 @@ describe('CalendarColorPicker', () => {
 		await user.clear(getHexInput());
 		await user.type(getHexInput(), '#abcdef');
 
-		await user.click(screen.getByText('Save'));
+		await user.click(screen.getByText('Choose'));
 
 		expect(onChange).toHaveBeenCalledWith('#abcdef');
 		expect(screen.queryByRole('textbox', { name: HEX_INPUT_LABEL })).not.toBeInTheDocument();
@@ -133,7 +164,7 @@ describe('CalendarColorPicker', () => {
 		);
 
 		await user.click(getCustomizeTrigger());
-		await user.click(screen.getByText('Cancel'));
+		await user.click(screen.getByText('Close'));
 
 		expect(onChange).not.toHaveBeenCalled();
 		expect(screen.queryByRole('textbox', { name: HEX_INPUT_LABEL })).not.toBeInTheDocument();
@@ -173,6 +204,29 @@ describe('CalendarColorPicker', () => {
 		expect(onModalClose).not.toHaveBeenCalled();
 	});
 
+	test('dragging the picker handle past the popover edge and releasing outside does not close it', async () => {
+		const onChange = vi.fn();
+		const { user } = setupTest(
+			<>
+				<div>outside content</div>
+				<CalendarColorPicker value={STANDARD_COLOR.color} onChange={onChange} />
+			</>
+		);
+
+		await user.click(getCustomizeTrigger());
+
+		// Simulates a drag that starts on the picker (inside the popover) and ends outside it: the
+		// native `click` this produces targets wherever the mouse was released, not where the drag
+		// began, so it must be dispatched separately from the mousedown to reproduce that sequence.
+		/* eslint-disable testing-library/prefer-user-event */
+		fireEvent.mouseDown(getHexInput());
+		fireEvent.click(screen.getByText('outside content'));
+		/* eslint-enable testing-library/prefer-user-event */
+
+		expect(onChange).not.toHaveBeenCalled();
+		expect(getHexInput()).toBeVisible();
+	});
+
 	test('clicking the trigger again while open still toggles the popover closed', async () => {
 		const { user } = setupTest(
 			<CalendarColorPicker value={STANDARD_COLOR.color} onChange={vi.fn()} />
@@ -199,7 +253,7 @@ describe('CalendarColorPicker', () => {
 		await user.click(getCustomizeTrigger());
 		expect(onOpenChange).toHaveBeenLastCalledWith(true);
 
-		await user.click(screen.getByText('Cancel'));
+		await user.click(screen.getByText('Close'));
 		expect(onOpenChange).toHaveBeenLastCalledWith(false);
 	});
 
@@ -222,7 +276,7 @@ describe('CalendarColorPicker', () => {
 		await user.click(getCustomizeTrigger());
 		await user.clear(getHexInput());
 		await user.type(getHexInput(), CUSTOM_HEX);
-		await user.click(screen.getByText('Save'));
+		await user.click(screen.getByText('Choose'));
 
 		const customDot = screen.getByRole('button', { name: CUSTOM_COLOR_LABEL });
 		expect(customDot).toHaveAttribute(ARIA_PRESSED, 'true');

@@ -69,6 +69,30 @@ describe('useOnOutsideClick', () => {
 		expect(onOutsideClick).not.toHaveBeenCalled();
 	});
 
+	it('does not call onOutsideClick when the gesture started inside contentRef, even if the click lands outside', () => {
+		const onOutsideClick = vi.fn();
+		renderHook(() => useOnOutsideClick(true, contentRef, anchorRef, onOutsideClick));
+
+		contentEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+		outsideEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+		expect(onOutsideClick).not.toHaveBeenCalled();
+	});
+
+	it('calls onOutsideClick again for a genuine outside gesture right after an ignored drag-out', () => {
+		const onOutsideClick = vi.fn();
+		renderHook(() => useOnOutsideClick(true, contentRef, anchorRef, onOutsideClick));
+
+		contentEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+		outsideEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+		expect(onOutsideClick).not.toHaveBeenCalled();
+
+		outsideEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+		outsideEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+		expect(onOutsideClick).toHaveBeenCalledTimes(1);
+	});
+
 	it('removes the listener on unmount so outside clicks no longer trigger it', () => {
 		const onOutsideClick = vi.fn();
 		const { unmount } = renderHook(() =>
