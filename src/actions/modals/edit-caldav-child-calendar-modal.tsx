@@ -125,7 +125,7 @@ export const EditCaldavChildCalendarModal = ({
 			{isReadOnly ? (
 				<Tooltip label={nameDisabledTooltip} placement="top" maxWidth="fit-content">
 					<Input
-						label={`${t('label.calendars_name', "Calendars' name")}*`}
+						label={`${t('label.choose_representative_name', 'Choose a representative name')}*`}
 						background={'gray5'}
 						value={calendarName}
 						disabled
@@ -133,7 +133,7 @@ export const EditCaldavChildCalendarModal = ({
 				</Tooltip>
 			) : (
 				<Input
-					label={`${t('label.calendars_name', "Calendars' name")}*`}
+					label={`${t('label.choose_representative_name', 'Choose a representative name')}*`}
 					background={'gray5'}
 					hasError={isDuplicateCalendarName}
 					description={

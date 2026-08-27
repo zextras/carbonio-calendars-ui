@@ -99,7 +99,7 @@ describe('EditCaldavChildCalendarModal', () => {
 		);
 
 		await user.click(screen.getByTestId('icon: PlusCircleOutline'));
-		expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
+		expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
 
 		await user.click(screen.getByTestId('icon: CloseOutline'));
 		expect(onClose).not.toHaveBeenCalled();

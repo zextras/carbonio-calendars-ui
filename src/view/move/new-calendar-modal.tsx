@@ -127,7 +127,10 @@ export const NewModal = ({
 		onClose();
 	}, [onClose, defaultColorHex, isColorPickerOpen]);
 
-	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
+	const placeholder = useMemo(
+		() => `${t('label.choose_representative_name', 'Choose a representative name')}*`,
+		[t]
+	);
 
 	useEffect(() => {
 		nameInputRef.current?.focus();

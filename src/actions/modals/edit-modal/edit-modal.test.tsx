@@ -182,7 +182,7 @@ describe('the edit calendar modal is composed by', () => {
 	});
 	describe('the modal body. It is composed by', () => {
 		describe('the calendar name input', () => {
-			test('has the label "Calendar name"', async () => {
+			test('has the label "Choose a representative name"', async () => {
 				const closeFn = vi.fn();
 
 				const store = configureStore({ reducer: combineReducers(reducers) });
@@ -193,7 +193,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 
 				const title = screen.getByRole('textbox', {
-					name: /calendar name/i
+					name: /representative name/i
 				});
 				expect(title).toBeVisible();
 			});
@@ -208,7 +208,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 
 				const title = screen.getByRole('textbox', {
-					name: /calendar name/i
+					name: /representative name/i
 				});
 				expect(title).toHaveValue(folder.name);
 			});
@@ -223,7 +223,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 
 				const title = screen.getByRole('textbox', {
-					name: /calendar name/i
+					name: /representative name/i
 				});
 
 				expect(title).toBeDisabled();
@@ -239,7 +239,7 @@ describe('the edit calendar modal is composed by', () => {
 				});
 
 				const title = screen.getByRole('textbox', {
-					name: /calendar name/i
+					name: /representative name/i
 				});
 
 				await user.hover(title);
@@ -535,7 +535,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 
 						const title = screen.getByRole('textbox', {
-							name: /calendar name/i
+							name: /representative name/i
 						});
 
 						await user.clear(title);
@@ -562,7 +562,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 
 						const title = screen.getByRole('textbox', {
-							name: /calendar name/i
+							name: /representative name/i
 						});
 
 						await user.clear(title);
@@ -666,7 +666,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 
 					const title = screen.getByRole('textbox', {
-						name: /calendar name/i
+						name: /representative name/i
 					});
 
 					await user.clear(title);

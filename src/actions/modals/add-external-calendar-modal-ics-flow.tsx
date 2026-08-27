@@ -65,7 +65,7 @@ export const AddExternalCalendarModalIcsFlow = ({
 			/>
 			<Padding top="medium" />
 			<Input
-				label={`${t('add_ics_from_url.calendar_name', 'Calendar name')}*`}
+				label={`${t('label.choose_representative_name', 'Choose a representative name')}*`}
 				background={'gray5'}
 				hasError={isDuplicateCalendarName}
 				description={

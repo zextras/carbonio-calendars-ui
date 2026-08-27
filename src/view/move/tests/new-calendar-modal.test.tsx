@@ -32,7 +32,7 @@ describe('NewModal', () => {
 		setupTest(<NewModal onClose={vi.fn()} folderId={defaultCalendarFolder.id} />);
 
 		expect(screen.getByText('New calendar creation')).toBeVisible();
-		expect(screen.getByRole('textbox', { name: 'Calendar name*' })).toBeVisible();
+		expect(screen.getByRole('textbox', { name: 'Choose a representative name*' })).toBeVisible();
 	});
 
 	it('close button is a no-op while the color picker custom-color popover is open', async () => {
@@ -40,7 +40,7 @@ describe('NewModal', () => {
 		const { user } = setupTest(<NewModal onClose={onClose} folderId={defaultCalendarFolder.id} />);
 
 		await user.click(screen.getByTestId('icon: PlusCircleOutline'));
-		expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
+		expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
 
 		await user.click(screen.getByTestId('icon: CloseOutline'));
 		expect(onClose).not.toHaveBeenCalled();

@@ -15,7 +15,7 @@ import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { FOLDER_OPERATIONS } from 'constants/api';
 
-const CALENDAR_NAME_LABEL = 'Calendar name*';
+const CALENDAR_NAME_LABEL = 'Choose a representative name*';
 const SAVE_CHANGES_LABEL = 'Save Changes';
 const DEFAULT_FOLDER_ID = '123';
 const DEFAULT_FOLDER_URL = 'https://example.com/ext.ics';
@@ -152,7 +152,7 @@ describe('EditExternalCalendarModal', () => {
 		);
 
 		await user.click(screen.getByTestId('icon: PlusCircleOutline'));
-		expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
+		expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
 
 		await user.click(screen.getByTestId('icon: CloseOutline'));
 		expect(onClose).not.toHaveBeenCalled();
