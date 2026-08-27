@@ -7,21 +7,16 @@ import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 're
 
 import styled from '@emotion/styled';
 import {
-	AnyColor,
 	Button,
 	Checkbox,
 	Container,
 	Divider,
-	Icon,
 	Input,
 	ModalBody,
 	ModalFooter,
 	ModalHeader,
 	Padding,
 	Row,
-	Select,
-	SelectItem,
-	SingleSelectionOnChange,
 	Text,
 	Tooltip,
 	useSnackbar
@@ -35,15 +30,15 @@ import {
 	Grant,
 	hasId
 } from '@zextras/carbonio-ui-commons';
-import { compact, find, includes, map } from 'lodash';
+import { compact, includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
 import { ShareCalendarUrls } from './share-calendar-urls';
+import { CalendarColorPicker, resolveCalendarColorHex } from 'commons/calendar-color-picker';
 import { useEditModalContext } from 'commons/edit-modal-context';
 import { isCaldavChild } from 'commons/utilities';
 import { FOLDER_OPERATIONS } from 'constants/api';
-import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from 'constants/index';
 import { folderAction } from 'store/actions/calendar-actions';
 import { sendShareCalendarNotification } from 'store/actions/send-share-calendar-notification';
@@ -51,103 +46,11 @@ import { useAppDispatch } from 'store/redux/hooks';
 import { FolderAction } from 'types/soap/soap-actions';
 import { containPublicShareGrant } from 'utils/calendars-share';
 
-const Square = styled.div<{ $color: AnyColor }>`
-	width: 1.125rem;
-	height: 1.125rem;
-	position: relative;
-	top: -0.1875rem;
-	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-	background: ${({ $color }): string => $color};
-	border-radius: 0.25rem;
-`;
-
-const ColorContainer = styled(Container)`
-	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-`;
-
 const StyledContainer = styled(Container)`
 	min-width: 0;
 	flex-basis: 0;
 	flex-grow: 1;
 `;
-
-const TextUpperCase = styled(Text)`
-	text-transform: capitalize;
-`;
-
-type LabelFactoryProps = {
-	selected: Array<SelectItem>;
-	label: string | undefined;
-	open: boolean;
-	focus: boolean;
-};
-
-const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) => {
-	const colorName = useMemo(() => selected?.[0]?.label, [selected]);
-	const squareColor = useMemo(
-		() =>
-			(colorName === 'custom'
-				? selected?.[0]?.value
-				: CALENDARS_STANDARD_COLORS[parseInt(selected[0].value, 10)]?.color) || '',
-		[colorName, selected]
-	) as string;
-
-	return (
-		<ColorContainer
-			orientation="horizontal"
-			width="fill"
-			crossAlignment="center"
-			mainAlignment="space-between"
-			borderRadius="half"
-			background={'gray5'}
-			padding={{
-				all: 'small'
-			}}
-		>
-			<Row width="100%" takeAvailableSpace mainAlignment="space-between">
-				<Row
-					orientation="vertical"
-					crossAlignment="flex-start"
-					mainAlignment="flex-start"
-					padding={{ left: 'small' }}
-				>
-					<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
-						{label}
-					</Text>
-					<TextUpperCase>{colorName}</TextUpperCase>
-				</Row>
-				<Padding right="small">
-					<Square $color={squareColor ?? '0'} />
-				</Padding>
-			</Row>
-			<Icon
-				size="large"
-				icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
-				color={open || focus ? 'primary' : 'secondary'}
-				style={{ alignSelf: 'center' }}
-			/>
-		</ColorContainer>
-	);
-};
-
-const useGetStatusItems = (): Array<SelectItem> => {
-	const [t] = useTranslation();
-	return CALENDARS_STANDARD_COLORS.map((el, index) => {
-		const colorLabel = t(`colors.${el.label}`);
-		return {
-			label: colorLabel,
-			value: index.toString(),
-			customComponent: (
-				<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
-					<Padding left="small">
-						<TextUpperCase>{colorLabel}</TextUpperCase>
-					</Padding>
-					<Square $color={el.color} />
-				</Container>
-			)
-		};
-	});
-};
 
 export type MainEditModalProps = {
 	folder: Folder;
@@ -163,18 +66,13 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const userSettings = useUserSettings();
 	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
-	const { setModal, onClose, setActiveGrant } = useEditModalContext();
-
-	const colors = useGetStatusItems();
+	const { setModal, onClose, setActiveGrant, isColorPickerOpen, setIsColorPickerOpen } =
+		useEditModalContext();
 
 	const defaultFreeBusy = /b/.test(folder.f ?? '');
 	const defaultFolderName = folder.name || '';
 
-	const defaultColor = useMemo(
-		() =>
-			find(colors, (color) => color.value === folder.color?.toString()) ?? { label: '', value: '' },
-		[colors, folder.color]
-	);
+	const defaultColorHex = resolveCalendarColorHex(folder.color, folder.rgb);
 
 	const defaultSharedWithPublic = useMemo(() => containPublicShareGrant(grant), [grant]);
 	const isPublicShareEnabled = userSettings?.attrs?.zimbraPublicSharingEnabled === 'TRUE';
@@ -225,29 +123,20 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		[folderName, folder, showDupWarning]
 	);
 
-	const [selectedColor, setSelectedColor] = useState<SelectItem>(defaultColor);
-
-	const onSelectedColorChange = useCallback<SingleSelectionOnChange>(
-		(newColor) => {
-			if (newColor) {
-				const newResult = find(colors, (color) => color.value === newColor);
-				if (newResult) {
-					setSelectedColor(newResult);
-				}
-			}
-		},
-		[colors]
-	);
+	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
 
 	const onConfirm = useCallback(() => {
 		const actionRename =
 			folderName?.length && folderName !== defaultFolderName
 				? { op: FOLDER_OPERATIONS.RENAME, name: folderName, id: folder.id }
 				: undefined;
-		const actionColor =
-			selectedColor && selectedColor?.value !== defaultColor?.value
-				? { op: FOLDER_OPERATIONS.COLOR, color: selectedColor.value, id: folder.id }
-				: undefined;
+		// Always send `rgb` (never the numeric `color`), matching the other calendar color
+		// modals: a partial update that only sets `color` doesn't clear a previously-set
+		// `rgb`, so the calendar would stay stuck on the old custom color.
+		const actionColor: FolderAction | undefined =
+			selectedColorHex === defaultColorHex
+				? undefined
+				: { op: FOLDER_OPERATIONS.COLOR, rgb: selectedColorHex, id: folder.id };
 		const actionFreeBusy =
 			freeBusy !== defaultFreeBusy
 				? {
@@ -298,8 +187,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		folderName,
 		defaultFolderName,
 		folder.id,
-		selectedColor,
-		defaultColor?.value,
+		selectedColorHex,
+		defaultColorHex,
 		freeBusy,
 		defaultFreeBusy,
 		isSharedWithPublic,
@@ -312,6 +201,10 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const onShare = useCallback(() => {
 		if (setModal) setModal('share');
 	}, [setModal]);
+
+	const onCloseModal = useCallback(() => {
+		if (!isColorPickerOpen) onClose();
+	}, [isColorPickerOpen, onClose]);
 
 	const onRevoke = useCallback(
 		(item: Grant) => {
@@ -364,7 +257,10 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const title = useMemo(() => t('action.edit_and_share_calendar', 'Edit and share calendar'), [t]);
 
-	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
+	const placeholder = useMemo(
+		() => `${t('label.choose_representative_name', 'Choose a representative name')}*`,
+		[t]
+	);
 
 	const isCaldavChildReadOnly = useMemo(() => {
 		const caldavChild = isCaldavChild(folder);
@@ -433,13 +329,14 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					setFolderName(e.target.value);
 				}}
 				inputRef={calendarNameInputRef}
+				disabled={isColorPickerOpen}
 			/>
 		);
 	}
 
 	return (
 		<Container data-testid="MainEditModal" style={{ overflowY: 'auto' }}>
-			<ModalHeader onClose={onClose} title={title} showCloseIcon />
+			<ModalHeader onClose={onCloseModal} title={title} showCloseIcon />
 			<Divider />
 			<ModalBody>
 				<Container
@@ -474,25 +371,17 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					</Container>
 
 					{/* Calendar color */}
-					<Container
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
-						orientation="horizontal"
-						height="fit"
-					>
-						<Select
-							label={t('label.calendar_color', 'Calendar color')}
-							onChange={onSelectedColorChange}
-							items={colors}
-							defaultSelection={selectedColor}
-							LabelFactory={LabelFactory}
-						/>
-					</Container>
+					<CalendarColorPicker
+						value={selectedColorHex}
+						onChange={setSelectedColorHex}
+						onOpenChange={setIsColorPickerOpen}
+					/>
 
 					<Checkbox
 						value={freeBusy}
 						defaultChecked={defaultFreeBusy}
 						onClick={toggleFreeBusy}
+						disabled={isColorPickerOpen}
 						label={t(
 							'label.exclude_free_busy',
 							'Exclude this calendar when reporting the free/busy times'
@@ -523,6 +412,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									icon="Plus"
 									onClick={onShare}
 									size="small"
+									disabled={isColorPickerOpen}
 								/>
 							</Container>
 
@@ -549,6 +439,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 															onEdit(item);
 														}}
 														size="small"
+														disabled={isColorPickerOpen}
 													/>
 												</Tooltip>
 												<Padding horizontal="extrasmall" />
@@ -561,6 +452,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 															onRevoke(item);
 														}}
 														size="small"
+														disabled={isColorPickerOpen}
 													/>
 												</Tooltip>
 												<Padding horizontal="extrasmall" />
@@ -576,6 +468,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 															onResend(item);
 														}}
 														size="small"
+														disabled={isColorPickerOpen}
 													/>
 												</Tooltip>
 											</Container>
@@ -605,13 +498,16 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									hasUserToggledPublicRef.current = true;
 									setIsSharedWithPublic((prev) => !prev);
 								}}
+								disabled={isColorPickerOpen}
 								label={t(
 									'share.options.share_calendar_with.public',
 									'Share with public (view only, no password required)'
 								)}
 							/>
 
-							{isSharedWithPublic && <ShareCalendarUrls calendarName={folder.name} />}
+							{isSharedWithPublic && (
+								<ShareCalendarUrls calendarName={folder.name} disabled={isColorPickerOpen} />
+							)}
 						</Container>
 					)}
 				</Container>
@@ -620,7 +516,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			<ModalFooter
 				onConfirm={onConfirm}
 				confirmLabel={t('label.ok', 'OK')}
-				confirmDisabled={disabled}
+				confirmDisabled={disabled || isColorPickerOpen}
 			/>
 		</Container>
 	);

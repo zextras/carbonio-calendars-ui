@@ -46,6 +46,7 @@ export const getShareCalendarRoleOptions = ({
 export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 	const [activeGrant, setActiveGrant] = useState({});
 	const [modal, setModal] = useState('main');
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 	const [t] = useTranslation();
 	const folder = useFolder(folderId);
 	const grant = folder?.acl?.grant;
@@ -65,14 +66,16 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 
 	useEffect(() => {
 		const updateFolder = getUpdateFolder();
-		getFolderRequest({ id: folderId }).then((res: [Folder]) => {
-			if (res?.[0]?.acl?.grant) {
-				updateFolder(folderId, { acl: { grant: res?.[0]?.acl?.grant } });
+		getFolderRequest({ id: folderId }).then((res: { folder?: Folder[] }) => {
+			if (res?.folder?.[0]?.acl?.grant) {
+				updateFolder(folderId, { acl: { grant: res.folder[0].acl.grant } });
 			}
 		});
 	}, [folderId]);
 
 	useEffect(() => {
+		// Escape while the color popover is open is handled by CalendarColorPicker itself
+		// (useCloseOnEscape stops the keydown before it reaches this listener at all).
 		const onKey = (e: KeyboardEvent): void => {
 			if (e.key === 'Escape') {
 				if (modal !== 'main') {
@@ -87,8 +90,20 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 		return () => window.removeEventListener('keydown', onKey, { capture: true });
 	}, [modal, onClose, onGoBack]);
 
+	const contextValue = useMemo(
+		() => ({
+			setModal,
+			onClose,
+			roleOptions,
+			setActiveGrant,
+			isColorPickerOpen,
+			setIsColorPickerOpen
+		}),
+		[onClose, roleOptions, isColorPickerOpen]
+	);
+
 	return (
-		<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
+		<EditModalContext.Provider value={contextValue}>
 			{modal === 'main' && folder && (
 				<MainEditModal folder={folder} totalAppointments={folder?.n ?? 0} grant={grant ?? []} />
 			)}

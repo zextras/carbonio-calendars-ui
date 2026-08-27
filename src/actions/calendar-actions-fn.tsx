@@ -59,6 +59,7 @@ export const newCalendar =
 		createModal(
 			{
 				id: modalId,
+				size: 'medium',
 				focusModalContent: false,
 				children: (
 					<StoreProvider>
@@ -193,6 +194,7 @@ export const addIcsFromUrl =
 		createModal(
 			{
 				id: modalId,
+				size: 'medium',
 				focusModalContent: false,
 				children: (
 					<StoreProvider>

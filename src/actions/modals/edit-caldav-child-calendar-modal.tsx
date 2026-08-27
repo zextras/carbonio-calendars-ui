@@ -3,16 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import {
-	Container,
-	Input,
-	Padding,
-	Select,
-	Tooltip,
-	useSnackbar
-} from '@zextras/carbonio-design-system';
+import { Container, Input, Padding, Tooltip, useSnackbar } from '@zextras/carbonio-design-system';
 import { useFolder } from '@zextras/carbonio-ui-commons';
 import { compact } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -24,9 +17,8 @@ import {
 	useDuplicateCalendarNameValidation
 } from './edit-caldav-modal-helpers';
 import { ModalHeader } from 'commons/modal-header';
-import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
+import { CalendarColorPicker, resolveCalendarColorHex } from 'commons/calendar-color-picker';
 import { FOLDER_OPERATIONS } from 'constants/api';
-import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { folderAction } from 'store/actions/calendar-actions';
 
 type EditCaldavChildCalendarModalProps = {
@@ -36,20 +28,26 @@ type EditCaldavChildCalendarModalProps = {
 
 export const EditCaldavChildCalendarModal = ({
 	folderId,
-	onClose
+	onClose: onCloseProp
 }: EditCaldavChildCalendarModalProps): JSX.Element => {
 	const [t] = useTranslation();
 	const folder = useFolder(folderId);
 	const createSnackbar = useSnackbar();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 	const [calendarName, setCalendarName] = useState(folder?.name ?? '');
-	const [selectedColor, setSelectedColor] = useState(
-		folder?.rgb
-			? CALENDARS_STANDARD_COLORS.findIndex(
-					(c) => c.color.toLowerCase() === folder.rgb?.toLowerCase()
-				).toString()
-			: '0'
+
+	const onClose = useCallback(() => {
+		if (isColorPickerOpen) {
+			return;
+		}
+		onCloseProp();
+	}, [onCloseProp, isColorPickerOpen]);
+	const defaultColorHex = useMemo(
+		() => resolveCalendarColorHex(folder?.color, folder?.rgb),
+		[folder?.color, folder?.rgb]
 	);
+	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
 	const normalizedCurrentName = (folder?.name ?? '').trim().toLowerCase();
 	const isReadOnly = folder?.perm && !/w/.test(folder.perm);
 	const nameDisabledTooltip = t(
@@ -57,28 +55,11 @@ export const EditCaldavChildCalendarModal = ({
 		'You cannot edit the name of this calendar'
 	);
 
-	const originalColorIndex = folder?.rgb
-		? CALENDARS_STANDARD_COLORS.findIndex(
-				(c) => c.color.toLowerCase() === folder.rgb?.toLowerCase()
-			).toString()
-		: '0';
-
 	const isDuplicateCalendarName = useDuplicateCalendarNameValidation({
 		folderId,
 		calendarName,
 		normalizedCurrentName
 	});
-
-	const colorItems = useMemo(
-		() => buildCalendarColorItems((colorLabel) => t(`colors.${colorLabel}`)),
-		[t]
-	);
-
-	const selectedRgb = useMemo(
-		() =>
-			CALENDARS_STANDARD_COLORS[Number(selectedColor)]?.color ?? CALENDARS_STANDARD_COLORS[0].color,
-		[selectedColor]
-	);
 
 	const onConfirm = (): void => {
 		if (!folder || isSubmitting) {
@@ -87,7 +68,7 @@ export const EditCaldavChildCalendarModal = ({
 
 		const trimmedName = calendarName.trim();
 		const hasNameChanged = trimmedName !== folder.name;
-		const hasColorChanged = selectedColor !== originalColorIndex;
+		const hasColorChanged = selectedColorHex !== defaultColorHex;
 
 		if (!hasNameChanged && !hasColorChanged) {
 			showChangesSavedSnackbar(createSnackbar, 'edit-caldav-child-calendar-success', t);
@@ -105,7 +86,9 @@ export const EditCaldavChildCalendarModal = ({
 			hasNameChanged && !isReadOnly
 				? { op: FOLDER_OPERATIONS.RENAME, name: trimmedName, id: folderId }
 				: undefined,
-			hasColorChanged ? { op: FOLDER_OPERATIONS.COLOR, rgb: selectedRgb, id: folderId } : undefined
+			hasColorChanged
+				? { op: FOLDER_OPERATIONS.COLOR, rgb: selectedColorHex, id: folderId }
+				: undefined
 		]);
 
 		if (actions.length > 0) {
@@ -142,7 +125,7 @@ export const EditCaldavChildCalendarModal = ({
 			{isReadOnly ? (
 				<Tooltip label={nameDisabledTooltip} placement="top" maxWidth="fit-content">
 					<Input
-						label={`${t('label.calendars_name', "Calendars' name")}*`}
+						label={`${t('label.choose_representative_name', 'Choose a representative name')}*`}
 						background={'gray5'}
 						value={calendarName}
 						disabled
@@ -150,7 +133,7 @@ export const EditCaldavChildCalendarModal = ({
 				</Tooltip>
 			) : (
 				<Input
-					label={`${t('label.calendars_name', "Calendars' name")}*`}
+					label={`${t('label.choose_representative_name', 'Choose a representative name')}*`}
 					background={'gray5'}
 					hasError={isDuplicateCalendarName}
 					description={
@@ -162,28 +145,24 @@ export const EditCaldavChildCalendarModal = ({
 							: undefined
 					}
 					value={calendarName}
-					disabled={isSubmitting}
+					disabled={isSubmitting || isColorPickerOpen}
 					onChange={(event): void => setCalendarName(event.target.value)}
 				/>
 			)}
 			<Padding top="medium" />
-			<Select
-				label={t('label.select_color', 'Select color')}
-				items={colorItems}
-				defaultSelection={colorItems[Number(originalColorIndex)]}
-				LabelFactory={CalendarColorLabelFactory}
+			<CalendarColorPicker
+				value={selectedColorHex}
+				onChange={setSelectedColorHex}
+				onOpenChange={setIsColorPickerOpen}
 				disabled={isSubmitting}
-				onChange={(value): void => {
-					if (value) {
-						setSelectedColor(value);
-					}
-				}}
 			/>
 			<Padding top="medium" />
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('label.save_changes', 'Save Changes')}
-				disabled={!calendarName.trim() || isSubmitting || isDuplicateCalendarName}
+				disabled={
+					!calendarName.trim() || isSubmitting || isDuplicateCalendarName || isColorPickerOpen
+				}
 			/>
 		</Container>
 	);
