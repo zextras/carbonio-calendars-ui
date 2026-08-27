@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { ColorDot, ColorDotsRow, findExactColorIndex } from './color-dots-row';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import { useCloseOnEscape } from 'hooks/use-close-on-escape';
+import { useOnOutsideClick } from 'hooks/use-on-outside-click';
 import { usePreventBackdropClose } from 'hooks/use-prevent-backdrop-close';
 
 const CALENDAR_COLOR_OPTIONS = CALENDARS_STANDARD_COLORS.map((color) => ({
@@ -138,6 +139,7 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 	}, []);
 
 	useCloseOnEscape(isPopoverOpen, onCancelCustomColor);
+	useOnOutsideClick(isPopoverOpen, popoverContentRef, colorSwatchRef, onCancelCustomColor);
 
 	const onToggleTrigger = useCallback(() => {
 		setIsPopoverOpen((prev) => !prev);
@@ -164,10 +166,14 @@ export const CalendarColorPicker: FC<CalendarColorPickerProps> = ({
 				disabled={disabled || isPopoverOpen}
 			>
 				{lastCustomHex && (
-					<Tooltip label={t('label.custom_color', 'Custom color (hex code)')}>
+					<Tooltip
+						label={t('label.custom_color', 'Custom color ({{hex}})', { hex: lastCustomHex })}
+					>
 						<ColorDot
 							type="button"
-							aria-label={t('label.custom_color', 'Custom color (hex code)')}
+							aria-label={t('label.custom_color', 'Custom color ({{hex}})', {
+								hex: lastCustomHex
+							})}
 							aria-pressed={isCustomColorSelected}
 							$color={lastCustomHex}
 							$selected={isCustomColorSelected}

@@ -5,6 +5,8 @@
  */
 import React, { FC, useState } from 'react';
 
+import { CustomModal } from '@zextras/carbonio-design-system';
+
 import { CalendarColorPicker, CalendarColorPickerProps } from '../calendar-color-picker';
 import { screen, setupTest } from '@test-setup';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
@@ -12,7 +14,7 @@ import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 const STANDARD_COLOR = CALENDARS_STANDARD_COLORS[1]; // blue
 const ANOTHER_STANDARD_COLOR = CALENDARS_STANDARD_COLORS[3]; // green
 const CUSTOM_HEX = '#123456';
-const CUSTOM_COLOR_LABEL = 'Custom color (hex code)';
+const CUSTOM_COLOR_LABEL = `Custom color (${CUSTOM_HEX})`;
 const HEX_INPUT_LABEL = 'Hex color';
 const ARIA_PRESSED = 'aria-pressed';
 
@@ -134,6 +136,53 @@ describe('CalendarColorPicker', () => {
 		await user.click(screen.getByText('Cancel'));
 
 		expect(onChange).not.toHaveBeenCalled();
+		expect(screen.queryByRole('textbox', { name: HEX_INPUT_LABEL })).not.toBeInTheDocument();
+	});
+
+	test('clicking outside the popover closes it without calling onChange', async () => {
+		const onChange = vi.fn();
+		const { user } = setupTest(
+			<>
+				<div>outside content</div>
+				<CalendarColorPicker value={STANDARD_COLOR.color} onChange={onChange} />
+			</>
+		);
+
+		await user.click(getCustomizeTrigger());
+		await user.click(screen.getByText('outside content'));
+
+		expect(onChange).not.toHaveBeenCalled();
+		expect(screen.queryByRole('textbox', { name: HEX_INPUT_LABEL })).not.toBeInTheDocument();
+	});
+
+	test('clicking outside the popover closes it even inside a CustomModal, without closing the modal', async () => {
+		const onChange = vi.fn();
+		const onModalClose = vi.fn();
+		const { user } = setupTest(
+			<CustomModal open onClose={onModalClose}>
+				<div>other modal content</div>
+				<CalendarColorPicker value={STANDARD_COLOR.color} onChange={onChange} />
+			</CustomModal>
+		);
+
+		await user.click(getCustomizeTrigger());
+		await user.click(screen.getByText('other modal content'));
+
+		expect(onChange).not.toHaveBeenCalled();
+		expect(screen.queryByRole('textbox', { name: HEX_INPUT_LABEL })).not.toBeInTheDocument();
+		expect(onModalClose).not.toHaveBeenCalled();
+	});
+
+	test('clicking the trigger again while open still toggles the popover closed', async () => {
+		const { user } = setupTest(
+			<CalendarColorPicker value={STANDARD_COLOR.color} onChange={vi.fn()} />
+		);
+
+		const trigger = getCustomizeTrigger();
+		await user.click(trigger);
+		expect(getHexInput()).toBeVisible();
+
+		await user.click(trigger);
 		expect(screen.queryByRole('textbox', { name: HEX_INPUT_LABEL })).not.toBeInTheDocument();
 	});
 
