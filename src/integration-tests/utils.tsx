@@ -58,7 +58,7 @@ export async function setupCalendarViewIntegrationTest({
 
 export async function typeCalendarName(user: UserEvent, value: string): Promise<void> {
 	const calendarNameInput = screen.getByRole('textbox', {
-		name: /Calendar name/i
+		name: /representative name/i
 	});
 	await user.click(calendarNameInput);
 	await user.paste(value);
