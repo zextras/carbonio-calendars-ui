@@ -48,6 +48,39 @@ describe('CalendarAccordionItem', () => {
 
 			expect(screen.getByText('Calendar')).toBeVisible();
 		});
+
+		it('appends the owner to the label for a linked calendar', () => {
+			const customFolder = {
+				...generateFolder({
+					view: 'appointment',
+					id: '2345',
+					name: 'Calendar',
+					isLink: true,
+					checked: false
+				}),
+				owner: 'mattia.tisato@zextras.com'
+			};
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByText('Calendar (mattia.tisato@zextras.com)')).toBeVisible();
+		});
+
+		it('does not append an owner to the label for a non-linked calendar', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'CustomCalendar',
+				isLink: false,
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByText('CustomCalendar')).toBeVisible();
+		});
 	});
 
 	describe('Selection state', () => {

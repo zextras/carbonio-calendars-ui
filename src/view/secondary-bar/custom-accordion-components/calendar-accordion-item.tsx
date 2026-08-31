@@ -116,16 +116,19 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 
 	const folderName = useMemo((): string => {
 		const { id } = getFolderIdParts(calendarId);
+		let name = calendar?.name ?? '';
 		if (id === FOLDERS.CALENDAR) {
-			return t('label.calendar', 'Calendar');
+			name = t('label.calendar', 'Calendar');
+		} else if (id === FOLDERS.TRASH) {
+			name = t('label.trash', 'Trash');
 		}
 
-		if (id === FOLDERS.TRASH) {
-			return t('label.trash', 'Trash');
+		if (calendar?.isLink && calendar.owner) {
+			return `${name} (${calendar.owner})`;
 		}
 
-		return calendar?.name ?? '';
-	}, [calendar?.name, calendarId, t]);
+		return name;
+	}, [calendar, calendarId, t]);
 
 	const accordionItem = useMemo<AccordionItemType | null>(() => {
 		if (!calendar) {
