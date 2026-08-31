@@ -36,12 +36,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { importCalendarICSFn } from 'actions/calendar-actions-fn';
-import {
-	recursiveToggleCheck,
-	getFolderIcon,
-	isExternalSyncFolder,
-	isLinkChild
-} from 'commons/utilities';
+import { recursiveToggleCheck, getFolderIcon, isExternalSyncFolder } from 'commons/utilities';
 import { useCalendarActions } from 'hooks/use-calendar-actions';
 import { useCheckedCalendarsQuery } from 'hooks/use-checked-calendars-query';
 import { setCalendarColor } from 'normalizations/normalizations-utils';
@@ -149,21 +144,21 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 			return null;
 		}
 
-		if (calendar.isLink || isLinkChild(calendar)) {
-			const tooltipText = t('tooltip.folder_linked_status', 'Linked to me');
-			return RowWithIcon('Linked', 'linked', tooltipText);
+		if (root?.name !== ROOT_NAME) {
+			const tooltipText = t('tooltip.folder_delegated_status', 'Shared account calendar');
+			return RowWithIcon('DelegatedCalendarOutline', 'gray0', tooltipText);
 		}
 
-		if (calendar.acl?.grant) {
+		if (calendar.acl?.grant?.length) {
 			const tooltipText = t('tooltip.folder_sharing_status', {
 				count: calendar.acl.grant.length,
 				defaultValue_one: 'Shared with {{count}} person',
 				defaultValue: 'Shared with {{count}} people'
 			});
-			return RowWithIcon('Shared', 'shared', tooltipText);
+			return RowWithIcon('Share', 'gray0', tooltipText);
 		}
 		return null;
-	}, [calendar, t]);
+	}, [calendar, root, t]);
 
 	const externalStatusIcon = useMemo<React.ReactNode>(() => {
 		if (!calendar || !isExternalSyncFolder(calendar)) {

@@ -19,6 +19,7 @@ import { getSetupServer } from '@jest-setup';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
+import { getMocksContext } from '@test-utils/utils/mocks-context';
 
 describe('CalendarAccordionItem', () => {
 	const store = configureStore({ reducer: combineReducers(reducers) });
@@ -195,19 +196,32 @@ describe('CalendarAccordionItem', () => {
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.shared)).toBeVisible();
 		});
 
-		it('shows linked status icon when calendar is a link', () => {
+		it('shows no status icon when calendar is a linked calendar (shared with me)', () => {
 			const customFolder = generateFolder({
 				view: 'appointment',
 				id: '2345',
 				name: 'CustomCalendar',
 				isLink: true,
+				acl: { grant: [] },
 				checked: false
 			});
 			const item = { id: customFolder.id };
 
 			setupCalendarAccordionItem(item, [customFolder]);
 
-			expect(screen.getByTestId(TEST_SELECTORS.ICONS.linked)).toBeVisible();
+			expect(screen.queryByTestId(TEST_SELECTORS.ICONS.shared)).not.toBeInTheDocument();
+			expect(screen.queryByTestId(TEST_SELECTORS.ICONS.delegatedCalendar)).not.toBeInTheDocument();
+		});
+
+		it('shows delegated status icon for calendars belonging to a shared account', () => {
+			populateFoldersStore();
+			const mockedContext = getMocksContext();
+			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
+			const item = { id: `${sharedAccountIdentity.identity.id}:${FOLDERS.CALENDAR}` };
+
+			setupTest(<CalendarAccordionItem item={item} />, { store });
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.delegatedCalendar)).toBeVisible();
 		});
 	});
 
