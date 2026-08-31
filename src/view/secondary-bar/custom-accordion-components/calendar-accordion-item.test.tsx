@@ -135,6 +135,38 @@ describe('CalendarAccordionItem', () => {
 
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
 		});
+
+		it('renders delegated calendar icon (checked) for calendars belonging to a shared account', () => {
+			const mockedContext = getMocksContext();
+			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: `${sharedAccountIdentity.identity.id}:999`,
+				name: 'DelegatedCalendarChecked',
+				checked: true
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedDelegatedCalendar)).toBeVisible();
+		});
+
+		it('renders delegated calendar icon (unchecked) for calendars belonging to a shared account', () => {
+			const mockedContext = getMocksContext();
+			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: `${sharedAccountIdentity.identity.id}:998`,
+				name: 'DelegatedCalendarUnchecked',
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedDelegatedCalendar)).toBeVisible();
+		});
 	});
 
 	describe('Interaction', () => {
@@ -210,18 +242,6 @@ describe('CalendarAccordionItem', () => {
 			setupCalendarAccordionItem(item, [customFolder]);
 
 			expect(screen.queryByTestId(TEST_SELECTORS.ICONS.shared)).not.toBeInTheDocument();
-			expect(screen.queryByTestId(TEST_SELECTORS.ICONS.delegatedCalendar)).not.toBeInTheDocument();
-		});
-
-		it('shows delegated status icon for calendars belonging to a shared account', () => {
-			populateFoldersStore();
-			const mockedContext = getMocksContext();
-			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
-			const item = { id: `${sharedAccountIdentity.identity.id}:${FOLDERS.CALENDAR}` };
-
-			setupTest(<CalendarAccordionItem item={item} />, { store });
-
-			expect(screen.getByTestId(TEST_SELECTORS.ICONS.delegatedCalendar)).toBeVisible();
 		});
 	});
 

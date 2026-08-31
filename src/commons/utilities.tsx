@@ -11,6 +11,7 @@ import {
 	FOLDERS,
 	getFoldersMap,
 	getRoot,
+	getRootAccountId,
 	getUpdateFolder,
 	hasId
 } from '@zextras/carbonio-ui-commons';
@@ -41,6 +42,12 @@ export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
 export const isMainRootChild = (item: { id: string }): boolean => {
 	const root = getRoot(item.id);
 	return root?.id === FOLDERS.USER_ROOT;
+};
+
+export const isDelegatedAccountFolder = (item: { id: string }): boolean => {
+	const rootAccountId = getRootAccountId(item.id);
+	const root = getRoot(rootAccountId ?? FOLDERS.USER_ROOT);
+	return !!root && root.name !== ROOT_NAME;
 };
 
 export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolean =>
@@ -473,6 +480,8 @@ export const getFolderIcon = ({
 		return '';
 	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
 	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
+	if (isDelegatedAccountFolder(item))
+		return checked ? 'DelegatedCalendar' : 'DelegatedCalendarOutline';
 	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 	if (isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })) {
 		return checked ? 'GroupCalendar' : 'GroupCalendarOutline';

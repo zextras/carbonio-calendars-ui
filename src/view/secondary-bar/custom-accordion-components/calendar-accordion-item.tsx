@@ -144,11 +144,6 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 			return null;
 		}
 
-		if (root?.name !== ROOT_NAME) {
-			const tooltipText = t('tooltip.folder_delegated_status', 'Shared account calendar');
-			return RowWithIcon('DelegatedCalendarOutline', 'gray0', tooltipText);
-		}
-
 		if (calendar.acl?.grant?.length) {
 			const tooltipText = t('tooltip.folder_sharing_status', {
 				count: calendar.acl.grant.length,
@@ -158,7 +153,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 			return RowWithIcon('Share', 'gray0', tooltipText);
 		}
 		return null;
-	}, [calendar, root, t]);
+	}, [calendar, t]);
 
 	const externalStatusIcon = useMemo<React.ReactNode>(() => {
 		if (!calendar || !isExternalSyncFolder(calendar)) {
