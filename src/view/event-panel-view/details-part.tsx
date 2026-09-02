@@ -24,7 +24,7 @@ import { NeverSentWarningRow } from '../event-summary-view/never-sent-warning-ro
 import TagsRow from '../event-summary-view/tags-row';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
-import { isExternalSyncFolder } from 'commons/utilities';
+import { getCalendarOwnerEmail, getFolderIcon, isExternalSyncFolder } from 'commons/utilities';
 
 const PaddedRow = styled(Row)`
 	padding: 0.25rem 0.25rem;
@@ -105,6 +105,19 @@ export const DetailsPart = ({
 		[calendar?.color, calendar?.rgb]
 	);
 
+	const calendarIcon = useMemo(
+		(): string => (calendar ? getFolderIcon({ item: calendar, checked: true }) : 'Calendar2'),
+		[calendar]
+	);
+
+	const calendarTooltipLabel = useMemo((): string => {
+		if (!calendar?.name) {
+			return '';
+		}
+		const ownerEmail = getCalendarOwnerEmail(calendar);
+		return ownerEmail ? `${calendar.name} (${ownerEmail})` : calendar.name;
+	}, [calendar]);
+
 	const timeData = useMemo<{
 		allDay?: boolean;
 		start?: number;
@@ -183,7 +196,11 @@ export const DetailsPart = ({
 							/>
 						)}
 						<Padding right={'small'} />
-						<CustomIconInfo tooltipLabel={calendar?.name} color={color.color} icon={'Calendar2'} />
+						<CustomIconInfo
+							tooltipLabel={calendarTooltipLabel}
+							color={color.color}
+							icon={calendarIcon}
+						/>
 					</Container>
 					{timeData && <TimeInfoRow timeInfoData={timeData} />}
 					{locationData && locationData?.class !== 'PRI' && (

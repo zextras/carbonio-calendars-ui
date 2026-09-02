@@ -50,6 +50,45 @@ export const isDelegatedAccountFolder = (item: { id: string }): boolean => {
 	return !!root && root.name !== ROOT_NAME;
 };
 
+/**
+ * Returns the email address to show as the "owner" of a calendar, if any:
+ * - for a calendar belonging to a delegated/shared account, the account's own email
+ * - for a calendar linked to the primary account, the sharer's email
+ * - otherwise undefined (own, non-shared calendar)
+ */
+export const getCalendarOwnerEmail = (item: {
+	id: string;
+	isLink?: boolean;
+	owner?: string;
+}): string | undefined => {
+	if (isDelegatedAccountFolder(item)) {
+		const rootAccountId = getRootAccountId(item.id);
+		const root = getRoot(rootAccountId ?? FOLDERS.USER_ROOT);
+		return root?.name;
+	}
+	if (item.isLink && item.owner) {
+		return item.owner;
+	}
+	return undefined;
+};
+
+/**
+ * Whether a calendar with this name already exists among the primary
+ * account's top-level calendars (i.e. would collide with a new mountpoint,
+ * which is always created there).
+ */
+export const isCalendarNameUsedInMainAccount = (name: string): boolean => {
+	const folders = getFoldersMap();
+	const normalizedName = name.trim().toLowerCase();
+	return some(
+		folders,
+		(folder) =>
+			folder.view === 'appointment' &&
+			folder.l === FOLDERS.USER_ROOT &&
+			folder.name.trim().toLowerCase() === normalizedName
+	);
+};
+
 export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolean =>
 	/y/.test(item.f ?? '') || !!item.url;
 
@@ -480,9 +519,9 @@ export const getFolderIcon = ({
 		return '';
 	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
 	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
+	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 	if (isDelegatedAccountFolder(item))
 		return checked ? 'DelegatedCalendar' : 'DelegatedCalendarOutline';
-	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 	if (isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })) {
 		return checked ? 'GroupCalendar' : 'GroupCalendarOutline';
 	}

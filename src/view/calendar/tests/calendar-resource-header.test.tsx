@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React from 'react';
+import React, { act } from 'react';
 
 import { screen } from '@testing-library/react';
 
@@ -45,6 +45,77 @@ describe('CalendarResourceHeader', () => {
 		expect(columnWrapper.style.getPropertyValue('--rbc-slot-selection-background')).toBe(
 			standardColor.background
 		);
+	});
+
+	it('renders the owner email in parentheses when the resource has an owner', () => {
+		setupTest(
+			<CalendarResourceHeader
+				index={0}
+				label="Calendar A"
+				resource={{
+					id: 'cal-a',
+					title: 'Calendar A',
+					color: 1,
+					owner: 'shared.account@zextras.com'
+				}}
+			/>
+		);
+
+		expect(screen.getByText('Calendar A')).toBeVisible();
+		expect(screen.getByText('(shared.account@zextras.com)')).toBeVisible();
+	});
+
+	it('does not render an owner when the resource has none', () => {
+		setupTest(
+			<CalendarResourceHeader
+				index={0}
+				label="Calendar A"
+				resource={{ id: 'cal-a', title: 'Calendar A', color: 1 }}
+			/>
+		);
+
+		expect(screen.queryByText(/\(.*\)/)).not.toBeInTheDocument();
+	});
+
+	it('shows a tooltip with the calendar name for a resource without an owner', async () => {
+		const { user } = setupTest(
+			<CalendarResourceHeader
+				index={0}
+				label="Calendar A"
+				resource={{ id: 'cal-a', title: 'Calendar A', color: 1 }}
+			/>
+		);
+
+		await user.hover(screen.getByText('Calendar A'));
+		act(() => {
+			vi.advanceTimersByTime(3000);
+		});
+
+		expect((await screen.findAllByText('Calendar A')).length).toBeGreaterThan(1);
+	});
+
+	it('shows a tooltip with the calendar name and owner for a resource with an owner', async () => {
+		const { user } = setupTest(
+			<CalendarResourceHeader
+				index={0}
+				label="Delegated calendar"
+				resource={{
+					id: 'cal-a',
+					title: 'Delegated calendar',
+					color: 1,
+					owner: 'shared.account@zextras.com'
+				}}
+			/>
+		);
+
+		await user.hover(screen.getByText('Delegated calendar'));
+		act(() => {
+			vi.advanceTimersByTime(3000);
+		});
+
+		expect(
+			await screen.findByText('Delegated calendar (shared.account@zextras.com)')
+		).toBeVisible();
 	});
 
 	it('does not throw when no .rbc-time-header-content ancestor is present', () => {

@@ -64,7 +64,8 @@ describe('CalendarAccordionItem', () => {
 
 			setupCalendarAccordionItem(item, [customFolder]);
 
-			expect(screen.getByText('Calendar (mattia.tisato@zextras.com)')).toBeVisible();
+			expect(screen.getByText('Calendar')).toBeVisible();
+			expect(screen.getByText('(mattia.tisato@zextras.com)')).toBeVisible();
 		});
 
 		it('does not append an owner to the label for a non-linked calendar', () => {
@@ -199,6 +200,41 @@ describe('CalendarAccordionItem', () => {
 			setupCalendarAccordionItem(item, [customFolder]);
 
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedDelegatedCalendar)).toBeVisible();
+		});
+
+		it('renders shared calendar icon for a calendar linked to my main account', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'SharedWithMe',
+				isLink: true,
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedSharedCalendar)).toBeVisible();
+		});
+
+		it('renders shared calendar icon, not delegated calendar icon, for a linked calendar belonging to a shared account', () => {
+			const mockedContext = getMocksContext();
+			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: `${sharedAccountIdentity.identity.id}:997`,
+				name: 'SharedWithSharedAccount',
+				isLink: true,
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedSharedCalendar)).toBeVisible();
+			expect(
+				screen.queryByTestId(TEST_SELECTORS.ICONS.unSelectedDelegatedCalendar)
+			).not.toBeInTheDocument();
 		});
 	});
 

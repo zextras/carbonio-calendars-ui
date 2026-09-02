@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
-import { Row, Text } from '@zextras/carbonio-design-system';
+import { getColor, Padding, Row, Text, Tooltip, useTheme } from '@zextras/carbonio-design-system';
 import type { ResourceHeaderProps } from 'react-big-calendar';
 
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
@@ -14,6 +14,7 @@ export type CalendarResource = {
 	id: string;
 	title: string;
 	color: number | undefined;
+	owner?: string;
 };
 
 export const CalendarResourceHeader = (
@@ -23,6 +24,11 @@ export const CalendarResourceHeader = (
 		color: props.resource.color
 	});
 	const rowRef = useRef<HTMLDivElement>(null);
+	const theme = useTheme();
+	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
+	const tooltipLabel = props.resource.owner
+		? `${props.resource.title} (${props.resource.owner})`
+		: props.resource.title;
 
 	// react-big-calendar's all-day row (BackgroundCells) never forwards the
 	// resourceId to dayPropGetter, so it can't be themed from there. This is
@@ -44,8 +50,27 @@ export const CalendarResourceHeader = (
 			borderColor={backgroundColor.color}
 			height="2.25rem"
 			padding={'small'}
+			mainAlignment="flex-start"
+			wrap="nowrap"
+			minWidth={0}
+			flexGrow={1}
+			flexBasis="0"
 		>
-			<Text weight={'bold'}>{props.label}</Text>
+			<Tooltip label={tooltipLabel}>
+				<Row mainAlignment="flex-start" wrap="nowrap" minWidth={0} flexGrow={1} flexBasis="0">
+					<Text weight={'bold'} style={{ minWidth: 0, flexShrink: 0, maxWidth: '65%' }}>
+						{props.resource.title}
+					</Text>
+					{props.resource.owner && (
+						<>
+							<Padding left="extrasmall" />
+							<Text size="small" style={{ minWidth: 0, color: ownerLabelColor }}>
+								{`(${props.resource.owner})`}
+							</Text>
+						</>
+					)}
+				</Row>
+			</Tooltip>
 		</Row>
 	);
 };

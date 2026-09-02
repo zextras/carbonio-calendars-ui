@@ -24,6 +24,8 @@ export const TEST_SELECTORS = {
 		shared: 'icon: Share',
 		selectedDelegatedCalendar: 'icon: DelegatedCalendar',
 		unSelectedDelegatedCalendar: 'icon: DelegatedCalendarOutline',
+		selectedSharedCalendar: 'icon: SharedCalendar',
+		unSelectedSharedCalendar: 'icon: SharedCalendarOutline',
 		leftArrow: 'icon: ChevronLeft',
 		rightArrow: 'icon: ChevronRight',
 		closeOutline: 'icon: CloseOutline',

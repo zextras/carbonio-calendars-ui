@@ -21,7 +21,10 @@ import {
 	AccordionItem,
 	Dropdown,
 	Icon,
-	Text
+	Text,
+	Container,
+	useTheme,
+	getColor
 } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import {
@@ -87,6 +90,8 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 
 	const { displayName } = useUserAccount();
 	const [t] = useTranslation();
+	const theme = useTheme();
+	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
@@ -116,19 +121,25 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 
 	const folderName = useMemo((): string => {
 		const { id } = getFolderIdParts(calendarId);
-		let name = calendar?.name ?? '';
 		if (id === FOLDERS.CALENDAR) {
-			name = t('label.calendar', 'Calendar');
-		} else if (id === FOLDERS.TRASH) {
-			name = t('label.trash', 'Trash');
+			return t('label.calendar', 'Calendar');
+		}
+		if (id === FOLDERS.TRASH) {
+			return t('label.trash', 'Trash');
 		}
 
-		if (calendar?.isLink && calendar.owner) {
-			return `${name} (${calendar.owner})`;
-		}
+		return calendar?.name ?? '';
+	}, [calendar?.name, calendarId, t]);
 
-		return name;
-	}, [calendar, calendarId, t]);
+	const ownerLabel = useMemo(
+		(): string | null => (calendar?.isLink && calendar.owner ? `(${calendar.owner})` : null),
+		[calendar]
+	);
+
+	const fullLabel = useMemo(
+		(): string => (ownerLabel ? `${folderName} ${ownerLabel}` : folderName),
+		[folderName, ownerLabel]
+	);
 
 	const accordionItem = useMemo<AccordionItemType | null>(() => {
 		if (!calendar) {
@@ -136,11 +147,11 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 		}
 		return {
 			...calendar,
-			label: folderName,
+			label: fullLabel,
 			icon: getFolderIcon({ item: calendar, checked: calendar.checked ?? false }),
 			iconColor: setCalendarColor({ color: calendar.color, rgb: calendar.rgb }).color
 		} as AccordionItemType;
-	}, [calendar, folderName]);
+	}, [calendar, fullLabel]);
 
 	const sharedStatusIcon = useMemo<React.ReactNode>(() => {
 		if (!calendar) {
@@ -274,7 +285,36 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 				<Row onClick={onClick}>
 					<Padding left="small" />
 					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
-						<AccordionItem item={accordionItem} />
+						<AccordionItem
+							item={ownerLabel ? { ...accordionItem, label: undefined } : accordionItem}
+						>
+							{ownerLabel && (
+								<Container
+									orientation="horizontal"
+									mainAlignment="flex-start"
+									crossAlignment="baseline"
+									minWidth={0}
+									flexGrow={1}
+									flexBasis="0"
+								>
+									<Text
+										overflow="ellipsis"
+										size="medium"
+										style={{ minWidth: 0, flexShrink: 0, maxWidth: '65%' }}
+									>
+										{folderName}
+									</Text>
+									<Padding left="extrasmall" />
+									<Text
+										overflow="ellipsis"
+										size="small"
+										style={{ minWidth: 0, flexShrink: 1, color: ownerLabelColor }}
+									>
+										{ownerLabel}
+									</Text>
+								</Container>
+							)}
+						</AccordionItem>
 					</Tooltip>
 					{externalStatusIcon}
 					{sharedStatusIcon}

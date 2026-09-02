@@ -26,6 +26,7 @@ import { MemoCustomEvent } from './custom-event';
 import { CustomShowMoreButton } from './custom-show-more-button';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
+import { getCalendarOwnerEmail } from '../../commons/utilities';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
@@ -354,7 +355,8 @@ export default function CalendarComponent(): React.JSX.Element {
 			return map(calendars, (calendar) => ({
 				id: calendar.id,
 				title: calendar.name,
-				color: calendar.color
+				color: calendar.color,
+				owner: getCalendarOwnerEmail(calendar)
 			}));
 		}
 		return undefined;
