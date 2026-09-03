@@ -5,7 +5,15 @@
  */
 import React, { useEffect, useMemo, useRef } from 'react';
 
-import { getColor, Row, Text, Tooltip, useTheme } from '@zextras/carbonio-design-system';
+import {
+	getColor,
+	Icon,
+	Padding,
+	Row,
+	Text,
+	Tooltip,
+	useTheme
+} from '@zextras/carbonio-design-system';
 import type { ResourceHeaderProps } from 'react-big-calendar';
 
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
@@ -14,6 +22,7 @@ export type CalendarResource = {
 	id: string;
 	title: string;
 	color: number | undefined;
+	icon: string;
 	owner?: string;
 };
 
@@ -56,6 +65,9 @@ export const CalendarResourceHeader = (
 			flexGrow={1}
 			flexBasis="0"
 		>
+			<Padding right="extrasmall">
+				<Icon icon={props.resource.icon} color={backgroundColor.color} size="medium" />
+			</Padding>
 			<Tooltip label={tooltipLabel}>
 				<Row
 					orientation="vertical"

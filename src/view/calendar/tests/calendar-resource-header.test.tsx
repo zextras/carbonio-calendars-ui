@@ -18,11 +18,23 @@ describe('CalendarResourceHeader', () => {
 			<CalendarResourceHeader
 				index={0}
 				label="Calendar A"
-				resource={{ id: 'cal-a', title: 'Calendar A', color: 1 }}
+				resource={{ id: 'cal-a', title: 'Calendar A', color: 1, icon: 'Calendar2' }}
 			/>
 		);
 
 		expect(screen.getByText('Calendar A')).toBeVisible();
+	});
+
+	it('renders the resource icon', () => {
+		setupTest(
+			<CalendarResourceHeader
+				index={0}
+				label="Calendar A"
+				resource={{ id: 'cal-a', title: 'Calendar A', color: 1, icon: 'SharedCalendar' }}
+			/>
+		);
+
+		expect(screen.getByTestId('icon: SharedCalendar')).toBeVisible();
 	});
 
 	it("sets the resource's color as CSS variables on the closest .rbc-time-header-content ancestor", () => {
@@ -32,7 +44,7 @@ describe('CalendarResourceHeader', () => {
 				<CalendarResourceHeader
 					index={0}
 					label="Calendar A"
-					resource={{ id: 'cal-a', title: 'Calendar A', color: 1 }}
+					resource={{ id: 'cal-a', title: 'Calendar A', color: 1, icon: 'Calendar2' }}
 				/>
 			</div>
 		);
@@ -56,6 +68,7 @@ describe('CalendarResourceHeader', () => {
 					id: 'cal-a',
 					title: 'Calendar A',
 					color: 1,
+					icon: 'Calendar2',
 					owner: 'shared.account@zextras.com'
 				}}
 			/>
@@ -70,7 +83,7 @@ describe('CalendarResourceHeader', () => {
 			<CalendarResourceHeader
 				index={0}
 				label="Calendar A"
-				resource={{ id: 'cal-a', title: 'Calendar A', color: 1 }}
+				resource={{ id: 'cal-a', title: 'Calendar A', color: 1, icon: 'Calendar2' }}
 			/>
 		);
 
@@ -82,7 +95,7 @@ describe('CalendarResourceHeader', () => {
 			<CalendarResourceHeader
 				index={0}
 				label="Calendar A"
-				resource={{ id: 'cal-a', title: 'Calendar A', color: 1 }}
+				resource={{ id: 'cal-a', title: 'Calendar A', color: 1, icon: 'Calendar2' }}
 			/>
 		);
 
@@ -103,6 +116,7 @@ describe('CalendarResourceHeader', () => {
 					id: 'cal-a',
 					title: 'Delegated calendar',
 					color: 1,
+					icon: 'DelegatedCalendar',
 					owner: 'shared.account@zextras.com'
 				}}
 			/>
@@ -124,7 +138,7 @@ describe('CalendarResourceHeader', () => {
 				<CalendarResourceHeader
 					index={0}
 					label="Calendar A"
-					resource={{ id: 'cal-a', title: 'Calendar A', color: 1 }}
+					resource={{ id: 'cal-a', title: 'Calendar A', color: 1, icon: 'Calendar2' }}
 				/>
 			)
 		).not.toThrow();
