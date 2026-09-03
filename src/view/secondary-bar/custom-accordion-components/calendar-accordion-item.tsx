@@ -292,7 +292,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 							{ownerEmail && (
 								<Container
 									orientation="vertical"
-									mainAlignment="flex-start"
+									mainAlignment="space-between"
 									crossAlignment="flex-start"
 									minWidth={0}
 									flexGrow={1}
