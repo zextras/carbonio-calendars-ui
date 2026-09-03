@@ -131,14 +131,14 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 		return calendar?.name ?? '';
 	}, [calendar?.name, calendarId, t]);
 
-	const ownerLabel = useMemo(
-		(): string | null => (calendar?.isLink && calendar.owner ? `(${calendar.owner})` : null),
+	const ownerEmail = useMemo(
+		(): string | null => (calendar?.isLink && calendar.owner ? calendar.owner : null),
 		[calendar]
 	);
 
 	const fullLabel = useMemo(
-		(): string => (ownerLabel ? `${folderName} ${ownerLabel}` : folderName),
-		[folderName, ownerLabel]
+		(): string => (ownerEmail ? `${folderName} (${ownerEmail})` : folderName),
+		[folderName, ownerEmail]
 	);
 
 	const accordionItem = useMemo<AccordionItemType | null>(() => {
@@ -286,31 +286,26 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 					<Padding left="small" />
 					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
 						<AccordionItem
-							item={ownerLabel ? { ...accordionItem, label: undefined } : accordionItem}
+							item={ownerEmail ? { ...accordionItem, label: undefined } : accordionItem}
 						>
-							{ownerLabel && (
+							{ownerEmail && (
 								<Container
-									orientation="horizontal"
+									orientation="vertical"
 									mainAlignment="flex-start"
-									crossAlignment="baseline"
+									crossAlignment="flex-start"
 									minWidth={0}
 									flexGrow={1}
 									flexBasis="0"
 								>
-									<Text
-										overflow="ellipsis"
-										size="medium"
-										style={{ minWidth: 0, flexShrink: 0, maxWidth: '65%' }}
-									>
+									<Text overflow="ellipsis" size="small" style={{ minWidth: 0, width: '100%' }}>
 										{folderName}
 									</Text>
-									<Padding left="extrasmall" />
 									<Text
 										overflow="ellipsis"
-										size="small"
-										style={{ minWidth: 0, flexShrink: 1, color: ownerLabelColor }}
+										size="extrasmall"
+										style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}
 									>
-										{ownerLabel}
+										{ownerEmail}
 									</Text>
 								</Container>
 							)}

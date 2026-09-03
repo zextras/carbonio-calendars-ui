@@ -6,7 +6,16 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import styled from '@emotion/styled';
-import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	getColor,
+	Icon,
+	Padding,
+	Row,
+	Text,
+	Tooltip,
+	useTheme
+} from '@zextras/carbonio-design-system';
 import { useFolder } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -70,7 +79,7 @@ const CustomIconInfo = ({
 	color,
 	icon
 }: {
-	tooltipLabel: string;
+	tooltipLabel: ReactElement | string;
 	color: string;
 	icon: string;
 }): ReactElement => (
@@ -99,6 +108,8 @@ export const DetailsPart = ({
 	const calendar = useFolder(event.resource.calendar.id);
 	const eventIsfromExternalCalendar = isExternalSyncFolder(calendar ?? {});
 	const [t] = useTranslation();
+	const theme = useTheme();
+	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
 
 	const color = useMemo(
 		() => setCalendarColor({ rgb: calendar?.rgb, color: calendar?.color }),
@@ -110,13 +121,23 @@ export const DetailsPart = ({
 		[calendar]
 	);
 
-	const calendarTooltipLabel = useMemo((): string => {
+	const calendarTooltipLabel = useMemo((): ReactElement | string => {
 		if (!calendar?.name) {
 			return '';
 		}
 		const ownerEmail = getCalendarOwnerEmail(calendar);
-		return ownerEmail ? `${calendar.name} (${ownerEmail})` : calendar.name;
-	}, [calendar]);
+		if (!ownerEmail) {
+			return calendar.name;
+		}
+		return (
+			<Container orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
+				<Text size="small">{calendar.name}</Text>
+				<Text size="extrasmall" style={{ color: ownerLabelColor }}>
+					{ownerEmail}
+				</Text>
+			</Container>
+		);
+	}, [calendar, ownerLabelColor]);
 
 	const timeData = useMemo<{
 		allDay?: boolean;

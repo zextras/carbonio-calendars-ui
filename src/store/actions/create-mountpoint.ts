@@ -7,7 +7,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { JSNS } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
-import { isCalendarNameUsedInMainAccount } from '../../commons/utilities';
 import { batchRequest } from '../../soap/batch-request';
 import { CreateMountpointRequest } from '../../types/soap/soap-actions';
 
@@ -18,9 +17,7 @@ export const createMountpoint = createAsyncThunk(
 			CreateMountpointRequest: map(links, (link) => ({
 				link: {
 					l: 1,
-					name: isCalendarNameUsedInMainAccount(link.name)
-						? `${link.name} ${link.of} ${link.ownerName}`
-						: link.name,
+					name: `${link.name} ${link.of} ${link.ownerName}`,
 					rid: link.folderId,
 					view: 'appointment',
 					zid: link.ownerId

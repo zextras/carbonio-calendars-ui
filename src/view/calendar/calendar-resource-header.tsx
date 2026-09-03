@@ -5,7 +5,7 @@
  */
 import React, { useEffect, useMemo, useRef } from 'react';
 
-import { getColor, Padding, Row, Text, Tooltip, useTheme } from '@zextras/carbonio-design-system';
+import { getColor, Row, Text, Tooltip, useTheme } from '@zextras/carbonio-design-system';
 import type { ResourceHeaderProps } from 'react-big-calendar';
 
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
@@ -48,7 +48,7 @@ export const CalendarResourceHeader = (
 			key={props.resource.id}
 			background={backgroundColor.background}
 			borderColor={backgroundColor.color}
-			height="2.25rem"
+			height={props.resource.owner ? '2.75rem' : '2.25rem'}
 			padding={'small'}
 			mainAlignment="flex-start"
 			wrap="nowrap"
@@ -57,17 +57,22 @@ export const CalendarResourceHeader = (
 			flexBasis="0"
 		>
 			<Tooltip label={tooltipLabel}>
-				<Row mainAlignment="flex-start" wrap="nowrap" minWidth={0} flexGrow={1} flexBasis="0">
-					<Text weight={'bold'} style={{ minWidth: 0, flexShrink: 0, maxWidth: '65%' }}>
+				<Row
+					orientation="vertical"
+					mainAlignment="flex-start"
+					crossAlignment="flex-start"
+					wrap="nowrap"
+					minWidth={0}
+					flexGrow={1}
+					flexBasis="0"
+				>
+					<Text weight={'bold'} size="small" style={{ minWidth: 0, width: '100%' }}>
 						{props.resource.title}
 					</Text>
 					{props.resource.owner && (
-						<>
-							<Padding left="extrasmall" />
-							<Text size="small" style={{ minWidth: 0, color: ownerLabelColor }}>
-								{`(${props.resource.owner})`}
-							</Text>
-						</>
+						<Text size="extrasmall" style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}>
+							{props.resource.owner}
+						</Text>
 					)}
 				</Row>
 			</Tooltip>

@@ -72,23 +72,6 @@ export const getCalendarOwnerEmail = (item: {
 	return undefined;
 };
 
-/**
- * Whether a calendar with this name already exists among the primary
- * account's top-level calendars (i.e. would collide with a new mountpoint,
- * which is always created there).
- */
-export const isCalendarNameUsedInMainAccount = (name: string): boolean => {
-	const folders = getFoldersMap();
-	const normalizedName = name.trim().toLowerCase();
-	return some(
-		folders,
-		(folder) =>
-			folder.view === 'appointment' &&
-			folder.l === FOLDERS.USER_ROOT &&
-			folder.name.trim().toLowerCase() === normalizedName
-	);
-};
-
 export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolean =>
 	/y/.test(item.f ?? '') || !!item.url;
 

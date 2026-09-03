@@ -25,10 +25,10 @@ export const CalendarInfoRow = ({ event }: CalendarInfoRowProps): ReactElement =
 	);
 	const theme = useTheme();
 	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
-	const ownerLabel = useMemo((): string | null => {
-		const ownerEmail = calendar && getCalendarOwnerEmail(calendar);
-		return ownerEmail ? `(${ownerEmail})` : null;
-	}, [calendar]);
+	const ownerEmail = useMemo(
+		(): string | undefined => calendar && getCalendarOwnerEmail(calendar),
+		[calendar]
+	);
 
 	return (
 		<>
@@ -38,17 +38,16 @@ export const CalendarInfoRow = ({ event }: CalendarInfoRowProps): ReactElement =
 						<Padding right="small">
 							<Icon icon={icon} size="medium" color={color.color} />
 						</Padding>
-						<Text overflow="break-word" size="medium" weight="bold" style={{ flexShrink: 0 }}>
-							{calendar?.name}
-						</Text>
-						{ownerLabel && (
-							<>
-								<Padding left="extrasmall" />
-								<Text overflow="break-word" size="small" style={{ color: ownerLabelColor }}>
-									{ownerLabel}
+						<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
+							<Text overflow="break-word" size="small" weight="bold">
+								{calendar?.name}
+							</Text>
+							{ownerEmail && (
+								<Text overflow="break-word" size="extrasmall" style={{ color: ownerLabelColor }}>
+									{ownerEmail}
 								</Text>
-							</>
-						)}
+							)}
+						</Row>
 					</Row>
 				</Row>
 			)}
