@@ -47,7 +47,7 @@ describe('CalendarResourceHeader', () => {
 		);
 	});
 
-	it('renders the owner email on its own line when the resource has an owner', () => {
+	it('renders the owner email in parentheses on its own line when the resource has an owner', () => {
 		setupTest(
 			<CalendarResourceHeader
 				index={0}
@@ -62,7 +62,7 @@ describe('CalendarResourceHeader', () => {
 		);
 
 		expect(screen.getByText('Calendar A')).toBeVisible();
-		expect(screen.getByText('shared.account@zextras.com')).toBeVisible();
+		expect(screen.getByText('(shared.account@zextras.com)')).toBeVisible();
 	});
 
 	it('does not render an owner when the resource has none', () => {

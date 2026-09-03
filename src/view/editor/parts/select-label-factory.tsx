@@ -17,7 +17,7 @@ import {
 	Tooltip,
 	AnyColor
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, useRoot, Grant } from '@zextras/carbonio-ui-commons';
+import { Grant } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
 import { isLinkChild } from '../../../commons/utilities';
@@ -55,6 +55,7 @@ interface CustomSelectItem extends SelectItem {
 	isLink?: boolean;
 	absFolderPath?: string | undefined;
 	color?: string;
+	ownerEmail?: string;
 }
 
 interface CustomLabelFactoryProps extends LabelFactoryProps {
@@ -80,24 +81,23 @@ const RowWithIcon = ({
 );
 
 export const ItemFactory = ({
-	id,
 	color,
 	label,
 	acl,
 	isLink,
 	absFolderPath,
-	disabled
+	disabled,
+	ownerEmail
 }: {
-	id: string | undefined;
 	color: string | undefined;
 	label: string;
 	acl?: { grant: Array<Grant> };
 	isLink?: boolean;
 	absFolderPath?: string | undefined;
 	disabled: boolean;
+	ownerEmail?: string;
 }): JSX.Element => {
 	const [t] = useTranslation();
-	const root = useRoot(id ?? '');
 	const sharedStatusIcon = useMemo(() => {
 		if (isLink || isLinkChild({ absFolderPath })) {
 			const tooltipText = t('tooltip.folder_linked_status', 'Linked to me');
@@ -121,9 +121,9 @@ export const ItemFactory = ({
 			<TextUpperCase disabled={disabled}>{label}</TextUpperCase>
 			{sharedStatusIcon}
 			<Row takeAvailableSpace>
-				{root && root.id !== FOLDERS.USER_ROOT && (
+				{ownerEmail && (
 					<Padding left="small" style={{ overflow: 'hidden' }}>
-						<TextUpperCase color={'gray1'}>{`(${root.name})`}</TextUpperCase>
+						<TextUpperCase color={'gray1'}>{`(${ownerEmail})`}</TextUpperCase>
 					</Padding>
 				)}
 			</Row>
@@ -163,7 +163,7 @@ const LabelFactory = (item: CustomLabelFactoryProps): ReactElement => {
 							isLink={selected[0].isLink}
 							absFolderPath={selected[0].absFolderPath}
 							acl={selected[0].acl}
-							id={selected[0].id}
+							ownerEmail={selected[0].ownerEmail}
 							disabled={disabled}
 						/>
 					)}

@@ -287,6 +287,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
 						<AccordionItem
 							item={ownerEmail ? { ...accordionItem, label: undefined } : accordionItem}
+							height={ownerEmail ? '3.375rem' : undefined}
 						>
 							{ownerEmail && (
 								<Container
@@ -302,10 +303,10 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 									</Text>
 									<Text
 										overflow="ellipsis"
-										size="extrasmall"
+										size="small"
 										style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}
 									>
-										{ownerEmail}
+										{`(${ownerEmail})`}
 									</Text>
 								</Container>
 							)}

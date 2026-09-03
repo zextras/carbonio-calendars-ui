@@ -71,7 +71,7 @@ export const CalendarResourceHeader = (
 					</Text>
 					{props.resource.owner && (
 						<Text size="extrasmall" style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}>
-							{props.resource.owner}
+							{`(${props.resource.owner})`}
 						</Text>
 					)}
 				</Row>

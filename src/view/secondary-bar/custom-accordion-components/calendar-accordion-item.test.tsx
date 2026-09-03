@@ -65,7 +65,7 @@ describe('CalendarAccordionItem', () => {
 			setupCalendarAccordionItem(item, [customFolder]);
 
 			expect(screen.getByText('Calendar')).toBeVisible();
-			expect(screen.getByText('mattia.tisato@zextras.com')).toBeVisible();
+			expect(screen.getByText('(mattia.tisato@zextras.com)')).toBeVisible();
 		});
 
 		it('does not append an owner to the label for a non-linked calendar', () => {

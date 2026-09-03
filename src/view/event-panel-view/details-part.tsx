@@ -133,7 +133,7 @@ export const DetailsPart = ({
 			<Container orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
 				<Text size="small">{calendar.name}</Text>
 				<Text size="extrasmall" style={{ color: ownerLabelColor }}>
-					{ownerEmail}
+					{`(${ownerEmail})`}
 				</Text>
 			</Container>
 		);

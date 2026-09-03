@@ -40,7 +40,7 @@ describe('CalendarInfoRow', () => {
 		expect(screen.getByTestId('icon: Calendar2')).toBeVisible();
 	});
 
-	it('shows the owner on its own line and the shared-calendar icon for a linked calendar', () => {
+	it('shows the owner in parentheses on its own line and the shared-calendar icon for a linked calendar', () => {
 		const customFolder = {
 			...generateFolder({
 				view: 'appointment',
@@ -56,7 +56,7 @@ describe('CalendarInfoRow', () => {
 		setupTest(<CalendarInfoRow event={event} />);
 
 		expect(screen.getByText('Calendar')).toBeVisible();
-		expect(screen.getByText('mattia.tisato@zextras.com')).toBeVisible();
+		expect(screen.getByText('(mattia.tisato@zextras.com)')).toBeVisible();
 		expect(screen.getByTestId('icon: SharedCalendar')).toBeVisible();
 	});
 
@@ -75,6 +75,6 @@ describe('CalendarInfoRow', () => {
 
 		expect(screen.getByTestId('icon: DelegatedCalendar')).toBeVisible();
 		expect(screen.getByText('Delegated calendar')).toBeVisible();
-		expect(screen.getByText(sharedAccountIdentity.identity.email)).toBeVisible();
+		expect(screen.getByText(`(${sharedAccountIdentity.identity.email})`)).toBeVisible();
 	});
 });

@@ -44,7 +44,7 @@ export const CalendarInfoRow = ({ event }: CalendarInfoRowProps): ReactElement =
 							</Text>
 							{ownerEmail && (
 								<Text overflow="break-word" size="extrasmall" style={{ color: ownerLabelColor }}>
-									{ownerEmail}
+									{`(${ownerEmail})`}
 								</Text>
 							)}
 						</Row>

@@ -27,6 +27,7 @@ import { filter, find, map, reject, sortBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
+import { getCalendarOwnerEmail } from '../../../commons/utilities';
 import { PREFS_DEFAULTS } from '../../../constants';
 import {
 	setCalendarColor,
@@ -118,11 +119,13 @@ export const CalendarSelector = ({
 			map(requiredCalendars, (cal) => {
 				const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
 				const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
+				const ownerEmail = getCalendarOwnerEmail(cal);
 				return {
 					...cal,
 					label: labelName,
 					value: cal.id,
 					color: color.color,
+					ownerEmail,
 					customComponent: (
 						<ItemFactory
 							disabled={disabled ?? false}
@@ -131,7 +134,7 @@ export const CalendarSelector = ({
 							isLink={cal.isLink}
 							label={labelName}
 							acl={cal.acl}
-							id={cal.id}
+							ownerEmail={ownerEmail}
 						/>
 					)
 				};

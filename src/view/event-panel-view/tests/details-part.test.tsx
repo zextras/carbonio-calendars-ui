@@ -162,7 +162,7 @@ describe('title-row', () => {
 		});
 
 		expect(await screen.findByText(linkedFolder.name)).toBeVisible();
-		expect(await screen.findByText(linkedFolder.owner)).toBeVisible();
+		expect(await screen.findByText(`(${linkedFolder.owner})`)).toBeVisible();
 	});
 	test('the calendar icon is a delegated-calendar icon and the tooltip shows the shared account owner email', async () => {
 		const sharedAccountIdentity = getMocksContext().identities.sendAs[0];
@@ -205,6 +205,6 @@ describe('title-row', () => {
 		});
 
 		expect(await screen.findByText(delegatedFolder.name)).toBeVisible();
-		expect(await screen.findByText(sharedAccountIdentity.identity.email)).toBeVisible();
+		expect(await screen.findByText(`(${sharedAccountIdentity.identity.email})`)).toBeVisible();
 	});
 });
