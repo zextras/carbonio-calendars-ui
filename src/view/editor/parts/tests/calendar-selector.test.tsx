@@ -178,6 +178,60 @@ describe('CalendarSelector', () => {
 			);
 		});
 
+		it('shows the shared account owner email next to the label for a delegated calendar', async () => {
+			const { delegatedCalendar } = setupFoldersStore();
+			const { identities } = getMocksContext();
+
+			setupTest(
+				<CalendarSelector
+					calendarId={delegatedCalendar.id}
+					onCalendarChange={vi.fn()}
+					excludeTrash
+				/>
+			);
+
+			expect(screen.getByText(`(${identities.sendAs[0].identity.email})`)).toBeVisible();
+		});
+
+		it('shows the sharer email next to the label for a calendar linked to the primary account', async () => {
+			const { delegatedCalendar } = setupFoldersStore();
+			const linkedCalendar = mockedData.calendars.getCalendar({
+				id: '12',
+				name: 'Linked calendar',
+				parent: FOLDERS.USER_ROOT,
+				isLink: true,
+				perm: 'rwidx',
+				owner: 'sharer@zextras.com'
+			});
+			useFolderStore.setState((state) => {
+				const { children: existingUserRootCalendars, ...userRootRest } =
+					state.folders[FOLDERS.USER_ROOT];
+				return {
+					folders: {
+						...state.folders,
+						[FOLDERS.USER_ROOT]: {
+							...userRootRest,
+							children: [...existingUserRootCalendars, linkedCalendar]
+						},
+						[linkedCalendar.id]: linkedCalendar
+					}
+				};
+			});
+
+			const { user } = setupTest(
+				<CalendarSelector
+					calendarId={delegatedCalendar.id}
+					onCalendarChange={vi.fn()}
+					excludeTrash
+					allowAllAccounts
+				/>
+			);
+			await user.click(screen.getByText(DELEGATED_CALENDAR_NAME));
+
+			const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+			expect(within(dropdown).getByText('(sharer@zextras.com)')).toBeVisible();
+		});
+
 		it('notifies the selection of an owned calendar', async () => {
 			const { delegatedCalendar } = setupFoldersStore();
 			const onCalendarChange = vi.fn();

@@ -248,6 +248,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						}}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash
+						allowAllAccounts
 					/>
 				</Container>
 			</Row>

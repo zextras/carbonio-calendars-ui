@@ -21,7 +21,10 @@ import {
 	AccordionItem,
 	Dropdown,
 	Icon,
-	Text
+	Text,
+	Container,
+	useTheme,
+	getColor
 } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import {
@@ -36,12 +39,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { importCalendarICSFn } from 'actions/calendar-actions-fn';
-import {
-	recursiveToggleCheck,
-	getFolderIcon,
-	isExternalSyncFolder,
-	isLinkChild
-} from 'commons/utilities';
+import { recursiveToggleCheck, getFolderIcon, isExternalSyncFolder } from 'commons/utilities';
 import { useCalendarActions } from 'hooks/use-calendar-actions';
 import { useCheckedCalendarsQuery } from 'hooks/use-checked-calendars-query';
 import { setCalendarColor } from 'normalizations/normalizations-utils';
@@ -92,6 +90,8 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 
 	const { displayName } = useUserAccount();
 	const [t] = useTranslation();
+	const theme = useTheme();
+	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
@@ -124,7 +124,6 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 		if (id === FOLDERS.CALENDAR) {
 			return t('label.calendar', 'Calendar');
 		}
-
 		if (id === FOLDERS.TRASH) {
 			return t('label.trash', 'Trash');
 		}
@@ -132,35 +131,40 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 		return calendar?.name ?? '';
 	}, [calendar?.name, calendarId, t]);
 
+	const ownerEmail = useMemo(
+		(): string | null => (calendar?.isLink && calendar.owner ? calendar.owner : null),
+		[calendar]
+	);
+
+	const fullLabel = useMemo(
+		(): string => (ownerEmail ? `${folderName} (${ownerEmail})` : folderName),
+		[folderName, ownerEmail]
+	);
+
 	const accordionItem = useMemo<AccordionItemType | null>(() => {
 		if (!calendar) {
 			return null;
 		}
 		return {
 			...calendar,
-			label: folderName,
+			label: fullLabel,
 			icon: getFolderIcon({ item: calendar, checked: calendar.checked ?? false }),
 			iconColor: setCalendarColor({ color: calendar.color, rgb: calendar.rgb }).color
 		} as AccordionItemType;
-	}, [calendar, folderName]);
+	}, [calendar, fullLabel]);
 
 	const sharedStatusIcon = useMemo<React.ReactNode>(() => {
 		if (!calendar) {
 			return null;
 		}
 
-		if (calendar.isLink || isLinkChild(calendar)) {
-			const tooltipText = t('tooltip.folder_linked_status', 'Linked to me');
-			return RowWithIcon('Linked', 'linked', tooltipText);
-		}
-
-		if (calendar.acl?.grant) {
+		if (!calendar.isLink && calendar.acl?.grant?.length) {
 			const tooltipText = t('tooltip.folder_sharing_status', {
 				count: calendar.acl.grant.length,
 				defaultValue_one: 'Shared with {{count}} person',
 				defaultValue: 'Shared with {{count}} people'
 			});
-			return RowWithIcon('Shared', 'shared', tooltipText);
+			return RowWithIcon('Share', 'gray0', tooltipText);
 		}
 		return null;
 	}, [calendar, t]);
@@ -281,7 +285,32 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 				<Row onClick={onClick}>
 					<Padding left="small" />
 					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
-						<AccordionItem item={accordionItem} />
+						<AccordionItem
+							item={ownerEmail ? { ...accordionItem, label: undefined } : accordionItem}
+							height={ownerEmail ? '3.375rem' : undefined}
+						>
+							{ownerEmail && (
+								<Container
+									orientation="vertical"
+									mainAlignment="space-between"
+									crossAlignment="flex-start"
+									minWidth={0}
+									flexGrow={1}
+									flexBasis="0"
+								>
+									<Text overflow="ellipsis" size="small" style={{ minWidth: 0, width: '100%' }}>
+										{folderName}
+									</Text>
+									<Text
+										overflow="ellipsis"
+										size="extrasmall"
+										style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}
+									>
+										{`(${ownerEmail})`}
+									</Text>
+								</Container>
+							)}
+						</AccordionItem>
 					</Tooltip>
 					{externalStatusIcon}
 					{sharedStatusIcon}

@@ -3,9 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
-import { Row, Text } from '@zextras/carbonio-design-system';
+import {
+	getColor,
+	Icon,
+	Padding,
+	Row,
+	Text,
+	Tooltip,
+	useTheme
+} from '@zextras/carbonio-design-system';
 import type { ResourceHeaderProps } from 'react-big-calendar';
 
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
@@ -14,15 +22,24 @@ export type CalendarResource = {
 	id: string;
 	title: string;
 	color: number | undefined;
+	rgb?: string;
+	icon: string;
+	owner?: string;
 };
 
 export const CalendarResourceHeader = (
 	props: ResourceHeaderProps<CalendarResource>
 ): React.JSX.Element => {
 	const backgroundColor = setCalendarColor({
-		color: props.resource.color
+		color: props.resource.color,
+		rgb: props.resource.rgb
 	});
 	const rowRef = useRef<HTMLDivElement>(null);
+	const theme = useTheme();
+	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
+	const tooltipLabel = props.resource.owner
+		? `${props.resource.title} (${props.resource.owner})`
+		: props.resource.title;
 
 	// react-big-calendar's all-day row (BackgroundCells) never forwards the
 	// resourceId to dayPropGetter, so it can't be themed from there. This is
@@ -42,10 +59,47 @@ export const CalendarResourceHeader = (
 			key={props.resource.id}
 			background={backgroundColor.background}
 			borderColor={backgroundColor.color}
-			height="2.25rem"
+			height="2.75rem"
 			padding={'small'}
+			mainAlignment="flex-start"
+			crossAlignment="center"
+			wrap="nowrap"
+			minWidth={0}
+			flexGrow={1}
+			flexBasis="0"
 		>
-			<Text weight={'bold'}>{props.label}</Text>
+			<Padding right="small">
+				<Icon icon={props.resource.icon} color={backgroundColor.color} size="large" />
+			</Padding>
+			<Tooltip label={tooltipLabel}>
+				<Row
+					orientation="vertical"
+					mainAlignment="flex-start"
+					crossAlignment="flex-start"
+					wrap="nowrap"
+					minWidth={0}
+					flexGrow={1}
+					flexBasis="0"
+				>
+					<Text
+						weight={'bold'}
+						size="small"
+						overflow="ellipsis"
+						style={{ minWidth: 0, width: '100%', textAlign: 'left' }}
+					>
+						{props.resource.title}
+					</Text>
+					{props.resource.owner && (
+						<Text
+							size="extrasmall"
+							overflow="ellipsis"
+							style={{ minWidth: 0, width: '100%', textAlign: 'left', color: ownerLabelColor }}
+						>
+							{`(${props.resource.owner})`}
+						</Text>
+					)}
+				</Row>
+			</Tooltip>
 		</Row>
 	);
 };
