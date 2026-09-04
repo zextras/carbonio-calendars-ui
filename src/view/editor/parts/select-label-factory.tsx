@@ -13,22 +13,11 @@ import {
 	Row,
 	Icon,
 	SelectItem,
-	LabelFactoryProps,
-	Tooltip,
-	AnyColor
+	LabelFactoryProps
 } from '@zextras/carbonio-design-system';
-import { Grant } from '@zextras/carbonio-ui-commons';
-import { useTranslation } from 'react-i18next';
+import { Folder } from '@zextras/carbonio-ui-commons';
 
-import { isLinkChild } from '../../../commons/utilities';
-
-export const Square = styled.div<{ $color?: AnyColor; $disabled?: boolean }>`
-	width: 1rem;
-	height: 1rem;
-	background: ${({ $color }): string | undefined => $color};
-	border-radius: 0.25rem;
-	opacity: ${({ $disabled }): number => ($disabled ? 0.5 : 1)};
-`;
+import { getFolderIcon } from '../../../commons/utilities';
 
 export const ColorContainer = styled(Container)`
 	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
@@ -51,9 +40,7 @@ export const LabelText = styled(Text)<{ $showPrimary?: boolean }>`
 
 interface CustomSelectItem extends SelectItem {
 	id?: string;
-	acl?: { grant: Array<Grant> };
-	isLink?: boolean;
-	absFolderPath?: string | undefined;
+	folder?: Folder;
 	color?: string;
 	ownerEmail?: string;
 }
@@ -62,68 +49,38 @@ interface CustomLabelFactoryProps extends LabelFactoryProps {
 	selected: CustomSelectItem[];
 }
 
-const RowWithIcon = ({
-	icon,
-	color,
-	tooltipText
-}: {
-	icon: string;
-	color: string;
-	tooltipText: string;
-}): JSX.Element => (
-	<Padding left="small">
-		<Tooltip placement="right" label={tooltipText}>
-			<Row>
-				<Icon icon={icon} color={color} size="medium" />
-			</Row>
-		</Tooltip>
-	</Padding>
-);
-
 export const ItemFactory = ({
 	color,
 	label,
-	acl,
-	isLink,
-	absFolderPath,
+	folder,
 	disabled,
 	ownerEmail
 }: {
 	color: string | undefined;
 	label: string;
-	acl?: { grant: Array<Grant> };
-	isLink?: boolean;
-	absFolderPath?: string | undefined;
+	folder?: Folder;
 	disabled: boolean;
 	ownerEmail?: string;
 }): JSX.Element => {
-	const [t] = useTranslation();
-	const sharedStatusIcon = useMemo(() => {
-		if (isLink || isLinkChild({ absFolderPath })) {
-			const tooltipText = t('tooltip.folder_linked_status', 'Linked to me');
-			return <RowWithIcon icon={'Linked'} color={'linked'} tooltipText={tooltipText} />;
-		}
-		if (acl?.grant) {
-			const tooltipText = t('tooltip.folder_sharing_status', {
-				count: acl.grant.length,
-				defaultValue_one: 'Shared with {{count}} person',
-				defaultValue: 'Shared with {{count}} people'
-			});
-			return <RowWithIcon icon={'Shared'} color={'shared'} tooltipText={tooltipText} />;
-		}
-		return null;
-	}, [absFolderPath, acl?.grant, isLink, t]);
+	const referenceIcon = useMemo(
+		() => (folder ? getFolderIcon({ item: folder, checked: true }) : ''),
+		[folder]
+	);
 	return (
 		<Row wrap={'nowrap'}>
 			<Padding right="small">
-				<Square $color={color} $disabled={disabled} />
+				<Icon
+					icon={referenceIcon || 'Calendar2'}
+					color={color}
+					disabled={disabled}
+					style={{ width: '1.125rem', height: '1.125rem' }}
+				/>
 			</Padding>
 			<TextUpperCase disabled={disabled}>{label}</TextUpperCase>
-			{sharedStatusIcon}
 			<Row takeAvailableSpace>
 				{ownerEmail && (
 					<Padding left="small" style={{ overflow: 'hidden' }}>
-						<TextUpperCase color={'gray1'}>{`(${ownerEmail})`}</TextUpperCase>
+						<TextUpperCase size="extrasmall" color={'gray1'}>{`(${ownerEmail})`}</TextUpperCase>
 					</Padding>
 				)}
 			</Row>
@@ -160,9 +117,7 @@ const LabelFactory = (item: CustomLabelFactoryProps): ReactElement => {
 						<ItemFactory
 							label={selected[0].label}
 							color={selected[0].color}
-							isLink={selected[0].isLink}
-							absFolderPath={selected[0].absFolderPath}
-							acl={selected[0].acl}
+							folder={selected[0].folder}
 							ownerEmail={selected[0].ownerEmail}
 							disabled={disabled}
 						/>

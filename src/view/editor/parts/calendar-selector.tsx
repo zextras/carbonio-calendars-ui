@@ -29,10 +29,7 @@ import { useTranslation } from 'react-i18next';
 import LabelFactory, { ItemFactory } from './select-label-factory';
 import { getCalendarOwnerEmail } from '../../../commons/utilities';
 import { PREFS_DEFAULTS } from '../../../constants';
-import {
-	setCalendarColor,
-	setCalendarColorFromNumber
-} from '../../../normalizations/normalizations-utils';
+import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 
 type CalendarSelectorProps = {
 	calendarId: string;
@@ -125,15 +122,14 @@ export const CalendarSelector = ({
 					label: labelName,
 					value: cal.id,
 					color: color.color,
+					folder: cal,
 					ownerEmail,
 					customComponent: (
 						<ItemFactory
 							disabled={disabled ?? false}
-							absFolderPath={cal.absFolderPath}
 							color={color.color}
-							isLink={cal.isLink}
+							folder={cal}
 							label={labelName}
-							acl={cal.acl}
 							ownerEmail={ownerEmail}
 						/>
 					)
@@ -149,14 +145,13 @@ export const CalendarSelector = ({
 		]);
 		const defaultCalendar = {
 			id: requiredCalendars?.[0]?.id ?? defaultCal?.id,
-			acl: requiredCalendars?.[0]?.acl ?? defaultCal?.acl,
-			isLink: requiredCalendars?.[0]?.isLink ?? defaultCal?.isLink,
-			absFolderPath: requiredCalendars?.[0]?.absFolderPath ?? defaultCal?.absFolderPath,
+			folder: requiredCalendars?.[0] ?? defaultCal,
 			value: requiredCalendars?.[0]?.id ?? defaultCal?.id,
 			label: requiredCalendars?.[0]?.name ?? defaultCal?.name,
-			color: requiredCalendars?.[0]?.color
-				? setCalendarColorFromNumber(requiredCalendars?.[0]?.color).color
-				: defaultCal?.color
+			color: setCalendarColor({
+				rgb: requiredCalendars?.[0]?.rgb ?? defaultCal?.rgb,
+				color: requiredCalendars?.[0]?.color ?? defaultCal?.color
+			}).color
 		};
 		return find(calendarItems, ['value', calendarId]) ?? defaultCalendar;
 	}, [requiredCalendars, zimbraPrefDefaultCalendarId, calendarItems, calendarId]);

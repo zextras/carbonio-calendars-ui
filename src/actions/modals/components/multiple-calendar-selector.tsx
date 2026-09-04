@@ -112,11 +112,9 @@ export const MultipleCalendarSelector = ({
 					customComponent: (
 						<ItemFactory
 							disabled={false}
-							absFolderPath={cal.absFolderPath}
 							color={color.color}
-							isLink={cal.isLink}
+							folder={cal}
 							label={labelName}
-							acl={cal.acl}
 							ownerEmail={getCalendarOwnerEmail(cal)}
 						/>
 					)
