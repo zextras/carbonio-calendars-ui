@@ -158,7 +158,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 			return null;
 		}
 
-		if (calendar.acl?.grant?.length) {
+		if (!calendar.isLink && calendar.acl?.grant?.length) {
 			const tooltipText = t('tooltip.folder_sharing_status', {
 				count: calendar.acl.grant.length,
 				defaultValue_one: 'Shared with {{count}} person',
@@ -303,7 +303,7 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 									</Text>
 									<Text
 										overflow="ellipsis"
-										size="small"
+										size="extrasmall"
 										style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}
 									>
 										{`(${ownerEmail})`}
