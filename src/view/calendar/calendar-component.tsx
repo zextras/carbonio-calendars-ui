@@ -356,6 +356,7 @@ export default function CalendarComponent(): React.JSX.Element {
 				id: calendar.id,
 				title: calendar.name,
 				color: calendar.color,
+				rgb: calendar.rgb,
 				icon: getFolderIcon({ item: calendar, checked: true }),
 				owner: getCalendarOwnerEmail(calendar)
 			}));

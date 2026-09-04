@@ -22,6 +22,7 @@ export type CalendarResource = {
 	id: string;
 	title: string;
 	color: number | undefined;
+	rgb?: string;
 	icon: string;
 	owner?: string;
 };
@@ -30,7 +31,8 @@ export const CalendarResourceHeader = (
 	props: ResourceHeaderProps<CalendarResource>
 ): React.JSX.Element => {
 	const backgroundColor = setCalendarColor({
-		color: props.resource.color
+		color: props.resource.color,
+		rgb: props.resource.rgb
 	});
 	const rowRef = useRef<HTMLDivElement>(null);
 	const theme = useTheme();
@@ -57,16 +59,17 @@ export const CalendarResourceHeader = (
 			key={props.resource.id}
 			background={backgroundColor.background}
 			borderColor={backgroundColor.color}
-			height={props.resource.owner ? '2.75rem' : '2.25rem'}
+			height="2.75rem"
 			padding={'small'}
 			mainAlignment="flex-start"
+			crossAlignment="center"
 			wrap="nowrap"
 			minWidth={0}
 			flexGrow={1}
 			flexBasis="0"
 		>
-			<Padding right="extrasmall">
-				<Icon icon={props.resource.icon} color={backgroundColor.color} size="medium" />
+			<Padding right="small">
+				<Icon icon={props.resource.icon} color={backgroundColor.color} size="large" />
 			</Padding>
 			<Tooltip label={tooltipLabel}>
 				<Row
@@ -78,11 +81,20 @@ export const CalendarResourceHeader = (
 					flexGrow={1}
 					flexBasis="0"
 				>
-					<Text weight={'bold'} size="small" style={{ minWidth: 0, width: '100%' }}>
+					<Text
+						weight={'bold'}
+						size="small"
+						overflow="ellipsis"
+						style={{ minWidth: 0, width: '100%', textAlign: 'left' }}
+					>
 						{props.resource.title}
 					</Text>
 					{props.resource.owner && (
-						<Text size="extrasmall" style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}>
+						<Text
+							size="extrasmall"
+							overflow="ellipsis"
+							style={{ minWidth: 0, width: '100%', textAlign: 'left', color: ownerLabelColor }}
+						>
 							{`(${props.resource.owner})`}
 						</Text>
 					)}
