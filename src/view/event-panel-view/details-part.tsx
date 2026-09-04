@@ -20,7 +20,6 @@ import { useFolder } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ImageAndIconPart } from './image-and-icon-part';
 import { useNeverSentWarningLabel } from '../../hooks/use-never-sent-warning-label';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
@@ -191,10 +190,6 @@ export const DetailsPart = ({
 			background={'gray6'}
 		>
 			<Row orientation="row" width="fill" takeAvailableSpace>
-				<Container width="fit">
-					<ImageAndIconPart color={color} />
-				</Container>
-				<Padding right="large" />
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow subject={title} calendarColor={color.color} isPrivate={isPrivate} />
