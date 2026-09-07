@@ -102,6 +102,15 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 			});
 			expect(result.current).toMatch(/Asia\/Bangkok/i);
 		});
+		it('will fall back to the local timezone instead of throwing for a non-IANA TZID (e.g. a Windows zone name from an Outlook invite)', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
+
+			const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+				initialProps: [eventStart, eventEnd, { timeZone: 'W. Europe Standard Time' }]
+			});
+			expect(result.current).toMatch(/Europe\/Berlin/i);
+		});
 		it('will be localized following user preference', () => {
 			shell.useUserSettings.mockReturnValueOnce({
 				...defaultSettings,

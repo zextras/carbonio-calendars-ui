@@ -26,22 +26,35 @@ type TimeStringsType = {
 };
 
 export const getTimeStrings = ({ start, end, options }: TimeStringsType): string => {
+	// RFC 5545 only requires a VTIMEZONE's TZID to be unique within the
+	// calendar object — it does not have to be an IANA identifier. Outlook/
+	// Exchange invites commonly carry Windows zone names instead (e.g.
+	// "W. Europe Standard Time"), which `Intl.DateTimeFormat` rejects with a
+	// RangeError. Fall back to the local zone instead of crashing the render.
+	let timeZone = options?.timeZone;
+	if (timeZone) {
+		try {
+			Intl.DateTimeFormat(undefined, { timeZone });
+		} catch {
+			timeZone = undefined;
+		}
+	}
+
 	const rangeOptions = {
 		weekday: 'long',
 		month: 'long',
 		day: '2-digit',
 		year: 'numeric',
 		minute: options?.allDay ? undefined : '2-digit',
-		timeZone: options?.timeZone,
+		timeZone,
 		second: undefined,
 		hour: options?.allDay ? undefined : '2-digit'
 	} as const;
 
 	const gmtOptions = {
-		timeZone: options?.timeZone,
+		timeZone,
 		timeZoneName: 'longOffset'
 	} as const;
-
 	const dateTimeFormat = new Intl.DateTimeFormat(
 		options.locale ?? navigator.language,
 		rangeOptions
@@ -56,7 +69,7 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 
 	const timezoneGmt = formatParts.find((part) => part.type === 'timeZoneName')?.value;
 
-	const timezoneString = options?.allDay ? undefined : options?.timeZone;
+	const timezoneString = options?.allDay ? undefined : timeZone;
 
 	return compact([formattedRange, timezoneGmt, timezoneString, options?.allDayLabel]).join(' ');
 };
