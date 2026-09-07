@@ -16,6 +16,7 @@ import {
 import { getDay } from 'date-fns';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import { shallowEqual } from 'react-redux';
 
 import CustomRepeatSelectItem from '../components/custom-repeat';
 import { RepeatItemComponent } from '../components/repeat-item-component';
@@ -25,10 +26,58 @@ import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
 	selectEditorDisabled,
 	selectEditorRecurrence,
+	selectEditorRecurrenceByDay,
+	selectEditorRecurrenceCount,
+	selectEditorRecurrenceFrequency,
+	selectEditorRecurrenceInterval,
+	selectEditorRecurrenceSetPos,
+	selectEditorRecurrenceUntilDate,
 	selectEditorStart
 } from 'store/selectors/editor';
 import { editEditorRecurrence } from 'store/slices/editor-slice';
-import { EditorProps } from 'types/editor';
+import { Byday, EditorProps, Interval } from 'types/editor';
+
+const WEEKDAY_CODES = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+const getRecurrenceValue = ({
+	freq,
+	interval,
+	byDay,
+	until,
+	count,
+	setPos,
+	start
+}: {
+	freq: string | undefined;
+	interval: Interval | undefined;
+	byDay: Byday | undefined;
+	until: string | undefined;
+	count: number | undefined;
+	setPos: string | undefined;
+	start: number | undefined;
+}): string => {
+	const isSimpleFrequency =
+		freq === RECURRENCE_FREQUENCY.DAILY ||
+		freq === RECURRENCE_FREQUENCY.WEEKLY ||
+		freq === RECURRENCE_FREQUENCY.MONTHLY ||
+		freq === RECURRENCE_FREQUENCY.YEARLY;
+	const hasDefaultInterval = !interval || interval.ival === 1;
+	const hasNoEndCondition = !until && !count;
+	const hasNoOrdinalModifier = !setPos;
+
+	const startDayCode = start ? WEEKDAY_CODES[getDay(new Date(start))] : undefined;
+	const hasDefaultWeekday =
+		!byDay?.wkday?.length || (byDay.wkday.length === 1 && byDay.wkday[0].day === startDayCode);
+
+	const isSimpleRecurrence =
+		isSimpleFrequency &&
+		hasDefaultInterval &&
+		hasNoEndCondition &&
+		hasNoOrdinalModifier &&
+		hasDefaultWeekday;
+
+	return isSimpleRecurrence ? freq : RECURRENCE_FREQUENCY.CUSTOM;
+};
 
 const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
@@ -73,6 +122,13 @@ export const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null
 	const start = useAppSelector(selectEditorStart(editorId));
 	const dispatch = useAppDispatch();
 
+	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const interval = useAppSelector(selectEditorRecurrenceInterval(editorId), shallowEqual);
+	const byDay = useAppSelector(selectEditorRecurrenceByDay(editorId), shallowEqual);
+	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
+	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
+	const setPos = useAppSelector(selectEditorRecurrenceSetPos(editorId));
+
 	const recurrenceItems = useMemo(
 		() => [
 			{
@@ -110,9 +166,12 @@ export const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null
 	);
 
 	const initialValue = useMemo(() => {
-		const recurrenceValue = recur ? RECURRENCE_FREQUENCY.CUSTOM : RECURRENCE_FREQUENCY.NEVER;
+		const recurrenceValue = recur
+			? getRecurrenceValue({ freq, interval, byDay, until, count, setPos, start })
+			: RECURRENCE_FREQUENCY.NEVER;
+
 		return find(recurrenceItems, { value: recurrenceValue }) ?? recurrenceItems[0];
-	}, [recur, recurrenceItems]);
+	}, [recur, recurrenceItems, freq, interval, byDay, until, count, setPos, start]);
 
 	const [selected, setSelected] = useState(initialValue);
 
