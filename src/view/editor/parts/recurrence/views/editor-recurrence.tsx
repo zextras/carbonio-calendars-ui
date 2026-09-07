@@ -76,7 +76,7 @@ const getRecurrenceValue = ({
 		hasNoOrdinalModifier &&
 		hasDefaultWeekday;
 
-	return isSimpleRecurrence ? (freq as string) : RECURRENCE_FREQUENCY.CUSTOM;
+	return isSimpleRecurrence ? freq : RECURRENCE_FREQUENCY.CUSTOM;
 };
 
 const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
