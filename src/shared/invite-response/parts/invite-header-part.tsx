@@ -15,6 +15,25 @@ import { MESSAGE_METHOD } from 'constants/api';
 import { useGetDateRangeConvertedToTimezone } from 'hooks/use-get-date-range-converted-to-timezone';
 import { Invite } from 'types/store/invite';
 
+// Fallback duration applied when a VEVENT has a DATE-TIME DTSTART but no
+// DTEND/DURATION. RFC 5545 §3.6.1 defines the default as a zero-length
+// event in that case, which renders as a degenerate (or, if the end is
+// missing outright, incorrect) range. Mirror Thunderbird's behavior and
+// show a 1-hour block instead.
+export const DEFAULT_EVENT_DURATION_MS = 60 * 60 * 1000;
+
+// `end` is the parsed invite end timestamp, or `undefined` when the invite
+// carries no DTEND/DURATION at all. All-day events keep their own
+// date-based duration handling and are left untouched here.
+export const getInviteEndTime = (
+	start: number,
+	end: number | undefined,
+	allDay: boolean
+): number => {
+	if (allDay) return end ?? start;
+	return end === undefined || end <= start ? start + DEFAULT_EVENT_DURATION_MS : end;
+};
+
 type InviteHeaderPartProps = {
 	mailMsg: any;
 	method: any;
@@ -40,10 +59,14 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 		[invite.start?.d, invite.start.u]
 	);
 
-	const localEndTime = useMemo(
-		() => moment(invite.end?.d ?? invite.end.u).valueOf(),
-		[invite.end?.d, invite.end.u]
-	);
+	const localEndTime = useMemo(() => {
+		const rawEnd = invite.end?.d ?? invite.end?.u;
+		return getInviteEndTime(
+			localStartTime,
+			rawEnd !== undefined ? moment(rawEnd).valueOf() : undefined,
+			allDay
+		);
+	}, [invite.end?.d, invite.end?.u, allDay, localStartTime]);
 
 	const originalDate = useGetDateRangeConvertedToTimezone(localStartTime ?? 0, localEndTime ?? 0, {
 		allDay,
