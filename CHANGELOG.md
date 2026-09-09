@@ -1,3 +1,9 @@
+## 1.35.0 (2026-09-09)
+
+* feat: improve calendar owner readability ([fd8e1cb](https://github.com/zextras/carbonio-calendars-ui/commit/fd8e1cb))
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.10.6 (#845) ([42fb6a4](https://github.com/zextras/carbonio-calendars-ui/commit/42fb6a4)), closes [#845](https://github.com/zextras/carbonio-calendars-ui/issues/845)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.10.7 (#847) ([b01748d](https://github.com/zextras/carbonio-calendars-ui/commit/b01748d)), closes [#847](https://github.com/zextras/carbonio-calendars-ui/issues/847)
+
 ## <small>1.34.4 (2026-09-07)</small>
 
 * CO-4192 - Rework calendar colour selector allowing custom colours (#838) ([ae74678](https://github.com/zextras/carbonio-calendars-ui/commit/ae74678)), closes [#838](https://github.com/zextras/carbonio-calendars-ui/issues/838)
