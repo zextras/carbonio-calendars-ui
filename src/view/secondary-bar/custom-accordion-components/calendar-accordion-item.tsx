@@ -298,12 +298,12 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 									flexGrow={1}
 									flexBasis="0"
 								>
-									<Text overflow="ellipsis" size="small" style={{ minWidth: 0, width: '100%' }}>
+									<Text overflow="ellipsis" size="medium" style={{ minWidth: 0, width: '100%' }}>
 										{folderName}
 									</Text>
 									<Text
 										overflow="ellipsis"
-										size="extrasmall"
+										size="small"
 										style={{ minWidth: 0, width: '100%', color: ownerLabelColor }}
 									>
 										{`(${ownerEmail})`}
