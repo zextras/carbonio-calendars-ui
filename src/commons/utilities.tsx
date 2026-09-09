@@ -491,6 +491,28 @@ export function recursiveToggleCheck({
 	});
 }
 
+const hasNoIcon = (item: SidebarFolder): boolean =>
+	item.id === FOLDERS.USER_ROOT || (!!item.isLink && item.oname === ROOT_NAME) || !!item.noIcon;
+
+/** [outline icon, filled icon] pair to use once a folder kind has been identified */
+const FOLDER_ICON_BY_KIND = {
+	trash: ['Trash2Outline', 'Trash2'],
+	allCalendar: ['CalendarOutline', 'Calendar2'],
+	shared: ['SharedCalendarOutline', 'SharedCalendar'],
+	delegated: ['DelegatedCalendarOutline', 'DelegatedCalendar'],
+	caldavGroup: ['GroupCalendarOutline', 'GroupCalendar'],
+	default: ['CalendarOutline', 'Calendar2']
+} as const;
+
+const getFolderIconKind = (item: SidebarFolder): keyof typeof FOLDER_ICON_BY_KIND => {
+	if (hasId(item, FOLDERS.TRASH)) return 'trash';
+	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return 'allCalendar';
+	if (item.isLink || isLinkChild(item)) return 'shared';
+	if (isDelegatedAccountFolder(item)) return 'delegated';
+	if (isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })) return 'caldavGroup';
+	return 'default';
+};
+
 export const getFolderIcon = ({
 	item,
 	checked
@@ -498,17 +520,8 @@ export const getFolderIcon = ({
 	item: SidebarFolder;
 	checked: boolean;
 }): string => {
-	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME) || item.noIcon)
-		return '';
-	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
-	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
-	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
-	if (isDelegatedAccountFolder(item))
-		return checked ? 'DelegatedCalendar' : 'DelegatedCalendarOutline';
-	if (isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })) {
-		return checked ? 'GroupCalendar' : 'GroupCalendarOutline';
-	}
-	return checked ? 'Calendar2' : 'CalendarOutline';
+	if (hasNoIcon(item)) return '';
+	return FOLDER_ICON_BY_KIND[getFolderIconKind(item)][checked ? 1 : 0];
 };
 
 export const replaceLinkToAnchor = (content: string): string => {
