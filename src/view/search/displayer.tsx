@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ComponentProps, ReactComponentElement } from 'react';
+import React, { ReactElement } from 'react';
 
 import styled from '@emotion/styled';
 import { Container } from '@zextras/carbonio-design-system';
@@ -18,6 +18,11 @@ import { ParticipantsPart } from '../event-panel-view/participants-part';
 import { ReminderPart } from '../event-panel-view/reminder-part';
 import { ReplyButtonsPart } from '../event-panel-view/reply-buttons-part';
 import { useInvite } from 'hooks/use-invite';
+import { EventType } from 'types/event';
+
+type DisplayerProps = {
+	event: EventType | undefined;
+};
 
 const BodyContainer = styled(Container)`
 	overflow-x: hidden;
@@ -26,7 +31,7 @@ const BodyContainer = styled(Container)`
 	word-wrap: break-word !important;
 `;
 
-const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> | null => {
+const Displayer = ({ event }: DisplayerProps): ReactElement | null => {
 	const invite = useInvite(event?.resource?.inviteId);
 	return invite ? (
 		<Container
@@ -47,14 +52,14 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 						<DetailsPart
 							event={event}
 							subject={event?.title}
-							isPrivate={event?.resource.isPrivate}
+							isPrivate={event?.resource.isPrivate ?? false}
 							inviteNeverSent={event?.resource?.inviteNeverSent}
 							invite={invite}
 						/>
 						<StyledDivider />
 						{event.resource.organizer &&
 							!event?.resource?.iAmOrganizer &&
-							!event?.resource?.owner &&
+							!event?.resource?.calendar?.owner &&
 							invite && (
 								<>
 									<ReplyButtonsPart invite={invite} event={event} />

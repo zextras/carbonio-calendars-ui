@@ -13,6 +13,7 @@ import Displayer from './displayer';
 import mockedData from '../../test/generators';
 import { setupTest } from '@test-setup';
 import { reducers } from 'store/redux';
+import { EventType } from 'types/event';
 
 describe('Displayer', () => {
 	describe('Rendering', () => {
@@ -132,7 +133,7 @@ describe('Displayer', () => {
 			const event = {
 				...mockedData.getEvent(),
 				resource: undefined
-			};
+			} as unknown as EventType;
 
 			const { container } = setupTest(<Displayer event={event} />, { store });
 

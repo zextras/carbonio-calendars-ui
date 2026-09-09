@@ -6,12 +6,20 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import styled from '@emotion/styled';
-import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	getColor,
+	Icon,
+	Padding,
+	Row,
+	Text,
+	Tooltip,
+	useTheme
+} from '@zextras/carbonio-design-system';
 import { useFolder } from '@zextras/carbonio-ui-commons';
 import { isNil, omitBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ImageAndIconPart } from './image-and-icon-part';
 import { useNeverSentWarningLabel } from '../../hooks/use-never-sent-warning-label';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
@@ -24,7 +32,7 @@ import { NeverSentWarningRow } from '../event-summary-view/never-sent-warning-ro
 import TagsRow from '../event-summary-view/tags-row';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
-import { isExternalSyncFolder } from 'commons/utilities';
+import { getCalendarOwnerEmail, getFolderIcon, isExternalSyncFolder } from 'commons/utilities';
 
 const PaddedRow = styled(Row)`
 	padding: 0.25rem 0.25rem;
@@ -70,7 +78,7 @@ const CustomIconInfo = ({
 	color,
 	icon
 }: {
-	tooltipLabel: string;
+	tooltipLabel: ReactElement | string;
 	color: string;
 	icon: string;
 }): ReactElement => (
@@ -99,11 +107,36 @@ export const DetailsPart = ({
 	const calendar = useFolder(event.resource.calendar.id);
 	const eventIsfromExternalCalendar = isExternalSyncFolder(calendar ?? {});
 	const [t] = useTranslation();
+	const theme = useTheme();
+	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
 
 	const color = useMemo(
 		() => setCalendarColor({ rgb: calendar?.rgb, color: calendar?.color }),
 		[calendar?.color, calendar?.rgb]
 	);
+
+	const calendarIcon = useMemo(
+		(): string => (calendar ? getFolderIcon({ item: calendar, checked: true }) : 'Calendar2'),
+		[calendar]
+	);
+
+	const calendarTooltipLabel = useMemo((): ReactElement | string => {
+		if (!calendar?.name) {
+			return '';
+		}
+		const ownerEmail = getCalendarOwnerEmail(calendar);
+		if (!ownerEmail) {
+			return calendar.name;
+		}
+		return (
+			<Container orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
+				<Text size="small">{calendar.name}</Text>
+				<Text size="extrasmall" style={{ color: ownerLabelColor }}>
+					{`(${ownerEmail})`}
+				</Text>
+			</Container>
+		);
+	}, [calendar, ownerLabelColor]);
 
 	const timeData = useMemo<{
 		allDay?: boolean;
@@ -157,10 +190,6 @@ export const DetailsPart = ({
 			background={'gray6'}
 		>
 			<Row orientation="row" width="fill" takeAvailableSpace>
-				<Container width="fit">
-					<ImageAndIconPart color={color} />
-				</Container>
-				<Padding right="large" />
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow subject={title} calendarColor={color.color} isPrivate={isPrivate} />
@@ -183,7 +212,11 @@ export const DetailsPart = ({
 							/>
 						)}
 						<Padding right={'small'} />
-						<CustomIconInfo tooltipLabel={calendar?.name} color={color.color} icon={'Calendar2'} />
+						<CustomIconInfo
+							tooltipLabel={calendarTooltipLabel}
+							color={color.color}
+							icon={calendarIcon}
+						/>
 					</Container>
 					{timeData && <TimeInfoRow timeInfoData={timeData} />}
 					{locationData && locationData?.class !== 'PRI' && (
