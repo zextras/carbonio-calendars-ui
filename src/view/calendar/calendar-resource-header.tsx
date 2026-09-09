@@ -3,17 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import {
-	getColor,
-	Icon,
-	Padding,
-	Row,
-	Text,
-	Tooltip,
-	useTheme
-} from '@zextras/carbonio-design-system';
+import { Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import type { ResourceHeaderProps } from 'react-big-calendar';
 
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
@@ -35,8 +27,6 @@ export const CalendarResourceHeader = (
 		rgb: props.resource.rgb
 	});
 	const rowRef = useRef<HTMLDivElement>(null);
-	const theme = useTheme();
-	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
 	const tooltipLabel = props.resource.owner
 		? `${props.resource.title} (${props.resource.owner})`
 		: props.resource.title;
@@ -85,7 +75,12 @@ export const CalendarResourceHeader = (
 						weight={'bold'}
 						size="small"
 						overflow="ellipsis"
-						style={{ minWidth: 0, width: '100%', textAlign: 'left' }}
+						style={{
+							minWidth: 0,
+							width: '100%',
+							textAlign: 'left',
+							color: backgroundColor.color
+						}}
 					>
 						{props.resource.title}
 					</Text>
@@ -93,7 +88,12 @@ export const CalendarResourceHeader = (
 						<Text
 							size="extrasmall"
 							overflow="ellipsis"
-							style={{ minWidth: 0, width: '100%', textAlign: 'left', color: ownerLabelColor }}
+							style={{
+								minWidth: 0,
+								width: '100%',
+								textAlign: 'left',
+								color: backgroundColor.color
+							}}
 						>
 							{`(${props.resource.owner})`}
 						</Text>
