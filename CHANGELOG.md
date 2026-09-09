@@ -1,3 +1,15 @@
+## <small>1.34.4 (2026-09-07)</small>
+
+* CO-4192 - Rework calendar colour selector allowing custom colours (#838) ([ae74678](https://github.com/zextras/carbonio-calendars-ui/commit/ae74678)), closes [#838](https://github.com/zextras/carbonio-calendars-ui/issues/838)
+* Merge branch 'main' into co-3607-weekly-recursion ([4804b83](https://github.com/zextras/carbonio-calendars-ui/commit/4804b83))
+* Merge pull request #843 from zextras/co-3607-weekly-recursion ([7b173fb](https://github.com/zextras/carbonio-calendars-ui/commit/7b173fb)), closes [#843](https://github.com/zextras/carbonio-calendars-ui/issues/843)
+* chore: point semantic-release at main branch ([9f851ee](https://github.com/zextras/carbonio-calendars-ui/commit/9f851ee))
+* chore(deps): update dependency msw to v2.15.0 (#812) ([5459a49](https://github.com/zextras/carbonio-calendars-ui/commit/5459a49)), closes [#812](https://github.com/zextras/carbonio-calendars-ui/issues/812)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.10.5 (#844) ([92c56ae](https://github.com/zextras/carbonio-calendars-ui/commit/92c56ae)), closes [#844](https://github.com/zextras/carbonio-calendars-ui/issues/844)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.9.2 (#837) ([d816698](https://github.com/zextras/carbonio-calendars-ui/commit/d816698)), closes [#837](https://github.com/zextras/carbonio-calendars-ui/issues/837)
+* fix: repetition value ([e56e301](https://github.com/zextras/carbonio-calendars-ui/commit/e56e301))
+* fix: repetition value ([57f44ab](https://github.com/zextras/carbonio-calendars-ui/commit/57f44ab))
+
 ## <small>1.34.3 (2026-08-25)</small>
 
 * Co 4136 Hide attendee response status for non-organizers in event view (#835) ([c6d4940](https://github.com/zextras/carbonio-calendars-ui/commit/c6d4940)), closes [#835](https://github.com/zextras/carbonio-calendars-ui/issues/835)
