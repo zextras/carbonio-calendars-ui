@@ -5,6 +5,7 @@
  */
 import {
 	getCalendarOwnerEmail,
+	getCalendarSharingGrantsCount,
 	getFolderIcon,
 	isCaldavChild,
 	isCaldavRootFolder,
@@ -195,5 +196,23 @@ describe('getCalendarOwnerEmail', () => {
 		populateFoldersStore({ customFolders: [folder] });
 
 		expect(getCalendarOwnerEmail(folder)).toBe(sharedAccountIdentity.identity.email);
+	});
+});
+
+describe('getCalendarSharingGrantsCount', () => {
+	it('returns 0 for an own, non-shared calendar', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: false, acl: undefined })).toBe(0);
+	});
+
+	it('returns 0 for an own calendar with an empty grant list', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: false, acl: { grant: [] } })).toBe(0);
+	});
+
+	it('returns the number of grants for an own calendar shared with others', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: false, acl: { grant: [{}, {}] } })).toBe(2);
+	});
+
+	it('returns 0 for a calendar shared with the user (a link), regardless of its acl', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: true, acl: { grant: [{}] } })).toBe(0);
 	});
 });

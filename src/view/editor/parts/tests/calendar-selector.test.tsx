@@ -16,6 +16,8 @@ import { getMocksContext } from '@test-utils/utils/mocks-context';
 import { TEST_SELECTORS } from 'constants/test-utils';
 import mockedData from 'test/generators';
 
+const SHARED_CALENDAR_NAME = 'Shared with others';
+
 const OWN_CALENDAR_NAME = 'Calendar';
 const OWN_SECONDARY_CALENDAR_NAME = 'Personal';
 const DELEGATED_CALENDAR_NAME = 'Delegated calendar';
@@ -269,6 +271,102 @@ describe('CalendarSelector', () => {
 			expect(within(dropdown).getByText(OWN_SECONDARY_CALENDAR_NAME)).toBeVisible();
 			expect(within(dropdown).getByText(DELEGATED_CALENDAR_NAME)).toBeVisible();
 			expect(within(dropdown).getByText(OTHER_DELEGATED_CALENDAR_NAME)).toBeVisible();
+		});
+	});
+
+	describe('sharing status icon', () => {
+		const addSharedCalendarToUserRoot = (): Folder => {
+			const sharedCalendar = mockedData.calendars.getCalendar({
+				id: '13',
+				name: SHARED_CALENDAR_NAME,
+				parent: FOLDERS.USER_ROOT,
+				acl: { grant: [{ zid: 'zid', gt: 'usr', perm: 'r', d: 'foo@test.com' }] }
+			});
+			useFolderStore.setState((state) => {
+				const { children: existingUserRootCalendars, ...userRootRest } =
+					state.folders[FOLDERS.USER_ROOT];
+				return {
+					folders: {
+						...state.folders,
+						[FOLDERS.USER_ROOT]: {
+							...userRootRest,
+							children: [...existingUserRootCalendars, sharedCalendar]
+						},
+						[sharedCalendar.id]: sharedCalendar
+					}
+				};
+			});
+			return sharedCalendar;
+		};
+
+		it('shows the Share icon next to the selected calendar when it has been shared with others', () => {
+			setupFoldersStore();
+			const sharedCalendar = addSharedCalendarToUserRoot();
+
+			setupTest(
+				<CalendarSelector calendarId={sharedCalendar.id} onCalendarChange={vi.fn()} excludeTrash />
+			);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.shared)).toBeVisible();
+		});
+
+		it('does not show the Share icon next to the selected calendar when it has not been shared', () => {
+			setupFoldersStore();
+
+			setupTest(
+				<CalendarSelector calendarId={defaultCalendar.id} onCalendarChange={vi.fn()} excludeTrash />
+			);
+
+			expect(screen.queryByTestId(TEST_SELECTORS.ICONS.shared)).not.toBeInTheDocument();
+		});
+
+		it('shows the Share icon in the dropdown next to a shared calendar', async () => {
+			setupFoldersStore();
+			addSharedCalendarToUserRoot();
+
+			const { user } = setupTest(
+				<CalendarSelector calendarId={defaultCalendar.id} onCalendarChange={vi.fn()} excludeTrash />
+			);
+			// the field label and the selected calendar are both named "Calendar" here,
+			// so the dropdown is opened from the chevron instead of the calendar name
+			await user.click(screen.getByTestId('icon: ChevronDownOutline'));
+
+			const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+			expect(within(dropdown).getByText(SHARED_CALENDAR_NAME)).toBeVisible();
+			expect(within(dropdown).getByTestId(TEST_SELECTORS.ICONS.shared)).toBeVisible();
+		});
+
+		it('does not show the Share icon next to a calendar shared with the user (a link)', () => {
+			setupFoldersStore();
+			const linkedCalendar = mockedData.calendars.getCalendar({
+				id: '14',
+				name: 'Linked shared calendar',
+				parent: FOLDERS.USER_ROOT,
+				isLink: true,
+				perm: 'rwidx',
+				owner: 'sharer@zextras.com',
+				acl: { grant: [{ zid: 'zid', gt: 'usr', perm: 'r', d: 'foo@test.com' }] }
+			});
+			useFolderStore.setState((state) => {
+				const { children: existingUserRootCalendars, ...userRootRest } =
+					state.folders[FOLDERS.USER_ROOT];
+				return {
+					folders: {
+						...state.folders,
+						[FOLDERS.USER_ROOT]: {
+							...userRootRest,
+							children: [...existingUserRootCalendars, linkedCalendar]
+						},
+						[linkedCalendar.id]: linkedCalendar
+					}
+				};
+			});
+
+			setupTest(
+				<CalendarSelector calendarId={linkedCalendar.id} onCalendarChange={vi.fn()} excludeTrash />
+			);
+
+			expect(screen.queryByTestId(TEST_SELECTORS.ICONS.shared)).not.toBeInTheDocument();
 		});
 	});
 });
