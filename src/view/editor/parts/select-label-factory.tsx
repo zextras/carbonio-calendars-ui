@@ -13,11 +13,13 @@ import {
 	Row,
 	Icon,
 	SelectItem,
-	LabelFactoryProps
+	LabelFactoryProps,
+	Tooltip
 } from '@zextras/carbonio-design-system';
 import { Folder } from '@zextras/carbonio-ui-commons';
+import { useTranslation } from 'react-i18next';
 
-import { getFolderIcon } from '../../../commons/utilities';
+import { getCalendarSharingGrantsCount, getFolderIcon } from '../../../commons/utilities';
 
 export const ColorContainer = styled(Container)`
 	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
@@ -62,8 +64,13 @@ export const ItemFactory = ({
 	disabled: boolean;
 	ownerEmail?: string;
 }): JSX.Element => {
+	const [t] = useTranslation();
 	const referenceIcon = useMemo(
 		() => (folder ? getFolderIcon({ item: folder, checked: true }) : ''),
+		[folder]
+	);
+	const sharingGrantsCount = useMemo(
+		() => (folder ? getCalendarSharingGrantsCount(folder) : 0),
 		[folder]
 	);
 	return (
@@ -84,6 +91,22 @@ export const ItemFactory = ({
 					</Padding>
 				)}
 			</Row>
+			{sharingGrantsCount > 0 && (
+				<Padding left="small">
+					<Tooltip
+						placement="top"
+						label={t('tooltip.folder_sharing_status', {
+							count: sharingGrantsCount,
+							defaultValue_one: 'Shared with {{count}} person',
+							defaultValue: 'Shared with {{count}} people'
+						})}
+					>
+						<Row>
+							<Icon icon="Share" color="gray0" disabled={disabled} />
+						</Row>
+					</Tooltip>
+				</Padding>
+			)}
 		</Row>
 	);
 };

@@ -76,6 +76,15 @@ export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolea
 	/y/.test(item.f ?? '') || !!item.url;
 
 /**
+ * Number of people a calendar has been shared with. Always 0 for a calendar shared TO
+ * the user (a link), since only the owner's grants describe the outgoing shares.
+ */
+export const getCalendarSharingGrantsCount = (item: {
+	isLink?: boolean;
+	acl?: { grant?: Array<unknown> };
+}): number => (item.isLink ? 0 : (item.acl?.grant?.length ?? 0));
+
+/**
  * A folder returned in GetFolderResponse that is the root of a DataSource.
  * Regular folders and CalDAV sub-folders will have dsId/dsType as undefined.
  */

@@ -39,7 +39,12 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { importCalendarICSFn } from 'actions/calendar-actions-fn';
-import { recursiveToggleCheck, getFolderIcon, isExternalSyncFolder } from 'commons/utilities';
+import {
+	recursiveToggleCheck,
+	getCalendarSharingGrantsCount,
+	getFolderIcon,
+	isExternalSyncFolder
+} from 'commons/utilities';
 import { useCalendarActions } from 'hooks/use-calendar-actions';
 import { useCheckedCalendarsQuery } from 'hooks/use-checked-calendars-query';
 import { setCalendarColor } from 'normalizations/normalizations-utils';
@@ -158,9 +163,10 @@ export const CalendarAccordionItem: FC<AccordionItemProps> = (props) => {
 			return null;
 		}
 
-		if (!calendar.isLink && calendar.acl?.grant?.length) {
+		const sharingGrantsCount = getCalendarSharingGrantsCount(calendar);
+		if (sharingGrantsCount > 0) {
 			const tooltipText = t('tooltip.folder_sharing_status', {
-				count: calendar.acl.grant.length,
+				count: sharingGrantsCount,
 				defaultValue_one: 'Shared with {{count}} person',
 				defaultValue: 'Shared with {{count}} people'
 			});
