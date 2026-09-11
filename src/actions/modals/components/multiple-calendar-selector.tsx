@@ -19,6 +19,7 @@ import {
 import { differenceWith, map, reject, sortBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { getCalendarOwnerEmail } from '../../../commons/utilities';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { ItemFactory } from '../../../view/editor/parts/select-label-factory';
 
@@ -111,12 +112,10 @@ export const MultipleCalendarSelector = ({
 					customComponent: (
 						<ItemFactory
 							disabled={false}
-							absFolderPath={cal.absFolderPath}
 							color={color.color}
-							isLink={cal.isLink}
+							folder={cal}
 							label={labelName}
-							acl={cal.acl}
-							id={cal.id}
+							ownerEmail={getCalendarOwnerEmail(cal)}
 						/>
 					)
 				};

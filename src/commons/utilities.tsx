@@ -11,6 +11,7 @@ import {
 	FOLDERS,
 	getFoldersMap,
 	getRoot,
+	getRootAccountId,
 	getUpdateFolder,
 	hasId
 } from '@zextras/carbonio-ui-commons';
@@ -43,8 +44,45 @@ export const isMainRootChild = (item: { id: string }): boolean => {
 	return root?.id === FOLDERS.USER_ROOT;
 };
 
+export const isDelegatedAccountFolder = (item: { id: string }): boolean => {
+	const rootAccountId = getRootAccountId(item.id);
+	const root = getRoot(rootAccountId ?? FOLDERS.USER_ROOT);
+	return !!root && root.name !== ROOT_NAME;
+};
+
+/**
+ * Returns the email address to show as the "owner" of a calendar, if any:
+ * - for a calendar belonging to a delegated/shared account, the account's own email
+ * - for a calendar linked to the primary account, the sharer's email
+ * - otherwise undefined (own, non-shared calendar)
+ */
+export const getCalendarOwnerEmail = (item: {
+	id: string;
+	isLink?: boolean;
+	owner?: string;
+}): string | undefined => {
+	if (isDelegatedAccountFolder(item)) {
+		const rootAccountId = getRootAccountId(item.id);
+		const root = getRoot(rootAccountId ?? FOLDERS.USER_ROOT);
+		return root?.name;
+	}
+	if (item.isLink && item.owner) {
+		return item.owner;
+	}
+	return undefined;
+};
+
 export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolean =>
 	/y/.test(item.f ?? '') || !!item.url;
+
+/**
+ * Number of people a calendar has been shared with. Always 0 for a calendar shared TO
+ * the user (a link), since only the owner's grants describe the outgoing shares.
+ */
+export const getCalendarSharingGrantsCount = (item: {
+	isLink?: boolean;
+	acl?: { grant?: Array<unknown> };
+}): number => (item.isLink ? 0 : (item.acl?.grant?.length ?? 0));
 
 /**
  * A folder returned in GetFolderResponse that is the root of a DataSource.
@@ -462,6 +500,28 @@ export function recursiveToggleCheck({
 	});
 }
 
+const hasNoIcon = (item: SidebarFolder): boolean =>
+	item.id === FOLDERS.USER_ROOT || (!!item.isLink && item.oname === ROOT_NAME) || !!item.noIcon;
+
+/** [outline icon, filled icon] pair to use once a folder kind has been identified */
+const FOLDER_ICON_BY_KIND = {
+	trash: ['Trash2Outline', 'Trash2'],
+	allCalendar: ['CalendarOutline', 'Calendar2'],
+	shared: ['SharedCalendarOutline', 'SharedCalendar'],
+	delegated: ['DelegatedCalendarOutline', 'DelegatedCalendar'],
+	caldavGroup: ['GroupCalendarOutline', 'GroupCalendar'],
+	default: ['CalendarOutline', 'Calendar2']
+} as const;
+
+const getFolderIconKind = (item: SidebarFolder): keyof typeof FOLDER_ICON_BY_KIND => {
+	if (hasId(item, FOLDERS.TRASH)) return 'trash';
+	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return 'allCalendar';
+	if (item.isLink || isLinkChild(item)) return 'shared';
+	if (isDelegatedAccountFolder(item)) return 'delegated';
+	if (isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })) return 'caldavGroup';
+	return 'default';
+};
+
 export const getFolderIcon = ({
 	item,
 	checked
@@ -469,15 +529,8 @@ export const getFolderIcon = ({
 	item: SidebarFolder;
 	checked: boolean;
 }): string => {
-	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME) || item.noIcon)
-		return '';
-	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
-	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
-	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
-	if (isCaldavRootFolder({ dsId: item.dsId, dsType: item.dsType })) {
-		return checked ? 'GroupCalendar' : 'GroupCalendarOutline';
-	}
-	return checked ? 'Calendar2' : 'CalendarOutline';
+	if (hasNoIcon(item)) return '';
+	return FOLDER_ICON_BY_KIND[getFolderIconKind(item)][checked ? 1 : 0];
 };
 
 export const replaceLinkToAnchor = (content: string): string => {

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import {
+	getCalendarOwnerEmail,
+	getCalendarSharingGrantsCount,
 	getFolderIcon,
 	isCaldavChild,
 	isCaldavRootFolder,
@@ -11,6 +13,8 @@ import {
 	replaceLinkToAnchor
 } from '../utilities';
 import { generateFolder } from '@test-utils/folders/folders-generator';
+import { populateFoldersStore } from '@test-utils/store/folders';
+import { getMocksContext } from '@test-utils/utils/mocks-context';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
 describe('replaceLinkToAnchor', () => {
@@ -139,5 +143,76 @@ describe('datasource folder helpers', () => {
 
 		expect(isCaldavChild(caldavChild)).toBe(true);
 		expect(isCaldavChild(caldavRoot)).toBe(false);
+	});
+});
+
+describe('getCalendarOwnerEmail', () => {
+	it('returns undefined for an own, non-shared calendar', () => {
+		const folder = generateFolder({ view: 'appointment', id: '2345', isLink: false });
+		populateFoldersStore({ customFolders: [folder] });
+
+		expect(getCalendarOwnerEmail(folder)).toBeUndefined();
+	});
+
+	it('returns the sharer email for a calendar linked to the primary account', () => {
+		const folder = {
+			...generateFolder({ view: 'appointment', id: '2345', isLink: true }),
+			owner: 'mattia.tisato@zextras.com'
+		};
+		populateFoldersStore({ customFolders: [folder] });
+
+		expect(getCalendarOwnerEmail(folder)).toBe('mattia.tisato@zextras.com');
+	});
+
+	it('returns undefined for a linked calendar without an owner', () => {
+		const folder = generateFolder({ view: 'appointment', id: '2345', isLink: true });
+		populateFoldersStore({ customFolders: [folder] });
+
+		expect(getCalendarOwnerEmail(folder)).toBeUndefined();
+	});
+
+	it('returns the shared account email for a calendar belonging to a delegated account', () => {
+		const sharedAccountIdentity = getMocksContext().identities.sendAs[0];
+		const folder = generateFolder({
+			view: 'appointment',
+			id: `${sharedAccountIdentity.identity.id}:2345`,
+			isLink: false
+		});
+		populateFoldersStore({ customFolders: [folder] });
+
+		expect(getCalendarOwnerEmail(folder)).toBe(sharedAccountIdentity.identity.email);
+	});
+
+	it('returns the shared account email, not the folder owner, for a linked calendar belonging to a delegated account', () => {
+		const sharedAccountIdentity = getMocksContext().identities.sendAs[0];
+		const folder = {
+			...generateFolder({
+				view: 'appointment',
+				id: `${sharedAccountIdentity.identity.id}:2345`,
+				isLink: true
+			}),
+			owner: 'someone.else@zextras.com'
+		};
+		populateFoldersStore({ customFolders: [folder] });
+
+		expect(getCalendarOwnerEmail(folder)).toBe(sharedAccountIdentity.identity.email);
+	});
+});
+
+describe('getCalendarSharingGrantsCount', () => {
+	it('returns 0 for an own, non-shared calendar', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: false, acl: undefined })).toBe(0);
+	});
+
+	it('returns 0 for an own calendar with an empty grant list', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: false, acl: { grant: [] } })).toBe(0);
+	});
+
+	it('returns the number of grants for an own calendar shared with others', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: false, acl: { grant: [{}, {}] } })).toBe(2);
+	});
+
+	it('returns 0 for a calendar shared with the user (a link), regardless of its acl', () => {
+		expect(getCalendarSharingGrantsCount({ isLink: true, acl: { grant: [{}] } })).toBe(0);
 	});
 });
