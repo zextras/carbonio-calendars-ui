@@ -1,3 +1,9 @@
+## 1.36.0 (2026-09-11)
+
+* feat(CO-4262): show the share icon inside calendar selector inputs (#851) ([74b8a43](https://github.com/zextras/carbonio-calendars-ui/commit/74b8a43)), closes [#851](https://github.com/zextras/carbonio-calendars-ui/issues/851)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.10.10 (#850) ([145f2da](https://github.com/zextras/carbonio-calendars-ui/commit/145f2da)), closes [#850](https://github.com/zextras/carbonio-calendars-ui/issues/850)
+* chore(deps): update sonarqube-scanner to 4.4.0 ([82c2aa4](https://github.com/zextras/carbonio-calendars-ui/commit/82c2aa4))
+
 ## 1.35.0 (2026-09-09)
 
 * feat: improve calendar owner readability ([fd8e1cb](https://github.com/zextras/carbonio-calendars-ui/commit/fd8e1cb))
