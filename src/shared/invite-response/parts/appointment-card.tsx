@@ -11,6 +11,7 @@ import { format, isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import { TagIconComponent } from '../../../commons/tag-icon-component';
+import { getTimeOnlyLiteralToken, useIs24HourFormat } from '../../../commons/time-format';
 import { CALENDAR_ROUTE } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
@@ -19,6 +20,8 @@ import { EventType } from '../../../types/event';
 
 const useEventTimeString = (start: Date, end: Date, allDay: boolean): string => {
 	const [t] = useTranslation();
+	const is24h = useIs24HourFormat();
+	const timeToken = getTimeOnlyLiteralToken(is24h);
 	const isSingleAllDay = isSameDay(start, end) && allDay;
 	const isMultiAllDay = !isSameDay(start, end) && allDay;
 	const isMulti = !isSameDay(start, end) && !allDay;
@@ -27,7 +30,7 @@ const useEventTimeString = (start: Date, end: Date, allDay: boolean): string => 
 		return t('label.all_day', 'All day');
 	}
 	if (isMulti) {
-		return `${format(start, 'MMMM do yyyy hh:mm a')} - ${format(end, 'MMMM do yyyy hh:mm a')}`;
+		return `${format(start, `MMMM do yyyy ${timeToken}`)} - ${format(end, `MMMM do yyyy ${timeToken}`)}`;
 	}
 	if (isMultiAllDay) {
 		return `${format(start, 'MMMM do yyyy')} - ${format(end, 'MMMM do yyyy')} - ${t(
@@ -35,7 +38,7 @@ const useEventTimeString = (start: Date, end: Date, allDay: boolean): string => 
 			'All day'
 		)}`;
 	}
-	return `${format(start, 'hh:mm a')} - ${format(end, 'hh:mm a')}`;
+	return `${format(start, timeToken)} - ${format(end, timeToken)}`;
 };
 
 export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element => {

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import type { BooleanString } from '@zextras/carbonio-ui-soap-lib';
 import '@zextras/carbonio-ui-soap-lib';
 
 declare module '@zextras/carbonio-ui-soap-lib' {
@@ -18,5 +19,8 @@ declare module '@zextras/carbonio-ui-soap-lib' {
 		zimbraPrefUseTimeZoneListInCalendar: string;
 		zimbraPrefCalendarForwardInvitesTo: string;
 		zimbraPrefAppleIcalDelegationEnabled: string;
+		// CO-3677: placeholder pref, not yet a real server-side attribute.
+		// Canonical name owned by src/commons/time-format.ts — rename both together.
+		zimbraPrefCalendarTimeFormat24Hour?: BooleanString;
 	}
 }

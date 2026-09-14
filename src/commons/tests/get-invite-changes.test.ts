@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { formatCompactDateTimeRange, getInviteChanges } from '../get-invite-changes';
+import { TIME_FORMAT_24_HOUR_PREF_NAME } from '../time-format';
 import { Editor } from '../../types/editor';
+import defaultSettings from '@test-utils/settings/default-settings';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 
 const dateTimeLabel = (start: number, end: number, allDay = false): string =>
 	formatCompactDateTimeRange(start, end, allDay);
@@ -306,5 +309,28 @@ describe('formatCompactDateTimeRange', () => {
 		const start = new Date(2026, 6, 29, 0, 0).getTime();
 		const end = new Date(2026, 6, 30, 23, 59).getTime();
 		expect(formatCompactDateTimeRange(start, end, true)).toBe('Wed, Jul 29 – Thu, Jul 30');
+	});
+
+	describe('when the time format pref is TRUE', () => {
+		beforeEach(() => {
+			shell.getUserSettings.mockReturnValue({
+				...defaultSettings,
+				prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+			});
+		});
+
+		it('always shows HH:mm on both sides, even when start and end share the same period', () => {
+			const start = new Date(2026, 6, 29, 20, 30).getTime();
+			const end = new Date(2026, 6, 29, 21, 0).getTime();
+			expect(formatCompactDateTimeRange(start, end, false)).toBe('Wed, Jul 29, 20:30 – 21:00');
+		});
+
+		it('shows the full date and HH:mm on both sides when start and end are on different days', () => {
+			const start = new Date(2026, 6, 29, 20, 30).getTime();
+			const end = new Date(2026, 6, 30, 9, 0).getTime();
+			expect(formatCompactDateTimeRange(start, end, false)).toBe(
+				'Wed, Jul 29, 20:30 – Thu, Jul 30, 09:00'
+			);
+		});
 	});
 });

@@ -10,6 +10,7 @@ import { compact, toLower } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { getDateFnsLocale } from '../commons/date-fns-react-widgets-localizer';
+import { TIME_FORMAT_24_HOUR_PREF_NAME, toHour12Option } from '../commons/time-format';
 
 type EventTimeOptions = {
 	allDay?: boolean;
@@ -24,6 +25,7 @@ type TimeStringsType = {
 		allDay?: boolean;
 		allDayLabel?: string;
 		locale?: string;
+		hour12?: boolean;
 	};
 };
 
@@ -36,7 +38,8 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 		minute: options?.allDay ? undefined : '2-digit',
 		timeZone: options?.timeZone,
 		second: undefined,
-		hour: options?.allDay ? undefined : '2-digit'
+		hour: options?.allDay ? undefined : '2-digit',
+		hour12: options?.allDay ? undefined : options?.hour12
 	} as const;
 
 	const gmtOptions = {
@@ -75,11 +78,13 @@ export const useGetDateRangeConvertedToTimezone = (
 		() => (allDay ? toLower(t('label.all_day', 'All day')) : ''),
 		[allDay, t]
 	);
-	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
-	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
+	const { prefs } = useUserSettings();
+	const locale = useMemo(() => prefs.zimbraPrefLocale ?? navigator.language, [prefs]);
+	const hour12 = useMemo(() => toHour12Option(prefs[TIME_FORMAT_24_HOUR_PREF_NAME]), [prefs]);
 
 	return useMemo(
-		() => getTimeStrings({ start, end, options: { allDay, allDayLabel, locale, timeZone } }),
-		[allDay, allDayLabel, end, locale, start, timeZone]
+		() =>
+			getTimeStrings({ start, end, options: { allDay, allDayLabel, locale, timeZone, hour12 } }),
+		[allDay, allDayLabel, end, hour12, locale, start, timeZone]
 	);
 };

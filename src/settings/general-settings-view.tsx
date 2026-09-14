@@ -23,7 +23,8 @@ import {
 	DefaultViewOptions,
 	StartWeekOfOptions,
 	DefaultApptVisibiltyOptions,
-	SpanTimeOptions
+	SpanTimeOptions,
+	TimeFormatOptions
 } from './components/utils';
 import { generalSubSection } from './sub-sections';
 
@@ -52,6 +53,7 @@ export default function GeneralSettings({
 		[settingsObj.zimbraPrefCalendarDefaultApptDuration]
 	);
 	const defaultApptVisibiltyOptions = useMemo(() => DefaultApptVisibiltyOptions(), []);
+	const timeFormatOptions = useMemo(() => TimeFormatOptions(), []);
 
 	const defaultViewSelection = useMemo(
 		() =>
@@ -75,6 +77,14 @@ export default function GeneralSettings({
 				(item) => item.value === settingsObj.zimbraPrefCalendarApptVisibility
 			),
 		[defaultApptVisibiltyOptions, settingsObj.zimbraPrefCalendarApptVisibility]
+	);
+	const timeFormatSelection = useMemo(
+		() =>
+			find(
+				timeFormatOptions,
+				(item) => item.value === (settingsObj.zimbraPrefCalendarTimeFormat24Hour ?? 'FALSE')
+			),
+		[timeFormatOptions, settingsObj.zimbraPrefCalendarTimeFormat24Hour]
 	);
 	const showReminderSelection = useMemo(
 		() =>
@@ -119,6 +129,26 @@ export default function GeneralSettings({
 						}}
 						defaultSelection={startWeekSelection}
 					/>
+					<Container gap={'0.25rem'} mainAlignment={'flex-start'} crossAlignment={'flex-start'}>
+						<Select
+							label={t('label.time_format', 'Time format')}
+							items={timeFormatOptions}
+							onChange={(value): void => {
+								if (value) {
+									updateSettings({
+										target: { name: 'zimbraPrefCalendarTimeFormat24Hour', value }
+									});
+								}
+							}}
+							defaultSelection={timeFormatSelection}
+						/>
+						<Text size="small" color="secondary">
+							{t(
+								'settings.hint.time_format',
+								'Applies to how times are displayed throughout Calendars, including work hours and appointments.'
+							)}
+						</Text>
+					</Container>
 					<Select
 						label={t('label.default_appt_vsblty', 'Default appointment visibility')}
 						items={defaultApptVisibiltyOptions}

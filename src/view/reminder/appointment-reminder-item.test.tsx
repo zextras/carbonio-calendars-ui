@@ -16,7 +16,10 @@ import { CALENDAR_ROUTE } from '../../constants';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { reducers } from '../../store/redux';
 import { generateReminderItem } from '../../test/generators/reminder';
+import { TIME_FORMAT_24_HOUR_PREF_NAME } from '../../commons/time-format';
 import { setupHook, setupTest, screen } from '@test-setup';
+import defaultSettings from '@test-utils/settings/default-settings';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 
 vi.mock('@zextras/carbonio-ui-commons', async () => ({
 	...(await vi.importActual('@zextras/carbonio-ui-commons')),
@@ -65,7 +68,29 @@ describe('Appointment Reminder Item', () => {
 		expect(screen.getByText(reminderItem.name)).toBeVisible();
 	});
 
-	it('should render the appointment time', () => {
+	it('should render the appointment time using the 12-hour default format', () => {
+		const reminderItem = generateReminderItem();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const timeText = `${dateFnsFormat(new Date(reminderItem.start), 'hh:mm a')} - ${dateFnsFormat(new Date(reminderItem.end), 'hh:mm a')}`;
+
+		setupTest(
+			<AppointmentReminderItem
+				reminderItem={reminderItem}
+				toggleModal={vi.fn()}
+				removeReminder={vi.fn()}
+				setActiveReminder={vi.fn()}
+			/>,
+			{ store }
+		);
+
+		expect(screen.getByText(timeText)).toBeVisible();
+	});
+
+	it('should render the appointment time in 24-hour format when the time format pref is TRUE', () => {
+		shell.useUserSettings.mockReturnValueOnce({
+			...defaultSettings,
+			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+		});
 		const reminderItem = generateReminderItem();
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const timeText = `${dateFnsFormat(new Date(reminderItem.start), 'HH:mm')} - ${dateFnsFormat(new Date(reminderItem.end), 'HH:mm')}`;

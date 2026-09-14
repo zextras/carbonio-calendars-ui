@@ -25,6 +25,7 @@ import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
 import { CustomEventIcon } from './custom-event-icon';
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
 import { TagIconComponent } from 'commons/tag-icon-component';
+import { getTimeOnlyToken, useIs24HourFormat } from 'commons/time-format';
 import { isExternalSyncFolder, isIcsOrCaldavExternalFolder } from 'commons/utilities';
 import { EVENT_ACTIONS } from 'constants/event-actions';
 import { CALENDAR_ROUTE } from 'constants/index';
@@ -67,22 +68,24 @@ const CustomDate = ({
 	start: Date;
 	end: Date;
 }): React.JSX.Element => {
+	const is24h = useIs24HourFormat();
 	const timeToDisplay = useMemo(() => {
 		const sameDay = isSameDay(start, end);
 		const sameMonth = isSameMonth(start, end);
 		const sameYear = isSameYear(start, end);
+		const timeToken = getTimeOnlyToken(is24h);
 
 		if (!sameYear) {
-			return `${format(start, 'yyyy/MM/dd, p')} - ${format(end, 'yyyy/MM/dd, p')}`;
+			return `${format(start, `yyyy/MM/dd, ${timeToken}`)} - ${format(end, `yyyy/MM/dd, ${timeToken}`)}`;
 		}
 		if (!sameMonth) {
-			return `${format(start, 'EEE MM/dd, p')} - ${format(end, 'EEE MM/dd, p')}`;
+			return `${format(start, `EEE MM/dd, ${timeToken}`)} - ${format(end, `EEE MM/dd, ${timeToken}`)}`;
 		}
 		if (!sameDay) {
-			return `${format(start, 'EEE dd, p')} - ${format(end, 'EEE dd, p')}`;
+			return `${format(start, `EEE dd, ${timeToken}`)} - ${format(end, `EEE dd, ${timeToken}`)}`;
 		}
-		return `${format(start, 'p')} - ${format(end, 'p')}`;
-	}, [end, start]);
+		return `${format(start, timeToken)} - ${format(end, timeToken)}`;
+	}, [end, is24h, start]);
 
 	return (
 		<Container crossAlignment={'flex-start'}>

@@ -12,9 +12,12 @@ import { map, values } from 'lodash';
 
 import { AppointmentCard } from './appointment-card';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
+import { TIME_FORMAT_24_HOUR_PREF_NAME } from '../../../commons/time-format';
 import mockedData from '../../../test/generators';
 import { setupTest } from '@test-setup';
+import defaultSettings from '@test-utils/settings/default-settings';
 import { tags } from '@test-utils/tags/tags';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 
 describe('appointment card component', () => {
 	beforeEach(() => {
@@ -60,6 +63,19 @@ describe('appointment card component', () => {
 
 				const timeString = screen.getByText(
 					`${format(new Date(event.start), 'hh:mm a')} - ${format(new Date(event.end), 'hh:mm a')}`
+				);
+				expect(timeString).toBeVisible();
+			});
+			test('if it is a single day and the 24-hour format is set it will show the hour start and end time in 24h', () => {
+				shell.useUserSettings.mockReturnValueOnce({
+					...defaultSettings,
+					prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+				});
+				const event = mockedData.getEvent();
+				setupTest(<AppointmentCard event={event} />);
+
+				const timeString = screen.getByText(
+					`${format(new Date(event.start), 'HH:mm')} - ${format(new Date(event.end), 'HH:mm')}`
 				);
 				expect(timeString).toBeVisible();
 			});

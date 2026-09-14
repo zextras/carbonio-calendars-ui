@@ -646,6 +646,10 @@ export const DefaultApptVisibiltyOptions = (): SelectItem<'public' | 'private'>[
 	{ label: t('settings.options.dflt_vsblty_opt.public', 'Public'), value: 'public' },
 	{ label: t('label.private', 'Private'), value: 'private' }
 ];
+export const TimeFormatOptions = (): SelectItem<'TRUE' | 'FALSE'>[] => [
+	{ label: t('settings.options.time_format.12h', '12-Hour (AM/PM)'), value: 'FALSE' },
+	{ label: t('settings.options.time_format.24h', '24-Hour (e.g. 14:00)'), value: 'TRUE' }
+];
 export const SpanTimeOptions = (isMinutesFormat: boolean): SelectItem[] => [
 	{
 		label: t('reminder.minute_before', {

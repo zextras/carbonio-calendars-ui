@@ -8,12 +8,16 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { format } from 'date-fns';
 
 import { MemoCustomEvent } from '../custom-event';
+import { TIME_FORMAT_24_HOUR_PREF_NAME } from 'commons/time-format';
 import { setupTest } from '@test-setup';
 import { reducers } from 'store/redux';
 import { useAppStatusStore } from 'store/zustand/store';
 import mockedData from 'test/generators';
+import defaultSettings from '@test-utils/settings/default-settings';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 
 describe('custom-event', () => {
 	test('if the event is not part of a recurrence it wont have a recurrent icon', async () => {
@@ -387,5 +391,41 @@ describe('custom-event', () => {
 		expect(
 			screen.queryByText(/tentative appointment|tooltip\.tentative_appointment/i)
 		).not.toBeInTheDocument();
+	});
+
+	test('shows the event time in 12-hour format by default', () => {
+		const event = mockedData.getEvent({ allDay: false });
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = { invites: { [invite.id]: invite } };
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		const timeText = `${format(event.start, 'p')} - ${format(event.end, 'p')}`;
+		expect(screen.getByText(timeText)).toBeVisible();
+	});
+
+	test('shows the event time in 24-hour format when the time format pref is TRUE', () => {
+		shell.useUserSettings.mockReturnValueOnce({
+			...defaultSettings,
+			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+		});
+		const event = mockedData.getEvent({ allDay: false });
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = { invites: { [invite.id]: invite } };
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, { store });
+
+		const timeText = `${format(event.start, 'HH:mm')} - ${format(event.end, 'HH:mm')}`;
+		expect(screen.getByText(timeText)).toBeVisible();
 	});
 });
