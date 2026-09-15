@@ -8,20 +8,13 @@ import { usePrefs } from '@zextras/carbonio-ui-commons';
 
 import { getLocale, localeFromPrefs } from 'hooks/use-locale';
 
-/**
- * Name of the Zimbra account pref that stores the user's time-format choice
- * (CO-3677). Not yet a real server-side attribute: no matching type in
- * @zextras/carbonio-ui-soap-lib, no entry in the official Zimbra attribute
- * docs. Value is read defensively as a Zimbra-style boolean string
- * ("TRUE"/"FALSE") pending the backend attribute being added. Rename here
- * and in src/carbonio-ui-soap-lib.ts once the real attribute name is confirmed.
- */
-export const TIME_FORMAT_24_HOUR_PREF_NAME = 'zimbraPrefCalendarTimeFormat24Hour';
+/** Name of the account pref that stores the user's time-format choice (CO-3677). */
+export const TIME_FORMAT_PREF_NAME = 'carbonioPrefTimeFormat';
 
-/** Explicit true/false for "TRUE"/"FALSE", undefined when the pref isn't set. */
+/** Explicit true/false for "24h"/"12h", undefined when the pref isn't set. */
 const explicitIs24Hour = (value: unknown): boolean | undefined => {
-	if (value === 'TRUE') return true;
-	if (value === 'FALSE') return false;
+	if (value === '24h') return true;
+	if (value === '12h') return false;
 	return undefined;
 };
 
@@ -31,14 +24,14 @@ const localeIs24Hour = (locale: string): boolean =>
 
 /** Non-hook getter, for code that cannot use hooks (e.g. Redux action creators). */
 export function getIs24HourFormat(): boolean {
-	const explicit = explicitIs24Hour(getUserSettings().prefs[TIME_FORMAT_24_HOUR_PREF_NAME]);
+	const explicit = explicitIs24Hour(getUserSettings().prefs[TIME_FORMAT_PREF_NAME]);
 	return explicit ?? localeIs24Hour(getLocale());
 }
 
 /** Hook, for React components/hooks — reactive via usePrefs(). */
 export function useIs24HourFormat(): boolean {
 	const prefs = usePrefs();
-	const explicit = explicitIs24Hour(prefs[TIME_FORMAT_24_HOUR_PREF_NAME]);
+	const explicit = explicitIs24Hour(prefs[TIME_FORMAT_PREF_NAME]);
 	return explicit ?? localeIs24Hour(localeFromPrefs(prefs));
 }
 
@@ -79,13 +72,13 @@ export function getHour12Option(is24h: boolean): boolean {
 
 /**
  * Tri-state Intl.DateTimeFormat `hour12` option, derived from a raw pref
- * value: explicit true/false when the pref is explicitly "FALSE"/"TRUE", or
+ * value: explicit true/false when the pref is explicitly "12h"/"24h", or
  * undefined when the pref isn't set — letting Intl fall back to the locale's
  * own convention, preserving existing (locale-dependent) behavior until the
  * user makes an explicit choice.
  */
 export function toHour12Option(value: unknown): boolean | undefined {
-	if (value === 'TRUE') return false;
-	if (value === 'FALSE') return true;
+	if (value === '24h') return false;
+	if (value === '12h') return true;
 	return undefined;
 }

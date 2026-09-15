@@ -12,7 +12,7 @@ import { map, values } from 'lodash';
 
 import { AppointmentCard } from './appointment-card';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
-import { TIME_FORMAT_24_HOUR_PREF_NAME } from '../../../commons/time-format';
+import { TIME_FORMAT_PREF_NAME } from '../../../commons/time-format';
 import mockedData from '../../../test/generators';
 import { setupTest } from '@test-setup';
 import defaultSettings from '@test-utils/settings/default-settings';
@@ -69,7 +69,7 @@ describe('appointment card component', () => {
 			test('if it is a single day and the 24-hour format is set it will show the hour start and end time in 24h', () => {
 				shell.useUserSettings.mockReturnValueOnce({
 					...defaultSettings,
-					prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+					prefs: { ...defaultSettings.prefs, [TIME_FORMAT_PREF_NAME]: '24h' }
 				});
 				const event = mockedData.getEvent();
 				setupTest(<AppointmentCard event={event} />);

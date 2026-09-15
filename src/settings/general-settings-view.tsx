@@ -18,6 +18,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
 import { find } from 'lodash';
 
+import { TIME_FORMAT_PREF_NAME } from '../commons/time-format';
 import {
 	ShowReminderOptions,
 	DefaultViewOptions,
@@ -78,13 +79,10 @@ export default function GeneralSettings({
 			),
 		[defaultApptVisibiltyOptions, settingsObj.zimbraPrefCalendarApptVisibility]
 	);
+	const timeFormatPref = settingsObj[TIME_FORMAT_PREF_NAME];
 	const timeFormatSelection = useMemo(
-		() =>
-			find(
-				timeFormatOptions,
-				(item) => item.value === (settingsObj.zimbraPrefCalendarTimeFormat24Hour ?? 'FALSE')
-			),
-		[timeFormatOptions, settingsObj.zimbraPrefCalendarTimeFormat24Hour]
+		() => find(timeFormatOptions, (item) => item.value === (timeFormatPref ?? '12h')),
+		[timeFormatOptions, timeFormatPref]
 	);
 	const showReminderSelection = useMemo(
 		() =>
@@ -136,7 +134,7 @@ export default function GeneralSettings({
 							onChange={(value): void => {
 								if (value) {
 									updateSettings({
-										target: { name: 'zimbraPrefCalendarTimeFormat24Hour', value }
+										target: { name: TIME_FORMAT_PREF_NAME, value }
 									});
 								}
 							}}

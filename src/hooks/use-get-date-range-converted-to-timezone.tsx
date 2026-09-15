@@ -9,7 +9,7 @@ import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { compact, toLower } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { TIME_FORMAT_24_HOUR_PREF_NAME, toHour12Option } from '../commons/time-format';
+import { TIME_FORMAT_PREF_NAME, toHour12Option } from '../commons/time-format';
 import { getLocale, localeFromPrefs } from './use-locale';
 
 type EventTimeOptions = {
@@ -74,7 +74,7 @@ export const useGetDateRangeConvertedToTimezone = (
 	);
 	const { prefs } = useUserSettings();
 	const locale = useMemo(() => localeFromPrefs(prefs), [prefs]);
-	const hour12 = useMemo(() => toHour12Option(prefs[TIME_FORMAT_24_HOUR_PREF_NAME]), [prefs]);
+	const hour12 = useMemo(() => toHour12Option(prefs[TIME_FORMAT_PREF_NAME]), [prefs]);
 
 	return useMemo(
 		() =>

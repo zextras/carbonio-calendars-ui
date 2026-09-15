@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { formatCompactDateTimeRange, getInviteChanges } from '../get-invite-changes';
-import { TIME_FORMAT_24_HOUR_PREF_NAME } from '../time-format';
+import { TIME_FORMAT_PREF_NAME } from '../time-format';
 import { Editor } from '../../types/editor';
 import defaultSettings from '@test-utils/settings/default-settings';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
@@ -315,7 +315,7 @@ describe('formatCompactDateTimeRange', () => {
 		beforeEach(() => {
 			shell.getUserSettings.mockReturnValue({
 				...defaultSettings,
-				prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+				prefs: { ...defaultSettings.prefs, [TIME_FORMAT_PREF_NAME]: '24h' }
 			});
 		});
 

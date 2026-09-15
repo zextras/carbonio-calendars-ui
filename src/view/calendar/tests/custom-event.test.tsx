@@ -11,7 +11,7 @@ import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { format } from 'date-fns';
 
 import { MemoCustomEvent } from '../custom-event';
-import { TIME_FORMAT_24_HOUR_PREF_NAME } from 'commons/time-format';
+import { TIME_FORMAT_PREF_NAME } from 'commons/time-format';
 import { setupTest } from '@test-setup';
 import { reducers } from 'store/redux';
 import { useAppStatusStore } from 'store/zustand/store';
@@ -412,7 +412,7 @@ describe('custom-event', () => {
 	test('shows the event time in 24-hour format when the time format pref is TRUE', () => {
 		shell.useUserSettings.mockReturnValueOnce({
 			...defaultSettings,
-			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_PREF_NAME]: '24h' }
 		});
 		const event = mockedData.getEvent({ allDay: false });
 		const invite = mockedData.getInvite({ event });

@@ -10,7 +10,7 @@ import { screen } from '@testing-library/react';
 import { format } from 'date-fns';
 
 import { TrashRow } from '../trash-row-part';
-import { TIME_FORMAT_24_HOUR_PREF_NAME } from '../../../commons/time-format';
+import { TIME_FORMAT_PREF_NAME } from '../../../commons/time-format';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { setupTest } from '@test-setup';
@@ -31,7 +31,7 @@ describe('TrashRow', () => {
 	it('shows the event date and time in 24-hour format when the time format pref is TRUE', () => {
 		shell.useUserSettings.mockReturnValueOnce({
 			...defaultSettings,
-			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_PREF_NAME]: '24h' }
 		});
 		const event = mockedData.getEvent();
 		const store = configureStore({ reducer: combineReducers(reducers) });

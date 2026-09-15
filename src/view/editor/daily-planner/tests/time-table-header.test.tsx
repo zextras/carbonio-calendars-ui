@@ -8,7 +8,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import { TimetableHeader } from '../time-table-header';
-import { TIME_FORMAT_24_HOUR_PREF_NAME } from '../../../../commons/time-format';
+import { TIME_FORMAT_PREF_NAME } from '../../../../commons/time-format';
 import { setupTest } from '@test-setup';
 import defaultSettings from '@test-utils/settings/default-settings';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
@@ -24,7 +24,7 @@ describe('TimetableHeader', () => {
 	it('renders a single 0-24 hour axis when the time format pref is TRUE', () => {
 		shell.useUserSettings.mockReturnValueOnce({
 			...defaultSettings,
-			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_24_HOUR_PREF_NAME]: 'TRUE' }
+			prefs: { ...defaultSettings.prefs, [TIME_FORMAT_PREF_NAME]: '24h' }
 		});
 		setupTest(<TimetableHeader />);
 

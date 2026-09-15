@@ -18,7 +18,7 @@ import {
 	getPickerTimeFormatToken,
 	getTimeOnlyLiteralToken,
 	getTimeOnlyToken,
-	TIME_FORMAT_24_HOUR_PREF_NAME,
+	TIME_FORMAT_PREF_NAME,
 	toHour12Option,
 	useIs24HourFormat
 } from '../time-format';
@@ -29,7 +29,7 @@ const withPref = (value: string | undefined, locale = 'en'): void => {
 		prefs: {
 			...defaultSettings.prefs,
 			zimbraPrefLocale: locale,
-			[TIME_FORMAT_24_HOUR_PREF_NAME]: value
+			[TIME_FORMAT_PREF_NAME]: value
 		}
 	} as unknown as AccountSettings;
 	shell.useUserSettings.mockReturnValue(settings);
@@ -64,16 +64,16 @@ describe('useIs24HourFormat', () => {
 		expect(result.current).toBe(true);
 	});
 
-	it('returns false when the pref is "FALSE" even on a 24h locale', () => {
+	it('returns false when the pref is "12h" even on a 24h locale', () => {
 		mockLocaleHour12(false);
-		withPref('FALSE', 'it');
+		withPref('12h', 'it');
 		const { result } = setupHook(useIs24HourFormat);
 		expect(result.current).toBe(false);
 	});
 
-	it('returns true when the pref is "TRUE" even on a 12h locale', () => {
+	it('returns true when the pref is "24h" even on a 12h locale', () => {
 		mockLocaleHour12(true);
-		withPref('TRUE', 'en-US');
+		withPref('24h', 'en-US');
 		const { result } = setupHook(useIs24HourFormat);
 		expect(result.current).toBe(true);
 	});
@@ -99,9 +99,9 @@ describe('getIs24HourFormat', () => {
 		expect(getIs24HourFormat()).toBe(true);
 	});
 
-	it('returns true when the pref is "TRUE"', () => {
+	it('returns true when the pref is "24h"', () => {
 		mockLocaleHour12(true);
-		withPref('TRUE', 'en-US');
+		withPref('24h', 'en-US');
 		expect(getIs24HourFormat()).toBe(true);
 	});
 });
@@ -111,12 +111,12 @@ describe('toHour12Option', () => {
 		expect(toHour12Option(undefined)).toBeUndefined();
 	});
 
-	it('returns true when the value is explicitly "FALSE"', () => {
-		expect(toHour12Option('FALSE')).toBe(true);
+	it('returns true when the value is explicitly "12h"', () => {
+		expect(toHour12Option('12h')).toBe(true);
 	});
 
-	it('returns false when the value is "TRUE"', () => {
-		expect(toHour12Option('TRUE')).toBe(false);
+	it('returns false when the value is "24h"', () => {
+		expect(toHour12Option('24h')).toBe(false);
 	});
 
 	it('returns undefined for an unexpected value rather than throwing', () => {
