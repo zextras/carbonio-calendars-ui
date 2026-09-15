@@ -6,6 +6,8 @@
 import { getUserSettings } from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '@zextras/carbonio-ui-commons';
 
+import { getLocale, localeFromPrefs } from 'hooks/use-locale';
+
 /**
  * Name of the Zimbra account pref that stores the user's time-format choice
  * (CO-3677). Not yet a real server-side attribute: no matching type in
@@ -16,17 +18,28 @@ import { usePrefs } from '@zextras/carbonio-ui-commons';
  */
 export const TIME_FORMAT_24_HOUR_PREF_NAME = 'zimbraPrefCalendarTimeFormat24Hour';
 
-const isTrue = (value: unknown): boolean => value === 'TRUE';
+/** Explicit true/false for "TRUE"/"FALSE", undefined when the pref isn't set. */
+const explicitIs24Hour = (value: unknown): boolean | undefined => {
+	if (value === 'TRUE') return true;
+	if (value === 'FALSE') return false;
+	return undefined;
+};
+
+/** Whether the given locale's own convention uses a 24-hour clock. */
+const localeIs24Hour = (locale: string): boolean =>
+	new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hour12 === false;
 
 /** Non-hook getter, for code that cannot use hooks (e.g. Redux action creators). */
 export function getIs24HourFormat(): boolean {
-	return isTrue(getUserSettings().prefs[TIME_FORMAT_24_HOUR_PREF_NAME]);
+	const explicit = explicitIs24Hour(getUserSettings().prefs[TIME_FORMAT_24_HOUR_PREF_NAME]);
+	return explicit ?? localeIs24Hour(getLocale());
 }
 
 /** Hook, for React components/hooks — reactive via usePrefs(). */
 export function useIs24HourFormat(): boolean {
 	const prefs = usePrefs();
-	return isTrue(prefs[TIME_FORMAT_24_HOUR_PREF_NAME]);
+	const explicit = explicitIs24Hour(prefs[TIME_FORMAT_24_HOUR_PREF_NAME]);
+	return explicit ?? localeIs24Hour(localeFromPrefs(prefs));
 }
 
 /** Generic "time only" date-fns token (event tiles, calendar time gutter). */

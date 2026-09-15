@@ -23,11 +23,12 @@ import {
 	useIs24HourFormat
 } from '../time-format';
 
-const withPref = (value: string | undefined): void => {
+const withPref = (value: string | undefined, locale = 'en'): void => {
 	const settings = {
 		...defaultSettings,
 		prefs: {
 			...defaultSettings.prefs,
+			zimbraPrefLocale: locale,
 			[TIME_FORMAT_24_HOUR_PREF_NAME]: value
 		}
 	} as unknown as AccountSettings;
@@ -35,40 +36,72 @@ const withPref = (value: string | undefined): void => {
 	shell.getUserSettings.mockReturnValue(settings);
 };
 
+/**
+ * src/__test__/vitest-setup.tsx globally stubs Intl.DateTimeFormat#resolvedOptions
+ * (to pin the timezone), so it no longer reflects the locale actually passed to the
+ * constructor. Re-stub it here to simulate what a 12h/24h locale would resolve to.
+ */
+const mockLocaleHour12 = (hour12: boolean): void => {
+	const original = new Intl.DateTimeFormat().resolvedOptions();
+	vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockReturnValue({
+		...original,
+		hour12
+	});
+};
+
 describe('useIs24HourFormat', () => {
-	it('returns false when the pref is not set', () => {
-		withPref(undefined);
+	it('falls back to the locale convention when the pref is not set (12h locale)', () => {
+		mockLocaleHour12(true);
+		withPref(undefined, 'en-US');
 		const { result } = setupHook(useIs24HourFormat);
 		expect(result.current).toBe(false);
 	});
 
-	it('returns false when the pref is "FALSE"', () => {
-		withPref('FALSE');
-		const { result } = setupHook(useIs24HourFormat);
-		expect(result.current).toBe(false);
-	});
-
-	it('returns true when the pref is "TRUE"', () => {
-		withPref('TRUE');
+	it('falls back to the locale convention when the pref is not set (24h locale)', () => {
+		mockLocaleHour12(false);
+		withPref(undefined, 'it');
 		const { result } = setupHook(useIs24HourFormat);
 		expect(result.current).toBe(true);
 	});
 
-	it('returns false for an unexpected value rather than throwing', () => {
-		withPref('garbage');
+	it('returns false when the pref is "FALSE" even on a 24h locale', () => {
+		mockLocaleHour12(false);
+		withPref('FALSE', 'it');
+		const { result } = setupHook(useIs24HourFormat);
+		expect(result.current).toBe(false);
+	});
+
+	it('returns true when the pref is "TRUE" even on a 12h locale', () => {
+		mockLocaleHour12(true);
+		withPref('TRUE', 'en-US');
+		const { result } = setupHook(useIs24HourFormat);
+		expect(result.current).toBe(true);
+	});
+
+	it('falls back to the locale convention for an unexpected value rather than throwing', () => {
+		mockLocaleHour12(true);
+		withPref('garbage', 'en-US');
 		const { result } = setupHook(useIs24HourFormat);
 		expect(result.current).toBe(false);
 	});
 });
 
 describe('getIs24HourFormat', () => {
-	it('returns false when the pref is not set', () => {
-		withPref(undefined);
+	it('falls back to the locale convention when the pref is not set (12h locale)', () => {
+		mockLocaleHour12(true);
+		withPref(undefined, 'en-US');
 		expect(getIs24HourFormat()).toBe(false);
 	});
 
+	it('falls back to the locale convention when the pref is not set (24h locale)', () => {
+		mockLocaleHour12(false);
+		withPref(undefined, 'it');
+		expect(getIs24HourFormat()).toBe(true);
+	});
+
 	it('returns true when the pref is "TRUE"', () => {
-		withPref('TRUE');
+		mockLocaleHour12(true);
+		withPref('TRUE', 'en-US');
 		expect(getIs24HourFormat()).toBe(true);
 	});
 });
