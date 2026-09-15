@@ -63,8 +63,8 @@ importers:
         specifier: 22.5.1
         version: 22.5.1
       immer:
-        specifier: 9.0.21
-        version: 9.0.21
+        specifier: 11.1.18
+        version: 11.1.18
       lodash:
         specifier: 4.18.1
         version: 4.18.1
@@ -103,7 +103,7 @@ importers:
         version: 4.2.1
       zustand:
         specifier: 4.5.7
-        version: 4.5.7(@types/react@18.3.31)(immer@9.0.21)(react@18.3.1)
+        version: 4.5.7(@types/react@18.3.31)(immer@11.1.18)(react@18.3.1)
     devDependencies:
       '@babel/core':
         specifier: 7.29.7
@@ -4603,6 +4603,9 @@ packages:
 
   immer@10.2.0:
     resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
+
+  immer@11.1.18:
+    resolution: {integrity: sha512-EQyQtLiYW029lyoczMl/Hh4Xu7cDecSc58JRYpHyL4tIAu3eqd1yJzQX04d2BZHDkzFFvm6qJEJWOtfDSWAXbQ==}
 
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
@@ -12590,6 +12593,8 @@ snapshots:
 
   immer@10.2.0: {}
 
+  immer@11.1.18: {}
+
   immer@9.0.21: {}
 
   import-fresh@3.3.1:
@@ -15494,6 +15499,14 @@ snapshots:
   yocto-queue@1.2.2: {}
 
   yoctocolors@2.1.2: {}
+
+  zustand@4.5.7(@types/react@18.3.31)(immer@11.1.18)(react@18.3.1):
+    dependencies:
+      use-sync-external-store: 1.6.0(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.31
+      immer: 11.1.18
+      react: 18.3.1
 
   zustand@4.5.7(@types/react@18.3.31)(immer@9.0.21)(react@18.3.1):
     dependencies:
