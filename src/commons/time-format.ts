@@ -9,7 +9,7 @@ import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { getLocale, localeFromPrefs } from 'hooks/use-locale';
 
 /** Name of the account pref that stores the user's time-format choice (CO-3677). */
-export const TIME_FORMAT_PREF_NAME = 'carbonioPrefTimeFormat';
+export const TIME_FORMAT_PREF_NAME = 'carbonioPrefTimeFormat' as const;
 
 /** Explicit true/false for "24h"/"12h", undefined when the pref isn't set. */
 const explicitIs24Hour = (value: unknown): boolean | undefined => {

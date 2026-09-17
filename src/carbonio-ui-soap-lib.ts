@@ -5,6 +5,8 @@
  */
 import '@zextras/carbonio-ui-soap-lib';
 
+import { TIME_FORMAT_PREF_NAME } from 'commons/time-format';
+
 declare module '@zextras/carbonio-ui-soap-lib' {
 	interface AccountSettingsPrefs {
 		zimbraPrefDefaultCalendarId: string;
@@ -18,7 +20,6 @@ declare module '@zextras/carbonio-ui-soap-lib' {
 		zimbraPrefUseTimeZoneListInCalendar: string;
 		zimbraPrefCalendarForwardInvitesTo: string;
 		zimbraPrefAppleIcalDelegationEnabled: string;
-		// CO-3677: canonical name owned by src/commons/time-format.ts — rename both together.
-		carbonioPrefTimeFormat?: '12h' | '24h';
+		[TIME_FORMAT_PREF_NAME]?: '12h' | '24h';
 	}
 }
