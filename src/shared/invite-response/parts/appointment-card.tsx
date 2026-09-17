@@ -30,7 +30,8 @@ const useEventTimeString = (start: Date, end: Date, allDay: boolean): string => 
 		return t('label.all_day', 'All day');
 	}
 	if (isMulti) {
-		return `${format(start, `MMMM do yyyy ${timeToken}`)} - ${format(end, `MMMM do yyyy ${timeToken}`)}`;
+		const dateToken = `MMMM do yyyy ${timeToken}`;
+		return `${format(start, dateToken)} - ${format(end, dateToken)}`;
 	}
 	if (isMultiAllDay) {
 		return `${format(start, 'MMMM do yyyy')} - ${format(end, 'MMMM do yyyy')} - ${t(

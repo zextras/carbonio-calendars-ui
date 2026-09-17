@@ -76,13 +76,16 @@ const CustomDate = ({
 		const timeToken = getTimeOnlyToken(is24h);
 
 		if (!sameYear) {
-			return `${format(start, `yyyy/MM/dd, ${timeToken}`)} - ${format(end, `yyyy/MM/dd, ${timeToken}`)}`;
+			const dateToken = `yyyy/MM/dd, ${timeToken}`;
+			return `${format(start, dateToken)} - ${format(end, dateToken)}`;
 		}
 		if (!sameMonth) {
-			return `${format(start, `EEE MM/dd, ${timeToken}`)} - ${format(end, `EEE MM/dd, ${timeToken}`)}`;
+			const dateToken = `EEE MM/dd, ${timeToken}`;
+			return `${format(start, dateToken)} - ${format(end, dateToken)}`;
 		}
 		if (!sameDay) {
-			return `${format(start, `EEE dd, ${timeToken}`)} - ${format(end, `EEE dd, ${timeToken}`)}`;
+			const dateToken = `EEE dd, ${timeToken}`;
+			return `${format(start, dateToken)} - ${format(end, dateToken)}`;
 		}
 		return `${format(start, timeToken)} - ${format(end, timeToken)}`;
 	}, [end, is24h, start]);
