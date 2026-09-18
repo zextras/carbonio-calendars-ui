@@ -5,6 +5,7 @@
  */
 
 import { useGetDateRangeConvertedToTimezone } from './use-get-date-range-converted-to-timezone';
+import { TIME_FORMAT_PREF_NAME } from '../commons/time-format';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupHook } from '@test-setup';
 import defaultSettings from '@test-utils/settings/default-settings';
@@ -69,6 +70,20 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				/* it is not depending on our code */
 				// eslint-disable-next-line no-irregular-whitespace
 				expect(result.current).toMatch('Saturday, January 01, 2022, 2:00 – 2:30 AM');
+			});
+			test('minutes or hours range difference in 24-hour format', () => {
+				shell.useUserSettings.mockReturnValueOnce({
+					...defaultSettings,
+					prefs: { ...defaultSettings.prefs, [TIME_FORMAT_PREF_NAME]: '24h' }
+				});
+				const eventStart = setDate({ hours: 14 });
+				const eventEnd = setDate({ hours: 14, minutes: 30 });
+
+				const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+					initialProps: [eventStart, eventEnd]
+				});
+				// eslint-disable-next-line no-irregular-whitespace
+				expect(result.current).toMatch('Saturday, January 01, 2022, 14:00 – 14:30');
 			});
 			test('days or more (weeks, months, years) range difference', () => {
 				const eventStart = setDate({ days: 2 });

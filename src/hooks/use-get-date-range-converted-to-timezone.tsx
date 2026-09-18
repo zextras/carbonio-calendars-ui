@@ -9,7 +9,8 @@ import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { compact, toLower } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { getDateFnsLocale } from '../commons/date-fns-react-widgets-localizer';
+import { TIME_FORMAT_PREF_NAME, toHour12Option } from '../commons/time-format';
+import { getLocale, localeFromPrefs } from './use-locale';
 
 type EventTimeOptions = {
 	allDay?: boolean;
@@ -24,6 +25,7 @@ type TimeStringsType = {
 		allDay?: boolean;
 		allDayLabel?: string;
 		locale?: string;
+		hour12?: boolean;
 	};
 };
 
@@ -36,7 +38,8 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 		minute: options?.allDay ? undefined : '2-digit',
 		timeZone: options?.timeZone,
 		second: undefined,
-		hour: options?.allDay ? undefined : '2-digit'
+		hour: options?.allDay ? undefined : '2-digit',
+		hour12: options?.allDay ? undefined : options?.hour12
 	} as const;
 
 	const gmtOptions = {
@@ -44,14 +47,8 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 		timeZoneName: 'longOffset'
 	} as const;
 
-	const dateTimeFormat = new Intl.DateTimeFormat(
-		options.locale ?? getDateFnsLocale()?.code ?? navigator.language,
-		rangeOptions
-	);
-	const dateGmtTimeFormat = new Intl.DateTimeFormat(
-		options.locale ?? getDateFnsLocale()?.code ?? navigator.language,
-		gmtOptions
-	);
+	const dateTimeFormat = new Intl.DateTimeFormat(options.locale ?? getLocale(), rangeOptions);
+	const dateGmtTimeFormat = new Intl.DateTimeFormat(options.locale ?? getLocale(), gmtOptions);
 
 	const formattedRange = dateTimeFormat.formatRange(start, end);
 	const formatParts = dateGmtTimeFormat.formatToParts(start);
@@ -75,11 +72,13 @@ export const useGetDateRangeConvertedToTimezone = (
 		() => (allDay ? toLower(t('label.all_day', 'All day')) : ''),
 		[allDay, t]
 	);
-	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
-	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
+	const { prefs } = useUserSettings();
+	const locale = useMemo(() => localeFromPrefs(prefs), [prefs]);
+	const hour12 = useMemo(() => toHour12Option(prefs[TIME_FORMAT_PREF_NAME]), [prefs]);
 
 	return useMemo(
-		() => getTimeStrings({ start, end, options: { allDay, allDayLabel, locale, timeZone } }),
-		[allDay, allDayLabel, end, locale, start, timeZone]
+		() =>
+			getTimeStrings({ start, end, options: { allDay, allDayLabel, locale, timeZone, hour12 } }),
+		[allDay, allDayLabel, end, hour12, locale, start, timeZone]
 	);
 };

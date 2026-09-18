@@ -7,6 +7,7 @@ import { format, isSameDay } from 'date-fns';
 import { differenceBy, unionBy } from 'lodash';
 
 import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
+import { getIs24HourFormat } from './time-format';
 import { Editor, Resource } from '../types/editor';
 import { InviteChangeParticipant, InviteChanges } from '../types/invite-changes';
 import { EditorChipAttendees } from '../types/store/invite';
@@ -69,17 +70,19 @@ export const formatCompactDateTimeRange = (start: number, end: number, allDay: b
 			: `${formatDay(startDate)} – ${formatDay(endDate)}`;
 	}
 
-	const formatTimeWithPeriod = (date: Date): string => format(date, 'h:mm a', { locale });
+	const is24h = getIs24HourFormat();
+	const formatTime = (date: Date): string => format(date, is24h ? 'HH:mm' : 'h:mm a', { locale });
 	const formatTimeNoPeriod = (date: Date): string => format(date, 'h:mm', { locale });
 	const formatPeriod = (date: Date): string => format(date, 'a', { locale });
 
 	if (isSameDay(startDate, endDate)) {
-		if (formatPeriod(startDate) === formatPeriod(endDate)) {
+		// In 24h mode there is no AM/PM period to collapse — always show HH:mm on both ends.
+		if (!is24h && formatPeriod(startDate) === formatPeriod(endDate)) {
 			return `${formatDay(startDate)}, ${formatTimeNoPeriod(startDate)} – ${formatTimeNoPeriod(endDate)} ${formatPeriod(endDate)}`;
 		}
-		return `${formatDay(startDate)}, ${formatTimeWithPeriod(startDate)} – ${formatTimeWithPeriod(endDate)}`;
+		return `${formatDay(startDate)}, ${formatTime(startDate)} – ${formatTime(endDate)}`;
 	}
-	return `${formatDay(startDate)}, ${formatTimeWithPeriod(startDate)} – ${formatDay(endDate)}, ${formatTimeWithPeriod(endDate)}`;
+	return `${formatDay(startDate)}, ${formatTime(startDate)} – ${formatDay(endDate)}, ${formatTime(endDate)}`;
 };
 
 export const getInviteChanges = (
