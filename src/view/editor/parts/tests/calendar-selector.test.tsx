@@ -274,6 +274,27 @@ describe('CalendarSelector', () => {
 		});
 	});
 
+	describe('when localOnly is set', () => {
+		it('excludes delegated calendars that have no local mount point', async () => {
+			setupFoldersStore();
+
+			const { user } = setupTest(
+				<CalendarSelector
+					calendarId={defaultCalendar.id}
+					onCalendarChange={vi.fn()}
+					excludeTrash
+					localOnly
+				/>
+			);
+			await user.click(screen.getByTestId('icon: ChevronDownOutline'));
+
+			const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+			expect(within(dropdown).getByText(OWN_SECONDARY_CALENDAR_NAME)).toBeVisible();
+			expect(within(dropdown).queryByText(DELEGATED_CALENDAR_NAME)).not.toBeInTheDocument();
+			expect(within(dropdown).queryByText(OTHER_DELEGATED_CALENDAR_NAME)).not.toBeInTheDocument();
+		});
+	});
+
 	describe('sharing status icon', () => {
 		const addSharedCalendarToUserRoot = (): Folder => {
 			const sharedCalendar = mockedData.calendars.getCalendar({

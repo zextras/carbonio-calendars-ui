@@ -39,6 +39,13 @@ type CalendarSelectorProps = {
 	showCalWithWritePerm?: boolean;
 	disabled?: boolean;
 	allowAllAccounts?: boolean;
+	/**
+	 * Exclude calendars of a delegated account that are only reachable through
+	 * that account's own id (no local mount point). Their id has no plain
+	 * integer form, so they can't be saved wherever the destination expects
+	 * one, e.g. zimbraPrefDefaultCalendarId.
+	 */
+	localOnly?: boolean;
 };
 
 /**
@@ -75,7 +82,8 @@ export const CalendarSelector = ({
 	excludeTrash = false,
 	showCalWithWritePerm = true,
 	disabled,
-	allowAllAccounts = false
+	allowAllAccounts = false,
+	localOnly = false
 }: CalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const rootAccountId = getRootAccountId(calendarId);
@@ -85,7 +93,10 @@ export const CalendarSelector = ({
 
 	const calendars = reject(
 		!allowAllAccounts && rootAccountId?.includes(':') ? allCalendarsByRoot : allCalendars,
-		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
+		(item) =>
+			item.name === ROOT_NAME ||
+			(item as LinkFolder).oname === ROOT_NAME ||
+			(localOnly && !!getFolderIdParts(item.id).zid)
 	);
 
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
