@@ -22,9 +22,11 @@ import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
 import { normalizeCalendarEvent } from '../../../normalizations/normalize-calendar-events';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
+import { GetMessageReturnType } from '../../../soap/get-message-request';
 import { declineCounterAppointmentRequest } from '../../../soap/decline-counter-appointment-request';
 import { getInvite } from '../../../store/actions/get-invite';
 import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
+import { AppDispatch } from '../../../store/redux';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { updateEditor } from '../../../store/slices/editor-slice';
 import {
@@ -34,6 +36,7 @@ import {
 	PROPOSAL_REPLY,
 	useProposalReply
 } from '../../../store/zustand/proposal-replies-store';
+import { Editor } from '../../../types/editor';
 import { ProposedTimeReplyArguments } from '../../../types/integrations';
 import { parseDateFromICS } from '../../../utils/dates';
 
@@ -48,6 +51,18 @@ function resolveCompTimestamp(
 	if (comp.d) return parseDateFromICS(comp.d).getTime();
 	return fallback;
 }
+
+const fetchInvite = (
+	dispatch: AppDispatch,
+	inviteId: string,
+	ridZ?: string
+): Promise<{ payload?: GetMessageReturnType }> => dispatch(getInvite({ inviteId, ridZ }));
+
+const applyAppointmentChange = (
+	dispatch: AppDispatch,
+	editor: Editor
+): Promise<{ payload?: { response?: unknown; error?: boolean; editor: Editor } }> =>
+	dispatch(modifyAppointment({ draft: false, editor }));
 
 const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	id,
@@ -132,7 +147,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 			inviteId
 		};
 
-		const fetchedInvite = await dispatch(getInvite({ inviteId, ridZ }));
+		const fetchedInvite = await fetchInvite(dispatch, inviteId, ridZ);
 		const calendar = find(calendarFolders, ['id', folderId]);
 		if (!calendar || !fetchedInvite?.payload?.m) {
 			throw new Error('Calendar or invite not available');
@@ -159,7 +174,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 			}
 		});
 
-		const { payload } = await dispatch(modifyAppointment({ draft: false, editor }));
+		const { payload } = await applyAppointmentChange(dispatch, editor);
 		// payload is undefined when the request throws, and carries error: true on a fault
 		if (!payload?.response || payload.error) {
 			throw new Error('Modify appointment failed');
