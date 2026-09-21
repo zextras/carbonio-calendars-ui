@@ -8,19 +8,24 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
-import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { parse } from 'date-fns';
 import { keyBy, values } from 'lodash';
-import { http, HttpResponse } from 'msw';
+import { DefaultBodyType, http, HttpResponse } from 'msw';
 
 import * as handler from '../../../commons/get-appointment';
 import { formatInviteChangesText } from '../../../commons/invite-changes-text';
 import { CALENDAR_BOARD_ID } from '../../../constants';
 import { getSetupServer } from '@jest-setup';
 import * as mockshell from '@test-mocks/@zextras/carbonio-shell-ui';
+import { mockUseHistoryNavigation } from '@test-utils/routing/use-history-navigation-mock';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '@test-utils/network/msw/create-api-interceptor';
 import { MESSAGE_METHOD } from 'constants/api';
 import { InviteResponse } from 'shared/invite-response/invite-response';
 import {
@@ -34,7 +39,7 @@ import * as moveAppointmentHandler from 'store/actions/move-appointment';
 import * as modifyAppointmentHandler from 'store/actions/new-modify-appointment';
 import * as sendInviteResponseHandler from 'store/actions/send-invite-response';
 import { reducers } from 'store/redux';
-import { useAcceptedProposalsStore } from 'store/zustand/accepted-proposals-store';
+import { useProposalRepliesStore } from 'store/zustand/proposal-replies-store';
 import mockedData from 'test/generators';
 import {
 	exceptionAppointmentAllDayResponse,
@@ -69,7 +74,7 @@ const setupFoldersStore = (): void => {
 describe('invite response component', () => {
 	beforeEach(() => {
 		// the store is module scoped on purpose, so it has to be cleared between tests
-		useAcceptedProposalsStore.setState({ acceptedProposals: {} });
+		useProposalRepliesStore.setState({ proposalReplies: {} });
 	});
 
 	describe('case invitation email', () => {
@@ -1080,6 +1085,52 @@ describe('invite response component', () => {
 
 				expect(screen.queryByText(/^Original:/)).not.toBeInTheDocument();
 			});
+			describe('on the copy kept in the sent folder', () => {
+				const buildSentCounterMailMessage = (): ReturnType<typeof buildMailMessageType> =>
+					buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false, {
+						parent: FOLDERS.SENT,
+						invite: [{ tz: [], comp: [{ apptId: '1484' }] }]
+					} as never);
+
+				test('the proposed and the original time are still shown', async () => {
+					setupFoldersStore();
+					setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+					const store = configureStore({ reducer: combineReducers(reducers) });
+					setupTest(
+						<InviteResponse mailMsg={buildSentCounterMailMessage()} moveToTrash={vi.fn()} />,
+						{
+							store
+						}
+					);
+
+					expect(
+						await screen.findByText(
+							'Original: Monday, February 05, 2024, 4:00 – 4:30 PM GMT+01:00 Europe/Berlin'
+						)
+					).toBeVisible();
+					expect(
+						screen.getByText(
+							'Proposed: Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+						)
+					).toBeVisible();
+				});
+				test('the reply buttons are not offered, since the proposal is the reader own one', async () => {
+					setupFoldersStore();
+					setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+					const store = configureStore({ reducer: combineReducers(reducers) });
+					setupTest(
+						<InviteResponse mailMsg={buildSentCounterMailMessage()} moveToTrash={vi.fn()} />,
+						{
+							store
+						}
+					);
+
+					await screen.findByText(/^Proposed:/);
+
+					expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+					expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+				});
+			});
 			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false, {
@@ -1268,6 +1319,29 @@ describe('invite response component', () => {
 							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
 
 							modifyAppointmentSpy.mockClear();
+						});
+						test('the mail list is shown again once accepted, so the trashed mail is not left open', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const { replaceHistory } = mockUseHistoryNavigation();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							await act(async () => {
+								await user.click(await screen.findByRole('button', { name: /Accept/i }));
+							});
+
+							expect(replaceHistory).toHaveBeenCalledWith(`/mails/folder/${mailMsg.parent}`);
 						});
 						test('the buttons are replaced by a confirmation once accepted', async () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
@@ -1662,20 +1736,23 @@ describe('invite response component', () => {
 
 						expect(decline).toBeEnabled();
 					});
-					describe('clicking on decline will call the mail integration to send a mail, It will prefill the composer ', () => {
-						test.todo(
-							'"text" field with the values "text" for normal text and the fragment for the html text'
-						);
-						test('"subject" field with "Proposal declined: " + event title', async () => {
-							const openComposerSpy = vi.fn();
-							vi.spyOn(mockshell, 'useIntegratedFunction').mockReturnValue([openComposerSpy, true]);
+					describe('clicking on decline will refuse the proposed new time', () => {
+						const declineCounterUrl = '/service/soap/DeclineCounterAppointmentRequest';
+						const declineCounterSuccess = (): HttpResponse<DefaultBodyType> =>
+							HttpResponse.json({ Body: { DeclineCounterAppointmentResponse: {} } });
+
+						test('a DeclineCounterAppointment request is sent', async () => {
 							setupFoldersStore();
+							const interceptor = createAPIInterceptor(
+								'post',
+								declineCounterUrl,
+								declineCounterSuccess()
+							);
 							const mailMsg = buildMailMessageType(
 								MESSAGE_METHOD.COUNTER,
 								MESSAGE_TYPE.SINGLE,
 								false
 							);
-							createSoapAPIInterceptor('GetAppointment', {});
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
@@ -1687,22 +1764,22 @@ describe('invite response component', () => {
 							const decline = await screen.findByRole('button', {
 								name: /decline/i
 							});
-							await user.click(decline);
+							await act(async () => {
+								await user.click(decline);
+							});
 
-							expect(openComposerSpy).toHaveBeenCalled();
-							const composerArgs = openComposerSpy.mock.calls[0][1];
-							expect(composerArgs.subject).toBe('Proposal declined: single event subject');
+							expect(interceptor.getCalledTimes()).toBe(1);
 						});
-						test('"to" field contains participants with type changed from "f" to "t"', async () => {
-							const openComposerSpy = vi.fn();
-							vi.spyOn(mockshell, 'useIntegratedFunction').mockReturnValue([openComposerSpy, true]);
+						test('the request is addressed to the proposer, with type changed from "f" to "t"', async () => {
 							setupFoldersStore();
+							const requestParams = createSoapAPIInterceptor<{
+								m: { e: Array<{ a: string; t: string }> };
+							}>('DeclineCounterAppointment');
 							const mailMsg = buildMailMessageType(
 								MESSAGE_METHOD.COUNTER,
 								MESSAGE_TYPE.SINGLE,
 								false
 							);
-							createSoapAPIInterceptor('GetAppointment', {});
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
@@ -1714,18 +1791,348 @@ describe('invite response component', () => {
 							const decline = await screen.findByRole('button', {
 								name: /decline/i
 							});
-							await user.click(decline);
+							await act(async () => {
+								await user.click(decline);
+							});
 
-							expect(openComposerSpy).toHaveBeenCalled();
-							const composerArgs = openComposerSpy.mock.calls[0][1];
-							expect(composerArgs.to).toBeDefined();
-							expect(composerArgs.to).toEqual(
-								expect.arrayContaining([
-									expect.objectContaining({
-										type: 't',
-										address: 'sender@mail.com'
-									})
-								])
+							expect((await requestParams).m.e).toEqual(
+								expect.arrayContaining([expect.objectContaining({ a: 'sender@mail.com', t: 't' })])
+							);
+						});
+						test('the request carries the proposed time and the appointment identity', async () => {
+							setupFoldersStore();
+							const requestParams = createSoapAPIInterceptor<{
+								m: {
+									su: string;
+									inv: {
+										comp: Array<{
+											method: string;
+											name: string;
+											uid: string;
+											s: { d: string; tz: string };
+											e: { d: string; tz: string };
+											or: { a: string };
+										}>;
+									};
+								};
+							}>('DeclineCounterAppointment');
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const counterComponent = mailMsg.invite[0].comp[0];
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await act(async () => {
+								await user.click(decline);
+							});
+
+							const { m } = await requestParams;
+							expect(m.su).toBe(
+								`${t('label.proposal_declined', 'Proposal declined')}: ${counterComponent.name}`
+							);
+							expect(m.inv.comp[0]).toEqual(
+								expect.objectContaining({
+									method: 'DECLINECOUNTER',
+									name: counterComponent.name,
+									uid: counterComponent.uid,
+									s: counterComponent.s[0],
+									e: counterComponent.e[0],
+									or: { a: counterComponent.or.a }
+								})
+							);
+						});
+						test('the appointment is left at its original time', async () => {
+							setupFoldersStore();
+							createAPIInterceptor('post', declineCounterUrl, declineCounterSuccess());
+							const modifyAppointmentSpy = vi.spyOn(modifyAppointmentHandler, 'modifyAppointment');
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await act(async () => {
+								await user.click(decline);
+							});
+
+							expect(modifyAppointmentSpy).not.toHaveBeenCalled();
+
+							modifyAppointmentSpy.mockClear();
+						});
+						test('clicking twice in rapid succession sends a single request', async () => {
+							setupFoldersStore();
+							const interceptor = createAPIInterceptor(
+								'post',
+								declineCounterUrl,
+								declineCounterSuccess()
+							);
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+
+							/* eslint-disable testing-library/no-unnecessary-act, testing-library/prefer-user-event */
+							await act(async () => {
+								fireEvent.click(decline);
+								fireEvent.click(decline);
+							});
+							/* eslint-enable testing-library/no-unnecessary-act, testing-library/prefer-user-event */
+
+							expect(interceptor.getCalledTimes()).toBe(1);
+						});
+						test('the mail list is shown again once declined, so the trashed mail is not left open', async () => {
+							setupFoldersStore();
+							createAPIInterceptor('post', declineCounterUrl, declineCounterSuccess());
+							const { replaceHistory } = mockUseHistoryNavigation();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await act(async () => {
+								await user.click(decline);
+							});
+
+							expect(replaceHistory).toHaveBeenCalledWith(`/mails/folder/${mailMsg.parent}`);
+						});
+						test('the counter mail is moved to trash once declined', async () => {
+							setupFoldersStore();
+							createAPIInterceptor('post', declineCounterUrl, declineCounterSuccess());
+							const moveToTrash = vi.fn();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={moveToTrash} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await act(async () => {
+								await user.click(decline);
+							});
+
+							expect(moveToTrash).toHaveBeenCalledTimes(1);
+						});
+						test('the buttons are replaced by a confirmation once declined', async () => {
+							setupFoldersStore();
+							createAPIInterceptor('post', declineCounterUrl, declineCounterSuccess());
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await act(async () => {
+								await user.click(decline);
+							});
+
+							await waitFor(() => {
+								expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+							});
+							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							expect(screen.getByText('You have declined the proposed new time.')).toBeVisible();
+						});
+						test('stays declined when the panel is re-created after the counter mail is trashed', async () => {
+							setupFoldersStore();
+							const interceptor = createAPIInterceptor(
+								'post',
+								declineCounterUrl,
+								declineCounterSuccess()
+							);
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user, unmount } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							await act(async () => {
+								await user.click(await screen.findByRole('button', { name: /Decline/i }));
+							});
+							expect(interceptor.getCalledTimes()).toBe(1);
+
+							unmount();
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							expect(
+								await screen.findByText('You have declined the proposed new time.')
+							).toBeVisible();
+							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+							expect(interceptor.getCalledTimes()).toBe(1);
+						});
+						test('is already declined when the counter mail sits in the trash', async () => {
+							setupFoldersStore();
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false,
+								{ parent: FOLDERS.TRASH } as never
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							expect(
+								await screen.findByText('You have declined the proposed new time.')
+							).toBeVisible();
+							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
+							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
+						});
+						test('a trashed proposal whose time was applied still reads as accepted', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const appointmentComp = singleAppointmentResponse.appt[0].inv[0].comp[0];
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false,
+								{
+									parent: FOLDERS.TRASH,
+									invite: [
+										{
+											tz: [],
+											comp: [{ apptId: '1484', s: appointmentComp.s, e: appointmentComp.e }]
+										}
+									]
+								} as never
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							expect(
+								await screen.findByText('You have accepted the proposed new time.')
+							).toBeVisible();
+						});
+						test('the reader own proposal in the trash still offers no reply', async () => {
+							setupFoldersStore();
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false,
+								{ parent: FOLDERS.TRASH, isSentByMe: true } as never
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />, {
+								store
+							});
+
+							await screen.findByText(/^Proposed:/);
+
+							expect(
+								screen.queryByText('You have declined the proposed new time.')
+							).not.toBeInTheDocument();
+							expect(await screen.findByRole('button', { name: /Decline/i })).toBeVisible();
+						});
+						test('shows an error and keeps the counter mail when the request fails', async () => {
+							setupFoldersStore();
+							getSetupServer().use(
+								http.post(declineCounterUrl, async () => HttpResponse.json({ Body: { Fault: {} } }))
+							);
+							const moveToTrash = vi.fn();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={moveToTrash} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await act(async () => {
+								await user.click(decline);
+							});
+
+							expect(
+								await screen.findByText('Something went wrong, please try again')
+							).toBeVisible();
+							expect(moveToTrash).not.toHaveBeenCalled();
+							await waitFor(() => {
+								expect(decline).toBeEnabled();
+							});
+							expect(screen.getByRole('button', { name: /Accept/i })).toBeEnabled();
+
+							getSetupServer().use(
+								http.post(declineCounterUrl, async () => declineCounterSuccess())
 							);
 						});
 					});

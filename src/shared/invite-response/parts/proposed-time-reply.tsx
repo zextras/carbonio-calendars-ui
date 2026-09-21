@@ -14,8 +14,7 @@ import {
 	Text,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
+import { useFoldersMap, useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { find, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -23,6 +22,7 @@ import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
 import { normalizeCalendarEvent } from '../../../normalizations/normalize-calendar-events';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
+import { declineCounterAppointmentRequest } from '../../../soap/decline-counter-appointment-request';
 import { getInvite } from '../../../store/actions/get-invite';
 import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../../../store/redux/hooks';
@@ -30,10 +30,14 @@ import { updateEditor } from '../../../store/slices/editor-slice';
 import {
 	getProposalKey,
 	markProposalAsAccepted,
-	useIsProposalAccepted
-} from '../../../store/zustand/accepted-proposals-store';
+	markProposalAsDeclined,
+	PROPOSAL_REPLY,
+	useProposalReply
+} from '../../../store/zustand/proposal-replies-store';
 import { ProposedTimeReplyArguments } from '../../../types/integrations';
 import { parseDateFromICS } from '../../../utils/dates';
+
+type PendingAction = 'accept' | 'decline';
 
 function resolveCompTimestamp(
 	comp: { u?: number; d?: string } | undefined,
@@ -54,17 +58,19 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	end,
 	msg,
 	to,
-	proposalApplied = false
+	proposalApplied = false,
+	proposalDismissed = false
 }): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
 	const calendarFolders = useFoldersMap();
-	const [openComposer, available] = useIntegratedFunction('compose');
+	const { replaceHistory } = useHistoryNavigation();
 
+	const counterComponent = msg?.invite?.[0]?.comp?.[0];
 	const proposalKey = getProposalKey({
 		messageId: msg?.id,
-		ridZ: msg?.invite?.[0]?.comp?.[0]?.ridZ,
+		ridZ: counterComponent?.ridZ,
 		start,
 		end
 	});
@@ -72,31 +78,47 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	// this panel once the counter mail is trashed, and mount-scoped state would come back reset,
 	// re-enabling the button and letting the attendee receive a duplicate notification. The store
 	// is gone after a reload, so the appointment itself is the fallback source of truth.
-	const isAccepted = useIsProposalAccepted(proposalKey) || proposalApplied;
+	const proposalReply = useProposalReply(proposalKey);
+	const isAccepted = proposalReply === PROPOSAL_REPLY.ACCEPTED || proposalApplied;
+	const isDeclined = proposalReply === PROPOSAL_REPLY.DECLINED || proposalDismissed;
 	// A ref set synchronously before the first request is what stops a second click landing
 	// while the chain is in flight, since a state update may not be committed yet.
 	const submissionLock = useRef(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [pendingAction, setPendingAction] = useState<PendingAction | undefined>(undefined);
 
-	const acceptProposedTime = useCallback(() => {
+	const handleFailure = useCallback((): void => {
+		submissionLock.current = false;
+		setPendingAction(undefined);
+		createSnackbar({
+			key: 'proposedTimeReplyFailed',
+			replace: true,
+			severity: 'error',
+			hideButton: true,
+			label: t('label.error_try_again', 'Something went wrong, please try again'),
+			autoHideTimeout: 3000
+		});
+	}, [createSnackbar, t]);
+
+	const leaveCounterMail = useCallback((): void => {
+		moveToTrash?.();
+		if (msg?.parent) {
+			replaceHistory(`/mails/folder/${msg.parent}`);
+		}
+	}, [moveToTrash, msg?.parent, replaceHistory]);
+
+	const startSubmission = useCallback((action: PendingAction): boolean => {
 		if (submissionLock.current) {
-			return;
+			return false;
 		}
 		submissionLock.current = true;
-		setIsSubmitting(true);
+		setPendingAction(action);
+		return true;
+	}, []);
 
-		const handleFailure = (): void => {
-			submissionLock.current = false;
-			setIsSubmitting(false);
-			createSnackbar({
-				key: 'proposedTimeAcceptFailed',
-				replace: true,
-				severity: 'error',
-				hideButton: true,
-				label: t('label.error_try_again', 'Something went wrong, please try again'),
-				autoHideTimeout: 3000
-			});
-		};
+	const acceptProposedTime = useCallback(() => {
+		if (!startSubmission('accept')) {
+			return;
+		}
 
 		getAppointment(id)
 			.then((res) => {
@@ -104,12 +126,10 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 					throw new Error('Appointment not found');
 				}
 				const inviteToNormalize =
-					find(
-						res.appt[0]?.inv,
-						(inv) => inv?.comp?.[0]?.ridZ === msg?.invite?.[0]?.comp?.[0]?.ridZ
-					) ?? res.appt[0]?.inv[0];
+					find(res.appt[0]?.inv, (inv) => inv?.comp?.[0]?.ridZ === counterComponent?.ridZ) ??
+					res.appt[0]?.inv[0];
 				const inviteId = `${inviteToNormalize.comp[0].apptId}-${inviteToNormalize.id}`;
-				const ridZ = inviteToNormalize?.comp?.[0]?.ridZ ?? msg?.invite?.[0]?.comp?.[0]?.ridZ;
+				const ridZ = inviteToNormalize?.comp?.[0]?.ridZ ?? counterComponent?.ridZ;
 				const folderId = inviteToNormalize.comp[0].ciFolder;
 				const appointmentToNormalize = {
 					...res?.appt[0],
@@ -140,7 +160,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 							isInstance: !!ridZ,
 							originalStart: resolveCompTimestamp(startComp, start),
 							originalEnd: resolveCompTimestamp(endComp, end),
-							exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
+							exceptId: counterComponent?.exceptId,
 							start,
 							end,
 							folders: calendarFolders,
@@ -164,36 +184,91 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 							label: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
 							autoHideTimeout: 3000
 						});
-						moveToTrash?.();
+						leaveCounterMail();
 					});
 				});
 			})
 			.catch(handleFailure);
 	}, [
 		calendarFolders,
+		counterComponent,
 		createSnackbar,
 		dispatch,
 		end,
+		handleFailure,
 		id,
-		moveToTrash,
-		msg?.invite,
+		leaveCounterMail,
 		proposalKey,
 		start,
+		startSubmission,
 		t
 	]);
 
 	const declineProposedTime = useCallback(() => {
-		if (available)
-			openComposer(null, {
-				text: ['text', `${fragment}:`],
-				subject: `${t('label.proposal_declined', 'Proposal declined')}: ${title}`,
-				to
-			});
-	}, [available, openComposer, fragment, t, title, to]);
+		if (!startSubmission('decline')) {
+			return;
+		}
+
+		declineCounterAppointmentRequest({
+			title: counterComponent?.name ?? title,
+			fragment,
+			to,
+			comp: counterComponent,
+			start,
+			end
+		})
+			.then((res) => {
+				if (res?.error) {
+					throw new Error('Decline counter appointment failed');
+				}
+				markProposalAsDeclined(proposalKey);
+				createSnackbar({
+					key: 'proposedTimeDeclined',
+					replace: true,
+					severity: 'info',
+					hideButton: true,
+					label: t('snackbar.proposed_time_declined', 'You declined the proposed time'),
+					autoHideTimeout: 3000
+				});
+				leaveCounterMail();
+			})
+			.catch(handleFailure);
+	}, [
+		counterComponent,
+		createSnackbar,
+		end,
+		fragment,
+		handleFailure,
+		leaveCounterMail,
+		proposalKey,
+		start,
+		startSubmission,
+		t,
+		title,
+		to
+	]);
+
+	const replyOutcome = ((): { icon: string; color: string; label: string } | undefined => {
+		if (isAccepted) {
+			return {
+				icon: 'CheckmarkOutline',
+				color: 'success',
+				label: t('label.proposed_time_accepted', 'You have accepted the proposed new time.')
+			};
+		}
+		if (isDeclined) {
+			return {
+				icon: 'CloseOutline',
+				color: 'error',
+				label: t('label.proposed_time_declined', 'You have declined the proposed new time.')
+			};
+		}
+		return undefined;
+	})();
 
 	return (
 		<>
-			{isAccepted ? (
+			{replyOutcome ? (
 				<Container
 					orientation="horizontal"
 					crossAlignment="center"
@@ -203,10 +278,10 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 					padding={{ vertical: 'small' }}
 				>
 					<Padding right="small">
-						<Icon icon="CheckmarkOutline" color="success" size="large" />
+						<Icon icon={replyOutcome.icon} color={replyOutcome.color} size="large" />
 					</Padding>
-					<Text color="success" weight="bold" size="small">
-						{t('label.proposed_time_accepted', 'You have accepted the proposed new time.')}
+					<Text color={replyOutcome.color} weight="bold" size="small">
+						{replyOutcome.label}
 					</Text>
 				</Container>
 			) : (
@@ -225,8 +300,8 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 							icon="CheckmarkOutline"
 							color="success"
 							onClick={acceptProposedTime}
-							disabled={isSubmitting}
-							loading={isSubmitting}
+							disabled={pendingAction !== undefined}
+							loading={pendingAction === 'accept'}
 						/>
 					</Padding>
 					<Padding right="small" vertical="medium">
@@ -236,7 +311,8 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 							icon="Close"
 							color="error"
 							onClick={declineProposedTime}
-							disabled={isSubmitting}
+							disabled={pendingAction !== undefined}
+							loading={pendingAction === 'decline'}
 						/>
 					</Padding>
 				</Container>
