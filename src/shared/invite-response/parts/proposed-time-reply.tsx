@@ -115,94 +115,85 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 		return true;
 	}, []);
 
-	const acceptProposedTime = useCallback(() => {
-		if (!startSubmission('accept')) {
-			return;
+	const applyProposedTime = useCallback(async (): Promise<void> => {
+		const res = await getAppointment(id);
+		if (!res?.appt?.[0]) {
+			throw new Error('Appointment not found');
 		}
+		const inviteToNormalize =
+			find(res.appt[0]?.inv, (inv) => inv?.comp?.[0]?.ridZ === counterComponent?.ridZ) ??
+			res.appt[0]?.inv[0];
+		const inviteId = `${inviteToNormalize.comp[0].apptId}-${inviteToNormalize.id}`;
+		const ridZ = inviteToNormalize?.comp?.[0]?.ridZ ?? counterComponent?.ridZ;
+		const folderId = inviteToNormalize.comp[0].ciFolder;
+		const appointmentToNormalize = {
+			...res?.appt[0],
+			inv: [inviteToNormalize],
+			inviteId
+		};
 
-		getAppointment(id)
-			.then((res) => {
-				if (!res?.appt?.[0]) {
-					throw new Error('Appointment not found');
-				}
-				const inviteToNormalize =
-					find(res.appt[0]?.inv, (inv) => inv?.comp?.[0]?.ridZ === counterComponent?.ridZ) ??
-					res.appt[0]?.inv[0];
-				const inviteId = `${inviteToNormalize.comp[0].apptId}-${inviteToNormalize.id}`;
-				const ridZ = inviteToNormalize?.comp?.[0]?.ridZ ?? counterComponent?.ridZ;
-				const folderId = inviteToNormalize.comp[0].ciFolder;
-				const appointmentToNormalize = {
-					...res?.appt[0],
-					inv: [inviteToNormalize],
-					inviteId
-				};
+		const fetchedInvite = await dispatch(getInvite({ inviteId, ridZ }));
+		const calendar = find(calendarFolders, ['id', folderId]);
+		if (!calendar || !fetchedInvite?.payload?.m) {
+			throw new Error('Calendar or invite not available');
+		}
+		const invite = normalizeInvite(fetchedInvite?.payload.m[0]);
+		const appointment = normalizeFromGetAppointment(appointmentToNormalize);
+		const event = normalizeCalendarEvent({ appointment, invite, calendar });
+		const startComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0];
+		const endComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0];
+		const editor = generateEditor({
+			event,
+			invite,
+			context: {
+				attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
+				isInstance: !!ridZ,
+				originalStart: resolveCompTimestamp(startComp, start),
+				originalEnd: resolveCompTimestamp(endComp, end),
+				exceptId: counterComponent?.exceptId,
+				start,
+				end,
+				folders: calendarFolders,
+				dispatch,
+				panel: false
+			}
+		});
 
-				return dispatch(
-					getInvite({
-						inviteId,
-						ridZ
-					})
-				).then((res2) => {
-					const calendar = find(calendarFolders, ['id', folderId]);
-					if (!calendar || !res2?.payload?.m) {
-						throw new Error('Calendar or invite not available');
-					}
-					const invite = normalizeInvite(res2?.payload.m[0]);
-					const appointment = normalizeFromGetAppointment(appointmentToNormalize);
-					const event = normalizeCalendarEvent({ appointment, invite, calendar });
-					const startComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0];
-					const endComp = appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0];
-					const editor = generateEditor({
-						event,
-						invite,
-						context: {
-							attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
-							isInstance: !!ridZ,
-							originalStart: resolveCompTimestamp(startComp, start),
-							originalEnd: resolveCompTimestamp(endComp, end),
-							exceptId: counterComponent?.exceptId,
-							start,
-							end,
-							folders: calendarFolders,
-							dispatch,
-							panel: false
-						}
-					});
-
-					return dispatch(modifyAppointment({ draft: false, editor })).then(({ payload }) => {
-						// payload is undefined when the request throws, and carries error: true on a fault
-						if (!payload?.response || payload.error) {
-							throw new Error('Modify appointment failed');
-						}
-						dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
-						markProposalAsAccepted(proposalKey);
-						createSnackbar({
-							key: 'proposedTimeAccepted',
-							replace: true,
-							severity: 'success',
-							hideButton: true,
-							label: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
-							autoHideTimeout: 3000
-						});
-						leaveCounterMail();
-					});
-				});
-			})
-			.catch(handleFailure);
+		const { payload } = await dispatch(modifyAppointment({ draft: false, editor }));
+		// payload is undefined when the request throws, and carries error: true on a fault
+		if (!payload?.response || payload.error) {
+			throw new Error('Modify appointment failed');
+		}
+		dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
+		markProposalAsAccepted(proposalKey);
+		createSnackbar({
+			key: 'proposedTimeAccepted',
+			replace: true,
+			severity: 'success',
+			hideButton: true,
+			label: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
+			autoHideTimeout: 3000
+		});
+		leaveCounterMail();
 	}, [
 		calendarFolders,
 		counterComponent,
 		createSnackbar,
 		dispatch,
 		end,
-		handleFailure,
 		id,
 		leaveCounterMail,
 		proposalKey,
 		start,
-		startSubmission,
 		t
 	]);
+
+	const acceptProposedTime = useCallback(() => {
+		if (!startSubmission('accept')) {
+			return;
+		}
+		applyProposedTime().catch(handleFailure);
+	}, [applyProposedTime, handleFailure, startSubmission]);
 
 	const declineProposedTime = useCallback(() => {
 		if (!startSubmission('decline')) {
