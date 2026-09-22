@@ -1,3 +1,9 @@
+## <small>1.36.2 (2026-09-22)</small>
+
+* fix(CO-3615): use zimbraPrefDefaultCalendarId when accepting a meeting invitation (#856) ([2427882](https://github.com/zextras/carbonio-calendars-ui/commit/2427882)), closes [#856](https://github.com/zextras/carbonio-calendars-ui/issues/856)
+* chore(deps): update dependency @types/lodash to v4.17.25 (#859) ([cc3c67b](https://github.com/zextras/carbonio-calendars-ui/commit/cc3c67b)), closes [#859](https://github.com/zextras/carbonio-calendars-ui/issues/859)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.11.0 (#858) ([544dc87](https://github.com/zextras/carbonio-calendars-ui/commit/544dc87)), closes [#858](https://github.com/zextras/carbonio-calendars-ui/issues/858)
+
 ## <small>1.36.1 (2026-09-17)</small>
 
 * fix(CO-3653): exclude non-local delegated calendars from the default calendar selector (#852) ([a14876a](https://github.com/zextras/carbonio-calendars-ui/commit/a14876a)), closes [#852](https://github.com/zextras/carbonio-calendars-ui/issues/852)
