@@ -18,16 +18,16 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
+import * as soapLib from '../../__mocks__/@zextras/carbonio-ui-soap-lib';
 import { PANEL_VIEW, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE, ParticipantRoleType, PARTICIPATION_STATUS } from '../constants/api';
 import { AppDispatch, reducers } from '../store/redux';
-import { ActionsContext } from '../types/actions';
 import mockedData from '../test/generators';
+import { ActionsContext } from '../types/actions';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
-import * as soapLib from '../../__mocks__/@zextras/carbonio-ui-soap-lib';
 import defaultSettings from '@test-utils/settings/default-settings';
 import { InviteReplyVerb } from 'soap/send-invite-reply-request';
 
@@ -1328,66 +1328,85 @@ describe('actions', () => {
 	});
 
 	describe('proposeNewTimeFn', () => {
-		test('on action will open an editor with propose new time context', () => {
-			const boardSpy = vi.spyOn(shell, 'addBoard');
-			const folder = {
-				absFolderPath: '/Calendar',
-				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
-				l: '1',
-				name: 'Calendar',
-				view: 'appointment'
-			};
+		const folder = {
+			absFolderPath: '/Calendar',
+			id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
+			l: '1',
+			name: 'Calendar',
+			view: 'appointment'
+		};
 
+		const buildProposeContext = (
+			dispatch: AppDispatch
+		): {
+			context: Parameters<typeof proposeNewTimeFn>[0]['context'];
+			createModal: ReturnType<typeof vi.fn>;
+			closeModal: ReturnType<typeof vi.fn>;
+			onClose: ReturnType<typeof vi.fn>;
+		} => {
 			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+			const onClose = vi.fn();
+			return {
+				context: {
+					folders,
+					dispatch,
+					t: vi.fn(),
+					replaceHistory: vi.fn(),
+					createModal,
+					closeModal,
+					onClose
+				},
+				createModal,
+				closeModal,
+				onClose
+			};
+		};
 
-			const store = configureStore({
-				reducer: combineReducers(reducers)
-			});
-
+		test('on action opens the propose new time modal instead of a board', () => {
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
 			const invite = mockedData.getInvite({ event });
-			const context = {
-				folders,
-				dispatch: store.dispatch,
-				t: vi.fn(),
-				replaceHistory: vi.fn(),
-				onClose: vi.fn()
-			};
+			const { context, createModal, onClose } = buildProposeContext(store.dispatch);
 
 			const action = proposeNewTimeFn({ event, invite, context });
 			action();
-			expect(boardSpy).toHaveBeenCalled();
+
+			expect(boardSpy).not.toHaveBeenCalled();
+			expect(onClose).toHaveBeenCalled();
+			expect(createModal).toHaveBeenCalledTimes(1);
+			expect(createModal).toHaveBeenCalledWith(
+				expect.objectContaining({ id: expect.stringContaining('propose-new-time') }),
+				true
+			);
 		});
 
-		test('null invite is fetched before opening editor', async () => {
-			const boardSpy = vi.spyOn(shell, 'addBoard');
-			const folder = {
-				absFolderPath: '/Calendar',
-				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
-				l: '1',
-				name: 'Calendar',
-				view: 'appointment'
-			};
-
-			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-
-			const store = configureStore({
-				reducer: combineReducers(reducers)
-			});
-
+		test('on action creates a propose new time editor addressed to the organizer', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = mockedData.getEvent();
-			const context = {
-				folders,
-				dispatch: store.dispatch,
-				t: vi.fn(),
-				replaceHistory: vi.fn(),
-				onClose: vi.fn()
-			};
+			const invite = mockedData.getInvite({ event });
+			const { context } = buildProposeContext(store.dispatch);
+
+			const action = proposeNewTimeFn({ event, invite, context });
+			action();
+
+			const editor = Object.values(store.getState().editor.editors)[0];
+			expect(editor.isProposeNewTime).toBe(true);
+			expect(editor.panel).toBe(false);
+			expect(editor.attendees).toEqual([{ email: event.resource.organizer?.email }]);
+		});
+
+		test('null invite is fetched before opening the modal', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const event = mockedData.getEvent();
+			const { context, createModal } = buildProposeContext(store.dispatch);
 
 			const action = proposeNewTimeFn({ event, context });
 			action();
 			await waitFor(() => {
-				expect(boardSpy).toHaveBeenCalled();
+				expect(createModal).toHaveBeenCalled();
 			});
 		});
 	});
