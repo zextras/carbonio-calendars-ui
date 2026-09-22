@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.36.1",
+	"version": "1.36.2",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"packageManager": "pnpm@10.32.1",
@@ -50,7 +50,7 @@
 		"@testing-library/react": "16.3.2",
 		"@testing-library/user-event": "14.6.1",
 		"@types/date-arithmetic": "4.1.4",
-		"@types/lodash": "4.17.24",
+		"@types/lodash": "4.17.25",
 		"@types/react": "18.3.31",
 		"@types/react-big-calendar": "1.16.3",
 		"@types/react-dom": "18.3.7",

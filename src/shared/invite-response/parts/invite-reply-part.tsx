@@ -19,11 +19,11 @@ import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-u
 import { useTranslation } from 'react-i18next';
 
 import { InstanceExceptionId } from '../../../utils/event';
-
 import { sendResponse } from '../invite-reply-actions';
 import { generateEditor } from 'commons/editor-generator';
+import { getDefaultCalendarFolder } from 'commons/utilities';
 import { PARTICIPATION_STATUS } from 'constants/api';
-import { CALENDAR_BOARD_ID } from 'constants/index';
+import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from 'constants/index';
 import { getEquipments, getMeetingRooms, getVirtualRoom } from 'normalizations/normalize-editor';
 import {
 	InviteReplyVerb,
@@ -85,9 +85,15 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const calendarFolders = useFoldersMap();
 	const { replaceHistory } = useHistoryNavigation();
 
-	const [selectedCalendarId, setSelectedCalendarId] = useState<string>(message.parent);
+	const defaultCalendarFolder = useMemo(
+		() => getDefaultCalendarFolder(calendarFolders),
+		[calendarFolders]
+	);
+	const [selectedCalendarId, setSelectedCalendarId] = useState<string>(
+		() => defaultCalendarFolder?.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	);
 	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(
-		() => calendarFolders[message.parent] ?? null
+		() => defaultCalendarFolder ?? null
 	);
 
 	const exceptId = useMemo((): InstanceExceptionId | undefined => {
