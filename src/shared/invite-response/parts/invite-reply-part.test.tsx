@@ -11,11 +11,13 @@ import { screen, waitFor } from '@testing-library/react';
 import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy } from 'lodash';
 
-import { buildMailMessageType, MESSAGE_TYPE } from '../invite-test-utils';
 import { sendResponse } from '../invite-reply-actions';
+import { buildMailMessageType, MESSAGE_TYPE } from '../invite-test-utils';
 import InviteReplyPart from './invite-reply-part';
+import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
+import defaultSettings from '@test-utils/settings/default-settings';
 import { MESSAGE_METHOD } from 'constants/api';
 import { reducers } from 'store/redux';
 import mockedData from 'test/generators';
@@ -76,10 +78,8 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			expect(scheduledInLabel).toBeVisible();
 		});
 
-		test('displays the parent calendar as initially selected', async () => {
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
-				parent: defaultCalendar.id
-			});
+		test("displays the user's default calendar as initially selected", async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 
 			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
 
@@ -93,10 +93,8 @@ describe('InviteReplyPart - Calendar Selection', () => {
 	});
 
 	describe('Calendar selection interaction', () => {
-		test('initializes with parent calendar selected and maintains state when accepting without calendar change', async () => {
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
-				parent: defaultCalendar.id
-			});
+		test('initializes with the default calendar selected and maintains state when accepting without calendar change', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
 
 			await waitFor(() => {
@@ -107,10 +105,50 @@ describe('InviteReplyPart - Calendar Selection', () => {
 			expect(acceptButton).toBeEnabled();
 		});
 
-		test('allows user to select a different calendar', async () => {
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
-				parent: defaultCalendar.id
+		describe('Default calendar preference', () => {
+			beforeEach(() => {
+				shell.getUserSettings.mockImplementation(() => ({
+					...defaultSettings,
+					prefs: {
+						...defaultSettings.prefs,
+						zimbraPrefDefaultCalendarId: secondaryCalendar.id
+					}
+				}));
 			});
+
+			afterEach(() => {
+				shell.getUserSettings.mockImplementation(() => defaultSettings);
+			});
+
+			test('displays the calendar matching zimbraPrefDefaultCalendarId, not the main calendar', async () => {
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, { store });
+
+				await waitFor(() => {
+					expect(screen.getByText(SECONDARY_CALENDAR_NAME)).toBeVisible();
+				});
+				expect(screen.queryByText(/^Calendar$/i)).not.toBeInTheDocument();
+			});
+
+			test('accepts the invite into the calendar matching zimbraPrefDefaultCalendarId', async () => {
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
+					store
+				});
+
+				const acceptButton = await screen.findByRole('button', { name: /Accept/i });
+				await user.click(acceptButton);
+
+				expect(vi.mocked(sendResponse)).toHaveBeenCalledWith(
+					expect.objectContaining({
+						activeCalendar: expect.objectContaining({ id: secondaryCalendar.id })
+					})
+				);
+			});
+		});
+
+		test('allows user to select a different calendar', async () => {
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -128,9 +166,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 		});
 
 		test('shows shared calendars with write permission in calendar list', async () => {
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
-				parent: defaultCalendar.id
-			});
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -143,9 +179,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 		});
 
 		test('persists calendar selection across multiple changes', async () => {
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
-				parent: defaultCalendar.id
-			});
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store
@@ -193,9 +227,7 @@ describe('InviteReplyPart - Calendar Selection', () => {
 		});
 
 		test('calendar selection state is independent of notify organizer checkbox state', async () => {
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
-				parent: defaultCalendar.id
-			});
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 
 			const { user } = setupTest(<InviteReplyPart inviteId={mailMsg.id} message={mailMsg} />, {
 				store

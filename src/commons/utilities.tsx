@@ -5,11 +5,12 @@
  */
 import { TextProps } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import type { DataSourceType, Folder } from '@zextras/carbonio-ui-commons';
+import type { DataSourceType, Folder, Folders } from '@zextras/carbonio-ui-commons';
 import {
 	ROOT_NAME,
 	FOLDERS,
 	getFoldersMap,
+	getPrefs,
 	getRoot,
 	getRootAccountId,
 	getUpdateFolder,
@@ -19,6 +20,7 @@ import { addSeconds, differenceInSeconds, formatDistanceToNow } from 'date-fns';
 import { find, forEach, isNil, map, reduce, some } from 'lodash';
 
 import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
+import { PREFS_DEFAULTS } from '../constants';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
@@ -74,6 +76,16 @@ export const getCalendarOwnerEmail = (item: {
 
 export const isExternalSyncFolder = (item: { f?: string; url?: string }): boolean =>
 	/y/.test(item.f ?? '') || !!item.url;
+
+/**
+ * Resolves the folder matching the user's preferred default calendar
+ * (`zimbraPrefDefaultCalendarId`), falling back to the built-in main calendar id.
+ */
+export const getDefaultCalendarFolder = (folders: Folders): Folder | undefined =>
+	find(folders, [
+		'id',
+		getPrefs().zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	]);
 
 /**
  * Number of people a calendar has been shared with. Always 0 for a calendar shared TO

@@ -1,3 +1,8 @@
+## <small>1.36.1 (2026-09-17)</small>
+
+* fix(CO-3653): exclude non-local delegated calendars from the default calendar selector (#852) ([a14876a](https://github.com/zextras/carbonio-calendars-ui/commit/a14876a)), closes [#852](https://github.com/zextras/carbonio-calendars-ui/issues/852)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.10.11 (#853) ([e463ed2](https://github.com/zextras/carbonio-calendars-ui/commit/e463ed2)), closes [#853](https://github.com/zextras/carbonio-calendars-ui/issues/853)
+
 ## 1.36.0 (2026-09-11)
 
 * feat(CO-4262): show the share icon inside calendar selector inputs (#851) ([74b8a43](https://github.com/zextras/carbonio-calendars-ui/commit/74b8a43)), closes [#851](https://github.com/zextras/carbonio-calendars-ui/issues/851)

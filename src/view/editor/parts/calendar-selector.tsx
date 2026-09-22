@@ -39,6 +39,13 @@ type CalendarSelectorProps = {
 	showCalWithWritePerm?: boolean;
 	disabled?: boolean;
 	allowAllAccounts?: boolean;
+	/**
+	 * Exclude calendars of a delegated account that are only reachable through
+	 * that account's own id (no local mount point). Their id has no plain
+	 * integer form, so they can't be saved wherever the destination expects
+	 * one, e.g. zimbraPrefDefaultCalendarId.
+	 */
+	localOnly?: boolean;
 };
 
 /**
@@ -75,7 +82,8 @@ export const CalendarSelector = ({
 	excludeTrash = false,
 	showCalWithWritePerm = true,
 	disabled,
-	allowAllAccounts = false
+	allowAllAccounts = false,
+	localOnly = false
 }: CalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const rootAccountId = getRootAccountId(calendarId);
@@ -85,7 +93,10 @@ export const CalendarSelector = ({
 
 	const calendars = reject(
 		!allowAllAccounts && rootAccountId?.includes(':') ? allCalendarsByRoot : allCalendars,
-		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
+		(item) =>
+			item.name === ROOT_NAME ||
+			(item as LinkFolder).oname === ROOT_NAME ||
+			(localOnly && !!getFolderIdParts(item.id).zid)
 	);
 
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
@@ -143,14 +154,15 @@ export const CalendarSelector = ({
 			'id',
 			zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS?.DEFAULT_CALENDAR_ID
 		]);
+		const fallbackCalendar = defaultCal ?? requiredCalendars?.[0];
 		const defaultCalendar = {
-			id: requiredCalendars?.[0]?.id ?? defaultCal?.id,
-			folder: requiredCalendars?.[0] ?? defaultCal,
-			value: requiredCalendars?.[0]?.id ?? defaultCal?.id,
-			label: requiredCalendars?.[0]?.name ?? defaultCal?.name,
+			id: fallbackCalendar?.id,
+			folder: fallbackCalendar,
+			value: fallbackCalendar?.id,
+			label: fallbackCalendar?.name,
 			color: setCalendarColor({
-				rgb: requiredCalendars?.[0]?.rgb ?? defaultCal?.rgb,
-				color: requiredCalendars?.[0]?.color ?? defaultCal?.color
+				rgb: fallbackCalendar?.rgb,
+				color: fallbackCalendar?.color
 			}).color
 		};
 		return find(calendarItems, ['value', calendarId]) ?? defaultCalendar;
