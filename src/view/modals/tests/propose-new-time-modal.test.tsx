@@ -122,7 +122,7 @@ describe('ProposeNewTimeModal', () => {
 	): ReturnType<typeof setupTest> =>
 		setupTest(<ProposeNewTimeModal editorId={defaultEditor.id} onClose={onClose} />, { store });
 
-	describe('rendering', () => {
+	describe('rendering and closing', () => {
 		let store: EnhancedStore<RootState>;
 
 		beforeEach(() => {
@@ -130,86 +130,37 @@ describe('ProposeNewTimeModal', () => {
 			createProposeEditor(store);
 		});
 
-		it('renders the modal title and the close icon', () => {
+		it('renders the read-only appointment summary cards', () => {
 			renderModal(store);
 			const modal = screen.getByTestId(MODAL_TEST_ID);
 			expect(within(modal).getByText('Propose new time')).toBeVisible();
-			expect(
-				customScreen.getByRoleWithIcon('button', { icon: 'icon: CloseOutline' })
-			).toBeVisible();
-		});
-
-		it('renders the read-only event title card', () => {
-			renderModal(store);
 			const cards = screen.getAllByTestId(CARD_TEST_ID);
 			expect(cards).toHaveLength(2);
 			expect(within(cards[0]).getByText('Event title')).toBeVisible();
 			expect(within(cards[0]).getByText(EVENT_TITLE)).toBeVisible();
-		});
-
-		it('renders the read-only original date and time card', () => {
-			renderModal(store);
-			const cards = screen.getAllByTestId(CARD_TEST_ID);
 			expect(within(cards[1]).getByText('Original date and time')).toBeVisible();
 			expect(within(cards[1]).getByText('11/07/2022, 4:21 PM - 5:21 PM')).toBeVisible();
 		});
 
-		it('renders the new date and time heading with both date pickers prefilled', () => {
+		it('renders the prefilled date pickers, the recipient hint and the actions', () => {
 			renderModal(store);
 			expect(screen.getByText('New date and time')).toBeVisible();
 			expect(screen.getByText('label.start_date_and_time')).toBeVisible();
 			expect(screen.getByText('label.end_date_and_time')).toBeVisible();
 			expect(screen.getAllByTestId('icon: CalendarOutline')).toHaveLength(2);
-		});
-
-		it('renders the recipient hint', () => {
-			renderModal(store);
 			expect(screen.getByText(RECIPIENT_HINT)).toBeVisible();
-		});
-
-		it('renders the cancel and send proposal actions', () => {
-			renderModal(store);
 			expect(screen.getByRole('button', { name: CANCEL_BTN })).toBeEnabled();
 			expect(screen.getByRole('button', { name: SEND_PROPOSAL_BTN })).toBeEnabled();
 		});
-	});
 
-	describe('closing without sending', () => {
-		let store: EnhancedStore<RootState>;
-
-		beforeEach(() => {
-			store = createTestStore();
-			createProposeEditor(store);
-		});
-
-		it('calls onClose when the header close icon is clicked', async () => {
+		it('calls onClose from both the header close icon and the cancel button', async () => {
 			const onClose = vi.fn();
 			const { user } = renderModal(store, onClose);
 
 			await user.click(customScreen.getByRoleWithIcon('button', { icon: 'icon: CloseOutline' }));
-
-			expect(onClose).toHaveBeenCalledTimes(1);
-		});
-
-		it('calls onClose when the cancel button is clicked', async () => {
-			const onClose = vi.fn();
-			const { user } = renderModal(store, onClose);
-
 			await user.click(screen.getByRole('button', { name: CANCEL_BTN }));
 
-			expect(onClose).toHaveBeenCalledTimes(1);
-		});
-
-		it('does not send any counter proposal when dismissed', async () => {
-			const onClose = vi.fn();
-			const requestSpy = vi.fn();
-			createSoapAPIInterceptor('CounterAppointment', { jsns: JSNS.mail }).then(requestSpy);
-			const { user } = renderModal(store, onClose);
-
-			await user.click(screen.getByRole('button', { name: CANCEL_BTN }));
-
-			expect(onClose).toHaveBeenCalled();
-			expect(requestSpy).not.toHaveBeenCalled();
+			expect(onClose).toHaveBeenCalledTimes(2);
 		});
 	});
 

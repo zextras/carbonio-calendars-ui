@@ -719,18 +719,7 @@ describe('invite response component', () => {
 						await user.click(proposeButton);
 
 						expect(boardSpy).not.toHaveBeenCalled();
-						const modal = await screen.findByTestId('propose-new-time-modal');
-						expect(modal).toBeVisible();
-						expect(within(modal).getByText('Event title')).toBeVisible();
-						expect(within(modal).getByText('Original date and time')).toBeVisible();
-						expect(within(modal).getByText('New date and time')).toBeVisible();
-						expect(
-							within(modal).getByText(
-								'Only the organizer of this appointment will receive your proposal.'
-							)
-						).toBeVisible();
-						expect(within(modal).getByRole('button', { name: /Send proposal/i })).toBeVisible();
-						expect(within(modal).getByRole('button', { name: /Cancel/i })).toBeVisible();
+						expect(await screen.findByTestId('propose-new-time-modal')).toBeVisible();
 					});
 					test('if the event is non recurrent a non recurrent editor is created', async () => {
 						setupFoldersStore();
