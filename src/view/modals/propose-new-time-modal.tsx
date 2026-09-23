@@ -140,7 +140,7 @@ export const ProposeNewTimeModal = ({
 				createSnackbar({
 					key: 'propose-new-time',
 					replace: true,
-					severity: response ? 'info' : 'warning',
+					severity: response ? 'success' : 'warning',
 					hideButton: true,
 					label: response
 						? t('message.new_time_proposal_sent', 'Your proposal has been sent to the organizer')
