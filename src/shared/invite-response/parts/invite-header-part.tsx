@@ -8,7 +8,6 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { MESSAGE_METHOD } from 'constants/api';
@@ -82,7 +81,6 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 	// mail message holds the attendee's proposed ones: show both when they differ.
 	const showOriginalTime =
 		method === MESSAGE_METHOD.COUNTER &&
-		mailMsg.parent !== FOLDERS.SENT &&
 		localStartTime !== 0 &&
 		(proposedStart !== localStartTime || proposedEnd !== localEndTime);
 
@@ -133,7 +131,7 @@ export const InviteHeaderPart: FC<InviteHeaderPartProps> = ({
 						/>
 					))}
 			</Row>
-			{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (
+			{method === MESSAGE_METHOD.COUNTER && (
 				<>
 					{showOriginalTime && (
 						<Row width="100%" mainAlignment="flex-start" padding={{ bottom: 'small' }}>
