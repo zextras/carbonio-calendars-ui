@@ -11,6 +11,7 @@ import {
 	CreateModalFn,
 	CloseModalFn,
 	Text,
+	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { format, isSameDay } from 'date-fns';
@@ -76,13 +77,14 @@ export const formatOriginalDateRange = ({
 
 const ReadOnlyCardContainer = styled(Container)`
 	border-radius: 0.25rem;
+	min-width: 0;
 `;
 
 const ReadOnlyCard = ({ label, value }: ReadOnlyCardProps): ReactElement => (
 	<ReadOnlyCardContainer
 		background="infoBanner"
 		mainAlignment="center"
-		crossAlignment="flex-start"
+		crossAlignment="stretch"
 		height="fit"
 		width="fill"
 		gap="0.25rem"
@@ -92,9 +94,11 @@ const ReadOnlyCard = ({ label, value }: ReadOnlyCardProps): ReactElement => (
 		<Text size="small" color="gray1.active">
 			{label}
 		</Text>
-		<Text overflow="break-word" weight="bold">
-			{value}
-		</Text>
+		<Tooltip label={value} overflowTooltip>
+			<Text overflow="ellipsis" weight="bold">
+				{value}
+			</Text>
+		</Tooltip>
 	</ReadOnlyCardContainer>
 );
 
