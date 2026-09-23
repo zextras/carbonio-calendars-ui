@@ -1370,7 +1370,7 @@ describe('invite response component', () => {
 								expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
 							});
 							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
-							expect(screen.getByText('You have accepted the proposed new time.')).toBeVisible();
+							expect(screen.getByText('You accepted the proposed new time.')).toBeVisible();
 						});
 						test('stays accepted when the panel is re-created after the counter mail is trashed', async () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
@@ -1400,9 +1400,7 @@ describe('invite response component', () => {
 								store
 							});
 
-							expect(
-								await screen.findByText('You have accepted the proposed new time.')
-							).toBeVisible();
+							expect(await screen.findByText('You accepted the proposed new time.')).toBeVisible();
 							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
 							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 							expect(modifyAppointmentSpy).toHaveBeenCalledTimes(1);
@@ -1432,9 +1430,7 @@ describe('invite response component', () => {
 								store
 							});
 
-							expect(
-								await screen.findByText('You have accepted the proposed new time.')
-							).toBeVisible();
+							expect(await screen.findByText('You accepted the proposed new time.')).toBeVisible();
 							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
 							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 						});
@@ -1989,7 +1985,7 @@ describe('invite response component', () => {
 								expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 							});
 							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
-							expect(screen.getByText('You have declined the proposed new time.')).toBeVisible();
+							expect(screen.getByText('You declined the proposed new time.')).toBeVisible();
 						});
 						test('stays declined when the panel is re-created after the counter mail is trashed', async () => {
 							setupFoldersStore();
@@ -2021,9 +2017,7 @@ describe('invite response component', () => {
 								store
 							});
 
-							expect(
-								await screen.findByText('You have declined the proposed new time.')
-							).toBeVisible();
+							expect(await screen.findByText('You declined the proposed new time.')).toBeVisible();
 							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
 							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 							expect(interceptor.getCalledTimes()).toBe(1);
@@ -2042,9 +2036,7 @@ describe('invite response component', () => {
 								store
 							});
 
-							expect(
-								await screen.findByText('You have declined the proposed new time.')
-							).toBeVisible();
+							expect(await screen.findByText('You declined the proposed new time.')).toBeVisible();
 							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
 							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 						});
@@ -2071,9 +2063,7 @@ describe('invite response component', () => {
 								store
 							});
 
-							expect(
-								await screen.findByText('You have accepted the proposed new time.')
-							).toBeVisible();
+							expect(await screen.findByText('You accepted the proposed new time.')).toBeVisible();
 						});
 						test('the reader own proposal in the trash still offers no reply', async () => {
 							setupFoldersStore();
@@ -2092,7 +2082,7 @@ describe('invite response component', () => {
 							await screen.findByText(/^Proposed:/);
 
 							expect(
-								screen.queryByText('You have declined the proposed new time.')
+								screen.queryByText('You declined the proposed new time.')
 							).not.toBeInTheDocument();
 							expect(await screen.findByRole('button', { name: /Decline/i })).toBeVisible();
 						});
