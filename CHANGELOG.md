@@ -1,3 +1,19 @@
+## 1.37.0 (2026-09-22)
+
+* Merge branch 'main' into co-4176-improve-decline-flow ([a23e63d](https://github.com/zextras/carbonio-calendars-ui/commit/a23e63d))
+* Merge branch 'main' into co-4176-improve-decline-flow ([5ac2dfa](https://github.com/zextras/carbonio-calendars-ui/commit/5ac2dfa))
+* Merge pull request #857 from zextras/co-4176-improve-decline-flow ([156ef9e](https://github.com/zextras/carbonio-calendars-ui/commit/156ef9e)), closes [#857](https://github.com/zextras/carbonio-calendars-ui/issues/857)
+* chore: retrigger sonarqube analysis ([119a947](https://github.com/zextras/carbonio-calendars-ui/commit/119a947))
+* feat: appointment decline flow improvements ([f74ef25](https://github.com/zextras/carbonio-calendars-ui/commit/f74ef25))
+* feat: appointment decline flow improvements ([25261e8](https://github.com/zextras/carbonio-calendars-ui/commit/25261e8))
+* feat: appointment decline flow improvements ([a16492d](https://github.com/zextras/carbonio-calendars-ui/commit/a16492d))
+
+## <small>1.36.2 (2026-09-22)</small>
+
+* fix(CO-3615): use zimbraPrefDefaultCalendarId when accepting a meeting invitation (#856) ([2427882](https://github.com/zextras/carbonio-calendars-ui/commit/2427882)), closes [#856](https://github.com/zextras/carbonio-calendars-ui/issues/856)
+* chore(deps): update dependency @types/lodash to v4.17.25 (#859) ([cc3c67b](https://github.com/zextras/carbonio-calendars-ui/commit/cc3c67b)), closes [#859](https://github.com/zextras/carbonio-calendars-ui/issues/859)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.11.0 (#858) ([544dc87](https://github.com/zextras/carbonio-calendars-ui/commit/544dc87)), closes [#858](https://github.com/zextras/carbonio-calendars-ui/issues/858)
+
 ## <small>1.36.1 (2026-09-17)</small>
 
 * fix(CO-3653): exclude non-local delegated calendars from the default calendar selector (#852) ([a14876a](https://github.com/zextras/carbonio-calendars-ui/commit/a14876a)), closes [#852](https://github.com/zextras/carbonio-calendars-ui/issues/852)

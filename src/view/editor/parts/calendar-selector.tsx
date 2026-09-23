@@ -154,14 +154,15 @@ export const CalendarSelector = ({
 			'id',
 			zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS?.DEFAULT_CALENDAR_ID
 		]);
+		const fallbackCalendar = defaultCal ?? requiredCalendars?.[0];
 		const defaultCalendar = {
-			id: requiredCalendars?.[0]?.id ?? defaultCal?.id,
-			folder: requiredCalendars?.[0] ?? defaultCal,
-			value: requiredCalendars?.[0]?.id ?? defaultCal?.id,
-			label: requiredCalendars?.[0]?.name ?? defaultCal?.name,
+			id: fallbackCalendar?.id,
+			folder: fallbackCalendar,
+			value: fallbackCalendar?.id,
+			label: fallbackCalendar?.name,
 			color: setCalendarColor({
-				rgb: requiredCalendars?.[0]?.rgb ?? defaultCal?.rgb,
-				color: requiredCalendars?.[0]?.color ?? defaultCal?.color
+				rgb: fallbackCalendar?.rgb,
+				color: fallbackCalendar?.color
 			}).color
 		};
 		return find(calendarItems, ['value', calendarId]) ?? defaultCalendar;
