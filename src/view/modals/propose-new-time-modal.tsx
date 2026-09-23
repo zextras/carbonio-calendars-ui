@@ -89,7 +89,7 @@ const ReadOnlyCard = ({ label, value }: ReadOnlyCardProps): ReactElement => (
 		padding={{ top: 'small', bottom: 'small', left: 'large', right: 'small' }}
 		data-testid="propose-new-time-read-only-card"
 	>
-		<Text size="small" color="secondary">
+		<Text size="small" color="gray1.active">
 			{label}
 		</Text>
 		<Text overflow="break-word" weight="bold">
