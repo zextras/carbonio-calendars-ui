@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { reduce } from 'lodash';
 
 import { PARTICIPATION_STATUS } from '../../constants/api';
+import { getTimeOnlyLiteralToken, useIs24HourFormat } from '../../commons/time-format';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { EventType } from '../../types/event';
@@ -38,13 +39,15 @@ export const TrashRow = ({ event }: { event: EventType }): ReactElement => {
 	const invite = useAppSelector(selectInstanceInvite(inviteId));
 
 	const attachments = useMemo(() => findAttachments(invite?.parts ?? [], []), [invite]);
+	const is24h = useIs24HourFormat();
+	const timeToken = getTimeOnlyLiteralToken(is24h);
 
 	return (
 		<Container padding={{ all: 'small' }}>
 			<Row orientation="horizontal" width="100%" mainAlignment="flex-start">
 				<Row width="auto%">
 					<Text size="large" overflow="break-word">
-						{`${format(event.start, 'dd/MM/yyyy')}, [${format(event.start, 'HH:mm')}]-[${format(event.end, 'HH:mm')}]`}
+						{`${format(event.start, 'dd/MM/yyyy')}, [${format(event.start, timeToken)}]-[${format(event.end, timeToken)}]`}
 					</Text>
 				</Row>
 				<Row width="5%">

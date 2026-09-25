@@ -9,7 +9,8 @@ import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { compact, toLower } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { getDateFnsLocale } from '../commons/date-fns-react-widgets-localizer';
+import { TIME_FORMAT_PREF_NAME, toHour12Option } from '../commons/time-format';
+import { getLocale, localeFromPrefs } from './use-locale';
 
 type EventTimeOptions = {
 	allDay?: boolean;
@@ -24,6 +25,7 @@ type TimeStringsType = {
 		allDay?: boolean;
 		allDayLabel?: string;
 		locale?: string;
+		hour12?: boolean;
 	};
 };
 
@@ -31,12 +33,14 @@ const formatMultiDayRange = ({
 	start,
 	end,
 	locale,
-	timeZone
+	timeZone,
+	hour12
 }: {
 	start: number | Date;
 	end: number | Date;
 	locale: string;
 	timeZone?: string;
+	hour12?: boolean;
 }): string => {
 	const dateFormat = new Intl.DateTimeFormat(locale, {
 		weekday: 'long',
@@ -51,10 +55,11 @@ const formatMultiDayRange = ({
 	const timeFormat = new Intl.DateTimeFormat(locale, {
 		hour: isTwelveHourLocale ? 'numeric' : '2-digit',
 		minute: '2-digit',
-		timeZone
+		timeZone,
+		hour12
 	});
 
-	return `${dateFormat.format(start)}, ${timeFormat.format(start)} \u2013 ${dateFormat.format(
+	return `${dateFormat.format(start)}, ${timeFormat.format(start)} – ${dateFormat.format(
 		end
 	)}, ${timeFormat.format(end)}`;
 };
@@ -90,7 +95,7 @@ const formatRange = ({
 	locale: string;
 	options: TimeStringsType['options'];
 }): string => {
-	const { timeZone } = options;
+	const { timeZone, hour12 } = options;
 	if (options?.allDay || isSameDay({ start, end, locale, timeZone })) {
 		return new Intl.DateTimeFormat(locale, {
 			weekday: 'long',
@@ -100,10 +105,17 @@ const formatRange = ({
 			minute: options?.allDay ? undefined : '2-digit',
 			timeZone,
 			second: undefined,
-			hour: options?.allDay ? undefined : '2-digit'
+			hour: options?.allDay ? undefined : '2-digit',
+			hour12: options?.allDay ? undefined : hour12
 		} as const).formatRange(start, end);
 	}
-	return formatMultiDayRange({ start, end, locale, timeZone });
+	return formatMultiDayRange({
+		start,
+		end,
+		locale,
+		timeZone,
+		hour12: options?.allDay ? undefined : hour12
+	});
 };
 
 export const getTimeStrings = ({ start, end, options }: TimeStringsType): string => {
@@ -112,7 +124,7 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 		timeZoneName: 'longOffset'
 	} as const;
 
-	const locale = options.locale ?? getDateFnsLocale()?.code ?? navigator.language;
+	const locale = options.locale ?? getLocale();
 	const dateGmtTimeFormat = new Intl.DateTimeFormat(locale, gmtOptions);
 
 	const formattedRange = formatRange({ start, end, locale, options });
@@ -139,11 +151,13 @@ export const useGetDateRangeConvertedToTimezone = (
 		() => (allDay ? toLower(t('label.all_day', 'All day')) : ''),
 		[allDay, t]
 	);
-	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
-	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
+	const { prefs } = useUserSettings();
+	const locale = useMemo(() => localeFromPrefs(prefs), [prefs]);
+	const hour12 = useMemo(() => toHour12Option(prefs[TIME_FORMAT_PREF_NAME]), [prefs]);
 
 	return useMemo(
-		() => getTimeStrings({ start, end, options: { allDay, allDayLabel, locale, timeZone } }),
-		[allDay, allDayLabel, end, locale, start, timeZone]
+		() =>
+			getTimeStrings({ start, end, options: { allDay, allDayLabel, locale, timeZone, hour12 } }),
+		[allDay, allDayLabel, end, hour12, locale, start, timeZone]
 	);
 };

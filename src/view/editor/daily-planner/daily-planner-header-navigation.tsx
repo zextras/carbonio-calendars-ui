@@ -5,11 +5,11 @@
  */
 import React, { useCallback, useMemo } from 'react';
 
-import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarToolbar } from '../../../components/calendar-toolbar';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
+import { useLocale } from 'hooks/use-locale';
 import {
 	selectEditorOriginalEnd,
 	selectEditorOriginalStart
@@ -31,8 +31,7 @@ export const DailyPlannerHeaderNavigation = ({
 	const originalEnd = useAppSelector(selectEditorOriginalEnd(editorId)) ?? 0;
 
 	const dispatch = useAppDispatch();
-	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
-	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
+	const locale = useLocale();
 
 	const [t] = useTranslation();
 
