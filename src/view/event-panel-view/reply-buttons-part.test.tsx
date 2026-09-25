@@ -7,13 +7,17 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { keyBy } from 'lodash';
 
 import { ReplyButtonsPart } from './reply-buttons-part';
 import * as appointmentActionsFn from '../../actions/appointment-actions-fn';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
 import { TEST_SELECTORS } from 'constants/test-utils';
 
 describe('ReplyButtonsPart', () => {
@@ -160,6 +164,28 @@ describe('ReplyButtonsPart', () => {
 				expect(screen.getByRole('button', { name: /Propose new time/i })).toBeEnabled();
 				unmount();
 			});
+		});
+	});
+
+	describe('Propose new time action', () => {
+		it('opens the propose new time modal instead of a board when clicked', async () => {
+			useFolderStore.setState(() => ({
+				folders: {
+					...keyBy(generateRoots(), 'id'),
+					[mockedData.calendars.defaultCalendar.id]: mockedData.calendars.defaultCalendar
+				}
+			}));
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const { user } = setupTest(<ReplyButtonsPart event={event} invite={invite} />, { store });
+
+			await user.click(screen.getByRole('button', { name: /Propose new time/i }));
+
+			expect(await screen.findByTestId('propose-new-time-modal')).toBeVisible();
+			expect(boardSpy).not.toHaveBeenCalled();
 		});
 	});
 

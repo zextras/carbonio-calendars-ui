@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
-import { Button, Container, Padding } from '@zextras/carbonio-design-system';
+import { Button, Container, Padding, useModal } from '@zextras/carbonio-design-system';
 import { useHistoryNavigation, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
@@ -27,15 +27,18 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 	const { replaceHistory } = useHistoryNavigation();
 	const dispatch = useAppDispatch();
 	const folders = useFoldersMap();
+	const { createModal, closeModal } = useModal();
 	const context = useMemo(
 		() => ({
 			dispatch,
 			folders,
 			t,
 			replaceHistory,
+			createModal,
+			closeModal,
 			isInstance: !!event.resource.ridZ
 		}),
-		[dispatch, event.resource.ridZ, folders, replaceHistory, t]
+		[closeModal, createModal, dispatch, event.resource.ridZ, folders, replaceHistory, t]
 	);
 
 	return (
