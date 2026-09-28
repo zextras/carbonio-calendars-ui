@@ -33,8 +33,8 @@ importers:
         specifier: 15.1.1
         version: 15.1.1(98c1da03190f301d08dfa9b4d97b06c8)
       '@zextras/carbonio-ui-commons':
-        specifier: 2.3.4
-        version: 2.3.4(a4ab35765fd663189218ec0262698ea5)
+        specifier: 2.5.0
+        version: 2.5.0(a4ab35765fd663189218ec0262698ea5)
       '@zextras/carbonio-ui-preview':
         specifier: 5.0.1
         version: 5.0.1(@types/react@18.3.31)(@zextras/carbonio-design-system@12.0.4(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1))(date-fns@4.4.0)(lodash@4.18.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2699,8 +2699,8 @@ packages:
       react-router-dom:
         optional: true
 
-  '@zextras/carbonio-ui-commons@2.3.4':
-    resolution: {integrity: sha512-1PGO6Rl+i76ZxTOPEZCwTxxpPmf2pXR2NvAt3fRAGJ7KEAeteYCXsyZ4M2TyfBR1ymcJpcYr98iENCZHyPrlrA==}
+  '@zextras/carbonio-ui-commons@2.5.0':
+    resolution: {integrity: sha512-Y+cBoLLXe99qaBU1ymITQNaO2rm0bJ6TL13UE4I9scNTlJp9b/wxdDL6mGGhtM2gnAPv/AFZp6Z+rf/yOYch7w==}
     engines: {node: v22, pnpm: '>=10'}
     peerDependencies:
       '@emotion/react': 11.14.0
@@ -6067,6 +6067,12 @@ packages:
     peerDependencies:
       react: ^16.14.0 || ^17 || ^18 || ^19
       react-dom: ^16.14.0 || ^17 || ^18 || ^19
+
+  react-colorful@5.8.0:
+    resolution: {integrity: sha512-Wy9OzPfjSN9bF12OB8N7UQvlsZ0I+7wHxpN+bV5BjNQGxOj6IiwkRjevJK9yOBjJWGQvAaf1OXtn8rUeEatAng==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   react-component-managers@3.2.2:
     resolution: {integrity: sha512-SqtB09hS1ir0koBNybvNbNAB3k/r7IbIGbXSxvkkTV0m50s+4oJ59KYsbPAQ/2DhE169Rc5V26d674EcGcDbGA==}
@@ -10383,7 +10389,7 @@ snapshots:
       - encoding
       - use-sync-external-store
 
-  '@zextras/carbonio-ui-commons@2.3.4(a4ab35765fd663189218ec0262698ea5)':
+  '@zextras/carbonio-ui-commons@2.5.0(a4ab35765fd663189218ec0262698ea5)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.31)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1)
@@ -10397,6 +10403,7 @@ snapshots:
       immer: 9.0.21
       lodash: 4.18.1
       react: 18.3.1
+      react-colorful: 5.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
       react-i18next: 12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom: 6.30.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13905,6 +13912,11 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-overlays: 5.2.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       uncontrollable: 7.2.1(react@18.3.1)
+
+  react-colorful@5.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-component-managers@3.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
