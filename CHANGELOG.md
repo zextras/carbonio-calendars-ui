@@ -1,3 +1,7 @@
+## <small>1.38.1 (2026-09-28)</small>
+
+* fix(CO-3638): prevent viewers from sharing calendars they don't own (#864) ([7aa5be9](https://github.com/zextras/carbonio-calendars-ui/commit/7aa5be9)), closes [#864](https://github.com/zextras/carbonio-calendars-ui/issues/864)
+
 ## 1.38.0 (2026-09-28)
 
 * feat(CO-3677): Add 12h/24h time format setting (#854) ([16e074a](https://github.com/zextras/carbonio-calendars-ui/commit/16e074a)), closes [#854](https://github.com/zextras/carbonio-calendars-ui/issues/854)
