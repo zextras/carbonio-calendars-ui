@@ -1,3 +1,18 @@
+## 1.39.0 (2026-09-28)
+
+* feat(CO-4177): propose a new time through a dedicated modal (#863) ([39258e6](https://github.com/zextras/carbonio-calendars-ui/commit/39258e6)), closes [#863](https://github.com/zextras/carbonio-calendars-ui/issues/863)
+
+## <small>1.38.1 (2026-09-28)</small>
+
+* fix(CO-3638): prevent viewers from sharing calendars they don't own (#864) ([7aa5be9](https://github.com/zextras/carbonio-calendars-ui/commit/7aa5be9)), closes [#864](https://github.com/zextras/carbonio-calendars-ui/issues/864)
+
+## 1.38.0 (2026-09-28)
+
+* feat(CO-3677): Add 12h/24h time format setting (#854) ([16e074a](https://github.com/zextras/carbonio-calendars-ui/commit/16e074a)), closes [#854](https://github.com/zextras/carbonio-calendars-ui/issues/854)
+* chore(deps): update dependency @zextras/carbonio-ui-configs to v2.1.1 (#861) ([0c35122](https://github.com/zextras/carbonio-calendars-ui/commit/0c35122)), closes [#861](https://github.com/zextras/carbonio-calendars-ui/issues/861)
+* chore(deps): update dependency @zextras/carbonio-ui-sdk to v2.3.13 (#862) ([7a60dfd](https://github.com/zextras/carbonio-calendars-ui/commit/7a60dfd)), closes [#862](https://github.com/zextras/carbonio-calendars-ui/issues/862)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.12.3 (#866) ([cd0c980](https://github.com/zextras/carbonio-calendars-ui/commit/cd0c980)), closes [#866](https://github.com/zextras/carbonio-calendars-ui/issues/866)
+
 ## <small>1.37.1 (2026-09-23)</small>
 
 * Merge pull request #865 from zextras/invite-response-translations-change ([19d3fe1](https://github.com/zextras/carbonio-calendars-ui/commit/19d3fe1)), closes [#865](https://github.com/zextras/carbonio-calendars-ui/issues/865)

@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
 import { useGetReminderItems } from './reminder-time-options';
+import { getTimeOnlyLiteralToken, useIs24HourFormat } from '../../commons/time-format';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
@@ -56,6 +57,8 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	} = reminderItem;
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
+	const is24h = useIs24HourFormat();
+	const timeToken = getTimeOnlyLiteralToken(is24h);
 	const [now, setNow] = useState(Date.now());
 	const [isDetailsExpanded, setDetailsExpanded] = useState(false);
 	const { pushHistory } = useHistoryNavigation();
@@ -195,7 +198,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 			<Row width="fill" padding={{ left: '2.5rem', bottom: 'small' }} mainAlignment="space-between">
 				<Row mainAlignment="flex-start">
 					<Text size={DEFAULT_FONT_SIZE}>
-						{format(start, 'HH:mm')} - {format(end, 'HH:mm')}
+						{format(start, timeToken)} - {format(end, timeToken)}
 					</Text>
 					<Padding left="small">{timeToDisplay}</Padding>
 				</Row>
