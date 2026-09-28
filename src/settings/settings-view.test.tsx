@@ -54,6 +54,8 @@ describe('Settings view', () => {
 			expect(screen.getByText(/label.general/i)).toBeVisible();
 			expect(screen.getByText(/label.default_view/i)).toBeVisible();
 			expect(screen.getByText(/label.start_week_on/i)).toBeVisible();
+			expect(screen.getByText(/label.time_format/i)).toBeVisible();
+			expect(screen.getByText(/settings.hint.time_format/i)).toBeVisible();
 			expect(screen.getByText(/label.default_appt_vsblty/i)).toBeVisible();
 			expect(screen.getByText(/label.auto_add_rcvd_app/i)).toBeVisible();
 			expect(screen.getByText(/label.show_declined_meetings/i)).toBeVisible();

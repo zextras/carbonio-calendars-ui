@@ -33,6 +33,11 @@ import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-ut
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
+import {
+	getCalendarEventEdgeToken,
+	getCalendarGridTimeToken,
+	useIs24HourFormat
+} from '../../commons/time-format';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { searchAppointments } from '../../store/actions/search-appointments';
@@ -87,6 +92,7 @@ export default function CalendarComponent(): React.JSX.Element {
 	const calendars = useCheckedFolders();
 	const theme = useTheme();
 	const prefs = usePrefs();
+	const is24h = useIs24HourFormat();
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const anchorElement = useSummaryViewRef();
@@ -417,7 +423,16 @@ export default function CalendarComponent(): React.JSX.Element {
 				onEventDrop={onEventDropOrResize}
 				allDayMaxRows={3}
 				onEventResize={onEventDropOrResize}
-				formats={{ eventTimeRangeFormat: (): string => '' }}
+				formats={{
+					eventTimeRangeFormat: (): string => '',
+					timeGutterFormat: getCalendarGridTimeToken(is24h),
+					selectRangeFormat: ({ start, end }, culture, local): string =>
+						`${local?.format(start, getCalendarGridTimeToken(is24h), culture)} – ${local?.format(end, getCalendarGridTimeToken(is24h), culture)}`,
+					eventTimeRangeStartFormat: ({ start }, culture, local): string =>
+						`${local?.format(start, getCalendarEventEdgeToken(is24h), culture)} – `,
+					eventTimeRangeEndFormat: ({ end }, culture, local): string =>
+						` – ${local?.format(end, getCalendarEventEdgeToken(is24h), culture)}`
+				}}
 				resizable
 				showMultiDayTimes
 				resizableAccessor={resizableAccessor}

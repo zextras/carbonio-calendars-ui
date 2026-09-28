@@ -7,18 +7,18 @@
 import React from 'react';
 
 import { useTheme } from '@zextras/carbonio-design-system';
-import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { EventDiv } from './parts/event-div';
 import { DailyPlannerEvents } from './types';
 import { getEventColor, getEventTooltipLabel, getLocalHoursMinutesFromEpoch } from './utils';
+import { useLocale } from 'hooks/use-locale';
 
 export const TimeTableEvent = ({ event }: { event: DailyPlannerEvents }): React.JSX.Element => {
 	const theme = useTheme();
 	const startHoursMinutes = getLocalHoursMinutesFromEpoch(event.startDateEpochMillis);
 	const timeSpan = (event.endDateEpochMillis - event.startDateEpochMillis) / (1000 * 60);
-	const locale = useUserSettings().prefs.zimbraPrefLocale ?? 'en-US';
+	const locale = useLocale();
 	const [t] = useTranslation();
 
 	const tooltipLabel = getEventTooltipLabel(event, t, locale);
