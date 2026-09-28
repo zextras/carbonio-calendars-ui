@@ -1,3 +1,7 @@
+## 1.39.0 (2026-09-28)
+
+* feat(CO-4177): propose a new time through a dedicated modal (#863) ([39258e6](https://github.com/zextras/carbonio-calendars-ui/commit/39258e6)), closes [#863](https://github.com/zextras/carbonio-calendars-ui/issues/863)
+
 ## <small>1.38.1 (2026-09-28)</small>
 
 * fix(CO-3638): prevent viewers from sharing calendars they don't own (#864) ([7aa5be9](https://github.com/zextras/carbonio-calendars-ui/commit/7aa5be9)), closes [#864](https://github.com/zextras/carbonio-calendars-ui/issues/864)
