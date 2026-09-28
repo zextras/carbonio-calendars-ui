@@ -15,6 +15,7 @@ import {
 
 import { getDateFnsLocale } from '../../commons/date-fns-react-widgets-localizer';
 import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
+import { getPickerTimeFormatToken, useIs24HourFormat } from '../../commons/time-format';
 
 const getHour = (hour) => {
 	switch (hour) {
@@ -66,6 +67,8 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 		[onChange, day, showEnd]
 	);
 	const startTime = useMemo(() => getDate(start), [start]);
+	const is24h = useIs24HourFormat();
+	const timeFormatToken = getPickerTimeFormatToken(is24h);
 
 	return (
 		<Container crossAlignment="flex-start" style={{ maxWidth: '37.5rem' }}>
@@ -80,7 +83,8 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 				disabled={disabled}
 				showTimeSelectOnly
 				timeIntervals={30}
-				dateFormat="p"
+				dateFormat={timeFormatToken}
+				timeFormat={timeFormatToken}
 				locale={getDateFnsLocale()}
 				onChange={onStartChange}
 				timeCaption={t('label.time', 'Time')}
