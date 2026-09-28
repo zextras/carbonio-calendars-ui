@@ -173,6 +173,17 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		setShareWithUserRole(shareRole);
 	}, []);
 
+	const createErrorSnackbar = useCallback((): void => {
+		createSnackbar({
+			key: `folder-action-failed`,
+			replace: true,
+			severity: 'error',
+			hideButton: true,
+			label: t('label.error_try_again', 'Something went wrong, please try again'),
+			autoHideTimeout: 3000
+		});
+	}, [createSnackbar, t]);
+
 	const onConfirm = useCallback((): void => {
 		const grantUsersAction: FolderAction[] = map(contacts, (contactInputItem) => ({
 			id: folderId,
@@ -190,55 +201,44 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 
 		const folderActionToSend = grantUsersAction.length > 1 ? grantUsersAction : grantUsersAction[0];
 
-		folderAction(folderActionToSend).then((res) => {
-			if (!res.Fault) {
-				createSnackbar({
-					key: `folder-action-success`,
-					replace: true,
-					severity: 'success',
-					hideButton: true,
-					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
-					autoHideTimeout: 3000
-				});
-				sendNotification &&
-					dispatch(
-						sendShareCalendarNotification({
-							standardMessage,
-							contacts: contacts.map((contact) => ({
-								email: contact.value.email
-							})),
-							folder: folderId,
-							accounts
-						})
-					).then((res2) => {
-						if (!res2.type.includes('fulfilled')) {
-							createSnackbar({
-								key: `folder-action-failed`,
-								replace: true,
-								severity: 'error',
-								hideButton: true,
-								label: t('label.error_try_again', 'Something went wrong, please try again'),
-								autoHideTimeout: 3000
-							});
-						}
+		folderAction(folderActionToSend)
+			.then((res) => {
+				if (!res.Fault) {
+					createSnackbar({
+						key: `folder-action-success`,
+						replace: true,
+						severity: 'success',
+						hideButton: true,
+						label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
+						autoHideTimeout: 3000
 					});
-			} else {
-				createSnackbar({
-					key: `folder-action-failed`,
-					replace: true,
-					severity: 'error',
-					hideButton: true,
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000
-				});
-			}
-		});
+					sendNotification &&
+						dispatch(
+							sendShareCalendarNotification({
+								standardMessage,
+								contacts: contacts.map((contact) => ({
+									email: contact.value.email
+								})),
+								folder: folderId,
+								accounts
+							})
+						).then((res2) => {
+							if (!res2.type.includes('fulfilled')) {
+								createErrorSnackbar();
+							}
+						});
+				} else {
+					createErrorSnackbar();
+				}
+			})
+			.catch(createErrorSnackbar);
 		closeFn && closeFn();
 	}, [
 		accounts,
 		allowToSeePrvtAppt,
 		closeFn,
 		contacts,
+		createErrorSnackbar,
 		createSnackbar,
 		dispatch,
 		folderId,

@@ -9,6 +9,7 @@ import { DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
 import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
+import { getDateTimeToken, getPickerTimeFormatToken, useIs24HourFormat } from './time-format';
 
 export default function StartDatePicker({ start, allDay, diff, onChange }) {
 	const onStartChange = useCallback(
@@ -36,7 +37,8 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			}`,
 		[allDay]
 	);
-	const dateFormat = useMemo(() => (allDay ? 'P' : 'Pp'), [allDay]);
+	const is24h = useIs24HourFormat();
+	const dateFormat = useMemo(() => (allDay ? 'P' : getDateTimeToken(is24h)), [allDay, is24h]);
 
 	return (
 		<DateTimePicker
@@ -45,6 +47,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			defaultValue={start}
 			onChange={onStartChange}
 			dateFormat={dateFormat}
+			timeFormat={allDay ? undefined : getPickerTimeFormatToken(is24h)}
 			locale={getDateFnsLocale()}
 			includeTime={!allDay}
 		/>

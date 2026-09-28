@@ -11,6 +11,8 @@ import { addYears, format, isValid, parse } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import configure from 'react-widgets/lib/configure';
 
+import { getLocale } from 'hooks/use-locale';
+
 // Mirrors DATE_FNS_LOCALE from carbonio-shell-ui src/constants/locales.ts,
 // which is not exported from the installed package.
 const LOCALE_IMPORT_MAP: Record<string, (() => Promise<Locale>) | undefined> = {
@@ -70,7 +72,7 @@ export function dateFnsLocalizer(): void {
 	if (initialized) return;
 	initialized = true;
 
-	const rawLocale = getUserSettings().prefs.zimbraPrefLocale ?? navigator.language;
+	const rawLocale = getLocale();
 	// Normalise BCP 47 tags (e.g. 'it-IT' → 'it', 'zh-CN' → 'zh_CN') to match map keys.
 	// Zimbra uses underscore separators (zh_CN); navigator.language uses hyphens (zh-CN).
 	const normalized = rawLocale.replaceAll('-', '_');
