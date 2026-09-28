@@ -1,3 +1,9 @@
+## <small>1.37.1 (2026-09-23)</small>
+
+* Merge pull request #865 from zextras/invite-response-translations-change ([19d3fe1](https://github.com/zextras/carbonio-calendars-ui/commit/19d3fe1)), closes [#865](https://github.com/zextras/carbonio-calendars-ui/issues/865)
+* fix: translations update ([886cf99](https://github.com/zextras/carbonio-calendars-ui/commit/886cf99))
+* chore(deps): update dependency @vitest/coverage-v8 to v4.1.11 (#860) ([a4ca9f3](https://github.com/zextras/carbonio-calendars-ui/commit/a4ca9f3)), closes [#860](https://github.com/zextras/carbonio-calendars-ui/issues/860)
+
 ## 1.37.0 (2026-09-22)
 
 * Merge branch 'main' into co-4176-improve-decline-flow ([a23e63d](https://github.com/zextras/carbonio-calendars-ui/commit/a23e63d))

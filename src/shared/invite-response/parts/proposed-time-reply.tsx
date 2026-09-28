@@ -259,14 +259,14 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 			return {
 				icon: 'CheckmarkOutline',
 				color: 'success',
-				label: t('label.proposed_time_accepted', 'You have accepted the proposed new time.')
+				label: t('label.proposed_time_accepted', 'You accepted the proposed new time.')
 			};
 		}
 		if (isDeclined) {
 			return {
 				icon: 'CloseOutline',
 				color: 'error',
-				label: t('label.proposed_time_declined', 'You have declined the proposed new time.')
+				label: t('label.proposed_time_declined', 'You declined the proposed new time.')
 			};
 		}
 		return undefined;
