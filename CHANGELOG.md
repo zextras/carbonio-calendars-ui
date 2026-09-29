@@ -1,3 +1,8 @@
+## <small>1.39.1 (2026-09-29)</small>
+
+* refactor(CO-4314): build the calendar color picker on the shared Colo… (#867) ([87421b8](https://github.com/zextras/carbonio-calendars-ui/commit/87421b8)), closes [#867](https://github.com/zextras/carbonio-calendars-ui/issues/867)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.13.0 (#869) ([e43781d](https://github.com/zextras/carbonio-calendars-ui/commit/e43781d)), closes [#869](https://github.com/zextras/carbonio-calendars-ui/issues/869)
+
 ## 1.39.0 (2026-09-28)
 
 * feat(CO-4177): propose a new time through a dedicated modal (#863) ([39258e6](https://github.com/zextras/carbonio-calendars-ui/commit/39258e6)), closes [#863](https://github.com/zextras/carbonio-calendars-ui/issues/863)
