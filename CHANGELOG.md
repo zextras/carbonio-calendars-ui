@@ -1,3 +1,7 @@
+## <small>1.39.2 (2026-09-30)</small>
+
+* fix: include the default identity in send invite response request (#868) ([c6b4450](https://github.com/zextras/carbonio-calendars-ui/commit/c6b4450)), closes [#868](https://github.com/zextras/carbonio-calendars-ui/issues/868)
+
 ## <small>1.39.1 (2026-09-29)</small>
 
 * refactor(CO-4314): build the calendar color picker on the shared Colo… (#867) ([87421b8](https://github.com/zextras/carbonio-calendars-ui/commit/87421b8)), closes [#867](https://github.com/zextras/carbonio-calendars-ui/issues/867)
