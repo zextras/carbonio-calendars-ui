@@ -5,9 +5,13 @@
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
+import {
+	InviteReplyVerb,
+	SendInviteReplyFulfilledType,
+	SendInviteReplyRequest
+} from '../../../soap/send-invite-reply-request';
 import { reducers } from '../../redux';
 import { sendInviteResponse } from '../send-invite-response';
-import { InviteReplyVerb } from '../../../soap/send-invite-reply-request';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 describe('sendInviteResponse', () => {
@@ -51,5 +55,29 @@ describe('sendInviteResponse', () => {
 		);
 
 		expect(result.type).toBe('invites/sendInviteResponse/fulfilled');
+	});
+
+	it('sends the default identity id as idnt so the reply is not sent from a random identity', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const apiInterceptor = createSoapAPIInterceptor<
+			SendInviteReplyRequest,
+			SendInviteReplyFulfilledType
+		>('SendInviteReply', {
+			apptId: 'appt-123',
+			calItemId: 'cal-123',
+			invId: 'inv-123'
+		});
+
+		store.dispatch(
+			sendInviteResponse({
+				inviteId: 'invite-123',
+				action: InviteReplyVerb.ACCEPT,
+				updateOrganizer: true
+			})
+		);
+
+		const request = await apiInterceptor;
+		expect(request.idnt).toBe('1');
 	});
 });

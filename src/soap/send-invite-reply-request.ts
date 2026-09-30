@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { getIdentitiesDescriptors } from '@zextras/carbonio-ui-commons';
 import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 import { InstanceExceptionId } from '../utils/event';
@@ -198,6 +199,9 @@ export type SendInviteReplyFulfilledType = {
 
 export type SendInviteReplyReturnType = SendInviteReplyFulfilledType | SendInviteReplyRejectedType;
 
+const getDefaultIdentityId = (): string | undefined =>
+	getIdentitiesDescriptors().find((identity) => identity.identityName === 'DEFAULT')?.id;
+
 export const sendInviteReplyRequest = async ({
 	id,
 	action,
@@ -211,6 +215,7 @@ export const sendInviteReplyRequest = async ({
 	exceptId?: InstanceExceptionId;
 	m?: Msg;
 }): Promise<SendInviteReplyReturnType> => {
+	const idnt = getDefaultIdentityId();
 	const reqParams: SendInviteReplyRequest = {
 		_jsns: 'urn:zimbraMail',
 		id,
@@ -219,6 +224,7 @@ export const sendInviteReplyRequest = async ({
 		verb: action,
 		rt: 'r',
 		updateOrganizer,
+		...(idnt && { idnt }),
 		...(m !== undefined && { m })
 	};
 
