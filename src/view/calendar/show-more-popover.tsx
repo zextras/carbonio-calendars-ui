@@ -15,11 +15,11 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { MemoCustomEvent } from './custom-event';
 import { EventType } from '../../types/event';
+import { useLocale } from 'hooks/use-locale';
 
 export const ShowMorePopover = ({
 	anchorRef,
@@ -34,8 +34,7 @@ export const ShowMorePopover = ({
 	events: EventType[];
 	anchorRef: RefObject<HTMLElement>;
 }): React.JSX.Element => {
-	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
-	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
+	const locale = useLocale();
 	const [t] = useTranslation();
 
 	const title = useMemo(

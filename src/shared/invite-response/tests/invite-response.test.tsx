@@ -16,7 +16,6 @@ import { DefaultBodyType, http, HttpResponse } from 'msw';
 
 import * as handler from '../../../commons/get-appointment';
 import { formatInviteChangesText } from '../../../commons/invite-changes-text';
-import { CALENDAR_BOARD_ID } from '../../../constants';
 import { getSetupServer } from '@jest-setup';
 import * as mockshell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { mockUseHistoryNavigation } from '@test-utils/routing/use-history-navigation-mock';
@@ -705,7 +704,7 @@ describe('invite response component', () => {
 						await user.click(proposeButton);
 						expect(store.getState().editor.editors['new-1']).toBeDefined();
 					});
-					test('a board is opened', async () => {
+					test('the propose new time modal is opened instead of a board', async () => {
 						setupFoldersStore();
 
 						const boardSpy = vi.spyOn(mockshell, 'addBoard');
@@ -723,11 +722,9 @@ describe('invite response component', () => {
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await user.click(proposeButton);
-						expect(boardSpy).toHaveBeenCalled();
-						expect(boardSpy).toHaveBeenCalledTimes(1);
-						expect(boardSpy).toHaveBeenCalledWith(
-							expect.objectContaining({ boardViewId: CALENDAR_BOARD_ID })
-						);
+
+						expect(boardSpy).not.toHaveBeenCalled();
+						expect(await screen.findByTestId('propose-new-time-modal')).toBeVisible();
 					});
 					test('if the event is non recurrent a non recurrent editor is created', async () => {
 						setupFoldersStore();
