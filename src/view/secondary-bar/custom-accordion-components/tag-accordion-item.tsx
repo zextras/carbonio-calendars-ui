@@ -11,11 +11,7 @@ import {
 	AccordionItemType,
 	Dropdown
 } from '@zextras/carbonio-design-system';
-import {
-	useRunSearchIntegration,
-	useTags,
-	ZIMBRA_STANDARD_COLORS
-} from '@zextras/carbonio-ui-commons';
+import { useRunSearchIntegration, useTags, resolveTagColorHex } from '@zextras/carbonio-ui-commons';
 
 import { CALENDAR_ROUTE } from '../../../constants';
 import { useGetTagsActions } from '../../tags/tag-actions';
@@ -31,7 +27,7 @@ export const TagAccordionItem: FC<AccordionItemProps> = (props) => {
 			runSearch?.(
 				[
 					{
-						avatarBackground: ZIMBRA_STANDARD_COLORS[tag.color || 0].hex,
+						avatarBackground: resolveTagColorHex(tag),
 						avatarIcon: 'Tag',
 						background: 'gray2',
 						hasAvatar: true,
@@ -49,7 +45,7 @@ export const TagAccordionItem: FC<AccordionItemProps> = (props) => {
 			id: tag.id,
 			icon: 'Tag',
 			label: tag.name,
-			iconColor: ZIMBRA_STANDARD_COLORS[tag.color ?? 0].hex
+			iconColor: resolveTagColorHex(tag)
 		}),
 		[tag]
 	);

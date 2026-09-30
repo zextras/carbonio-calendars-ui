@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
 import {
 	ZIMBRA_STANDARD_COLORS,
+	resolveTagColorHex,
 	useRunSearchIntegration,
 	useSortedTagsArray,
 	Tag
@@ -56,7 +57,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 			runSearch?.(
 				[
 					{
-						avatarBackground: ZIMBRA_STANDARD_COLORS[tagToSearch?.color ?? 0].hex,
+						avatarBackground: resolveTagColorHex(tagToSearch),
 						avatarIcon: 'Tag',
 						background: 'gray2',
 						hasAvatar: true,
@@ -89,7 +90,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 								<TagChip
 									key={tag.name}
 									label={tag.name}
-									avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
+									avatarBackground={resolveTagColorHex(tag)}
 									background={'gray2'}
 									hasAvatar
 									avatarIcon="Tag"
@@ -104,7 +105,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 							{map(tags, (tag) => (
 								<TagChip
 									label={tag.name}
-									avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
+									avatarBackground={resolveTagColorHex(tag)}
 									background={'gray2'}
 									hasAvatar
 									avatarIcon="Tag"

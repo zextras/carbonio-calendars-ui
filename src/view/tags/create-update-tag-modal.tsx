@@ -14,10 +14,11 @@ import {
 	changeTagColor,
 	createTag,
 	renameTag,
-	ItemType
+	resolveTagColorHex,
+	ItemType,
+	TagColorPicker
 } from '@zextras/carbonio-ui-commons';
 
-import { ColorPicker } from '../../commons/color-picker';
 import { itemActionRequest } from '../../soap/item-action-request';
 import { EventType } from '../../types/event';
 
@@ -40,9 +41,8 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 		nameInputRef.current?.focus();
 	}, []);
 	const [name, setName] = useState(tag?.name || '');
-
-	// TODO: remove any cast when tag.color is properly typed
-	const [color, setColor] = useState((tag?.color as any) || 0);
+	const [colorHex, setColorHex] = useState(() => resolveTagColorHex(tag));
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 	const title = useMemo(
 		() =>
 			editMode
@@ -51,7 +51,6 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 		[editMode, tag?.name]
 	);
 	const label = useMemo(() => `${t('label.tag_name', 'Tag name')}*`, []);
-	const handleColorChange = useCallback((c: string | null) => setColor(c), []);
 	const handleNameChange = useCallback(
 		(ev: React.ChangeEvent<HTMLInputElement>) => setName(ev.target.value),
 		[]
@@ -64,7 +63,10 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 		() => showMaxLengthWarning || showSpecialCharWarning,
 		[showMaxLengthWarning, showSpecialCharWarning]
 	);
-	const disabled = useMemo(() => name === '' || showWarning, [name, showWarning]);
+	const disabled = useMemo(
+		() => name === '' || showWarning || isColorPickerOpen,
+		[name, showWarning, isColorPickerOpen]
+	);
 
 	const applyNewlyCreatedTag = useCallback(
 		({ inviteId, tagName }: { inviteId: string; tagName: string }) => {
@@ -105,7 +107,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 	);
 	const onCreate = useCallback(
 		() =>
-			createTag({ name, color }).then((res) => {
+			createTag({ name, rgb: colorHex }).then((res) => {
 				if (res.tag) {
 					if (event) {
 						applyNewlyCreatedTag({ inviteId: event.resource.id, tagName: res.tag?.[0]?.name });
@@ -127,10 +129,10 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 				}
 				onClose();
 			}),
-		[name, color, onClose, event, applyNewlyCreatedTag, createSnackbar]
+		[name, colorHex, onClose, event, applyNewlyCreatedTag, createSnackbar]
 	);
 	const onUpdate = useCallback(() => {
-		Promise.all([renameTag(`${tag?.id}`, name), changeTagColor(`${tag?.id}`, Number(color))])
+		Promise.all([renameTag(`${tag?.id}`, name), changeTagColor(`${tag?.id}`, colorHex)])
 			.then(() => {
 				onClose();
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -160,11 +162,17 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 					hideButton: true
 				});
 			});
-	}, [color, createSnackbar, name, onClose, tag]);
+	}, [colorHex, createSnackbar, name, onClose, tag]);
+
+	const onCloseModal = useCallback(() => {
+		if (!isColorPickerOpen) {
+			onClose();
+		}
+	}, [isColorPickerOpen, onClose]);
 
 	return (
 		<>
-			<ModalHeader onClose={onClose} title={title} />
+			<ModalHeader onClose={onCloseModal} title={title} />
 			<Input
 				label={label}
 				value={name}
@@ -190,14 +198,11 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 				</Padding>
 			)}
 
-			<Padding top="small" />
-			<ColorPicker
-				onChange={handleColorChange}
-				t={t}
-				label={t('label.select_color', 'Select Color')}
-				defaultColor={color}
-			/>
+			<Padding vertical="medium" />
+			<TagColorPicker value={colorHex} onChange={setColorHex} onOpenChange={setIsColorPickerOpen} />
+			<Padding vertical="medium" />
 			<ModalFooter
+				paddingTop="0"
 				onConfirm={editMode ? onUpdate : onCreate}
 				label={editMode ? t('label.edit', 'edit') : t('label.create', 'Create')}
 				disabled={disabled}

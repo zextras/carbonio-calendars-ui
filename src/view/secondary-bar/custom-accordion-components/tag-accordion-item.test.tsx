@@ -85,4 +85,28 @@ describe('TagAccordionItem', () => {
 			'calendars'
 		);
 	});
+
+	it('should render the tag icon with the custom color of the tag', () => {
+		const tag: Tag = { ...generateTag(), rgb: '#abcdef' };
+		useTagStore.setState({ tags: { [tag.id]: tag } });
+
+		setupTest(<TagAccordionItem item={{ id: tag.id, label: tag.name }} />);
+
+		expect(screen.getByTestId(TEST_SELECTORS.ICONS.tag)).toHaveStyleRule('color', '#abcdef');
+	});
+
+	it('should trigger the search with the custom color of the tag', async () => {
+		const runSearchSpy = vi.fn();
+		vi.mocked(useRunSearchIntegration).mockReturnValue(runSearchSpy);
+		const tag: Tag = { ...generateTag(), rgb: '#abcdef' };
+		useTagStore.setState({ tags: { [tag.id]: tag } });
+
+		const { user } = setupTest(<TagAccordionItem item={{ id: tag.id, label: tag.name }} />);
+		await user.click(screen.getByText(tag.name));
+
+		expect(runSearchSpy).toHaveBeenCalledWith(
+			[expect.objectContaining({ avatarBackground: '#abcdef' })],
+			'calendars'
+		);
+	});
 });
