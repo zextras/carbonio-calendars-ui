@@ -21,7 +21,7 @@ import {
 import { t } from '@zextras/carbonio-shell-ui';
 import {
 	DeleteTagModal,
-	ZIMBRA_STANDARD_COLORS,
+	resolveTagColorHex,
 	useSortedTagsArray,
 	ItemType,
 	Tag
@@ -73,6 +73,7 @@ export const createTag = ({ createModal, closeModal }: ActionParams): ActionDesc
 		createModal?.(
 			{
 				id: modalId,
+				size: 'medium',
 				focusModalContent: false,
 				children: (
 					<StoreProvider>
@@ -107,6 +108,7 @@ export const createAndApplyTag = ({
 		context.createModal(
 			{
 				id: modalId,
+				size: 'medium',
 				focusModalContent: false,
 				children: (
 					<StoreProvider>
@@ -133,6 +135,7 @@ export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionD
 		createModal?.(
 			{
 				id: modalId,
+				size: 'medium',
 				focusModalContent: false,
 				children: (
 					<StoreProvider>
@@ -216,7 +219,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 		},
 		[event?.resource?.id, createSnackbar, tag.name]
 	);
-	const tagColor = useMemo(() => ZIMBRA_STANDARD_COLORS[tag.color || 0].hex, [tag.color]);
+	const tagColor = useMemo(() => resolveTagColorHex(tag), [tag]);
 	const tagIcon = useMemo(() => (checked ? 'Tag' : 'TagOutline'), [checked]);
 	const tagIconOnHovered = useMemo(() => (checked ? 'Untag' : 'Tag'), [checked]);
 

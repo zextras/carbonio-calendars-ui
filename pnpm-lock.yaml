@@ -33,8 +33,8 @@ importers:
         specifier: 15.1.1
         version: 15.1.1(98c1da03190f301d08dfa9b4d97b06c8)
       '@zextras/carbonio-ui-commons':
-        specifier: 2.5.0
-        version: 2.5.0(a4ab35765fd663189218ec0262698ea5)
+        specifier: 2.6.0
+        version: 2.6.0(a4ab35765fd663189218ec0262698ea5)
       '@zextras/carbonio-ui-preview':
         specifier: 5.0.1
         version: 5.0.1(@types/react@18.3.31)(@zextras/carbonio-design-system@12.0.4(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1))(date-fns@4.4.0)(lodash@4.18.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2699,8 +2699,8 @@ packages:
       react-router-dom:
         optional: true
 
-  '@zextras/carbonio-ui-commons@2.5.0':
-    resolution: {integrity: sha512-Y+cBoLLXe99qaBU1ymITQNaO2rm0bJ6TL13UE4I9scNTlJp9b/wxdDL6mGGhtM2gnAPv/AFZp6Z+rf/yOYch7w==}
+  '@zextras/carbonio-ui-commons@2.6.0':
+    resolution: {integrity: sha512-Q216ToiYsCPou3YolyidWj9/UFG7oNCz8x3acwtzT5wkx/3kqDmr3Pq5VfnveQn4LdQXtmY3iS+AQ0e/oSilhQ==}
     engines: {node: v22, pnpm: '>=10'}
     peerDependencies:
       '@emotion/react': 11.14.0
@@ -10389,7 +10389,7 @@ snapshots:
       - encoding
       - use-sync-external-store
 
-  '@zextras/carbonio-ui-commons@2.5.0(a4ab35765fd663189218ec0262698ea5)':
+  '@zextras/carbonio-ui-commons@2.6.0(a4ab35765fd663189218ec0262698ea5)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.31)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1)
