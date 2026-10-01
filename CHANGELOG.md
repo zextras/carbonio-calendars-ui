@@ -1,3 +1,7 @@
+## 1.40.0 (2026-10-01)
+
+* feat(CO-4361): support custom tag colors with the shared color picker (#870) ([f715d06](https://github.com/zextras/carbonio-calendars-ui/commit/f715d06)), closes [#870](https://github.com/zextras/carbonio-calendars-ui/issues/870)
+
 ## <small>1.39.2 (2026-09-30)</small>
 
 * fix: include the default identity in send invite response request (#868) ([c6b4450](https://github.com/zextras/carbonio-calendars-ui/commit/c6b4450)), closes [#868](https://github.com/zextras/carbonio-calendars-ui/issues/868)
