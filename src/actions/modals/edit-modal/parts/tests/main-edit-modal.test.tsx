@@ -186,6 +186,69 @@ describe('MainEditModal', () => {
 			expect(screen.queryByText('Internal sharing')).not.toBeInTheDocument();
 		});
 
+		it.each(['r', 'rp', 'rwidx', 'rwidxp'])(
+			'should not render the "Internal sharing" section for linked folders shared with %s rights',
+			(perm) => {
+				const folder = {
+					...generateFolder({ view: FOLDER_VIEW.appointment }),
+					isLink: true as const,
+					owner: 'someone@example.com',
+					perm,
+					reminder: false,
+					broken: false
+				};
+
+				setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={[]} />, {
+					store
+				});
+
+				expect(screen.queryByText('Internal sharing')).not.toBeInTheDocument();
+				expect(screen.queryByRole('button', { name: 'Add share' })).not.toBeInTheDocument();
+			}
+		);
+
+		it.each(['rwidxa', 'rwidxap'])(
+			'should render the "Internal sharing" section with the "Add share" button for linked folders shared with %s rights',
+			(perm) => {
+				const folder = {
+					...generateFolder({ view: FOLDER_VIEW.appointment }),
+					isLink: true as const,
+					owner: 'someone@example.com',
+					perm,
+					reminder: false,
+					broken: false
+				};
+
+				setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={[]} />, {
+					store
+				});
+
+				expect(screen.getByText('Internal sharing')).toBeVisible();
+				expect(screen.getByRole('button', { name: 'Add share' })).toBeVisible();
+			}
+		);
+
+		it('should render the grants of a linked folder shared with administer rights', () => {
+			const folder = {
+				...generateFolder({ view: FOLDER_VIEW.appointment }),
+				isLink: true as const,
+				owner: 'someone@example.com',
+				perm: 'rwidxa',
+				reminder: false,
+				broken: false
+			};
+			const grant: Array<Grant> = [
+				{ gt: SHARE_USER_TYPE.USER, perm: 'r', d: 'grantee@example.com' }
+			];
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={grant} />, {
+				store
+			});
+
+			expect(screen.getByText(/grantee@example\.com/)).toBeVisible();
+			expect(screen.getByRole('button', { name: 'Revoke' })).toBeVisible();
+		});
+
 		it('should render the "Add share" button next to the "Internal sharing" header', () => {
 			const folder = generateFolder({ view: FOLDER_VIEW.appointment });
 			const grant: Array<Grant> = [];
@@ -304,6 +367,24 @@ describe('MainEditModal', () => {
 				store
 			});
 
+			expect(screen.queryByText('Public sharing')).not.toBeInTheDocument();
+		});
+
+		it('should not render for linked folders shared with administer rights', () => {
+			const folder = {
+				...generateFolder({ view: FOLDER_VIEW.appointment }),
+				isLink: true as const,
+				owner: 'someone@example.com',
+				perm: 'rwidxa',
+				reminder: false,
+				broken: false
+			};
+
+			setupTest(<MainEditModalTestWrapper folder={folder} totalAppointments={0} grant={[]} />, {
+				store
+			});
+
+			expect(screen.getByText('Internal sharing')).toBeVisible();
 			expect(screen.queryByText('Public sharing')).not.toBeInTheDocument();
 		});
 
