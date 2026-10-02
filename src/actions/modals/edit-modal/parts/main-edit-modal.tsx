@@ -268,6 +268,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		return caldavChild && isReadOnly;
 	}, [folder]);
 
+	// On a calendar shared with the user, resharing requires the administer ("a") right
+	const canManageInternalSharing = !(folder.isLink && folder.owner) || /a/.test(folder.perm ?? '');
+
 	const calendarNameInputRef = useRef<HTMLInputElement>(null);
 	const isCalendarNameEditable = !isCaldavChildReadOnly && !hasId(folder, FOLDERS.CALENDAR);
 	useEffect(() => {
@@ -389,7 +392,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					/>
 
 					{/* Internal sharing */}
-					{!(folder.isLink && folder.owner) && (
+					{canManageInternalSharing && (
 						<Container
 							mainAlignment="flex-start"
 							crossAlignment="flex-start"
