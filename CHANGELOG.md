@@ -1,3 +1,7 @@
+## <small>1.40.1 (2026-10-02)</small>
+
+* fix(CO-4432): allow grantees with administer rights to reshare a shared calendar (#871) ([55c7ec7](https://github.com/zextras/carbonio-calendars-ui/commit/55c7ec7)), closes [#871](https://github.com/zextras/carbonio-calendars-ui/issues/871)
+
 ## 1.40.0 (2026-10-01)
 
 * feat(CO-4361): support custom tag colors with the shared color picker (#870) ([f715d06](https://github.com/zextras/carbonio-calendars-ui/commit/f715d06)), closes [#870](https://github.com/zextras/carbonio-calendars-ui/issues/870)
