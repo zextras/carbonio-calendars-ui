@@ -423,8 +423,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 								<Container
 									style={{ overflowY: 'auto' }}
 									mainAlignment="flex-start"
-									height={internalGrants.length === 1 ? '1.375rem' : '3.25rem'}
-									maxHeight={'3.25rem'}
+									height="fit"
+									maxHeight="3.5rem"
 									padding={{ right: 'small' }}
 									gap="0.5rem"
 								>
