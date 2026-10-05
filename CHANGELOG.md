@@ -1,3 +1,7 @@
+## <small>1.40.2 (2026-10-05)</small>
+
+* fix(CO-4434): prevent share grant buttons from being clipped on Firefox (#872) ([adde263](https://github.com/zextras/carbonio-calendars-ui/commit/adde263)), closes [#872](https://github.com/zextras/carbonio-calendars-ui/issues/872)
+
 ## <small>1.40.1 (2026-10-02)</small>
 
 * fix(CO-4432): allow grantees with administer rights to reshare a shared calendar (#871) ([55c7ec7](https://github.com/zextras/carbonio-calendars-ui/commit/55c7ec7)), closes [#871](https://github.com/zextras/carbonio-calendars-ui/issues/871)
