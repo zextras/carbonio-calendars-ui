@@ -3,21 +3,43 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
+import {isTrashOrNestedInIt} from '@zextras/carbonio-ui-commons';
+import {getUserAccount, getUserSettings} from '@zextras/carbonio-shell-ui';
 
-import { EventType } from '../../types/event';
+import {EventType} from '../../types/event';
 
 export const isOrganizerOrHaveEqualRights = (
 	event: EventType,
 	absFolderPath: string | undefined
-): boolean =>
-	!(event.resource.organizer
-		? // if the event is in trash or nested in it
-			isTrashOrNestedInIt({ id: event.resource.calendar.id, absFolderPath }) ||
-			// if user is owner of the calendar but he is not the organizer
-			(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
-			// if it is inside a shared calendar or user doesn't have write access
-			(!!event.resource.calendar.owner &&
-				(event.resource.calendar.owner !== event.resource.organizer?.email ||
-					!event?.haveWriteAccess))
-		: false);
+): boolean => {
+    const rawAlias = getUserSettings()?.attrs?.zimbraMailAlias;
+    const emails = [getUserAccount()?.name, rawAlias].flat().filter(Boolean) as string[];
+    const resource = event.resource;
+    const organizerEmail = event.resource.organizer?.email;
+    const calendarOwner = event.resource.calendar.owner;
+    if (!resource.organizer) {
+        return true;
+    }
+
+    if (isTrashOrNestedInIt({ id: resource.calendar.id, absFolderPath })) {
+        return false;
+    }
+
+    if (event?.haveWriteAccess === false) {
+        return false;
+    }
+
+    const isUserOrganizer = organizerEmail ? emails.includes(organizerEmail) : false;
+
+    if (isUserOrganizer || resource.iAmOrganizer) {
+        return true;
+    }
+
+    const isUserOwner = calendarOwner ? emails.includes(calendarOwner) : false;
+
+    if (calendarOwner && calendarOwner !== organizerEmail) {
+        return isUserOwner && isUserOrganizer;
+    }
+
+    return true;
+}
