@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
@@ -54,8 +54,6 @@ export const LexicalWrapper = styled.div<{
 		position: sticky;
 		top: 0;
 		z-index: 1;
-		background-color: ${({ theme }): string => theme.palette.gray4.regular};
-		border-radius: ${({ theme }): string => theme.borderRadius};
 	}
 
 	.cal-lexical-editor-inner {
@@ -96,8 +94,7 @@ export const LexicalWrapper = styled.div<{
 		user-select: none;
 	}
 
-	/* "Show blocks" view aid is a stretch item, not implemented yet; class kept
-	   reserved so it can be wired up later without another CSS pass. */
+	/* "Show blocks" view aid: outlines block-level elements for debugging. */
 	.cal-lexical-show-blocks
 		.cal-lexical-content-editable
 		:is(p, h1, h2, h3, h4, h5, h6, blockquote, ul, ol, li, div, pre, table) {
@@ -329,11 +326,12 @@ export const RichTextEditorContainer = ({
 }: RichTextEditorContainerProps): React.JSX.Element => {
 	const { prefs } = useUserSettings();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const [showBlocks, setShowBlocks] = useState(false);
 
 	const fontFamily =
 		(prefs?.zimbraPrefHtmlEditorDefaultFontFamily as string) || DEFAULT_FONT_FAMILY;
-	const fontSize = prefs?.zimbraPrefHtmlEditorDefaultFontSize as string | undefined;
-	const color = prefs?.zimbraPrefHtmlEditorDefaultFontColor as string | undefined;
+	const fontSize = prefs?.zimbraPrefHtmlEditorDefaultFontSize;
+	const color = prefs?.zimbraPrefHtmlEditorDefaultFontColor;
 
 	const initialConfig = useMemo(
 		() => ({
@@ -376,10 +374,15 @@ export const RichTextEditorContainer = ({
 			<LexicalWrapper $fontFamily={fontFamily} $fontSize={fontSize} $color={color}>
 				{!disabled?.composer && (
 					<div className="cal-lexical-toolbar">
-						<RichToolbarPlugin fontFamily={fontFamily} fontSize={fontSize} />
+						<RichToolbarPlugin
+							fontFamily={fontFamily}
+							fontSize={fontSize}
+							showBlocks={showBlocks}
+							onToggleShowBlocks={(): void => setShowBlocks((previous) => !previous)}
+						/>
 					</div>
 				)}
-				<div className="cal-lexical-editor-inner">
+				<div className={`cal-lexical-editor-inner${showBlocks ? ' cal-lexical-show-blocks' : ''}`}>
 					<RichTextPlugin
 						contentEditable={
 							<ContentEditable

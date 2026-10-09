@@ -23,6 +23,7 @@ import { useTableInsert } from './rich-toolbar-plugin-hooks/use-table-insert';
 import { useTextFormatting } from './rich-toolbar-plugin-hooks/use-text-formatting';
 import { useToolbarSelectionSync } from './rich-toolbar-plugin-hooks/use-toolbar-selection-sync';
 import { type BlockType } from './rich-toolbar-plugin-model';
+import { SourceCodeModal } from './source-code-modal';
 import { ToolbarDivider } from './toolbar-divider';
 import { ToolbarIconButton } from './toolbar-icon-button';
 import { ToolbarSelect } from './toolbar-select';
@@ -33,20 +34,27 @@ type RichToolbarPluginProps = {
 	fontFamily?: string;
 	/** Account's default font size, used as the size selector's default value. */
 	fontSize?: string;
+	/** Whether block-level elements are outlined for visual debugging. */
+	showBlocks: boolean;
+	/** Toggles {@link showBlocks}. */
+	onToggleShowBlocks: () => void;
 };
 
 /**
  * The calendars-ui rich-text toolbar: font/size/block-type selects, text and
  * background color, inline text formatting, paragraph alignment/direction/
- * indentation and lists. Link, table and image controls are intentionally not
- * included here — they are spliced in separately once their own plugins land.
+ * indentation, lists, links, tables, images, a block-outline view aid and a
+ * raw HTML source editor.
  */
 export const RichToolbarPlugin = ({
 	fontFamily,
-	fontSize
+	fontSize,
+	showBlocks,
+	onToggleShowBlocks
 }: RichToolbarPluginProps): React.JSX.Element => {
 	const [editor] = useLexicalComposerContext();
 	const [linkModalOpen, setLinkModalOpen] = useState(false);
+	const [sourceCodeModalOpen, setSourceCodeModalOpen] = useState(false);
 	const { openImageModal, imageModalOpen, setImageModalOpen } = useImageActions(editor);
 	const { tableItems, tableLabel, tableMenuOpen, setTableMenuOpen } = useTableInsert(editor);
 
@@ -278,6 +286,21 @@ export const RichToolbarPlugin = ({
 					label={t('lexical-label.insert_image_url', 'Insert image')}
 					onClick={openImageModal}
 				/>
+
+				<ToolbarDivider />
+
+				{/* View aids */}
+				<ToolbarIconButton
+					icon={editorIcon('visualblocks')}
+					label={t('lexical-label.show_blocks', 'Show blocks')}
+					onClick={onToggleShowBlocks}
+					active={showBlocks}
+				/>
+				<ToolbarIconButton
+					icon={editorIcon('sourcecode')}
+					label={t('lexical-label.source_code', 'Source code')}
+					onClick={(): void => setSourceCodeModalOpen(true)}
+				/>
 			</Row>
 			<LinkModal
 				editor={editor}
@@ -288,6 +311,11 @@ export const RichToolbarPlugin = ({
 				editor={editor}
 				open={imageModalOpen}
 				onClose={(): void => setImageModalOpen(false)}
+			/>
+			<SourceCodeModal
+				editor={editor}
+				open={sourceCodeModalOpen}
+				onClose={(): void => setSourceCodeModalOpen(false)}
 			/>
 		</>
 	);

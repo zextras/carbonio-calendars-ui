@@ -28,6 +28,8 @@ export type TestUser = ReturnType<typeof setupTest>['user'];
 type TestEditorProps = {
 	fontFamily?: string;
 	fontSize?: string;
+	showBlocks?: boolean;
+	onToggleShowBlocks?: () => void;
 };
 
 /**
@@ -36,7 +38,12 @@ type TestEditorProps = {
  * `RichTextEditorContainer` yet, so these tests build their own tiny editor
  * rather than depending on that (still-pending) integration.
  */
-const TestEditor = ({ fontFamily, fontSize }: TestEditorProps): React.JSX.Element => {
+const TestEditor = ({
+	fontFamily,
+	fontSize,
+	showBlocks = false,
+	onToggleShowBlocks = (): void => undefined
+}: TestEditorProps): React.JSX.Element => {
 	const initialConfig = useMemo(
 		() => ({
 			namespace: 'RichToolbarPluginTest',
@@ -50,7 +57,12 @@ const TestEditor = ({ fontFamily, fontSize }: TestEditorProps): React.JSX.Elemen
 
 	return (
 		<LexicalComposer initialConfig={initialConfig}>
-			<RichToolbarPlugin fontFamily={fontFamily} fontSize={fontSize} />
+			<RichToolbarPlugin
+				fontFamily={fontFamily}
+				fontSize={fontSize}
+				showBlocks={showBlocks}
+				onToggleShowBlocks={onToggleShowBlocks}
+			/>
 			<RichTextPlugin
 				contentEditable={<ContentEditable data-testid={EDITOR_TESTID} />}
 				placeholder={<div />}

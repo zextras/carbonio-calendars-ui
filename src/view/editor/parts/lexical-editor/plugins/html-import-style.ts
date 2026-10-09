@@ -14,7 +14,7 @@ import {
 const STYLE_PROPERTIES = ['color', 'backgroundColor', 'fontFamily', 'fontSize'] as const;
 
 function toCssPropertyName(property: string): string {
-	return property.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+	return property.replaceAll(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
 
 function extractInlineTextStyle(style: CSSStyleDeclaration): string {

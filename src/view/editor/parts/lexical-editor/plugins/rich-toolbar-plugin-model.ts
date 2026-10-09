@@ -27,7 +27,7 @@ export function $getSelectionBlockType(): BlockType {
 }
 
 export const normalizeCssValue = (value: string): string =>
-	value.toLowerCase().replace(/\s+/g, ' ').trim();
+	value.toLowerCase().replaceAll(/\s+/g, ' ').trim();
 
 export type TextFormatsState = {
 	bold: boolean;
