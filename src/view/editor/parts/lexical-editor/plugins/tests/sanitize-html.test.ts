@@ -32,6 +32,15 @@ describe('sanitizeEditorHtml', () => {
 		expect(result).toContain('font-family: Arial');
 	});
 
+	it('keeps the link attributes the link editor can set', () => {
+		const result = sanitizeEditorHtml(
+			'<a href="https://example.com" target="_blank" rel="noopener noreferrer" title="My title">x</a>'
+		);
+		expect(result).toContain('href="https://example.com"');
+		expect(result).toContain('target="_blank"');
+		expect(result).toContain('title="My title"');
+	});
+
 	it('keeps tables and images with allowed attributes', () => {
 		const html =
 			'<table><tr><td colspan="2">cell</td></tr></table><img src="https://example.com/a.png" alt="a" width="10" height="10">';

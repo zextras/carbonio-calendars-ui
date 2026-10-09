@@ -47,6 +47,7 @@ const ALLOWED_ATTR = [
 	'href',
 	'target',
 	'rel',
+	'title',
 	'src',
 	'alt',
 	'width',

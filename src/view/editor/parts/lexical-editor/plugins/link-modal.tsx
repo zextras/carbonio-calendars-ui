@@ -45,8 +45,11 @@ function $updateLinkNode(
 	node.setRel(attributes.rel ?? null);
 	node.setTitle(attributes.title ?? null);
 	if (text && text !== node.getTextContent()) {
-		node.getChildren().forEach((child) => child.remove());
+		// Append before removing: LinkNode can't be empty, so removing its last
+		// child first would make Lexical drop the link node itself.
+		const previousChildren = node.getChildren();
 		node.append($createTextNode(text));
+		previousChildren.forEach((child) => child.remove());
 	}
 }
 

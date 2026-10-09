@@ -6,6 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore, type EnhancedStore } from '@reduxjs/toolkit';
+import { act } from '@testing-library/react';
 
 import { setupTest, screen } from '@test-setup';
 import { reducers, type RootState } from 'store/redux';
@@ -36,6 +37,23 @@ describe('EditorComposer', () => {
 
 		expect(screen.getByTestId('editor-textArea')).toBeInTheDocument();
 		expect(screen.queryByTestId('editor-composer')).not.toBeInTheDocument();
+	});
+
+	it('writes the typed plain text to both richText and plainText after the debounce window', async () => {
+		const store = createStore({ isRichText: false, plainText: '', richText: '' });
+		const { user } = setupTest(<EditorComposer editorId={defaultEditor.id} />, { store });
+		const textArea = screen.getByTestId('editor-textArea');
+
+		await user.type(textArea, 'Meeting notes');
+		expect(textArea).toHaveValue('Meeting notes');
+
+		act(() => {
+			vi.advanceTimersByTime(500);
+		});
+
+		const editor = store.getState().editor.editors[defaultEditor.id];
+		expect(editor.plainText).toBe('Meeting notes');
+		expect(editor.richText).toBe('Meeting notes');
 	});
 
 	it('disables the plain textarea when disabled.composer is set', () => {

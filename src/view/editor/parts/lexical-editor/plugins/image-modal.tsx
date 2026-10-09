@@ -34,6 +34,13 @@ function inputToDimension(value: string): ImageDimension {
 	return Number.isFinite(parsed) && parsed > 0 ? parsed : 'inherit';
 }
 
+/** Width/height ratio of the given input values, or `null` if either is not a positive number. */
+function ratioOf(width: string, height: string): number | null {
+	const w = Number(width);
+	const h = Number(height);
+	return w > 0 && h > 0 ? w / h : null;
+}
+
 /**
  * Modal "Insert/Edit Image" dialog: it collects the image source URL, the
  * alternative description and the width/height. When a single image node is
@@ -42,8 +49,10 @@ function inputToDimension(value: string): ImageDimension {
  *
  * The width/height fields can be kept proportional through the aspect-ratio
  * lock: while locked, editing one dimension scales the other using the image's
- * natural ratio (read by loading the source), falling back to the current
- * width/height ratio.
+ * natural ratio (read by loading the source), falling back to the width/height
+ * ratio captured when the dialog opened or the lock was last engaged. The
+ * fallback is captured rather than recomputed per keystroke, otherwise clearing
+ * or partially typing a value would make the ratio drift.
  */
 export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JSX.Element => {
 	const [src, setSrc] = useState('');
@@ -53,6 +62,7 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 	const [locked, setLocked] = useState(true);
 	const editImageKey = useRef<string | null>(null);
 	const naturalRatio = useRef<number | null>(null);
+	const fallbackRatio = useRef<number | null>(null);
 
 	useEffect(() => {
 		if (!open) {
@@ -83,6 +93,7 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 			setAltText(nextAlt);
 			setWidth(nextWidth);
 			setHeight(nextHeight);
+			fallbackRatio.current = ratioOf(nextWidth, nextHeight);
 		});
 		setLocked(true);
 	}, [editor, open]);
@@ -109,14 +120,17 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 		};
 	}, [open, src]);
 
-	const currentRatio = useCallback((): number | null => {
-		if (naturalRatio.current && naturalRatio.current > 0) {
-			return naturalRatio.current;
+	const currentRatio = useCallback(
+		(): number | null => naturalRatio.current ?? fallbackRatio.current,
+		[]
+	);
+
+	const toggleLock = useCallback((): void => {
+		if (!locked) {
+			fallbackRatio.current = ratioOf(width, height);
 		}
-		const w = Number(width);
-		const h = Number(height);
-		return w > 0 && h > 0 ? w / h : null;
-	}, [width, height]);
+		setLocked(!locked);
+	}, [height, locked, width]);
 
 	const onWidthChange = useCallback(
 		(ev: React.ChangeEvent<HTMLInputElement>): void => {
@@ -244,7 +258,7 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 							minWidth="fit-content"
 							aria-label={lockLabel}
 							aria-pressed={locked}
-							onClick={(): void => setLocked((prev) => !prev)}
+							onClick={toggleLock}
 						/>
 					</Tooltip>
 				</Container>
