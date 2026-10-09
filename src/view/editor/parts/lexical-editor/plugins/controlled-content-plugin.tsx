@@ -1,0 +1,243 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { debounce } from 'lodash';
+import {
+	$getRoot,
+	$getSelection,
+	$insertNodes,
+	$isElementNode,
+	$isRangeSelection,
+	$isTextNode,
+	SKIP_DOM_SELECTION_TAG,
+	SKIP_SELECTION_FOCUS_TAG,
+	type EditorState,
+	type LexicalEditor,
+	type LexicalNode,
+	type UpdateTag
+} from 'lexical';
+
+import { sanitizeEditorHtml } from './sanitize-html';
+import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
+import { selectEditorRichText } from '../../../../../store/selectors/editor';
+import { editEditorText } from '../../../../../store/slices/editor-slice';
+
+type ControlledContentPluginProps = {
+	editorId: string;
+};
+
+/**
+ * Absolute character offset of the current caret from the document start, or
+ * `null` when there is no range selection (e.g. the initial content load,
+ * when the editor has never been focused). Used to preserve the caret across
+ * a full content replacement, whose node keys change and make the old
+ * selection un-reappliable.
+ */
+function $getCaretAbsoluteOffset(): number | null {
+	const selection = $getSelection();
+	if (!$isRangeSelection(selection)) {
+		return null;
+	}
+	const { anchor } = selection;
+	let node = anchor.getNode();
+	let offset = anchor.type === 'text' ? anchor.offset : 0;
+	if (anchor.type === 'element' && $isElementNode(node)) {
+		const children = node.getChildren();
+		for (let i = 0; i < anchor.offset && i < children.length; i += 1) {
+			offset += children[i].getTextContentSize();
+		}
+	}
+	// Add the text content of everything before `node` in document order.
+	while (node.getKey() !== 'root') {
+		let prev = node.getPreviousSibling();
+		while (prev) {
+			offset += prev.getTextContentSize();
+			prev = prev.getPreviousSibling();
+		}
+		const parent = node.getParent();
+		if (!parent) {
+			break;
+		}
+		node = parent;
+	}
+	return offset;
+}
+
+type CaretPlacement = { remaining: number; placed: boolean };
+
+/**
+ * Walks `node` in document order, consuming `state.remaining` characters and
+ * placing the caret once the target position is reached. Empty blocks can
+ * host the caret only after the whole offset has been consumed, so an offset
+ * landing in an empty description stays there instead of falling through to
+ * the next text node.
+ */
+function $placeCaretInNode(node: LexicalNode, state: CaretPlacement): void {
+	if (state.placed) {
+		return;
+	}
+	if ($isTextNode(node)) {
+		const size = node.getTextContentSize();
+		if (state.remaining <= size) {
+			node.select(state.remaining, state.remaining);
+			state.placed = true;
+		} else {
+			state.remaining -= size;
+		}
+		return;
+	}
+	if (!$isElementNode(node)) {
+		return;
+	}
+	const children = node.getChildren();
+	if (children.length > 0) {
+		children.forEach((child) => $placeCaretInNode(child, state));
+		return;
+	}
+	if (state.remaining <= 0) {
+		node.selectStart();
+		state.placed = true;
+	}
+}
+
+/**
+ * Places the caret `target` characters from the start of the freshly
+ * inserted tree, falling back to the end when the content is now shorter
+ * than `target`.
+ */
+function $selectAtAbsoluteOffset(target: number): void {
+	const root = $getRoot();
+	const state: CaretPlacement = { remaining: target, placed: false };
+	root.getChildren().forEach((child) => $placeCaretInNode(child, state));
+	if (!state.placed) {
+		root.selectEnd();
+	}
+}
+
+/**
+ * Keeps the Lexical editor in controlled mode against the Redux editor slice
+ * (`richText`/`plainText` on the `Editor` identified by `editorId`).
+ *
+ * - Down (store -> editor): whenever `richText` changes from an external
+ *   source (initial invite load, or a live update such as inserting a public
+ *   link mid-edit) the new HTML is sanitized and parsed into the editor with
+ *   the `history-merge` tag so it is not treated as a user edit, and never
+ *   steals DOM focus from sibling fields (title/location/attendees).
+ * - Up (editor -> store): on every user change the HTML/plain text is
+ *   written back to the store, debounced 500ms — matching the previous
+ *   TinyMCE-backed composer's debounce contract exactly, so dirty-tracking
+ *   behaves the same.
+ *
+ * An echo guard (`lastEmittedHtmlRef`/`currentHtmlRef`) prevents the round
+ * trip from looping or moving the caret on our own writes.
+ */
+export const ControlledContentPlugin = ({
+	editorId
+}: ControlledContentPluginProps): React.JSX.Element => {
+	const [editor] = useLexicalComposerContext();
+	const dispatch = useAppDispatch();
+	const storeRichText = useAppSelector(selectEditorRichText(editorId));
+
+	const lastEmittedHtmlRef = useRef<string>();
+	const currentHtmlRef = useRef<string>();
+
+	const debouncedDispatch = useMemo(
+		() =>
+			debounce(
+				(richText: string, plainText: string) => {
+					dispatch(editEditorText({ id: editorId, richText, plainText }));
+				},
+				500,
+				{ trailing: true, leading: false }
+			),
+		[dispatch, editorId]
+	);
+
+	// Up: editor -> store
+	const onChange = useCallback(
+		(editorState: EditorState, currentEditor: LexicalEditor): void => {
+			// Read through the editor (not the bare editor state) so that the
+			// active editor context is set: $generateHtmlFromNodes needs it.
+			editorState.read(
+				() => {
+					const plainText = $getRoot().getTextContent();
+					const richText = $generateHtmlFromNodes(currentEditor, null);
+
+					lastEmittedHtmlRef.current = richText;
+					currentHtmlRef.current = richText;
+
+					debouncedDispatch(richText, plainText);
+				},
+				{ editor: currentEditor }
+			);
+		},
+		[debouncedDispatch]
+	);
+
+	// Down: store -> editor
+	useEffect(() => {
+		const incoming = storeRichText ?? '';
+		if (incoming === lastEmittedHtmlRef.current || incoming === currentHtmlRef.current) {
+			return;
+		}
+
+		const html = sanitizeEditorHtml(incoming);
+
+		/*
+		 * Setting a selection below moves the browser focus onto the editor
+		 * root (Lexical's reconciler focuses the root whenever it applies a
+		 * selection and the root isn't already focused). The description
+		 * field never auto-focuses, so every down-sync must avoid stealing
+		 * focus from whichever sibling field (title/location/attendees) the
+		 * user may be in — e.g. inserting a public link mid-edit
+		 * (use-get-public-url.jsx) dispatches a brand-new richText while the
+		 * user could be typing elsewhere in the form.
+		 *
+		 * SKIP_SELECTION_FOCUS_TAG only changes anything when the root
+		 * doesn't already have focus, so it's safe on every sync.
+		 * SKIP_DOM_SELECTION_TAG is stronger (skips DOM selection syncing
+		 * entirely) and is scoped to the very first sync only, so later
+		 * syncs still restore the caret normally while the body has focus.
+		 */
+		const isInitialLoad = currentHtmlRef.current === undefined;
+		const tags: UpdateTag[] = ['history-merge', SKIP_SELECTION_FOCUS_TAG];
+		if (isInitialLoad) {
+			tags.push(SKIP_DOM_SELECTION_TAG);
+		}
+
+		editor.update(
+			() => {
+				// Capture the caret before wiping the content so it can be
+				// restored onto the newly inserted (different-keyed) nodes.
+				const previousOffset = $getCaretAbsoluteOffset();
+
+				const dom = new DOMParser().parseFromString(html, 'text/html');
+				const nodes = $generateNodesFromDOM(editor, dom);
+				const root = $getRoot();
+				root.clear();
+				root.select();
+				$insertNodes(nodes);
+
+				if (previousOffset == null) {
+					// Initial load / never focused: open at the top instead
+					// of leaving the caret at the end of a long description.
+					root.selectStart();
+				} else {
+					$selectAtAbsoluteOffset(previousOffset);
+				}
+			},
+			{ tag: tags }
+		);
+
+		currentHtmlRef.current = incoming;
+	}, [editor, storeRichText]);
+
+	return <OnChangePlugin onChange={onChange} ignoreSelectionChange />;
+};

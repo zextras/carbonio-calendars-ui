@@ -54,5 +54,5 @@ For deeper detail see:
 - `vi.mock('@zextras/carbonio-shell-ui')` and `@zextras/carbonio-ui-soap-lib` are auto-mocked for every test via `src/__test__/vitest-setup.tsx`; the real mocks live in `__mocks__/@zextras/`.
 - `useFakeTimers({ shouldAdvanceTime: true })` is active in every test `beforeEach`. When using `userEvent`, always set it up with `advanceTimers: vi.advanceTimersByTime` (the `setupTest` helper does this).
 - Every source file must start with the SPDX notice (`src/notice.template.ts`); ESLint `notice/notice` will fail otherwise.
-- `@types/webpack` is a runtime dep because `carbonio.webpack.js` customizes the SDK's webpack config (aliases `app-entrypoint`, copies text-composer assets, injects `BASE_PATH`).
+- `@types/webpack` is a runtime dep because `carbonio.webpack.js` customizes the SDK's webpack config (aliases `app-entrypoint`, injects `BASE_PATH`).
 - `date-fns` replaces `moment`/`moment-timezone` for all date operations. Use `src/commons/date-fns-react-widgets-localizer.ts` for react-widgets date pickers.
