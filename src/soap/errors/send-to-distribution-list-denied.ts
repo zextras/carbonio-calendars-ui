@@ -14,7 +14,11 @@ type FaultWithArguments = {
 };
 
 // The backend reports each address with its display name, e.g. "Devs <devs@test.com>"
-const emailOf = (address: string): string => /<([^>]+)>\s*$/.exec(address)?.[1] ?? address.trim();
+const emailOf = (address: string): string => {
+	const trimmed = address.trim();
+	const start = trimmed.lastIndexOf('<');
+	return start !== -1 && trimmed.endsWith('>') ? trimmed.slice(start + 1, -1) : trimmed;
+};
 
 /**
  * Returns the distribution lists the sender is not allowed to email, taken from the "invalid"

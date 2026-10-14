@@ -32,6 +32,10 @@ describe('getDeniedDistributionLists', () => {
 		expect(getDeniedDistributionLists(deniedFault([`"Devs, Team" <${DL_1}>`]))).toEqual([DL_1]);
 	});
 
+	it('keeps the address when the display name contains angle brackets', () => {
+		expect(getDeniedDistributionLists(deniedFault([`"Devs <team>" <${DL_1}> `]))).toEqual([DL_1]);
+	});
+
 	it('accepts a single argument not wrapped in an array', () => {
 		const fault = {
 			Detail: {
