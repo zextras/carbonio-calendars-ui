@@ -62,6 +62,7 @@ const normalizeEventResource = ({
 }): EventResource => ({
 	id: appt.id,
 	inviteId: inst?.inviteId ?? appt.inviteId,
+	seriesInviteId: appt.inviteId,
 	ridZ: inst?.ridZ,
 	name: inst?.name ?? appt.name,
 	calendar: getCalendarResource(calendar),

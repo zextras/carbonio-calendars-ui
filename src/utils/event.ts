@@ -5,9 +5,10 @@
  */
 import { format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
+import { omit } from 'lodash';
 
 import { DATE_FORMAT } from '../constants';
-import { EventType } from '../types/event';
+import { EventResource, EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 
 export type InstanceExceptionId = { d: string; tz: string | undefined };
@@ -39,3 +40,26 @@ export const getInstanceExceptionId = ({
 					: formatInTimeZone(new Date(start ?? 0), 'UTC', DATE_FORMAT.UTC),
 				tz
 			};
+
+/**
+ * An exception (e.g. the one the server creates on the organizer's side when an attendee
+ * replies to a single instance) is still an occurrence of its series, but the server returns
+ * it with recur=false, so isRecurrent alone is not enough to tell.
+ */
+export const isOccurrenceOfSeries = (
+	resource: Pick<EventResource, 'isRecurrent' | 'isException'>
+): boolean => resource.isRecurrent || !!resource.isException;
+
+/**
+ * The event to use for the actions on the whole series of an occurrence: for an exception the
+ * series invite differs from the instance one.
+ */
+export const toSeriesEvent = (event: EventType): EventType => ({
+	...event,
+	resource: {
+		...omit(event.resource, 'ridZ'),
+		inviteId: event.resource.seriesInviteId ?? event.resource.inviteId,
+		isRecurrent: true,
+		isException: false
+	}
+});
