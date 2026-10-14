@@ -27,6 +27,7 @@ import { FloatingLinkEditorPlugin } from './plugins/floating-link-editor-plugin'
 import { STYLE_PRESERVING_HTML_IMPORT } from './plugins/html-import-style';
 import { ImagePlugin } from './plugins/image-plugin';
 import { ListMarkdownShortcutPlugin } from './plugins/list-markdown-shortcut-plugin';
+import { ListTabIndentationPlugin } from './plugins/list-tab-indentation-plugin';
 import { ImageNode } from './plugins/nodes/image-node';
 import { RichToolbarPlugin } from './plugins/rich-toolbar-plugin';
 import { TableActionMenuPlugin } from './plugins/table-action-menu-plugin';
@@ -81,6 +82,12 @@ export const LexicalWrapper = styled.div<{
 
 	.cal-lexical-content-editable p:last-child {
 		margin-bottom: 0;
+	}
+
+	/* Lexical wraps a nested list in an extra <li>; hide its marker so a nested
+	   item doesn't show two bullets. */
+	.cal-lexical-nested-listitem {
+		list-style-type: none;
 	}
 
 	.cal-lexical-placeholder {
@@ -359,7 +366,8 @@ export const RichTextEditorContainer = ({
 				link: 'cal-lexical-link',
 				table: 'cal-lexical-table',
 				tableCellSelected: 'cal-lexical-table-cell-selected',
-				image: 'cal-lexical-image'
+				image: 'cal-lexical-image',
+				list: { nested: { listitem: 'cal-lexical-nested-listitem' } }
 			},
 			html: { import: STYLE_PRESERVING_HTML_IMPORT },
 			onError: (error: Error): void => {
@@ -397,6 +405,7 @@ export const RichTextEditorContainer = ({
 				<HistoryPlugin />
 				<ListPlugin />
 				<ListMarkdownShortcutPlugin />
+				<ListTabIndentationPlugin />
 				<LinkPlugin />
 				<AutoLinkPlugin />
 				<FloatingLinkEditorPlugin />
