@@ -11,7 +11,10 @@ import {
 	createAPIInterceptor,
 	createSoapAPIInterceptor
 } from '@test-utils/network/msw/create-api-interceptor';
-import { generateSoapErrorResponseBody } from 'test/generators/utils';
+import {
+	generateSendToDistributionListDeniedResponseBody,
+	generateSoapErrorResponseBody
+} from 'test/generators/utils';
 import { ForwardAppointmentRequest } from 'types/soap/soap-actions';
 import { useForwardAppointment } from 'view/modals/forward-appointment/use-forward-appointment';
 
@@ -94,6 +97,26 @@ describe('useForwardAppointment', () => {
 
 		expect(mockOnSuccess).not.toHaveBeenCalled();
 		expect(mockOnComplete).toHaveBeenCalledTimes(1);
+	});
+
+	it('should call onError with the fault and not onComplete when a distribution list is denied', async () => {
+		const deniedResponse = generateSendToDistributionListDeniedResponseBody({
+			invalid: ['devs@example.com']
+		});
+		createSoapAPIInterceptor('ForwardAppointment', deniedResponse);
+
+		const { result } = renderHook(() => useForwardAppointment(defaultParams));
+
+		await act(async () => {
+			await result.current(mockContacts, mockMessageParts);
+		});
+
+		await waitFor(() => {
+			expect(mockOnError).toHaveBeenCalledWith(deniedResponse.Fault);
+		});
+
+		expect(mockOnSuccess).not.toHaveBeenCalled();
+		expect(mockOnComplete).not.toHaveBeenCalled();
 	});
 
 	it('should call onError when request fails', async () => {
