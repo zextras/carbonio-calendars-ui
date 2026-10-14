@@ -22,10 +22,10 @@ const createAppointmentFn = ({
 	dispatch(createAppointment({ draft, editor })).then(({ payload }) => {
 		if (payload?.response) {
 			dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
-			return Promise.resolve({ response: payload.response, editor: payload.editor });
+			return { response: payload.response, editor: payload.editor };
 		}
 		// on failure the payload is the SOAP fault, so callers can tell which error occurred
-		return Promise.resolve(payload ?? {});
+		return payload ?? {};
 	});
 
 const modifyAppointmentFn = ({
