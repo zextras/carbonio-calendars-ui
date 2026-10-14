@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.40.2",
+	"version": "1.40.3",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"packageManager": "pnpm@10.32.1",
@@ -78,7 +78,7 @@
 		"sonarqube-scanner": "4.4.0",
 		"ts-node": "10.9.2",
 		"typescript": "5.9.3",
-		"vitest": "4.1.10",
+		"vitest": "4.1.11",
 		"@semantic-release/changelog": "6.0.3",
 		"@semantic-release/commit-analyzer": "13.0.1",
 		"@semantic-release/git": "10.0.1",

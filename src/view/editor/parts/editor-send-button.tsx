@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useEditorSendButtonState } from './editor-button-hooks';
 import { onSend } from 'commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from 'constants/index';
+import { getAppointmentSendErrorLabel } from 'soap/errors/send-to-distribution-list-denied';
 import { StoreProvider } from 'store/redux';
 import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import {
@@ -74,7 +75,8 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					true
 				);
 			} else
-				onSend({ isNew, editor, dispatch, notifyAttendees }).then(({ response }) => {
+				onSend({ isNew, editor, dispatch, notifyAttendees }).then((result) => {
+					const { response } = result;
 					if (editor?.panel && response) {
 						replaceHistory(`/${CALENDAR_ROUTE}`);
 					}
@@ -87,7 +89,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 						severity: response ? 'info' : 'warning',
 						hideButton: true,
 						label: !response
-							? t('label.error_try_again', 'Something went wrong, please try again')
+							? getAppointmentSendErrorLabel(t, result)
 							: t('message.appointment_invitation_sent', 'Appointment invitation sent'),
 						autoHideTimeout: 3000
 					});
