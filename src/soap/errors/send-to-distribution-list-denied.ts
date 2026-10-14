@@ -48,11 +48,14 @@ export const getAppointmentSendErrorLabel = (t: TFunction, fault: unknown): stri
 		});
 	}
 	if (deniedLists && deniedLists.length > 1) {
+		const pluralDefault =
+			"You can't invite {{count}} distribution lists. Remove them and try again.";
 		return t('label.error_distribution_lists_denied', {
 			count: deniedLists.length,
 			defaultValue_one: "You can't invite {{count}} distribution list. Remove it and try again.",
-			defaultValue_other:
-				"You can't invite {{count}} distribution lists. Remove them and try again."
+			defaultValue_other: pluralDefault,
+			// used when i18next cannot resolve plural rules for the locale, e.g. "en_US"
+			defaultValue: pluralDefault
 		});
 	}
 	return t('label.error_try_again', 'Something went wrong, please try again');

@@ -77,6 +77,16 @@ describe('getAppointmentSendErrorLabel', () => {
 		);
 	});
 
+	it('counts the denied distribution lists when the locale has no plural rules', async () => {
+		const i18n = getAppI18n();
+		// Carbonio uses locales like "en_US", which Intl.PluralRules rejects
+		await i18n.changeLanguage('en_US');
+
+		expect(getAppointmentSendErrorLabel(i18n.t, deniedFault([DL_1, DL_2]))).toBe(
+			"You can't invite 2 distribution lists. Remove them and try again."
+		);
+	});
+
 	it('returns the generic error for other faults', () => {
 		expect(getAppointmentSendErrorLabel(t, generateSoapErrorResponseBody().Fault)).toBe(
 			GENERIC_ERROR
