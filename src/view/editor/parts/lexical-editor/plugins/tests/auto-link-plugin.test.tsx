@@ -4,7 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { act, waitFor } from '@testing-library/react';
-import { $getRoot, $getSelection, $isRangeSelection, type LexicalEditor } from 'lexical';
+import {
+	$getRoot,
+	$getSelection,
+	$isRangeSelection,
+	type LexicalEditor,
+	type RangeSelection
+} from 'lexical';
 
 import {
 	createEditorStore,
@@ -37,47 +43,28 @@ async function selectStartOfEditor(editor: LexicalEditor): Promise<void> {
 	});
 }
 
-/**
- * AutoLinkPlugin's matcher re-evaluates on each text-content change, so (unlike
- * the markdown-shortcut heuristic) it doesn't strictly require one character
- * per update — but committing one character per update still mirrors a real
- * keystroke most faithfully, and `{Enter}` is committed as a dedicated
- * paragraph-split update.
- */
+async function commit(
+	editor: LexicalEditor,
+	apply: (selection: RangeSelection) => void
+): Promise<void> {
+	await act(async () => {
+		editor.update(() => {
+			const selection = $getSelection();
+			if ($isRangeSelection(selection)) {
+				apply(selection);
+			}
+		});
+		await Promise.resolve();
+	});
+}
+
 async function typeText(editor: LexicalEditor, text: string): Promise<void> {
-	const tokens = text.split(/(\{Enter\})/).filter((token) => token.length > 0);
-	// eslint-disable-next-line no-restricted-syntax
-	for (const token of tokens) {
-		if (token === '{Enter}') {
-			// eslint-disable-next-line no-await-in-loop
-			await act(async () => {
-				editor.update(() => {
-					const selection = $getSelection();
-					if ($isRangeSelection(selection)) {
-						selection.insertParagraph();
-					}
-				});
-				await Promise.resolve();
-			});
-			// eslint-disable-next-line no-continue
-			continue;
-		}
-		// eslint-disable-next-line no-await-in-loop
-		await token.split('').reduce(
-			(previous, char) =>
-				previous.then(() =>
-					act(async () => {
-						editor.update(() => {
-							const selection = $getSelection();
-							if ($isRangeSelection(selection)) {
-								selection.insertText(char);
-							}
-						});
-						await Promise.resolve();
-					})
-				),
-			Promise.resolve()
-		);
+	const [, candidate, separator] = /^(.*?)(\s|\{Enter\})?$/.exec(text) ?? [];
+	await commit(editor, (selection) => selection.insertText(candidate));
+	if (separator === '{Enter}') {
+		await commit(editor, (selection) => selection.insertParagraph());
+	} else if (separator) {
+		await commit(editor, (selection) => selection.insertText(separator));
 	}
 }
 
