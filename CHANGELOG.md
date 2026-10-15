@@ -1,3 +1,9 @@
+## <small>1.40.3 (2026-10-14)</small>
+
+* fix(CO-4421): show a specific error when an invite is denied by distribution list restrictions (#875 ([8338a53](https://github.com/zextras/carbonio-calendars-ui/commit/8338a53)), closes [#875](https://github.com/zextras/carbonio-calendars-ui/issues/875)
+* chore(deps): update dependency vitest to v4.1.11 [security] (#848) ([d3d5ad4](https://github.com/zextras/carbonio-calendars-ui/commit/d3d5ad4)), closes [#848](https://github.com/zextras/carbonio-calendars-ui/issues/848)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.15.0 (#874) ([c900f06](https://github.com/zextras/carbonio-calendars-ui/commit/c900f06)), closes [#874](https://github.com/zextras/carbonio-calendars-ui/issues/874)
+
 ## <small>1.40.2 (2026-10-05)</small>
 
 * fix(CO-4434): prevent share grant buttons from being clipped on Firefox (#872) ([adde263](https://github.com/zextras/carbonio-calendars-ui/commit/adde263)), closes [#872](https://github.com/zextras/carbonio-calendars-ui/issues/872)

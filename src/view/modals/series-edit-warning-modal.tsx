@@ -11,6 +11,7 @@ import { closeBoard, useBoard, t } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { getAppointmentSendErrorLabel } from '../../soap/errors/send-to-distribution-list-denied';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import {
 	selectEditorAttendees,
@@ -62,14 +63,15 @@ export const SeriesEditWarningModal = ({
 
 	const onConfirm = useCallback(() => {
 		isSending
-			? action({ isNew, editor, dispatch, notifyAttendees }).then(({ response }: any) => {
+			? action({ isNew, editor, dispatch, notifyAttendees }).then((result: any) => {
+					const { response } = result;
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
 						severity: response ? 'info' : 'warning',
 						hideButton: true,
 						label: !response
-							? t('label.error_try_again', 'Something went wrong, please try again')
+							? getAppointmentSendErrorLabel(t, result)
 							: t('message.appointment_invitation_sent', 'Appointment invitation sent'),
 						autoHideTimeout: 3000
 					});
@@ -81,14 +83,15 @@ export const SeriesEditWarningModal = ({
 					editor,
 					dispatch,
 					notifyAttendees
-				}).then(({ response }: any) => {
+				}).then((result: any) => {
+					const { response } = result;
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
 						severity: response ? 'info' : 'warning',
 						hideButton: true,
 						label: !response
-							? t('label.error_try_again', 'Something went wrong, please try again')
+							? getAppointmentSendErrorLabel(t, result)
 							: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
 						autoHideTimeout: 3000
 					});
