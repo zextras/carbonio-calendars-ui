@@ -1,3 +1,8 @@
+## <small>1.40.4 (2026-10-16)</small>
+
+* fix(CO-3625): treat exceptions of a recurring series as series occurrences (#876) ([374d188](https://github.com/zextras/carbonio-calendars-ui/commit/374d188)), closes [#876](https://github.com/zextras/carbonio-calendars-ui/issues/876)
+* chore(deps): update dependency zextras/jenkins-lib-common to v4.15.2 (#877) ([24b3963](https://github.com/zextras/carbonio-calendars-ui/commit/24b3963)), closes [#877](https://github.com/zextras/carbonio-calendars-ui/issues/877)
+
 ## <small>1.40.3 (2026-10-14)</small>
 
 * fix(CO-4421): show a specific error when an invite is denied by distribution list restrictions (#875 ([8338a53](https://github.com/zextras/carbonio-calendars-ui/commit/8338a53)), closes [#875](https://github.com/zextras/carbonio-calendars-ui/issues/875)
