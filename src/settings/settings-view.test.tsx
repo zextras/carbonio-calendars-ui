@@ -123,4 +123,19 @@ describe('Settings view', () => {
 			});
 		});
 	});
+
+	describe('Work week', () => {
+		it('should show the device timezone', () => {
+			vi.setSystemTime(new Date('2026-07-01T10:00:00Z'));
+			createSoapAPIInterceptor('GetRights', {});
+			setupTest(<CalendarSettingsView />);
+
+			expect(screen.getByText('label.timezone_device_msg')).toBeVisible();
+			expect(screen.getByText('label.your_device_timezone_msg')).toBeVisible();
+			expect(shell.t).toHaveBeenCalledWith(
+				'label.your_device_timezone_msg',
+				expect.objectContaining({ timezone: 'GMT +02:00 Europe/Berlin' })
+			);
+		});
+	});
 });
