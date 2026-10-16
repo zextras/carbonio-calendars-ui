@@ -92,13 +92,13 @@ export default function WorkWeekSettings({
 				/>
 				<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
 					<Text>
-						{t('label.timezone_device_msg', "The timings follow your device's timezone.")}
+						{t('label.timezone_device_msg', 'These times follow your device’s timezone.')}
 					</Text>
 					<Text>
 						<i>
 							{t('label.your_device_timezone_msg', {
 								timezone: deviceTimezone,
-								defaultValue: 'Your device’s timezone is: {{timezone}}'
+								defaultValue: 'Your device’s timezone: {{timezone}}'
 							})}
 						</i>
 					</Text>
