@@ -11,6 +11,8 @@ import { Mock } from 'vitest';
 
 import { useEventActions } from './use-event-actions';
 import { EVENT_ACTIONS } from '../constants/event-actions';
+import { getInvite } from '../store/actions/get-invite';
+import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import {
 	AppointmentActionsItems,
 	InstanceActionsItems,
@@ -23,6 +25,12 @@ vi.mock('@zextras/carbonio-design-system', async () => ({
 	...(await vi.importActual('@zextras/carbonio-design-system')),
 	useModal: vi.fn()
 }));
+
+vi.mock('../store/actions/get-invite', async (importOriginal) => {
+	const actual = await importOriginal<typeof import('../store/actions/get-invite')>();
+	// keep the thunk action creators (fulfilled, rejected...) used by the slices
+	return { getInvite: Object.assign(vi.fn(actual.getInvite), actual.getInvite) };
+});
 
 vi.mock('../store/redux/hooks', async () => ({
 	...(await vi.importActual('../store/redux/hooks')),
@@ -91,6 +99,48 @@ describe('useEventActions', () => {
 				expect(actionsResult[createCopyActionPosition].id).toBe('create_copy');
 				expect(actionsResult[createCopyActionPosition + 1].id).toBe('forward');
 			});
+		});
+	});
+
+	describe('exception of a recurring series', () => {
+		// the server sends recur=false on exceptions (e.g. the one created on the organizer's side
+		// when an attendee declines a single instance)
+		const event = {
+			resource: {
+				calendar: { id: '55' },
+				id: '100',
+				inviteId: '100-101',
+				seriesInviteId: '100-99',
+				ridZ: '20261012T080000Z',
+				isRecurrent: false,
+				isException: true,
+				iAmOrganizer: true
+			},
+			haveWriteAccess: true
+		} as EventType;
+
+		it('should return both the instance and the series menus', () => {
+			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
+
+			const actionsResult = result.current as SeriesActionsItems;
+			expect(actionsResult.map((action) => action.id)).toEqual([
+				EVENT_ACTIONS.INSTANCE,
+				EVENT_ACTIONS.SERIES
+			]);
+		});
+
+		it('series actions should load the series invite instead of the exception one', () => {
+			const exceptionInvite = { id: '100-101' };
+			(useAppSelector as Mock).mockReturnValue(exceptionInvite);
+			const dispatch = vi.fn(() => Promise.resolve({ payload: undefined }));
+			(useAppDispatch as Mock).mockReturnValue(dispatch);
+			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
+
+			const seriesActions = (result.current as SeriesActionsItems)[1].items;
+			const editSeries = getActionByName(seriesActions, EVENT_ACTIONS.EDIT);
+			editSeries?.onClick?.({} as KeyboardEvent);
+
+			expect(getInvite).toHaveBeenCalledWith({ inviteId: '100-99', ridZ: undefined });
 		});
 	});
 
