@@ -11,13 +11,13 @@ import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { format } from 'date-fns';
 
 import { MemoCustomEvent } from '../custom-event';
-import { TIME_FORMAT_PREF_NAME } from 'commons/time-format';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
+import defaultSettings from '@test-utils/settings/default-settings';
+import { TIME_FORMAT_PREF_NAME } from 'commons/time-format';
 import { reducers } from 'store/redux';
 import { useAppStatusStore } from 'store/zustand/store';
 import mockedData from 'test/generators';
-import defaultSettings from '@test-utils/settings/default-settings';
-import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 
 describe('custom-event', () => {
 	test('if the event is not part of a recurrence it wont have a recurrent icon', async () => {
@@ -40,6 +40,26 @@ describe('custom-event', () => {
 	});
 	test('if the event is part of a recurrence it will have a recurrent icon', async () => {
 		const event = mockedData.getEvent({ resource: { isRecurrent: true } });
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+		setupTest(<MemoCustomEvent event={event} title={event.title} />, {
+			store
+		});
+		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
+	});
+	test('if the event is an exception of a recurrence it will have a recurrent icon', async () => {
+		const event = mockedData.getEvent({
+			resource: { isRecurrent: false, isException: true }
+		});
 		const invite = mockedData.getInvite({ event });
 		const mockedInviteSlice = {
 			invites: {
