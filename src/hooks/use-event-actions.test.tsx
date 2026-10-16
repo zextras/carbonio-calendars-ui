@@ -79,6 +79,13 @@ describe('useEventActions', () => {
 				expect(actionsResult[createCopyActionPosition].id).toBe('create_copy');
 				expect(actionsResult[createCopyActionPosition + 1].id).toBe('forward');
 			});
+
+			it('should not include apply tag action', () => {
+				const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
+
+				const actionsResult = (result.current as SeriesActionsItems)[0].items;
+				expect(getActionByName(actionsResult, EVENT_ACTIONS.APPLY_TAG)).toBeUndefined();
+			});
 		});
 		describe('series menu', () => {
 			const event = { resource: { calendar: { id: '55' }, isRecurrent: true } } as EventType;
@@ -98,6 +105,13 @@ describe('useEventActions', () => {
 				const createCopyActionPosition = indexOf(actionIds, 'create_copy');
 				expect(actionsResult[createCopyActionPosition].id).toBe('create_copy');
 				expect(actionsResult[createCopyActionPosition + 1].id).toBe('forward');
+			});
+
+			it('should include apply tag action', () => {
+				const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
+
+				const actionsResult = (result.current as SeriesActionsItems)[1].items;
+				expect(getActionByName(actionsResult, EVENT_ACTIONS.APPLY_TAG)).toBeDefined();
 			});
 		});
 	});
@@ -141,6 +155,14 @@ describe('useEventActions', () => {
 			editSeries?.onClick?.({} as KeyboardEvent);
 
 			expect(getInvite).toHaveBeenCalledWith({ inviteId: '100-99', ridZ: undefined });
+		});
+
+		it('should allow tagging only from the series menu', () => {
+			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
+
+			const [instanceMenu, seriesMenu] = result.current as SeriesActionsItems;
+			expect(getActionByName(instanceMenu.items, EVENT_ACTIONS.APPLY_TAG)).toBeUndefined();
+			expect(getActionByName(seriesMenu.items, EVENT_ACTIONS.APPLY_TAG)).toBeDefined();
 		});
 	});
 
