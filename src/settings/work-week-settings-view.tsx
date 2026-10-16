@@ -98,7 +98,7 @@ export default function WorkWeekSettings({
 						<i>
 							{t('label.your_device_timezone_msg', {
 								timezone: deviceTimezone,
-								defaultValue: 'Your device timezone is: {{timezone}}'
+								defaultValue: 'Your device’s timezone is: {{timezone}}'
 							})}
 						</i>
 					</Text>
