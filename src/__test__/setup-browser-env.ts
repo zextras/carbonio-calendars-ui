@@ -21,6 +21,28 @@ Object.defineProperty(window, 'matchMedia', {
 	}))
 });
 
+// jsdom has no layout engine, so neither Range nor Element implement
+// getBoundingClientRect's geometry — but Lexical's reconciler calls
+// `selectionTarget.getBoundingClientRect()` on every DOM selection update
+// (not just from floating-UI positioning code), so without a stub any test
+// that types into a Lexical editor throws "getBoundingClientRect is not a
+// function" from inside Lexical's commit phase.
+if (typeof Range.prototype.getBoundingClientRect !== 'function') {
+	Range.prototype.getBoundingClientRect = function getBoundingClientRect(): DOMRect {
+		return {
+			bottom: 0,
+			height: 0,
+			left: 0,
+			right: 0,
+			top: 0,
+			width: 0,
+			x: 0,
+			y: 0,
+			toJSON: () => ({})
+		};
+	};
+}
+
 // Mock DOMMatrix for pdfjs-dist
 if (typeof globalThis.DOMMatrix === 'undefined') {
 	globalThis.DOMMatrix = class DOMMatrix {
