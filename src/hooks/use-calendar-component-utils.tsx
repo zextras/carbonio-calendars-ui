@@ -21,7 +21,7 @@ import { useParams } from 'react-router-dom';
 
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
-import { CALENDAR_BOARD_ID, CALENDAR_ROUTE } from '../constants';
+import { CALENDAR_BOARD_ICON, CALENDAR_BOARD_ID, CALENDAR_DIRTY_BOARD_ICON, CALENDAR_ROUTE } from '../constants';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeCalendarEditor } from '../normalizations/normalize-editor';
@@ -396,6 +396,8 @@ export const useCalendarComponentUtils = (): {
 				addBoard({
 					boardViewId: CALENDAR_BOARD_ID,
 					title: editor?.title ?? '',
+					icon: CALENDAR_BOARD_ICON,
+					dirtyIcon: CALENDAR_DIRTY_BOARD_ICON,
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					editor

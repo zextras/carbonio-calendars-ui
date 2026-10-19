@@ -8,11 +8,8 @@ import React, { ReactElement, useEffect, useRef } from 'react';
 import { useBoard, useBoardHooks } from '@zextras/carbonio-shell-ui';
 
 import { EditorPanel } from './editor-panel';
-import { StoreProvider } from '../../store/redux';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectEditorIsDirty } from '../../store/selectors/editor';
-import { useGlobalModal } from '../global-modal-manager';
-import { EditorCloseConfirmationModal } from '../modals/editor-close-confirmation-modal';
 
 const BoardEditPanel = (): ReactElement | null => {
 	const board = useBoard();
@@ -25,34 +22,11 @@ const BoardEditPanel = (): ReactElement | null => {
 	const boardTitleRef = useRef(board?.title ?? '');
 	boardTitleRef.current = board?.title ?? '';
 
-	const { updateBoard } = useBoardHooks();
-	const { createModal, closeModal } = useGlobalModal();
+	const { setContentStatus } = useBoardHooks();
 
 	useEffect(() => {
-		updateBoard({
-			onClose: () => {
-				if (isDirtyRef.current && editorId) {
-					const modalId = `editor-close-confirmation-${editorId}`;
-					createModal(
-						{
-							id: modalId,
-							children: (
-								<StoreProvider>
-									<EditorCloseConfirmationModal
-										editorId={editorId}
-										boardTitle={boardTitleRef.current}
-										onClose={(): void => closeModal(modalId)}
-									/>
-								</StoreProvider>
-							),
-							onClose: () => closeModal(modalId)
-						},
-						true
-					);
-				}
-			}
-		});
-	}, [closeModal, createModal, editorId, updateBoard]);
+		setContentStatus(isDirty ? 'dirty' : 'pristine');
+	}, [setContentStatus, isDirty]);
 
 	if (!editorId) {
 		return null;

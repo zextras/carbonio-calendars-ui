@@ -10,7 +10,7 @@ import { useFoldersMap, usePrefs } from '@zextras/carbonio-ui-commons';
 import { endOfMonth, endOfWeek, isWithinInterval, startOfMonth, startOfWeek } from 'date-fns';
 
 import { generateEditor, getEndTime } from '../commons/editor-generator';
-import { CALENDAR_BOARD_ID } from '../constants';
+import { CALENDAR_BOARD_ICON, CALENDAR_BOARD_ID, CALENDAR_DIRTY_BOARD_ICON } from '../constants';
 import { useAppDispatch } from '../store/redux/hooks';
 import {
 	useCalendarDate,
@@ -84,6 +84,8 @@ export const useOnClickNewButton = (): ((
 			addBoard({
 				boardViewId: CALENDAR_BOARD_ID,
 				title: editor.title ?? '',
+				icon: CALENDAR_BOARD_ICON,
+				dirtyIcon: CALENDAR_DIRTY_BOARD_ICON,
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				editor

@@ -16,7 +16,7 @@ import { generateEditor } from '../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../commons/get-appointment';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { CALENDAR_BOARD_ID } from '../../constants';
+import { CALENDAR_BOARD_ICON, CALENDAR_BOARD_ID, CALENDAR_DIRTY_BOARD_ICON } from '../../constants';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
@@ -80,6 +80,8 @@ export const ReminderModal = ({
 							addBoard({
 								boardViewId: CALENDAR_BOARD_ID,
 								title: editor?.title ?? '',
+								icon: CALENDAR_BOARD_ICON,
+								dirtyIcon: CALENDAR_DIRTY_BOARD_ICON,
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
 								editor
