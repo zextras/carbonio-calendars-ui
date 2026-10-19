@@ -158,7 +158,7 @@ export async function setupWithSelectedContent(
 export async function openSelect(user: TestUser, index: number): Promise<void> {
 	const chevron = screen.getAllByTestId('icon: ArrowDown')[index];
 	// eslint-disable-next-line testing-library/no-node-access
-	const trigger = chevron.closest('[tabindex="0"]');
+	const trigger = chevron.closest('[tabindex]');
 	if (trigger === null) {
 		throw new Error('select trigger not found');
 	}
