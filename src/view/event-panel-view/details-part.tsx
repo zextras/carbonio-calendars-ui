@@ -24,6 +24,7 @@ import { useNeverSentWarningLabel } from '../../hooks/use-never-sent-warning-lab
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
+import { isOccurrenceOfSeries } from '../../utils/event';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { FreeBusyStatusRowComponent } from '../event-summary-view/free-busy-status-row';
 import { LocationRow } from '../event-summary-view/location-row';
@@ -204,7 +205,7 @@ export const DetailsPart = ({
 							/>
 						)}
 						<Padding right={'small'} />
-						{event.resource.isRecurrent && (
+						{isOccurrenceOfSeries(event.resource) && (
 							<CustomIconInfo
 								tooltipLabel={t('label.recurrent', 'Recurrent appointment')}
 								color={'0'}

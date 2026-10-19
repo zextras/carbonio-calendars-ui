@@ -199,6 +199,15 @@ describe('SearchListItem', () => {
 		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
 	});
 
+	it('renders recurrent icon for an exception of a recurrence', () => {
+		const item = {
+			...baseItem,
+			resource: { ...baseItem.resource, isRecurrent: false, isException: true }
+		};
+		setupTest(<SearchListItem item={item} />, { store: mockStore });
+		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
+	});
+
 	it('should call openAppointment immediately when invite exists in store', async () => {
 		const event = mockedData.getEvent();
 		const invite = mockedData.getInvite({ event });
