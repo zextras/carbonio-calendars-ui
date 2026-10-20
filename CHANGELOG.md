@@ -1,3 +1,7 @@
+## <small>1.40.5 (2026-10-20)</small>
+
+* fix(CO-1878): allow tagging a recurring appointment only from the series menu (#879) ([878e744](https://github.com/zextras/carbonio-calendars-ui/commit/878e744)), closes [#879](https://github.com/zextras/carbonio-calendars-ui/issues/879)
+
 ## <small>1.40.4 (2026-10-16)</small>
 
 * fix(CO-3625): treat exceptions of a recurring series as series occurrences (#876) ([374d188](https://github.com/zextras/carbonio-calendars-ui/commit/374d188)), closes [#876](https://github.com/zextras/carbonio-calendars-ui/issues/876)
