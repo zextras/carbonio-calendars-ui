@@ -107,7 +107,6 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				forwardEventItem({ event, context }),
 				emailAttendeesEventItem({ event, invite, context }),
 				showOriginal({ event }),
-				applyTag({ event, context }),
 				answerToEventItem({ event, invite, context: contextOverride })
 			])
 		},
@@ -134,7 +133,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event: seriesEvent, invite: seriesInvite, context }),
 				forwardEventItem({ event, context }),
 				showOriginal({ event }),
-				applyTag({ event, context }),
+				// tags belong to the whole appointment: the server cannot tag a single occurrence
+				applyTag({ event: seriesEvent, context }),
 				answerToEventItem({ event: seriesEvent, invite: seriesInvite, context }),
 				getExportICSItem({ event: seriesEvent, context })
 			])
