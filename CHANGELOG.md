@@ -1,3 +1,9 @@
+## 1.41.0 (2026-10-22)
+
+* feat(CO-4382): migrate appointment editor from TinyMCE to Lexical (#873) ([28b24fd](https://github.com/zextras/carbonio-calendars-ui/commit/28b24fd)), closes [#873](https://github.com/zextras/carbonio-calendars-ui/issues/873)
+* docs: remove double hyphen from pnpm commands in README ([addbec9](https://github.com/zextras/carbonio-calendars-ui/commit/addbec9))
+* chore(deps): update dependency zextras/jenkins-lib-common to v5 ([e993ab2](https://github.com/zextras/carbonio-calendars-ui/commit/e993ab2))
+
 ## <small>1.40.5 (2026-10-20)</small>
 
 * fix(CO-1878): allow tagging a recurring appointment only from the series menu (#879) ([878e744](https://github.com/zextras/carbonio-calendars-ui/commit/878e744)), closes [#879](https://github.com/zextras/carbonio-calendars-ui/issues/879)
