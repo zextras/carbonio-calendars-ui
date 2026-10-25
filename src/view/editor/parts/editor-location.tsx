@@ -13,17 +13,29 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorDisabled,
+	selectEditorEnd,
 	selectEditorLocation,
+	selectEditorStart,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { editEditorLocation } from '../../../store/slices/editor-slice';
 
+interface EditorLocationExtensionOptions {
+	eventEndAt: Date | undefined;
+	eventLocation?: string;
+	eventStartAt: Date | undefined;
+	eventTitle?: string;
+	onConfirm: (newLocation: string) => void;
+}
+
 interface EditorLocationExtension extends Action {
-	execute: (options: { eventTitle?: string; onConfirm: (newLocation: string) => void }) => void;
+	execute: (options: EditorLocationExtensionOptions) => void;
 }
 
 export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
+	const eventEnd = useAppSelector(selectEditorEnd(editorId));
+	const eventStart = useAppSelector(selectEditorStart(editorId));
 	const eventTitle = useAppSelector(selectEditorTitle(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
@@ -73,13 +85,16 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 		}
 
 		extension.execute({
+			eventEndAt: eventEnd ? new Date(eventEnd) : undefined,
+			eventLocation: location,
+			eventStartAt: eventStart ? new Date(eventStart) : undefined,
 			eventTitle,
 			onConfirm: (newLocation: string) => {
 				setValue(newLocation);
 				debounceInput(newLocation);
 			}
 		});
-	}, [debounceInput, eventTitle, extension]);
+	}, [debounceInput, eventEnd, eventStart, eventTitle, extension, location]);
 
 	return !isNil(location) ? (
 		<Container
