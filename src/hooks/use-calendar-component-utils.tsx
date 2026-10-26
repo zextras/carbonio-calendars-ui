@@ -31,6 +31,7 @@ import {
 } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventType } from '../types/event';
+import { isEndInThePast } from '../utils/dates';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
 
@@ -294,7 +295,19 @@ export const useCalendarComponentUtils = (): {
 				return;
 			}
 
-			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
+			if (isEndInThePast({ end: new Date(end), allDay: isAllDay })) {
+				createSnackbar({
+					key: `appointment-moved-in-the-past`,
+					replace: true,
+					severity: 'warning',
+					hideButton: true,
+					label: t(
+						'message.snackbar.cannot_move_in_the_past',
+						'You cannot move an appointment to the past'
+					),
+					autoHideTimeout: 3000
+				});
+			} else if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
 				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
 					replace: true,

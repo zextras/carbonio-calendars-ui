@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { isAfter, isBefore, startOfDay } from 'date-fns';
 import { isNaN } from 'lodash';
 
 export const getTimezoneOffsetFromUtc = (timeZone?: string, date?: Date): number => {
@@ -83,3 +84,13 @@ export const parseDateToICS = (stringToParse: string): string => {
 	const isNotUTC = /GMT[+-]/.test(stringToParse);
 	return `${year}${month}${day}T${hour}${minute}${second}${isNotUTC ? '' : 'Z'}`;
 };
+
+export const isEndInThePast = ({
+	end,
+	allDay,
+	now = new Date()
+}: {
+	end: number | Date;
+	allDay?: boolean;
+	now?: Date;
+}): boolean => (allDay ? isBefore(startOfDay(end), startOfDay(now)) : !isAfter(end, now));

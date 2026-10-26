@@ -3,7 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { applyTimezoneToLocalDate, parseDateFromICS, parseDateToICS } from './dates';
+import { addHours, endOfDay, startOfDay, subDays, subHours } from 'date-fns';
+
+import {
+	applyTimezoneToLocalDate,
+	isEndInThePast,
+	parseDateFromICS,
+	parseDateToICS
+} from './dates';
 
 describe('dates utils', () => {
 	describe('parseDateFromICS', () => {
@@ -71,6 +78,31 @@ describe('dates utils', () => {
 			expect(convertedToTimezone.toString()).toEqual(
 				expect.stringContaining('Tue Dec 03 2024 14:03:42 GMT+0100')
 			);
+		});
+	});
+
+	describe('isEndInThePast', () => {
+		const now = new Date(2030, 5, 15, 12, 0, 0);
+
+		test('returns true when a timed event ends before now', () => {
+			expect(isEndInThePast({ end: subHours(now, 1), now })).toBe(true);
+		});
+
+		test('returns true when a timed event ends exactly now', () => {
+			expect(isEndInThePast({ end: now, now })).toBe(true);
+		});
+
+		test('returns false when a timed event ends after now', () => {
+			expect(isEndInThePast({ end: addHours(now, 1), now })).toBe(false);
+		});
+
+		test('returns false when an all-day event ends today', () => {
+			expect(isEndInThePast({ end: startOfDay(now), allDay: true, now })).toBe(false);
+			expect(isEndInThePast({ end: endOfDay(now), allDay: true, now })).toBe(false);
+		});
+
+		test('returns true when an all-day event ended yesterday', () => {
+			expect(isEndInThePast({ end: endOfDay(subDays(now, 1)), allDay: true, now })).toBe(true);
 		});
 	});
 });

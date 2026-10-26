@@ -6,13 +6,16 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Padding, Row } from '@zextras/carbonio-design-system';
+import { startOfDay } from 'date-fns';
 
 import EndDatePicker from '../../../commons/end-date-picker';
 import StartDatePicker from '../../../commons/start-date-picker';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
+	selectEditor,
 	selectEditorAllDay,
 	selectEditorEnd,
+	selectEditorIsNew,
 	selectEditorStart,
 	selectEditorTimezone
 } from '../../../store/selectors/editor';
@@ -24,6 +27,8 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
+	const isNew = useAppSelector(selectEditorIsNew(editorId));
+	const isProposeNewTime = !!useAppSelector(selectEditor(editorId))?.isProposeNewTime;
 	const diff = useMemo(() => (end ?? 0) - (start ?? 0), [end, start]);
 	const dispatch = useAppDispatch();
 
@@ -58,10 +63,24 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 		[end, timezone]
 	);
 
+	const minDate = useMemo(
+		() =>
+			!isNew || isProposeNewTime
+				? startOfDay(new Date(new Date().toLocaleString('en-US', { timeZone: timezone })))
+				: undefined,
+		[isNew, isProposeNewTime, timezone]
+	);
+
 	return startValue && endValue ? (
 		<>
 			<Row takeAvailableSpace>
-				<StartDatePicker start={startValue} onChange={onChange} diff={diff} allDay={allDay} />
+				<StartDatePicker
+					start={startValue}
+					onChange={onChange}
+					diff={diff}
+					allDay={allDay}
+					minDate={minDate}
+				/>
 			</Row>
 			<Padding left="small" />
 			<Row takeAvailableSpace>
@@ -71,6 +90,7 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 					onChange={onChange}
 					diff={diff}
 					allDay={allDay}
+					minDate={minDate}
 				/>
 			</Row>
 		</>

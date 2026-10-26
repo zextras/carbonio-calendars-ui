@@ -10,7 +10,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 
 import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
 
-export default function StartDatePicker({ start, allDay, diff, onChange }) {
+export default function StartDatePicker({ start, allDay, diff, onChange, minDate }) {
 	const onStartChange = useCallback(
 		(d) => {
 			const newStartValue = d.getTime();
@@ -47,6 +47,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			dateFormat={dateFormat}
 			locale={getDateFnsLocale()}
 			includeTime={!allDay}
+			minDate={minDate}
 		/>
 	);
 }

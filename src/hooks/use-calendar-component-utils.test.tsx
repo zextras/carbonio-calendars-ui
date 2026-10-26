@@ -8,7 +8,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, waitFor } from '@testing-library/react';
 import { addBoard } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { endOfDay, startOfDay } from 'date-fns';
+import { addDays, endOfDay, startOfDay, subDays, subHours } from 'date-fns';
 
 import { useCalendarComponentUtils } from './use-calendar-component-utils';
 import { onSave } from '../commons/editor-save-send-fns';
@@ -16,9 +16,9 @@ import { CALENDAR_ROUTE, PREFS_DEFAULTS } from '../constants';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { reducers } from '../store/redux';
 import { useAppStatusStore } from '../store/zustand/store';
-import type { Editor } from '../types/editor';
 import mockedData from '../test/generators';
 import { singleGetMsgResponse } from '../test/mocks/network/msw/handle-get-invite';
+import type { Editor } from '../types/editor';
 import { getSetupServer } from '@jest-setup';
 import { setupHook, screen } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
@@ -267,14 +267,48 @@ describe('useCalendarComponentUtils', () => {
 
 			act(() => {
 				result.current.onEventDropOrResize({
-					start: new Date('2024-01-16'),
-					end: new Date('2024-01-16'),
+					start: startOfDay(addDays(new Date(), 1)),
+					end: startOfDay(addDays(new Date(), 1)),
 					event,
 					isAllDay: true
 				});
 			});
 
 			await screen.findByText('You cannot drag a recurrent appointment in a all day slot');
+		});
+
+		it('shows a warning snackbar and does not save when the event is moved to the past', async () => {
+			const event = mockedData.getEvent({ allDay: false, resource: { isRecurrent: false } });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.onEventDropOrResize({
+					start: subHours(new Date(), 3),
+					end: subHours(new Date(), 2),
+					event,
+					isAllDay: false
+				});
+			});
+
+			await screen.findByText('You cannot move an appointment to the past');
+			expect(onSave).not.toHaveBeenCalled();
+		});
+
+		it('shows a warning snackbar when an all-day event is moved to a past day', async () => {
+			const event = mockedData.getEvent({ allDay: true, resource: { isRecurrent: false } });
+			const { result } = setupHook(useCalendarComponentUtils, { store: buildStore() });
+
+			act(() => {
+				result.current.onEventDropOrResize({
+					start: startOfDay(subDays(new Date(), 1)),
+					end: startOfDay(subDays(new Date(), 1)),
+					event,
+					isAllDay: true
+				});
+			});
+
+			await screen.findByText('You cannot move an appointment to the past');
+			expect(onSave).not.toHaveBeenCalled();
 		});
 
 		it('does nothing when the event position has not changed', () => {
