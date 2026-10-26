@@ -17,7 +17,7 @@ import CreateAppSettings from './creating-app-settings-view';
 import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
 import PermissionSettings from './permissions-settings-view';
-import { saveSettings } from './save-settings';
+import { PermissionChange, saveSettings } from './save-settings';
 import WorkWeekSettingsView from './work-week-settings-view';
 import {
 	GRANTEE_TYPES,
@@ -85,7 +85,14 @@ export default function CalendarSettingsView(): React.JSX.Element {
 	);
 
 	useEffect(() => {
-		if (freeBusy.length > 0 && defaultSelectedFreeBusyContacts?.current) {
+		if (freeBusy.length === 0) {
+			defaultSelectedFreeBusyContacts.current = [];
+			setAllowedFBUsers([]);
+			setActiveFreeBusyOptn(null);
+			setCurrentFreeBusy(null);
+			return;
+		}
+		if (defaultSelectedFreeBusyContacts?.current) {
 			const defaultFreeBusyValue =
 				filter(freeBusy, (fb) => fb.gt === GRANTEE_TYPES.USR).length > 0
 					? map(
@@ -126,7 +133,14 @@ export default function CalendarSettingsView(): React.JSX.Element {
 	}, [domain, freeBusy]);
 
 	useEffect(() => {
-		if (invite.length > 0 && defaultSelectedInviteContacts?.current) {
+		if (invite.length === 0) {
+			defaultSelectedInviteContacts.current = [];
+			setAllowedInviteUsers([]);
+			setActiveInviteOptn(null);
+			setCurrentInvite(null);
+			return undefined;
+		}
+		if (defaultSelectedInviteContacts?.current) {
 			const defaultInviteValue =
 				filter(invite, (fb) => fb.gt === GRANTEE_TYPES.USR).length > 0
 					? map(
@@ -169,13 +183,13 @@ export default function CalendarSettingsView(): React.JSX.Element {
 
 	const handlePermissionChange = useCallback(
 		(permission: PermissionsRightsOptions) => () => {
-			setActiveFreeBusyOptn(permission);
+			setActiveFreeBusyOptn((active) => (active === permission ? null : permission));
 		},
 		[]
 	);
 	const handleInviteRightChange = useCallback(
 		(permission: PermissionsRightsOptions) => () => {
-			setActiveInviteOptn(permission);
+			setActiveInviteOptn((active) => (active === permission ? null : permission));
 		},
 		[]
 	);
@@ -290,8 +304,9 @@ export default function CalendarSettingsView(): React.JSX.Element {
 				{ status: 'rejected' as const, reason: 'Invalid email' }
 			] as PromiseSettledResult<unknown>[]);
 		}
-		let newFreeBusy = null;
-		let newInviteRight = null;
+		// undefined: no change; null: revoke the current grants without granting anything new
+		let newFreeBusy: PermissionChange | null | undefined;
+		let newInviteRight: PermissionChange | null | undefined;
 
 		if (
 			currentFreeBusy !== activeFreeBusyOptn ||
@@ -299,6 +314,9 @@ export default function CalendarSettingsView(): React.JSX.Element {
 				!isEqual(defaultSelectedFreeBusyContacts.current, allowedFBUsers))
 		) {
 			switch (activeFreeBusyOptn) {
+				case null:
+					newFreeBusy = null;
+					break;
 				case USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL:
 					newFreeBusy = { gt: GRANTEE_TYPES.PUB, deny: false };
 					break;
@@ -325,6 +343,9 @@ export default function CalendarSettingsView(): React.JSX.Element {
 				!isEqual(defaultSelectedInviteContacts.current, allowedInviteUsers))
 		) {
 			switch (activeInviteOptn) {
+				case null:
+					newInviteRight = null;
+					break;
 				case USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL:
 					newInviteRight = { gt: GRANTEE_TYPES.PUB, deny: false };
 					break;
@@ -343,16 +364,11 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			}
 		}
 
-		const permissionsFreeBusy = newFreeBusy
-			? { freeBusy: { current: freeBusy, new: newFreeBusy } }
-			: {};
-		const permissionsInviteRight = newInviteRight
-			? {
-					inviteRight: { current: invite, new: newInviteRight }
-				}
-			: {};
-		const permissions =
-			newFreeBusy || newInviteRight ? { ...permissionsFreeBusy, ...permissionsInviteRight } : {};
+		const permissionsFreeBusy =
+			newFreeBusy !== undefined ? { freeBusy: { current: freeBusy, new: newFreeBusy } } : {};
+		const permissionsInviteRight =
+			newInviteRight !== undefined ? { inviteRight: { current: invite, new: newInviteRight } } : {};
+		const permissions = { ...permissionsFreeBusy, ...permissionsInviteRight };
 		const newValue = {
 			...(Object.keys(settingsToUpdate).length > 0 && { prefs: settingsToUpdate }),
 			permissions
@@ -387,7 +403,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			if (settingsToUpdate.zimbraPrefCalendarWorkingHours) {
 				setOpen(false);
 			}
-			if (newFreeBusy || newInviteRight) {
+			if (newFreeBusy !== undefined || newInviteRight !== undefined) {
 				// reload the saved ACEs so the "current" baseline (contacts, zids) matches the server
 				getUserRights();
 			}

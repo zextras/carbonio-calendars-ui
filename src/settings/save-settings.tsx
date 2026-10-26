@@ -12,22 +12,21 @@ import type { AccountACEInfo } from './settings-view';
 
 type PrefsMods = Record<string, unknown> & AccountSettingsPrefs;
 
+export type PermissionChange = {
+	gt: string;
+	deny?: boolean;
+	d?: Array<{ email: string }> | string;
+};
+
 type PermissionsMods = {
+	// `new: null` revokes the current grants without granting anything
 	freeBusy?: {
 		current: Array<AccountACEInfo>;
-		new: {
-			gt: string;
-			deny?: boolean;
-			d?: Array<{ email: string }> | string;
-		};
+		new: PermissionChange | null;
 	};
 	inviteRight?: {
 		current: Array<AccountACEInfo>;
-		new: {
-			gt: string;
-			deny?: boolean;
-			d?: Array<{ email: string }> | string;
-		};
+		new: PermissionChange | null;
 	};
 };
 
@@ -51,67 +50,51 @@ function getRequestForPrefs(prefs: Mods['prefs'] | undefined): string {
 		: '';
 }
 
+function getRevokeAces(right: 'viewFreeBusy' | 'invite', current: Array<AccountACEInfo>): string {
+	return map(current, (ace) => {
+		if (ace.gt === 'all' && ace.deny)
+			return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" deny="1"/>`;
+		if (ace.gt === 'usr' || (right === 'viewFreeBusy' && ace.gt === 'dom'))
+			return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" d="${ace.d}"/>`;
+		return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" />`;
+	}).join('');
+}
+
+function getGrantAces(right: 'viewFreeBusy' | 'invite', change: PermissionChange | null): string {
+	if (!change) return '';
+	if (change.gt === 'dom' && right === 'viewFreeBusy') {
+		return `<ace right="${right}" gt="${change.gt}" d="${change.d}"/>`;
+	}
+	if (change.gt === 'all' && change.deny) {
+		return `<ace right="${right}" gt="${change.gt}" deny="1"/>`;
+	}
+	if (change.gt === 'usr') {
+		return map(
+			change.d as Array<{ email: string }>,
+			(u) => `<ace right="${right}" gt="${change.gt}" d="${u.email}"/>`
+		).join('');
+	}
+	return `<ace right="${right}" gt="${change.gt}" />`;
+}
+
 function getPermissions(permissions: Mods['permissions'] | undefined): string {
-	return permissions
-		? `<RevokeRightsRequest xmlns="urn:zimbraAccount" requestId="0">${
-				permissions.freeBusy
-					? map(permissions.freeBusy.current, (right) => {
-							if (right.gt === 'dom')
-								return `<ace right="viewFreeBusy" gt="${right.gt}" zid="${right.zid}" d="${right.d}"/>`;
-							if (right.gt === 'all' && right.deny)
-								return `<ace right="viewFreeBusy" gt="${right.gt}" zid="${right.zid}" deny="1"/>`;
-							if (right.gt === 'usr')
-								return `<ace right="viewFreeBusy" gt="${right.gt}" zid="${right.zid}" d="${right.d}"/>`;
-							return `<ace right="viewFreeBusy" gt="${right.gt}" zid="${right.zid}" />`;
-						}).join('')
-					: ''
-			}${
-				permissions.inviteRight
-					? map(permissions.inviteRight.current, (right) => {
-							if (right.gt === 'all' && right.deny)
-								return `<ace right="invite" gt="${right.gt}" zid="${right.zid}" deny="1"/>`;
-							if (right.gt === 'usr')
-								return `<ace right="invite" gt="${right.gt}" zid="${right.zid}" d="${right.d}"/>`;
-							return `<ace right="invite" gt="${right.gt}" zid="${right.zid}" />`;
-						}).join('')
-					: ''
-			}</RevokeRightsRequest><GrantRightsRequest xmlns="urn:zimbraAccount" requestId="1">${
-				permissions.freeBusy
-					? `${((): string => {
-							if (permissions.freeBusy.new.gt === 'dom') {
-								return `<ace right="viewFreeBusy" gt="${permissions.freeBusy.new.gt}" d="${permissions.freeBusy.new.d}"/>`;
-							}
-							if (permissions.freeBusy.new.gt === 'all' && permissions.freeBusy.new.deny) {
-								return `<ace right="viewFreeBusy" gt="${permissions.freeBusy.new.gt}" deny="1"/>`;
-							}
-							if (permissions.freeBusy.new.gt === 'usr') {
-								return map(
-									permissions.freeBusy.new.d as Array<{ email: string }>,
-									(u) =>
-										`<ace right="viewFreeBusy" gt="${permissions?.freeBusy?.new?.gt}" d="${u.email}"/>`
-								).join('');
-							}
-							return `<ace right="viewFreeBusy" gt="${permissions.freeBusy.new.gt}" />`;
-						})()}`
-					: ''
-			}${
-				permissions.inviteRight
-					? `${((): string => {
-							if (permissions.inviteRight.new.gt === 'all' && permissions.inviteRight.new.deny) {
-								return `<ace right="invite" gt="${permissions.inviteRight.new.gt}" deny="1"/>`;
-							}
-							if (permissions.inviteRight.new.gt === 'usr') {
-								return map(
-									permissions.inviteRight.new.d as Array<{ email: string }>,
-									(u) =>
-										`<ace right="invite" gt="${permissions?.inviteRight?.new?.gt}" d="${u.email}"/>`
-								).join('');
-							}
-							return `<ace right="invite" gt="${permissions?.inviteRight.new.gt}" />`;
-						})()}`
-					: ''
-			}</GrantRightsRequest>`
-		: '';
+	if (!permissions) return '';
+	const { freeBusy, inviteRight } = permissions;
+	const revokes = `${freeBusy ? getRevokeAces('viewFreeBusy', freeBusy.current) : ''}${
+		inviteRight ? getRevokeAces('invite', inviteRight.current) : ''
+	}`;
+	const grants = `${freeBusy ? getGrantAces('viewFreeBusy', freeBusy.new) : ''}${
+		inviteRight ? getGrantAces('invite', inviteRight.new) : ''
+	}`;
+	return `${
+		revokes
+			? `<RevokeRightsRequest xmlns="urn:zimbraAccount" requestId="0">${revokes}</RevokeRightsRequest>`
+			: ''
+	}${
+		grants
+			? `<GrantRightsRequest xmlns="urn:zimbraAccount" requestId="1">${grants}</GrantRightsRequest>`
+			: ''
+	}`;
 }
 
 function getRequestForMods(mods: Mods): string {
