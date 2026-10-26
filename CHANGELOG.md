@@ -1,3 +1,11 @@
+## <small>1.41.1 (2026-10-26)</small>
+
+* fix(CO-3866): show the device timezone in work week settings (#880) ([b1feee4](https://github.com/zextras/carbonio-calendars-ui/commit/b1feee4)), closes [#880](https://github.com/zextras/carbonio-calendars-ui/issues/880)
+* chore(deps): update dependency @babel/runtime to v7.29.10 (#885) ([68b1785](https://github.com/zextras/carbonio-calendars-ui/commit/68b1785)), closes [#885](https://github.com/zextras/carbonio-calendars-ui/issues/885)
+* chore(deps): update dependency @types/lodash to v4.17.27 (#886) ([c9c8053](https://github.com/zextras/carbonio-calendars-ui/commit/c9c8053)), closes [#886](https://github.com/zextras/carbonio-calendars-ui/issues/886)
+* chore(deps): update dependency @types/react-redux to v7.1.35 (#887) ([d26cd21](https://github.com/zextras/carbonio-calendars-ui/commit/d26cd21)), closes [#887](https://github.com/zextras/carbonio-calendars-ui/issues/887)
+* chore(deps): update dependency zextras/jenkins-lib-common to v5.1.0 (#884) ([46b160d](https://github.com/zextras/carbonio-calendars-ui/commit/46b160d)), closes [#884](https://github.com/zextras/carbonio-calendars-ui/issues/884)
+
 ## 1.41.0 (2026-10-22)
 
 * feat(CO-4382): migrate appointment editor from TinyMCE to Lexical (#873) ([28b24fd](https://github.com/zextras/carbonio-calendars-ui/commit/28b24fd)), closes [#873](https://github.com/zextras/carbonio-calendars-ui/issues/873)
