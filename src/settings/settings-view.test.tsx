@@ -5,12 +5,15 @@
  */
 import React from 'react';
 
+import { waitFor } from '@testing-library/react';
 import * as shell from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '@zextras/carbonio-ui-commons';
+import { http, HttpResponse } from 'msw';
 import { Mock } from 'vitest';
 
 import { saveSettings } from './save-settings';
 import CalendarSettingsView from './settings-view';
+import { getSetupServer } from '@jest-setup';
 import { screen, setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
@@ -136,6 +139,129 @@ describe('Settings view', () => {
 				'label.your_device_timezone_msg',
 				expect.objectContaining({ timezone: 'GMT +02:00 Europe/Berlin' })
 			);
+		});
+	});
+
+	describe('Permissions', () => {
+		type FakeContact = {
+			id: string;
+			email: string;
+			type: 'CONTACT';
+			label: string;
+			value: unknown;
+		};
+		const FakeContactInput = ({
+			defaultValue,
+			onChange
+		}: {
+			defaultValue: FakeContact[];
+			onChange: (contacts: FakeContact[]) => void;
+		}): React.JSX.Element => (
+			<button
+				onClick={(): void =>
+					onChange([
+						...defaultValue,
+						{
+							id: 'new@demo.com',
+							email: 'new@demo.com',
+							type: 'CONTACT',
+							label: 'new@demo.com',
+							value: {
+								id: 'new@demo.com',
+								label: 'new@demo.com',
+								type: 'CONTACT',
+								email: 'new@demo.com'
+							}
+						}
+					])
+				}
+			>
+				add contact
+			</button>
+		);
+		const buildAce = (right: 'viewFreeBusy' | 'invite', d: string): Record<string, unknown> => ({
+			right,
+			gt: 'usr',
+			d,
+			zid: `zid-${d}`
+		});
+
+		/**
+		 * GetRights answers with `first` on the first call and with `afterSave` on every following one,
+		 * to simulate the server state before and after the permissions have been saved.
+		 */
+		const mockGetRights = (
+			first: Array<Record<string, unknown>>,
+			afterSave: Array<Record<string, unknown>>
+		): { getCalledTimes: () => number } => {
+			let calledTimes = 0;
+			getSetupServer().use(
+				http.post('/service/soap/GetRightsRequest', () => {
+					calledTimes += 1;
+					return HttpResponse.json({
+						Body: { GetRightsResponse: { ace: calledTimes === 1 ? first : afterSave } }
+					});
+				})
+			);
+			return { getCalledTimes: () => calledTimes };
+		};
+
+		beforeEach(() => {
+			(shell.useIntegratedComponent as Mock).mockImplementation(() => [FakeContactInput, true]);
+			(saveSettings as Mock).mockResolvedValue({});
+		});
+
+		it('should disable save after the free/busy contact list has been saved', async () => {
+			const oldContact = buildAce('viewFreeBusy', 'old@demo.com');
+			const newContact = buildAce('viewFreeBusy', 'new@demo.com');
+			const rights = mockGetRights([oldContact], [oldContact, newContact]);
+			const { user } = setupTest(<CalendarSettingsView />);
+
+			await user.click(await screen.findByRole('button', { name: /add contact/i }));
+			const saveButton = screen.getByRole('button', { name: /save/i });
+			expect(saveButton).toBeEnabled();
+
+			await user.click(saveButton);
+			expect(await screen.findByText(/label.settings_saved/i)).toBeVisible();
+
+			await waitFor(() => expect(rights.getCalledTimes()).toBe(2));
+			await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeDisabled());
+		});
+
+		it('should save the invite contact list when it changes and "allow following users" is already selected', async () => {
+			const oldContact = buildAce('invite', 'old@demo.com');
+			const newContact = buildAce('invite', 'new@demo.com');
+			mockGetRights([oldContact], [oldContact, newContact]);
+			const { user } = setupTest(<CalendarSettingsView />);
+
+			await user.click(await screen.findByRole('button', { name: /add contact/i }));
+			await user.click(screen.getByRole('button', { name: /save/i }));
+
+			expect(saveSettings).toHaveBeenCalledWith({
+				permissions: {
+					inviteRight: {
+						current: [expect.objectContaining({ d: 'old@demo.com' })],
+						new: {
+							gt: 'usr',
+							deny: false,
+							d: [{ email: 'old@demo.com' }, { email: 'new@demo.com' }]
+						}
+					}
+				}
+			});
+			await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeDisabled());
+		});
+
+		it('should restore the saved contact list and disable save when changes are discarded', async () => {
+			mockGetRights([buildAce('viewFreeBusy', 'old@demo.com')], []);
+			const { user } = setupTest(<CalendarSettingsView />);
+
+			await user.click(await screen.findByRole('button', { name: /add contact/i }));
+			expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
+
+			await user.click(screen.getByRole('button', { name: /cancel/i }));
+
+			await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeDisabled());
 		});
 	});
 });

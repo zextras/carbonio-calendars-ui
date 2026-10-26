@@ -68,13 +68,13 @@ export default function CalendarSettingsView(): React.JSX.Element {
 	const createSnackbar = useSnackbar();
 	useUpdateView();
 
-	const getUserRights = async (): Promise<void> => {
+	const getUserRights = useCallback(async (): Promise<void> => {
 		const response: GrantRightsResponse = await getRightsRequest();
 		setUserRights(response);
-	};
+	}, []);
 	useEffect(() => {
 		getUserRights();
-	}, []);
+	}, [getUserRights]);
 
 	const [freeBusy, invite] = useMemo(
 		() => [
@@ -203,6 +203,8 @@ export default function CalendarSettingsView(): React.JSX.Element {
 		setUpdatedSettings({});
 		setActiveFreeBusyOptn(currentFreeBusy);
 		setActiveInviteOptn(currentInvite);
+		setAllowedFBUsers(defaultSelectedFreeBusyContacts.current);
+		setAllowedInviteUsers(defaultSelectedInviteContacts.current);
 		callLoader();
 	}, [settings, currentFreeBusy, currentInvite]);
 
@@ -317,7 +319,11 @@ export default function CalendarSettingsView(): React.JSX.Element {
 					};
 			}
 		}
-		if (currentInvite !== activeInviteOptn) {
+		if (
+			currentInvite !== activeInviteOptn ||
+			(activeInviteOptn === USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING &&
+				!isEqual(defaultSelectedInviteContacts.current, allowedInviteUsers))
+		) {
 			switch (activeInviteOptn) {
 				case USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL:
 					newInviteRight = { gt: GRANTEE_TYPES.PUB, deny: false };
@@ -381,6 +387,10 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			if (settingsToUpdate.zimbraPrefCalendarWorkingHours) {
 				setOpen(false);
 			}
+			if (newFreeBusy || newInviteRight) {
+				// reload the saved ACEs so the "current" baseline (contacts, zids) matches the server
+				getUserRights();
+			}
 			return [{ status: 'fulfilled' as const, value: res }] as PromiseSettledResult<unknown>[];
 		});
 	}, [
@@ -395,7 +405,8 @@ export default function CalendarSettingsView(): React.JSX.Element {
 		isEmailNotValid,
 		allowedFBUsers,
 		allowedInviteUsers,
-		createSnackbar
+		createSnackbar,
+		getUserRights
 	]);
 
 	const calculateRegularSchedule = (data: {
