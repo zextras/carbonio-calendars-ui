@@ -1,3 +1,9 @@
+## <small>1.41.2 (2026-10-27)</small>
+
+* fix(CO-4528): update carbonio-ui-commons to 2.6.2 ([383182c](https://github.com/zextras/carbonio-calendars-ui/commit/383182c))
+* chore(deps): update semantic-release monorepo (#889) ([ad51432](https://github.com/zextras/carbonio-calendars-ui/commit/ad51432)), closes [#889](https://github.com/zextras/carbonio-calendars-ui/issues/889)
+* chore(deps): update testing library (#890) ([57c91ad](https://github.com/zextras/carbonio-calendars-ui/commit/57c91ad)), closes [#890](https://github.com/zextras/carbonio-calendars-ui/issues/890)
+
 ## <small>1.41.1 (2026-10-26)</small>
 
 * fix(CO-3866): show the device timezone in work week settings (#880) ([b1feee4](https://github.com/zextras/carbonio-calendars-ui/commit/b1feee4)), closes [#880](https://github.com/zextras/carbonio-calendars-ui/issues/880)
