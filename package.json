@@ -47,8 +47,8 @@
 		"@emotion/jest": "11.14.2",
 		"@faker-js/faker": "8.4.1",
 		"@testing-library/jest-dom": "6.9.1",
-		"@testing-library/react": "16.3.2",
-		"@testing-library/user-event": "14.6.1",
+		"@testing-library/react": "16.3.3",
+		"@testing-library/user-event": "14.6.8",
 		"@types/date-arithmetic": "4.1.4",
 		"@types/lodash": "4.17.27",
 		"@types/react": "18.3.31",
@@ -82,10 +82,10 @@
 		"@semantic-release/changelog": "6.0.3",
 		"@semantic-release/commit-analyzer": "13.0.1",
 		"@semantic-release/git": "10.0.1",
-		"@semantic-release/github": "12.0.9",
-		"@semantic-release/npm": "13.1.5",
+		"@semantic-release/github": "12.0.10",
+		"@semantic-release/npm": "13.2.0",
 		"@semantic-release/release-notes-generator": "14.1.1",
-		"semantic-release": "25.0.7"
+		"semantic-release": "25.0.9"
 	},
 	"dependencies": {
 		"@emotion/react": "11.14.0",
