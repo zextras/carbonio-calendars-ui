@@ -9,7 +9,6 @@ import {
 	Container,
 	Input,
 	Padding,
-	Select,
 	Text,
 	Checkbox,
 	useSnackbar
@@ -19,7 +18,7 @@ import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
-import { buildCalendarColorItems, CalendarColorLabelFactory } from 'commons/calendar-color-picker';
+import { CalendarColorPicker, resolveCalendarColorHex } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
 import { createCalendar } from 'store/actions/create-calendar';
 import { EventType } from 'types/event';
@@ -50,8 +49,9 @@ export const NewModal = ({
 	const [inputValue, setInputValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const colors = useMemo(() => buildCalendarColorItems(), []);
-	const [selectedColor, setSelectedColor] = useState(0);
+	const defaultColorHex = resolveCalendarColorHex(0, undefined);
+	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
 	const nameInputRef = useRef<HTMLInputElement>(null);
@@ -77,7 +77,7 @@ export const NewModal = ({
 			createCalendar({
 				parent: (root?.id as '1') ?? '1',
 				name: inputValue,
-				color: selectedColor,
+				rgb: selectedColorHex,
 				excludeFreeBusy: freeBusy
 			}).then((newCalendarRes) => {
 				if (!newCalendarRes.Fault) {
@@ -112,19 +112,25 @@ export const NewModal = ({
 			});
 		}
 		setInputValue('');
-		setSelectedColor(0);
+		setSelectedColorHex(defaultColorHex);
 		setFreeBusy(false);
 		onClose();
 	};
 
 	const onCloseModal = useCallback(() => {
+		if (isColorPickerOpen) {
+			return;
+		}
 		setInputValue('');
-		setSelectedColor(0);
+		setSelectedColorHex(defaultColorHex);
 		setFreeBusy(false);
 		onClose();
-	}, [onClose]);
+	}, [onClose, defaultColorHex, isColorPickerOpen]);
 
-	const placeholder = useMemo(() => `${t('label.type_name_here', 'Calendar name')}*`, [t]);
+	const placeholder = useMemo(
+		() => `${t('label.choose_representative_name', 'Choose a representative name')}*`,
+		[t]
+	);
 
 	useEffect(() => {
 		nameInputRef.current?.focus();
@@ -150,6 +156,7 @@ export const NewModal = ({
 					setInputValue(e.target.value);
 				}}
 				inputRef={nameInputRef}
+				disabled={isColorPickerOpen}
 			/>
 			{showDupWarning && (
 				<Padding all="small">
@@ -159,21 +166,16 @@ export const NewModal = ({
 				</Padding>
 			)}
 			<Padding vertical="medium" />
-			<Select
-				label={'Select color'}
-				onChange={(value): void => {
-					if (value) {
-						setSelectedColor(parseInt(value, 10));
-					}
-				}}
-				items={colors}
-				defaultSelection={colors[0]}
-				LabelFactory={CalendarColorLabelFactory}
+			<CalendarColorPicker
+				value={selectedColorHex}
+				onChange={setSelectedColorHex}
+				onOpenChange={setIsColorPickerOpen}
 			/>
 			<Padding vertical="medium" />
 			<Checkbox
 				value={freeBusy}
 				onClick={toggleFreeBusy}
+				disabled={isColorPickerOpen}
 				label={t(
 					'label.exclude_free_busy',
 					'Exclude this calendar when reporting the free/busy times'
@@ -183,12 +185,13 @@ export const NewModal = ({
 				onConfirm={onConfirm}
 				secondaryAction={toggleModal}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
+				secondaryDisabled={isColorPickerOpen}
 				label={
 					event && hasId(event.resource.calendar, FOLDERS.TRASH)
 						? t('folder.modal.restore.footer', 'Create and Restore')
 						: t('label.create', 'Create')
 				}
-				disabled={disabled}
+				disabled={disabled || isColorPickerOpen}
 			/>
 		</Container>
 	);

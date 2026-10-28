@@ -15,7 +15,7 @@ import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
 import { FOLDER_OPERATIONS } from 'constants/api';
 
-const CALENDAR_NAME_LABEL = 'Calendar name*';
+const CALENDAR_NAME_LABEL = 'Choose a representative name*';
 const SAVE_CHANGES_LABEL = 'Save Changes';
 const DEFAULT_FOLDER_ID = '123';
 const DEFAULT_FOLDER_URL = 'https://example.com/ext.ics';
@@ -78,7 +78,9 @@ describe('EditExternalCalendarModal', () => {
 		expect(screen.getByText('Edit calendar')).toBeVisible();
 		expect(screen.getByText(new RegExp(`URL: ${DEFAULT_FOLDER_URL}`, 'i'))).toBeVisible();
 		expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeVisible();
-		expect(screen.getByText('Select color')).toBeVisible();
+		expect(
+			screen.getByText('Choose a color to make this calendar easier to recognize')
+		).toBeVisible();
 	});
 
 	test('shows loading placeholder when folder does not exist', () => {
@@ -140,6 +142,20 @@ describe('EditExternalCalendarModal', () => {
 		await waitFor(() => {
 			expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
 		});
+	});
+
+	test('close button is a no-op while the color picker custom-color popover is open', async () => {
+		setupFolders();
+		const onClose = vi.fn();
+		const { user } = setupTest(
+			<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={onClose} />
+		);
+
+		await user.click(screen.getByTestId('icon: PlusCircleOutline'));
+		expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
+
+		await user.click(screen.getByTestId('icon: CloseOutline'));
+		expect(onClose).not.toHaveBeenCalled();
 	});
 
 	test('closes immediately without submitting when no values changed', async () => {

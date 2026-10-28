@@ -7,7 +7,6 @@
 import React from 'react';
 
 import { Tooltip, useTheme } from '@zextras/carbonio-design-system';
-import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { MinutesLine } from './minutes-line';
@@ -16,6 +15,7 @@ import {
 	getHumanReadableHours,
 	getLocalHoursMinutesFromEpoch
 } from '../utils';
+import { useLocale } from 'hooks/use-locale';
 
 export const EndMark = ({
 	endTimeEpochMillis
@@ -23,7 +23,7 @@ export const EndMark = ({
 	endTimeEpochMillis: number;
 }): React.JSX.Element => {
 	const theme = useTheme();
-	const locale = useUserSettings().prefs.zimbraPrefLocale ?? 'en-US';
+	const locale = useLocale();
 	const [t] = useTranslation();
 	const tooltipLabel = `${t('daily_planner.end_time', 'End time')}: ${getHumanReadableHours(endTimeEpochMillis, locale)}`;
 	const { hours, minutes } = getLocalHoursMinutesFromEpoch(endTimeEpochMillis);

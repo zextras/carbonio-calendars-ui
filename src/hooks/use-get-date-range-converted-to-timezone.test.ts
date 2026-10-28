@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useGetDateRangeConvertedToTimezone } from './use-get-date-range-converted-to-timezone';
+import {
+	getTimeStrings,
+	useGetDateRangeConvertedToTimezone
+} from './use-get-date-range-converted-to-timezone';
+import { TIME_FORMAT_PREF_NAME } from '../commons/time-format';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupHook } from '@test-setup';
 import defaultSettings from '@test-utils/settings/default-settings';
@@ -70,6 +74,20 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				// eslint-disable-next-line no-irregular-whitespace
 				expect(result.current).toMatch('Saturday, January 01, 2022, 2:00 – 2:30 AM');
 			});
+			test('minutes or hours range difference in 24-hour format', () => {
+				shell.useUserSettings.mockReturnValueOnce({
+					...defaultSettings,
+					prefs: { ...defaultSettings.prefs, [TIME_FORMAT_PREF_NAME]: '24h' }
+				});
+				const eventStart = setDate({ hours: 14 });
+				const eventEnd = setDate({ hours: 14, minutes: 30 });
+
+				const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+					initialProps: [eventStart, eventEnd]
+				});
+				// eslint-disable-next-line no-irregular-whitespace
+				expect(result.current).toMatch('Saturday, January 01, 2022, 14:00 – 14:30');
+			});
 			test('days or more (weeks, months, years) range difference', () => {
 				const eventStart = setDate({ days: 2 });
 				const eventEnd = setDate({ days: 3 });
@@ -77,10 +95,8 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
 					initialProps: [eventStart, eventEnd]
 				});
-				/* it is not depending on our code */
-				// eslint-disable-next-line no-irregular-whitespace
 				expect(result.current).toEqual(
-					'Sunday, January 02, 2022 at 1:00 AM – Monday, January 03, 2022 at 1:00 AM GMT+01:00 Europe/Berlin'
+					'Sunday, January 02, 2022, 1:00 AM – Monday, January 03, 2022, 1:00 AM GMT+01:00 Europe/Berlin'
 				);
 			});
 		});
@@ -117,7 +133,7 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				initialProps: [eventStart, eventEnd]
 			});
 			expect(result.current).toMatch(
-				'domenica 02 gennaio 2022 alle ore 01:00 – lunedì 03 gennaio 2022 alle ore 01:00 GMT+01:00 Europe/Berlin'
+				'domenica 02 gennaio 2022, 01:00 – lunedì 03 gennaio 2022, 01:00 GMT+01:00 Europe/Berlin'
 			);
 		});
 		it('will be localized following browser settings if user preferences are not available', () => {
@@ -138,8 +154,51 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				initialProps: [eventStart, eventEnd]
 			});
 			expect(result.current).toMatch(
-				'Sonntag, 02. Januar 2022 um 01:00 – Montag, 03. Januar 2022 um 01:00 GMT+01:00 Europe/Berlin'
+				'Sonntag, 02. Januar 2022, 01:00 – Montag, 03. Januar 2022, 01:00 GMT+01:00 Europe/Berlin'
 			);
 		});
+	});
+});
+
+describe('getTimeStrings', () => {
+	const eventStart = setDate({ days: 2, hours: 10, minutes: 30 });
+	const eventEnd = setDate({ days: 2, hours: 11, minutes: 0 });
+
+	it('will append the all day label to an all day event', () => {
+		const result = getTimeStrings({
+			start: eventStart,
+			end: eventEnd,
+			options: { allDay: true, allDayLabel: 'all day', locale: 'en', timeZone: 'Europe/Rome' }
+		});
+
+		expect(result).toContain('all day');
+	});
+
+	it('will render a range crossing midnight in the same style as one inside a single day', () => {
+		const options = { locale: 'en', timeZone: 'Europe/Rome' } as const;
+
+		const sameDay = getTimeStrings({
+			start: setDate({ days: 2, hours: 10, minutes: 30 }),
+			end: setDate({ days: 2, hours: 11, minutes: 0 }),
+			options
+		});
+		const acrossDays = getTimeStrings({
+			start: setDate({ days: 2, hours: 10, minutes: 30 }),
+			end: setDate({ days: 3, hours: 11, minutes: 0 }),
+			options
+		});
+
+		expect(acrossDays).not.toContain(' at ');
+		expect(sameDay).not.toContain(' at ');
+	});
+
+	it('will not append the all day label to an event which is not all day', () => {
+		const result = getTimeStrings({
+			start: eventStart,
+			end: eventEnd,
+			options: { allDay: false, allDayLabel: 'all day', locale: 'en', timeZone: 'Europe/Rome' }
+		});
+
+		expect(result).not.toContain('all day');
 	});
 });

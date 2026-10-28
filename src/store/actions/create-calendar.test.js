@@ -6,7 +6,7 @@
 import { createCalendar } from './create-calendar';
 
 test.skip('Create a new calendar', async () => {
-	const calendar = { name: 'ciccio', parent: '1', color: 3, excludeFreeBusy: true };
+	const calendar = { name: 'ciccio', parent: '1', rgb: '#66BB6A', excludeFreeBusy: true };
 	const res = await createCalendar(calendar);
 	const updatedState = res.payload[0];
 	expect(res.calendars).toEqual(updatedState);

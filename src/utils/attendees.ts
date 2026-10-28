@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isEqual, omit } from 'lodash';
+import { isEqual, omit, reduce } from 'lodash';
 
 import { Editor } from '../types/editor';
-import { EditorChipAttendees } from '../types/store/invite';
+import { EditorChipAttendees, InviteParticipant, InviteParticipants } from '../types/store/invite';
 
 export const EDITOR_METADATA_FIELDS: ReadonlyArray<keyof Editor> = [
 	'id',
@@ -67,3 +67,29 @@ export const haveNonAttendeeFieldsChanged = (
 	const excludedFields = [...EDITOR_METADATA_FIELDS, ...EDITOR_ATTENDEE_FIELDS];
 	return !isEqual(omit(current, excludedFields), omit(original, excludedFields));
 };
+
+/**
+ * Flattens the AC/NE/TE/DE response-status buckets returned by the invite normalizer
+ * into a single list, preserving each participant's own response status.
+ */
+export const flattenInviteParticipants = (
+	participants: InviteParticipants | undefined
+): InviteParticipant[] =>
+	reduce(
+		participants,
+		(acc, group) => (group ? [...acc, ...group] : acc),
+		[] as InviteParticipant[]
+	);
+
+/**
+ * Whether the logged-in user is one of the invite's participants, matched the same way
+ * the rest of the event displayer matches "me" against an attendee (see organizer-part.tsx).
+ */
+export const isLoggedInUserAmongParticipants = (
+	participants: InviteParticipant[],
+	loggedInUser: { name?: string; displayName?: string }
+): boolean =>
+	participants.some(
+		(participant) =>
+			participant?.email === loggedInUser.name || participant?.name === loggedInUser.displayName
+	);

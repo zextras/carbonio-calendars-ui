@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { format } from 'date-fns';
 
 import defaultSettings from '@test-utils/settings/default-settings';
@@ -105,8 +105,9 @@ describe('dateFnsLocalizer', () => {
 			const { dateFnsLocalizer, getDateFnsLocale } =
 				await import('../date-fns-react-widgets-localizer');
 			dateFnsLocalizer();
-			await flushPromises();
-			expect(format(new Date(2026, 3, 1), 'MMMM', { locale: getDateFnsLocale() })).toBe('aprile');
+			await waitFor(() => {
+				expect(format(new Date(2026, 3, 1), 'MMMM', { locale: getDateFnsLocale() })).toBe('aprile');
+			});
 		});
 
 		it('loads and returns the English locale when zimbraPrefLocale is "en"', async () => {
@@ -118,8 +119,9 @@ describe('dateFnsLocalizer', () => {
 			const { dateFnsLocalizer, getDateFnsLocale } =
 				await import('../date-fns-react-widgets-localizer');
 			dateFnsLocalizer();
-			await flushPromises();
-			expect(format(new Date(2026, 3, 1), 'MMMM', { locale: getDateFnsLocale() })).toBe('April');
+			await waitFor(() => {
+				expect(format(new Date(2026, 3, 1), 'MMMM', { locale: getDateFnsLocale() })).toBe('April');
+			});
 		});
 	});
 
@@ -137,8 +139,9 @@ describe('dateFnsLocalizer', () => {
 			const { dateFnsLocalizer, getDateFnsLocale } =
 				await import('../date-fns-react-widgets-localizer');
 			dateFnsLocalizer();
-			await flushPromises();
-			expect(getDateFnsLocale().code).toBe(expectedCode);
+			await waitFor(() => {
+				expect(getDateFnsLocale().code).toBe(expectedCode);
+			});
 		});
 
 		it('falls back to enUS for the unsupported locale "ky"', async () => {
@@ -168,8 +171,9 @@ describe('dateFnsLocalizer', () => {
 			const { dateFnsLocalizer, getDateFnsLocale } =
 				await import('../date-fns-react-widgets-localizer');
 			dateFnsLocalizer();
-			await flushPromises();
-			expect(getDateFnsLocale().code).toBe('it');
+			await waitFor(() => {
+				expect(getDateFnsLocale().code).toBe('it');
+			});
 
 			Object.defineProperty(navigator, 'language', {
 				value: originalLanguage,
@@ -196,8 +200,9 @@ describe('dateFnsLocalizer', () => {
 			const { result } = renderHook(() => useDateFnsLocale());
 			expect(result.current.code).toBe('en-US');
 			dateFnsLocalizer();
-			await act(flushPromises);
-			expect(result.current.code).toBe('it');
+			await waitFor(() => {
+				expect(result.current.code).toBe('it');
+			});
 		});
 
 		it('initialises with the already-loaded locale when the hook mounts after dateFnsLocalizer resolves', async () => {
@@ -206,11 +211,13 @@ describe('dateFnsLocalizer', () => {
 				...defaultSettings,
 				prefs: { ...defaultSettings.prefs, zimbraPrefLocale: 'it' }
 			});
-			const { dateFnsLocalizer, useDateFnsLocale } =
+			const { dateFnsLocalizer, useDateFnsLocale, getDateFnsLocale } =
 				await import('../date-fns-react-widgets-localizer');
 			// Locale loads before the hook is mounted
 			dateFnsLocalizer();
-			await flushPromises();
+			await waitFor(() => {
+				expect(getDateFnsLocale().code).toBe('it');
+			});
 			const { result } = renderHook(() => useDateFnsLocale());
 			expect(result.current.code).toBe('it');
 		});

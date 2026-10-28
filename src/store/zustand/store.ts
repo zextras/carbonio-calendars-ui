@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { addDays, differenceInDays, subDays } from 'date-fns';
+import { addDays, differenceInDays, endOfDay, startOfDay, subDays } from 'date-fns';
 import type { View } from 'react-big-calendar';
 import { create } from 'zustand';
 
@@ -21,6 +21,10 @@ export type AppState = {
 	summaryViewId: string | undefined;
 	range: CalendarRange;
 	setRange: SetRange;
+	// exact boundaries of the days currently visible on the calendar board,
+	// as opposed to `range`, which only ever grows and is used to fetch appointments
+	visibleRange: CalendarRange;
+	setVisibleRange: SetRange;
 	summaryViewRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
@@ -56,5 +60,12 @@ export const useAppStatusStore = create<AppState>((set) => ({
 			}
 			return { range };
 		});
+	},
+	visibleRange: {
+		start: startOfDay(new Date()).getTime(),
+		end: endOfDay(new Date()).getTime()
+	},
+	setVisibleRange: ({ start, end }: { start: number; end: number }): void => {
+		set({ visibleRange: { start, end } });
 	}
 }));

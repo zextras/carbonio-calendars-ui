@@ -22,30 +22,6 @@ vi.mock('@zextras/carbonio-ui-commons', async () => ({
 	useFolder: vi.fn()
 }));
 
-vi.mock('@zextras/carbonio-design-system', async () => {
-	const actual = await vi.importActual('@zextras/carbonio-design-system');
-
-	return {
-		...actual,
-		Select: ({ label, items, disabled, onChange }: any): JSX.Element => (
-			<label>
-				{label}
-				<select
-					data-testid="mock-color-select"
-					disabled={disabled}
-					onChange={(event): void => onChange?.(event.target.value)}
-				>
-					{items?.map((item: { value: string; label: string }) => (
-						<option key={item.value} value={item.value}>
-							{item.label}
-						</option>
-					))}
-				</select>
-			</label>
-		)
-	};
-});
-
 const FOLDER_ID = 'caldav-child-1';
 const FOLDER_NAME = 'Child Calendar';
 
@@ -99,7 +75,7 @@ describe('EditCaldavChildCalendarModal', () => {
 		const { user } = setupTest(
 			<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />
 		);
-		await user.selectOptions(screen.getByTestId('mock-color-select'), '1');
+		await user.click(screen.getByRole('button', { name: /blue/i }));
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
 
 		await waitFor(() => {
@@ -110,6 +86,23 @@ describe('EditCaldavChildCalendarModal', () => {
 			});
 		});
 		await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+	});
+
+	it('ignores the close button while the color picker custom-color popover is open', async () => {
+		const folder = buildFolder({ perm: 'rw' });
+		(useFolder as Mock).mockReturnValue(folder);
+		populateFoldersStore({ customFolders: [folder] });
+		const onClose = vi.fn();
+
+		const { user } = setupTest(
+			<EditCaldavChildCalendarModal folderId={FOLDER_ID} onClose={onClose} />
+		);
+
+		await user.click(screen.getByTestId('icon: PlusCircleOutline'));
+		expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
+
+		await user.click(screen.getByTestId('icon: CloseOutline'));
+		expect(onClose).not.toHaveBeenCalled();
 	});
 
 	it('submits both RENAME and COLOR actions when name and color change', async () => {
@@ -123,7 +116,7 @@ describe('EditCaldavChildCalendarModal', () => {
 		);
 		await user.clear(screen.getByDisplayValue(FOLDER_NAME));
 		await user.type(screen.getByRole('textbox'), 'Renamed Child Calendar');
-		await user.selectOptions(screen.getByTestId('mock-color-select'), '1');
+		await user.click(screen.getByRole('button', { name: /blue/i }));
 		await user.click(screen.getByRole('button', { name: 'Save Changes' }));
 
 		await waitFor(() => {

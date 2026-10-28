@@ -12,18 +12,19 @@ import {
 	Divider,
 	Row,
 	Checkbox,
+	useModal,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { addBoard, Board, getUserAccount } from '@zextras/carbonio-shell-ui';
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
 import { InstanceExceptionId } from '../../../utils/event';
-
 import { sendResponse } from '../invite-reply-actions';
 import { generateEditor } from 'commons/editor-generator';
+import { getDefaultCalendarFolder } from 'commons/utilities';
 import { PARTICIPATION_STATUS } from 'constants/api';
-import { CALENDAR_BOARD_ID } from 'constants/index';
+import { PREFS_DEFAULTS } from 'constants/index';
 import { getEquipments, getMeetingRooms, getVirtualRoom } from 'normalizations/normalize-editor';
 import {
 	InviteReplyVerb,
@@ -38,6 +39,7 @@ import type { InviteReplyPartArguments, InviteResponseArguments } from 'types/in
 import { Invite } from 'types/store/invite';
 import { parseDateFromICS } from 'utils/dates';
 import { CalendarSelector } from 'view/editor/parts/calendar-selector';
+import { openProposeNewTimeModal } from 'view/modals/propose-new-time-modal';
 
 const normalizeEditorFromMailMessage = (
 	messageData: InviteResponseArguments['mailMsg']
@@ -84,10 +86,17 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const dispatch = useAppDispatch();
 	const calendarFolders = useFoldersMap();
 	const { replaceHistory } = useHistoryNavigation();
+	const { createModal, closeModal } = useModal();
 
-	const [selectedCalendarId, setSelectedCalendarId] = useState<string>(message.parent);
+	const defaultCalendarFolder = useMemo(
+		() => getDefaultCalendarFolder(calendarFolders),
+		[calendarFolders]
+	);
+	const [selectedCalendarId, setSelectedCalendarId] = useState<string>(
+		() => defaultCalendarFolder?.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	);
 	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(
-		() => calendarFolders[message.parent] ?? null
+		() => defaultCalendarFolder ?? null
 	);
 
 	const exceptId = useMemo((): InstanceExceptionId | undefined => {
@@ -108,39 +117,13 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 				isProposeNewTime: true,
 				panel: false,
 				inviteId,
-				disabled: {
-					title: true,
-					location: true,
-					organizer: true,
-					virtualRoom: true,
-					richTextButton: true,
-					attachmentsButton: true,
-					saveButton: true,
-					attendees: true,
-					optionalAttendees: true,
-					freeBusy: true,
-					calendar: true,
-					private: true,
-					allDay: true,
-					reminder: true,
-					recurrence: true,
-					meetingRoom: true,
-					equipment: true,
-					timezone: true
-				},
 				...partialEditor
 			}
 		});
 		if (editor.id) {
-			addBoard({
-				boardViewId: CALENDAR_BOARD_ID,
-				title: editor?.title ?? '',
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				editor
-			} as unknown as Board);
+			openProposeNewTimeModal({ editorId: editor.id, createModal, closeModal });
 		}
-	}, [calendarFolders, dispatch, inviteId, message.invite]);
+	}, [calendarFolders, closeModal, createModal, dispatch, inviteId, message.invite]);
 
 	const onAction = useCallback(
 		(action: InviteReplyVerb): (() => void) =>
@@ -248,6 +231,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						}}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash
+						allowAllAccounts
 					/>
 				</Container>
 			</Row>

@@ -12,7 +12,7 @@ import { PREFS_DEFAULTS } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import * as ParticipantDisplayerAction from '../../../store/actions/participant-displayer-actions';
 import { reducers } from '../../../store/redux';
-import { DisplayedParticipant } from '../participants-displayer';
+import { DisplayedParticipant, ParticipantsDisplayer } from '../participants-displayer';
 import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
 import defaultSettings from '@test-utils/settings/default-settings';
@@ -72,5 +72,60 @@ describe('participants displayer', () => {
 		expect(screen.getByTestId('icon: EmailOutline')).toBeInTheDocument();
 		await user.click(screen.getByTestId('icon: EmailOutline'));
 		expect(sendEmailSpy).toHaveBeenCalledTimes(1);
+	});
+});
+
+describe('ParticipantsDisplayer - response status visibility (CO-4136)', () => {
+	const participants = {
+		AC: [{ name: 'Alice', email: 'alice@example.com', isOptional: false }],
+		NE: [{ name: 'Bob', email: 'bob@example.com', isOptional: false }]
+	};
+
+	beforeEach(() => {
+		shell.useUserAccount.mockReturnValue({
+			name: 'me@example.com',
+			displayName: 'Me'
+		} as never);
+	});
+
+	test('shows the full response-status breakdown to an organizer/editor', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		setupTest(<ParticipantsDisplayer participants={participants as never} canSeeResponseStatus />, {
+			store
+		});
+
+		expect(screen.getByText('PARTICIPANTS.AC_WITH_COUNT')).toBeVisible();
+		expect(screen.getByText('PARTICIPANTS.NE_WITH_COUNT')).toBeVisible();
+	});
+
+	test('hides the response-status breakdown from a non-editor attendee and shows a flat list instead', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		setupTest(
+			<ParticipantsDisplayer participants={participants as never} canSeeResponseStatus={false} />,
+			{ store }
+		);
+
+		expect(screen.queryByText('PARTICIPANTS.AC_WITH_COUNT')).not.toBeInTheDocument();
+		expect(screen.queryByText('PARTICIPANTS.NE_WITH_COUNT')).not.toBeInTheDocument();
+		expect(screen.getByText('PARTICIPANTS.ATTENDEES_WITH_COUNT')).toBeVisible();
+		expect(screen.getByText('alice@example.com')).toBeVisible();
+		expect(screen.getByText('bob@example.com')).toBeVisible();
+	});
+
+	test('never shows a self-response status line here, even when the logged-in user is among the attendees (it lives above the reply buttons instead)', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const participantsWithSelf = {
+			...participants,
+			NE: [...participants.NE, { name: 'Me', email: 'me@example.com', isOptional: false }]
+		};
+		setupTest(
+			<ParticipantsDisplayer
+				participants={participantsWithSelf as never}
+				canSeeResponseStatus={false}
+			/>,
+			{ store }
+		);
+
+		expect(screen.queryByTestId('SelfResponseStatusText')).not.toBeInTheDocument();
 	});
 });

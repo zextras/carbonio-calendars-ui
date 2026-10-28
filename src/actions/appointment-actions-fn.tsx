@@ -24,6 +24,7 @@ import { getInstanceExceptionId } from '../utils/event';
 import { buildMessagePart } from '../store/actions/move-appointment-to-trash';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
+import { openProposeNewTimeModal } from '../view/modals/propose-new-time-modal';
 import { MoveApptModal } from '../view/move/move-appt-view';
 import {
 	InviteReplyVerb,
@@ -38,6 +39,8 @@ type ActionsContextIgnored =
 	| 'closeModal'
 	| 'createSnackbar'
 	| 'tags';
+
+type ProposeNewTimeContextIgnored = 'createAndApplyTag' | 'createSnackbar' | 'tags';
 
 type Recipient = {
 	email: string;
@@ -365,7 +368,7 @@ export const proposeNewTimeFn =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, ActionsContextIgnored>;
+		context: Omit<ActionsContext, ProposeNewTimeContextIgnored>;
 	}): (() => void) =>
 	(): void => {
 		const proposeTime = (invite: Invite): void => {
@@ -379,37 +382,16 @@ export const proposeNewTimeFn =
 					isProposeNewTime: true,
 					attendees: [
 						{
-							email: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email ?? ''
+							email: event?.resource?.organizer?.email ?? ''
 						}
-					],
-					disabled: {
-						title: true,
-						location: true,
-						organizer: true,
-						virtualRoom: true,
-						richTextButton: true,
-						attachmentsButton: true,
-						saveButton: true,
-						attendees: true,
-						optionalAttendees: true,
-						freeBusy: true,
-						calendar: true,
-						private: true,
-						allDay: true,
-						reminder: true,
-						recurrence: true,
-						meetingRoom: true,
-						equipment: true,
-						timezone: true
-					}
+					]
 				}
 			});
-			addBoard({
-				boardViewId: CALENDAR_BOARD_ID,
-				title: editor?.title ?? '',
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				editor
+			context?.onClose?.();
+			openProposeNewTimeModal({
+				editorId: editor.id,
+				createModal: context.createModal,
+				closeModal: context.closeModal
 			});
 		};
 		withInvite(_invite, event, context.dispatch, proposeTime);

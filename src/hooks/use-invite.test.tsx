@@ -11,11 +11,13 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { AppointmentReminderItemDetails } from 'view/reminder/appointment-reminder-item-details';
 import { reducers } from 'store/redux';
+import { sendInviteResponse } from 'store/actions/send-invite-response';
 import mockedData from '../test/generators';
 import generateAppointment from '../test/generators/appointment';
 import generateInvite from '../test/generators/invite';
 import { generateReminderItem } from 'test/generators/reminder';
 import * as getMessageRequestModule from '../soap/get-message-request';
+import { InviteReplyVerb } from '../soap/send-invite-reply-request';
 import { setupTest, screen } from '@test-setup';
 
 /**
@@ -173,6 +175,82 @@ describe('useInvite — via AppointmentReminderItemDetails', () => {
 			});
 
 			vi.restoreAllMocks();
+		});
+	});
+
+	describe('when a fetched invite is later cleared from the store (e.g. after replying to it)', () => {
+		it('fetches the invite again for the same inviteId', async () => {
+			const inviteId = faker.string.uuid();
+			const { appointment, store } = makeStoreWithAppointment(inviteId);
+			const reminderItem = generateReminderItem({ inviteId, id: appointment.id });
+			const invite = generateInvite({ context: { id: inviteId } });
+
+			const spy = vi.spyOn(getMessageRequestModule, 'getMessageRequest').mockResolvedValue({
+				m: [
+					{
+						id: inviteId,
+						inv: [
+							{
+								type: 'appt',
+								comp: [
+									{
+										name: invite.name,
+										method: 'PUBLISH',
+										compNum: 0,
+										rsvp: false,
+										or: {
+											a: invite.organizer?.a ?? 'test@example.com',
+											d: invite.organizer?.d ?? 'Test'
+										},
+										s: [{ d: '20260101T090000', tz: 'UTC', u: Date.now() }],
+										e: [{ d: '20260101T100000', tz: 'UTC', u: Date.now() }]
+									}
+								]
+							}
+						]
+					}
+				]
+			} as any);
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			await waitFor(() => {
+				expect(
+					screen.queryAllByTestId(/appointment-reminder-item-details-shimmer-row-\d+/).length
+				).toBe(0);
+			});
+			expect(spy).toHaveBeenCalledTimes(1);
+
+			// Simulate what sendInviteResponseFulfilled does after a successful
+			// reply: drop the invite from the store to force a fresh copy.
+			act(() => {
+				store.dispatch(
+					sendInviteResponse.fulfilled(
+						{ apptId: appointment.id, calItemId: '1:1', invId: inviteId },
+						'request-id',
+						{ inviteId, action: InviteReplyVerb.ACCEPT, updateOrganizer: true }
+					)
+				);
+			});
+
+			// Shimmer comes back while the invite is missing from the store...
+			await waitFor(() => {
+				expect(
+					screen.getAllByTestId(/appointment-reminder-item-details-shimmer-row-\d+/).length
+				).toBeGreaterThan(0);
+			});
+
+			// ...and the invite is fetched again for the same id, not left stuck.
+			await waitFor(() => {
+				expect(spy).toHaveBeenCalledTimes(2);
+			});
+			await waitFor(() => {
+				expect(
+					screen.queryAllByTestId(/appointment-reminder-item-details-shimmer-row-\d+/).length
+				).toBe(0);
+			});
+
+			spy.mockRestore();
 		});
 	});
 

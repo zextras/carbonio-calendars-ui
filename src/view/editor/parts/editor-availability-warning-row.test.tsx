@@ -24,6 +24,15 @@ const dateFormat = 'yyyy/MM/dd';
 const attendeeId = faker.internet.email();
 
 describe('editor availability warning row', () => {
+	beforeEach(() => {
+		// Pin "now" to a fixed mid-morning instant: several tests below compute
+		// same-day windows via addHours(new Date(), 5)/endOfDay(new Date()),
+		// which break whenever the suite actually runs within ~5 hours of
+		// midnight (Europe/Berlin, the timezone pinned in vitest.config.ts) —
+		// the real wall-clock time still drives fake timers otherwise.
+		vi.setSystemTime(new Date(2026, 0, 15, 10, 0, 0));
+	});
+
 	describe('getIsBusyAtTimeOfTheEvent', () => {
 		test('When an attendee is not busy at the time of the event the function return false', () => {
 			const item = {

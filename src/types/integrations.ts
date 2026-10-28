@@ -27,4 +27,5 @@ export type ProposedTimeReplyArguments = {
 	to: Array<{ address: string; fullName: string; name: string; type: string }>;
 	/** the appointment already sits at the proposed time, so the proposal was accepted before */
 	proposalApplied?: boolean;
+	proposalDismissed?: boolean;
 };

@@ -56,6 +56,7 @@ export const EditorCalendarSelector = ({ editorId }: { editorId: string }): Reac
 							onCalendarChange={onChange}
 							disabled
 							excludeTrash
+							allowAllAccounts
 						/>
 					</Row>
 				</Tooltip>
@@ -66,6 +67,7 @@ export const EditorCalendarSelector = ({ editorId }: { editorId: string }): Reac
 						onCalendarChange={onChange}
 						disabled={disabled?.calendar}
 						excludeTrash
+						allowAllAccounts
 					/>
 				</Row>
 			)}

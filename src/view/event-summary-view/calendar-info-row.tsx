@@ -3,29 +3,51 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
-import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import { getColor, Icon, Padding, Row, Text, useTheme } from '@zextras/carbonio-design-system';
 import { useFolder } from '@zextras/carbonio-ui-commons';
-import { useParams } from 'react-router-dom';
 
+import { getCalendarOwnerEmail, getFolderIcon } from '../../commons/utilities';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
+import { EventType } from '../../types/event';
 
-export const CalendarInfoRow = (): ReactElement => {
-	const { calendarId } = useParams<{ calendarId: string }>();
-	const calendar = useFolder(calendarId ?? '');
+export type CalendarInfoRowProps = {
+	event: EventType;
+};
+
+export const CalendarInfoRow = ({ event }: CalendarInfoRowProps): ReactElement => {
+	const calendar = useFolder(event.resource.calendar.id);
 	const color = setCalendarColor({ color: calendar?.color, rgb: calendar?.rgb });
+	const icon = useMemo(
+		(): string => (calendar ? getFolderIcon({ item: calendar, checked: true }) : 'Calendar2'),
+		[calendar]
+	);
+	const theme = useTheme();
+	const ownerLabelColor = useMemo(() => getColor('gray1.active', theme), [theme]);
+	const ownerEmail = useMemo(
+		(): string | undefined => calendar && getCalendarOwnerEmail(calendar),
+		[calendar]
+	);
+
 	return (
 		<>
 			{calendar && (
 				<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						<Padding right="small">
-							<Icon icon="Calendar2" size="medium" color={color.color} />
+							<Icon icon={icon} size="medium" color={color.color} />
 						</Padding>
-						<Text overflow="break-word" size="medium" weight="bold">
-							{calendar?.name}
-						</Text>
+						<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
+							<Text overflow="break-word" size="small" weight="bold">
+								{calendar?.name}
+							</Text>
+							{ownerEmail && (
+								<Text overflow="break-word" size="extrasmall" style={{ color: ownerLabelColor }}>
+									{`(${ownerEmail})`}
+								</Text>
+							)}
+						</Row>
 					</Row>
 				</Row>
 			)}

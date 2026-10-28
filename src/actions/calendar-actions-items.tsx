@@ -158,7 +158,7 @@ export const editCalendarItem = ({
 }: {
 	createModal: CreateModalFn;
 	closeModal: CloseModalFn;
-	item: { id: string; absFolderPath?: string; f?: string; url?: string };
+	item: { id: string; absFolderPath?: string; f?: string; url?: string; perm?: string };
 }): CalendarActionsItems => {
 	const isCaldavChildFolder = isCaldavChild(item as any);
 	return {
@@ -169,7 +169,10 @@ export const editCalendarItem = ({
 			: t('action.edit_and_share_calendar', 'Edit and share calendar'),
 		tooltipLabel: noPermissionLabel,
 		onClick: editCalendar({ createModal, closeModal, item }),
-		disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+		disabled:
+			hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+			isTrashOrNestedInIt(item) ||
+			(item.perm ? !/w/.test(item.perm) : false)
 	};
 };
 

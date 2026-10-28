@@ -19,6 +19,7 @@ import { getSetupServer } from '@jest-setup';
 import { setupTest, screen } from '@test-setup';
 import { generateFolder } from '@test-utils/folders/folders-generator';
 import { populateFoldersStore } from '@test-utils/store/folders';
+import { getMocksContext } from '@test-utils/utils/mocks-context';
 
 describe('CalendarAccordionItem', () => {
 	const store = configureStore({ reducer: combineReducers(reducers) });
@@ -46,6 +47,40 @@ describe('CalendarAccordionItem', () => {
 			setupCalendarAccordionItem(item);
 
 			expect(screen.getByText('Calendar')).toBeVisible();
+		});
+
+		it('appends the owner to the label for a linked calendar', () => {
+			const customFolder = {
+				...generateFolder({
+					view: 'appointment',
+					id: '2345',
+					name: 'Calendar',
+					isLink: true,
+					checked: false
+				}),
+				owner: 'mattia.tisato@zextras.com'
+			};
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByText('Calendar')).toBeVisible();
+			expect(screen.getByText('(mattia.tisato@zextras.com)')).toBeVisible();
+		});
+
+		it('does not append an owner to the label for a non-linked calendar', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'CustomCalendar',
+				isLink: false,
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByText('CustomCalendar')).toBeVisible();
 		});
 	});
 
@@ -134,6 +169,73 @@ describe('CalendarAccordionItem', () => {
 
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedCalendar)).toBeVisible();
 		});
+
+		it('renders delegated calendar icon (checked) for calendars belonging to a shared account', () => {
+			const mockedContext = getMocksContext();
+			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: `${sharedAccountIdentity.identity.id}:999`,
+				name: 'DelegatedCalendarChecked',
+				checked: true
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.selectedDelegatedCalendar)).toBeVisible();
+		});
+
+		it('renders delegated calendar icon (unchecked) for calendars belonging to a shared account', () => {
+			const mockedContext = getMocksContext();
+			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: `${sharedAccountIdentity.identity.id}:998`,
+				name: 'DelegatedCalendarUnchecked',
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedDelegatedCalendar)).toBeVisible();
+		});
+
+		it('renders shared calendar icon for a calendar linked to my main account', () => {
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: '2345',
+				name: 'SharedWithMe',
+				isLink: true,
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedSharedCalendar)).toBeVisible();
+		});
+
+		it('renders shared calendar icon, not delegated calendar icon, for a linked calendar belonging to a shared account', () => {
+			const mockedContext = getMocksContext();
+			const sharedAccountIdentity = mockedContext.identities.sendAs[0];
+			const customFolder = generateFolder({
+				view: 'appointment',
+				id: `${sharedAccountIdentity.identity.id}:997`,
+				name: 'SharedWithSharedAccount',
+				isLink: true,
+				checked: false
+			});
+			const item = { id: customFolder.id };
+
+			setupCalendarAccordionItem(item, [customFolder]);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.unSelectedSharedCalendar)).toBeVisible();
+			expect(
+				screen.queryByTestId(TEST_SELECTORS.ICONS.unSelectedDelegatedCalendar)
+			).not.toBeInTheDocument();
+		});
 	});
 
 	describe('Interaction', () => {
@@ -195,19 +297,20 @@ describe('CalendarAccordionItem', () => {
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.shared)).toBeVisible();
 		});
 
-		it('shows linked status icon when calendar is a link', () => {
+		it('shows no status icon when calendar is a linked calendar (shared with me)', () => {
 			const customFolder = generateFolder({
 				view: 'appointment',
 				id: '2345',
 				name: 'CustomCalendar',
 				isLink: true,
+				acl: { grant: [] },
 				checked: false
 			});
 			const item = { id: customFolder.id };
 
 			setupCalendarAccordionItem(item, [customFolder]);
 
-			expect(screen.getByTestId(TEST_SELECTORS.ICONS.linked)).toBeVisible();
+			expect(screen.queryByTestId(TEST_SELECTORS.ICONS.shared)).not.toBeInTheDocument();
 		});
 	});
 

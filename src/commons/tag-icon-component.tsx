@@ -6,7 +6,12 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { ZIMBRA_STANDARD_COLORS, useSortedTagsArray, Tag } from '@zextras/carbonio-ui-commons';
+import {
+	ZIMBRA_STANDARD_COLORS,
+	resolveTagColorHex,
+	useSortedTagsArray,
+	Tag
+} from '@zextras/carbonio-ui-commons';
 import { includes, reduce } from 'lodash';
 
 import { EventType } from '../types/event';
@@ -47,8 +52,8 @@ export const TagIconComponent = ({ event }: { event: EventType }): React.JSX.Ele
 	const tagIcon = useMemo(() => (tagItems?.length > 1 ? 'TagsMoreOutline' : 'Tag'), [tagItems]);
 	const tagIconColor = useMemo(
 		() =>
-			tagItems?.length === 1 && tagItems?.[0]?.color
-				? ZIMBRA_STANDARD_COLORS[tagItems?.[0]?.color]?.hex
+			tagItems?.length === 1 && (tagItems?.[0]?.color || tagItems?.[0]?.rgb)
+				? resolveTagColorHex(tagItems[0])
 				: undefined,
 		[tagItems]
 	);
@@ -85,7 +90,7 @@ export const TagIconComponent = ({ event }: { event: EventType }): React.JSX.Ele
 									<Row takeAvailableSpace mainAlignment="space-between">
 										<Row mainAlignment="flex-end">
 											<Padding right="small">
-												<Icon icon="Tag" color={ZIMBRA_STANDARD_COLORS[v.color ?? 0].hex} />
+												<Icon icon="Tag" color={resolveTagColorHex(v)} />
 											</Padding>
 										</Row>
 										<Row takeAvailableSpace mainAlignment="flex-start">

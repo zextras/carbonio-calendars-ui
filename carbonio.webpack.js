@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 const { execSync } = require('child_process');
-const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -27,21 +26,6 @@ const customizeConfig = (config, pkg, options, mode) => {
 	newConfig.plugins.push(
 		new webpack.DefinePlugin({
 			BASE_PATH: JSON.stringify(baseStaticPath)
-		})
-	);
-
-	newConfig.plugins.push(
-		new CopyPlugin({
-			patterns: [
-				{
-					from: path.resolve(
-						__dirname,
-						'node_modules/@zextras/carbonio-ui-text-composer/dist/assets'
-					),
-					to: path.resolve(__dirname, 'dist/'),
-					noErrorOnMissing: true
-				}
-			]
 		})
 	);
 

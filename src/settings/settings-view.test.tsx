@@ -54,6 +54,8 @@ describe('Settings view', () => {
 			expect(screen.getByText(/label.general/i)).toBeVisible();
 			expect(screen.getByText(/label.default_view/i)).toBeVisible();
 			expect(screen.getByText(/label.start_week_on/i)).toBeVisible();
+			expect(screen.getByText(/label.time_format/i)).toBeVisible();
+			expect(screen.getByText(/settings.hint.time_format/i)).toBeVisible();
 			expect(screen.getByText(/label.default_appt_vsblty/i)).toBeVisible();
 			expect(screen.getByText(/label.auto_add_rcvd_app/i)).toBeVisible();
 			expect(screen.getByText(/label.show_declined_meetings/i)).toBeVisible();
@@ -119,6 +121,21 @@ describe('Settings view', () => {
 				expect(await screen.findByText(/label.settings_saved/i)).toBeVisible();
 				expect(screen.queryByText(/settings.invalid_email/i)).not.toBeInTheDocument();
 			});
+		});
+	});
+
+	describe('Work week', () => {
+		it('should show the device timezone', () => {
+			vi.setSystemTime(new Date('2026-07-01T10:00:00Z'));
+			createSoapAPIInterceptor('GetRights', {});
+			setupTest(<CalendarSettingsView />);
+
+			expect(screen.getByText('label.timezone_device_msg')).toBeVisible();
+			expect(screen.getByText('label.your_device_timezone_msg')).toBeVisible();
+			expect(shell.t).toHaveBeenCalledWith(
+				'label.your_device_timezone_msg',
+				expect.objectContaining({ timezone: 'GMT +02:00 Europe/Berlin' })
+			);
 		});
 	});
 });

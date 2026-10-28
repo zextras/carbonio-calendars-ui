@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Container,
@@ -21,10 +21,9 @@ import { AddExternalCalendarModalCaldavFlow } from './add-external-calendar-moda
 import { AddExternalCalendarModalIcsFlow } from './add-external-calendar-modal-ics-flow';
 import ModalFooter from '../../commons/modal-footer';
 import { triggerCaldavSync } from 'commons/caldav-sync';
-import { buildCalendarColorItems } from 'commons/calendar-color-picker';
+import { resolveCalendarColorHex } from 'commons/calendar-color-picker';
 import { ModalHeader } from 'commons/modal-header';
 import { FOLDER_OPERATIONS } from 'constants/api';
-import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 import {
 	createCalDavDataSourceRequest,
 	testCalDavDataSourceRequest
@@ -115,7 +114,11 @@ const getCaldavTestErrorMessage = (
 	};
 };
 
-export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
+export const AddExternalCalendarModal = ({
+	onClose: onCloseProp
+}: {
+	onClose: () => void;
+}): JSX.Element => {
 	const [t] = useTranslation();
 	const folders = useFoldersMap();
 	const createSnackbar = useSnackbar();
@@ -130,6 +133,14 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 	const [calendarType, setCalendarType] = useState<CalendarType>(CALENDAR_TYPE_ICS);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+
+	const onClose = useCallback(() => {
+		if (isColorPickerOpen) {
+			return;
+		}
+		onCloseProp();
+	}, [onCloseProp, isColorPickerOpen]);
 
 	const calendarUrlInputRef = useRef<HTMLInputElement>(null);
 	useEffect(() => {
@@ -139,7 +150,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 	// ── ICS state ──────────────────────────────────────────────────────────────
 	const [calendarUrl, setCalendarUrl] = useState('');
 	const [calendarName, setCalendarName] = useState('');
-	const [selectedColor, setSelectedColor] = useState('0');
+	const [selectedColorHex, setSelectedColorHex] = useState(resolveCalendarColorHex(0, undefined));
 
 	// ── CalDAV state ───────────────────────────────────────────────────────────
 	const [caldavHost, setCaldavHost] = useState('');
@@ -234,17 +245,6 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 	// keep urlError as an alias so the variable name used in the JSX below is unchanged
 	const urlError = calendarType === CALENDAR_TYPE_ICS ? icsUrlError : undefined;
 
-	const colorItems = useMemo(
-		() => buildCalendarColorItems((colorLabel) => t(`colors.${colorLabel}`)),
-		[t]
-	);
-
-	const selectedRgb = useMemo(
-		() =>
-			CALENDARS_STANDARD_COLORS[Number(selectedColor)]?.color ?? CALENDARS_STANDARD_COLORS[0].color,
-		[selectedColor]
-	);
-
 	// ── Submit ─────────────────────────────────────────────────────────────────
 	const onConfirm = (): void => {
 		if (isSubmitting) {
@@ -261,7 +261,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 				l: FOLDERS.USER_ROOT,
 				name: calendarName.trim(),
 				url: calendarUrl.trim(),
-				rgb: selectedRgb,
+				rgb: selectedColorHex,
 				f: '#',
 				view: 'appointment',
 				sync: 0 // do not sync at the same time – for big calendars the notify handling takes time
@@ -384,12 +384,11 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 
 	// ── ADD button disabled logic ──────────────────────────────────────────────
 	const isAddDisabled = useMemo(() => {
-		if (isSubmitting) return true;
+		if (isSubmitting || isColorPickerOpen) return true;
 		if (calendarType === CALENDAR_TYPE_ICS) {
 			return (
 				!calendarUrl.trim() ||
 				!calendarName.trim() ||
-				selectedColor === '' ||
 				!!urlError ||
 				isDuplicateCalendarName ||
 				isDuplicateCalendarUrl
@@ -408,7 +407,6 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		calendarType,
 		calendarUrl,
 		calendarName,
-		selectedColor,
 		urlError,
 		isDuplicateCalendarName,
 		isDuplicateCalendarUrl,
@@ -417,7 +415,8 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 		caldavPassword,
 		caldavHost,
 		caldavFolderName,
-		isDuplicateCaldavFolderName
+		isDuplicateCaldavFolderName,
+		isColorPickerOpen
 	]);
 
 	return (
@@ -437,7 +436,7 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 				label={t('label.type', 'Type')}
 				items={calendarTypeItems}
 				defaultSelection={calendarTypeItems[0]}
-				disabled={isSubmitting}
+				disabled={isSubmitting || isColorPickerOpen}
 				showCheckbox={false}
 				onChange={(value): void => {
 					if (value) {
@@ -455,13 +454,14 @@ export const AddExternalCalendarModal = ({ onClose }: { onClose: () => void }): 
 					urlDescription={urlDescription}
 					isDuplicateCalendarUrl={isDuplicateCalendarUrl}
 					isSubmitting={isSubmitting}
+					isColorPickerOpen={isColorPickerOpen}
 					calendarName={calendarName}
 					isDuplicateCalendarName={isDuplicateCalendarName}
-					selectedColor={selectedColor}
-					colorItems={colorItems}
+					selectedColorHex={selectedColorHex}
 					onCalendarUrlChange={setCalendarUrl}
 					onCalendarNameChange={setCalendarName}
-					onSelectedColorChange={setSelectedColor}
+					onSelectedColorHexChange={setSelectedColorHex}
+					onColorPickerOpenChange={setIsColorPickerOpen}
 					calendarUrlInputRef={calendarUrlInputRef}
 				/>
 			) : (

@@ -26,13 +26,20 @@ import { MemoCustomEvent } from './custom-event';
 import { CustomShowMoreButton } from './custom-show-more-button';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
+import { getCalendarOwnerEmail, getFolderIcon } from '../../commons/utilities';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
+import {
+	getCalendarEventEdgeToken,
+	getCalendarGridTimeToken,
+	useIs24HourFormat
+} from '../../commons/time-format';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
+import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
@@ -85,6 +92,7 @@ export default function CalendarComponent(): React.JSX.Element {
 	const calendars = useCheckedFolders();
 	const theme = useTheme();
 	const prefs = usePrefs();
+	const is24h = useIs24HourFormat();
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const anchorElement = useSummaryViewRef();
@@ -108,7 +116,16 @@ export default function CalendarComponent(): React.JSX.Element {
 			}),
 		[customLocale]
 	);
-	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
+	const defaultCalendarFolder = useMemo(
+		() => find(calendars, ['id', prefs.zimbraPrefDefaultCalendarId]),
+		[calendars, prefs.zimbraPrefDefaultCalendarId]
+	);
+	const defaultSlotSelectionColor = useMemo(
+		() =>
+			defaultCalendarFolder &&
+			setCalendarColor({ rgb: defaultCalendarFolder.rgb, color: defaultCalendarFolder.color }),
+		[defaultCalendarFolder]
+	);
 	const { action } = useParams();
 
 	const [isSplitLayoutEnabled] = useSplitLayoutPrefs();
@@ -196,7 +213,7 @@ export default function CalendarComponent(): React.JSX.Element {
 	}, [calendarView, isSplitLayoutEnabled]);
 
 	const dayPropGetter = useCallback(
-		(newDate: Date): { style: React.CSSProperties } => {
+		(newDate: Date, resourceId?: number | string): { style: React.CSSProperties } => {
 			const isToday =
 				newDate.getDate() === new Date().getDate() &&
 				newDate.getMonth() === new Date().getMonth() &&
@@ -208,16 +225,42 @@ export default function CalendarComponent(): React.JSX.Element {
 				backgroundColor = isToday ? theme.palette.highlight.regular : theme.palette.gray6.regular;
 			}
 
+			// the drag-selection preview takes the color of the resource's own calendar
+			// when dragging in a specific split-day-view column, the default calendar otherwise.
+			// react-big-calendar's all-day row never forwards a resourceId here even in split
+			// view (unlike the main time grid), so that ambiguous case is left unset instead of
+			// defaulting: it then inherits the correct per-column value set by
+			// CalendarResourceHeader on the shared `.rbc-time-header-content` ancestor.
+			const isSplitDayView = calendarView === 'day' && isSplitLayoutEnabled;
+			const resourceFolder = resourceId ? find(calendars, ['id', String(resourceId)]) : undefined;
+			let slotSelectionColor = defaultSlotSelectionColor;
+			if (resourceFolder) {
+				slotSelectionColor = setCalendarColor({
+					rgb: resourceFolder.rgb,
+					color: resourceFolder.color
+				});
+			} else if (isSplitDayView) {
+				slotSelectionColor = undefined;
+			}
+
 			return {
 				style: {
 					minWidth: columnMinWidth,
 					backgroundColor,
-					borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
-				}
+					borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`,
+					...(slotSelectionColor && {
+						'--rbc-slot-selection-border': slotSelectionColor.color,
+						'--rbc-slot-selection-background': slotSelectionColor.background
+					})
+				} as React.CSSProperties
 			};
 		},
 		[
+			calendars,
+			calendarView,
 			columnMinWidth,
+			defaultSlotSelectionColor,
+			isSplitLayoutEnabled,
 			slotDayBorderColor,
 			theme.palette.gray3.regular,
 			theme.palette.gray6.regular,
@@ -301,10 +344,11 @@ export default function CalendarComponent(): React.JSX.Element {
 			const resCalendar = find(calendars, ['id', calendarSlot.resourceId]);
 			const absFolderPath = resCalendar?.absFolderPath;
 			const isTrashOrSubItem = isTrashOrNestedInIt({ id: calendarSlot.resourceId, absFolderPath });
-			const isDefaultCalendar = resCalendar?.id === prefs.zimbraPrefDefaultCalendarId;
-			return !summaryViewOpen && !action && !isTrashOrSubItem && isDefaultCalendar;
+			const hasWriteAccess =
+				!!resCalendar && (resCalendar.perm ? /w/.test(resCalendar.perm) : true);
+			return !summaryViewOpen && !action && !isTrashOrSubItem && hasWriteAccess;
 		},
-		[action, calendars, prefs.zimbraPrefDefaultCalendarId, summaryViewOpen]
+		[action, calendars, summaryViewOpen]
 	);
 
 	const scrollToTime = useMemo<Date>(
@@ -317,7 +361,10 @@ export default function CalendarComponent(): React.JSX.Element {
 			return map(calendars, (calendar) => ({
 				id: calendar.id,
 				title: calendar.name,
-				color: calendar.color
+				color: calendar.color,
+				rgb: calendar.rgb,
+				icon: getFolderIcon({ item: calendar, checked: true }),
+				owner: getCalendarOwnerEmail(calendar)
 			}));
 		}
 		return undefined;
@@ -327,7 +374,6 @@ export default function CalendarComponent(): React.JSX.Element {
 		<>
 			{!isEmpty(calendars) && <CalendarSyncWithRange />}
 			<CalendarStyle
-				$primaryCalendar={primaryCalendar as { color?: { background?: string; color?: string } }}
 				$summaryViewOpen={summaryViewOpen}
 				$action={action}
 				$headerMinWidth={columnMinWidth}
@@ -377,7 +423,16 @@ export default function CalendarComponent(): React.JSX.Element {
 				onEventDrop={onEventDropOrResize}
 				allDayMaxRows={3}
 				onEventResize={onEventDropOrResize}
-				formats={{ eventTimeRangeFormat: (): string => '' }}
+				formats={{
+					eventTimeRangeFormat: (): string => '',
+					timeGutterFormat: getCalendarGridTimeToken(is24h),
+					selectRangeFormat: ({ start, end }, culture, local): string =>
+						`${local?.format(start, getCalendarGridTimeToken(is24h), culture)} – ${local?.format(end, getCalendarGridTimeToken(is24h), culture)}`,
+					eventTimeRangeStartFormat: ({ start }, culture, local): string =>
+						`${local?.format(start, getCalendarEventEdgeToken(is24h), culture)} – `,
+					eventTimeRangeEndFormat: ({ end }, culture, local): string =>
+						` – ${local?.format(end, getCalendarEventEdgeToken(is24h), culture)}`
+				}}
 				resizable
 				showMultiDayTimes
 				resizableAccessor={resizableAccessor}

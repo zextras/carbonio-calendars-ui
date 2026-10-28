@@ -7,13 +7,17 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { keyBy } from 'lodash';
 
 import { ReplyButtonsPart } from './reply-buttons-part';
 import * as appointmentActionsFn from '../../actions/appointment-actions-fn';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
+import * as shell from '@test-mocks/@zextras/carbonio-shell-ui';
 import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
 import { TEST_SELECTORS } from 'constants/test-utils';
 
 describe('ReplyButtonsPart', () => {
@@ -163,6 +167,28 @@ describe('ReplyButtonsPart', () => {
 		});
 	});
 
+	describe('Propose new time action', () => {
+		it('opens the propose new time modal instead of a board when clicked', async () => {
+			useFolderStore.setState(() => ({
+				folders: {
+					...keyBy(generateRoots(), 'id'),
+					[mockedData.calendars.defaultCalendar.id]: mockedData.calendars.defaultCalendar
+				}
+			}));
+			const boardSpy = vi.spyOn(shell, 'addBoard');
+			const event = mockedData.getEvent();
+			const invite = mockedData.getInvite({ event });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const { user } = setupTest(<ReplyButtonsPart event={event} invite={invite} />, { store });
+
+			await user.click(screen.getByRole('button', { name: /Propose new time/i }));
+
+			expect(await screen.findByTestId('propose-new-time-modal')).toBeVisible();
+			expect(boardSpy).not.toHaveBeenCalled();
+		});
+	});
+
 	describe('Context', () => {
 		it('should pass correct context with isInstance as true when event has ridZ', () => {
 			const event = mockedData.getEvent({
@@ -194,6 +220,61 @@ describe('ReplyButtonsPart', () => {
 
 			expect(acceptAsActionSpy).toHaveBeenCalled();
 			expect(acceptAsActionSpy.mock.calls[0][0].context.isInstance).toBe(false);
+		});
+	});
+
+	describe('Self response status row (Figma spec)', () => {
+		it('shows "You accepted" with the success icon when the user accepted', () => {
+			const event = mockedData.getEvent({
+				resource: { participationStatus: PARTICIPATION_STATUS.ACCEPTED }
+			});
+			const invite = mockedData.getInvite({ event });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			setupTest(<ReplyButtonsPart event={event} invite={invite} />, { store });
+
+			expect(screen.getByTestId('SelfResponseStatusText')).toBeVisible();
+			expect(screen.getByText('message.you_accepted')).toBeVisible();
+			expect(screen.getByTestId('icon: StatusAccept')).toBeVisible();
+		});
+
+		it('shows "You declined" with the error icon when the user declined', () => {
+			const event = mockedData.getEvent({
+				resource: { participationStatus: PARTICIPATION_STATUS.DECLINED }
+			});
+			const invite = mockedData.getInvite({ event });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			setupTest(<ReplyButtonsPart event={event} invite={invite} />, { store });
+
+			expect(screen.getByText('message.you_declined')).toBeVisible();
+			expect(screen.getByTestId('icon: StatusDenied')).toBeVisible();
+		});
+
+		it('shows "You accepted as tentative" with the warning icon when the user accepted as tentative', () => {
+			const event = mockedData.getEvent({
+				resource: { participationStatus: PARTICIPATION_STATUS.TENTATIVE }
+			});
+			const invite = mockedData.getInvite({ event });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			setupTest(<ReplyButtonsPart event={event} invite={invite} />, { store });
+
+			expect(screen.getByText('message.you_accepted_as_tentative')).toBeVisible();
+			expect(screen.getByTestId('icon: StatusMaybe')).toBeVisible();
+		});
+
+		it('shows "You didn\'t answer" with the calendar-warning icon when the user has not answered yet', () => {
+			const event = mockedData.getEvent({
+				resource: { participationStatus: PARTICIPATION_STATUS.NEED_ACTION }
+			});
+			const invite = mockedData.getInvite({ event });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			setupTest(<ReplyButtonsPart event={event} invite={invite} />, { store });
+
+			expect(screen.getByText('message.you_did_not_answer')).toBeVisible();
+			expect(screen.getByTestId('icon: CalendarWarning')).toBeVisible();
 		});
 	});
 });

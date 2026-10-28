@@ -58,6 +58,7 @@ export type EventResource = {
 	attachmentFiles?: [];
 	id: string;
 	inviteId: string;
+	seriesInviteId?: string;
 	ridZ?: string;
 	calendar: EventResourceCalendar;
 	flags: string;

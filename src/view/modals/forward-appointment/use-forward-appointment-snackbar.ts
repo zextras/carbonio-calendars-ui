@@ -8,24 +8,30 @@ import { useCallback } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { SoapFault } from '@zextras/carbonio-ui-soap-lib';
+
+import { getAppointmentSendErrorLabel } from 'soap/errors/send-to-distribution-list-denied';
 
 type SnackbarHandlers = {
-	showErrorSnackbar: () => void;
+	showErrorSnackbar: (fault?: SoapFault) => void;
 	showSuccessSnackbar: () => void;
 };
 
 export const useForwardAppointmentSnackbar = (): SnackbarHandlers => {
 	const createSnackbar = useSnackbar();
 
-	const showErrorSnackbar = useCallback((): void => {
-		createSnackbar({
-			key: 'forward-appointment-error',
-			replace: true,
-			severity: 'error',
-			label: t('label.error_try_again', 'Something went wrong, please try again'),
-			autoHideTimeout: 3000
-		});
-	}, [createSnackbar]);
+	const showErrorSnackbar = useCallback(
+		(fault?: SoapFault): void => {
+			createSnackbar({
+				key: 'forward-appointment-error',
+				replace: true,
+				severity: 'error',
+				label: getAppointmentSendErrorLabel(t, fault),
+				autoHideTimeout: 3000
+			});
+		},
+		[createSnackbar]
+	);
 
 	const showSuccessSnackbar = useCallback((): void => {
 		createSnackbar({

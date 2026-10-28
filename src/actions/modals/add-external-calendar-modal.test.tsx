@@ -22,7 +22,7 @@ import { CreateFolderResponse } from 'types/soap/createFolder';
 
 const TYPE_LABEL = 'Type*';
 const URL_LABEL = 'Calendar URL*';
-const CALENDAR_NAME_LABEL = 'Calendar name*';
+const CALENDAR_NAME_LABEL = 'Choose a representative name*';
 const VALID_ICS_URL = 'https://a/1.ics';
 const VALID_CALDAV_HOST = 'https://caldav.example.com';
 
@@ -134,7 +134,7 @@ describe('AddExternalCalendarModal', () => {
 			expect(
 				screen.getByRole('textbox', { name: 'Host address (calendar.example.com)*' })
 			).toBeVisible();
-			expect(screen.getByRole('textbox', { name: 'Calendars’ name*' })).toBeVisible();
+			expect(screen.getByRole('textbox', { name: 'Choose a representative name*' })).toBeVisible();
 			expect(screen.getByText('This host does not require credentials')).toBeVisible();
 			expect(screen.getByRole('textbox', { name: 'Username*' })).toBeVisible();
 			// PasswordInput renders as type="password", query by label text
@@ -150,7 +150,7 @@ describe('AddExternalCalendarModal', () => {
 				VALID_CALDAV_HOST
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'My Calendars'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'user@example.com');
@@ -168,7 +168,7 @@ describe('AddExternalCalendarModal', () => {
 				VALID_CALDAV_HOST
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'My Calendars'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'user@example.com');
@@ -200,7 +200,7 @@ describe('AddExternalCalendarModal', () => {
 				VALID_CALDAV_HOST
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'My Calendars'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'user@example.com');
@@ -245,7 +245,10 @@ describe('AddExternalCalendarModal', () => {
 				screen.getByRole('textbox', { name: 'Host address (calendar.example.com)*' }),
 				'mailbox1.demo.zextras.io'
 			);
-			await user.pasteInto(screen.getByRole('textbox', { name: 'Calendars’ name*' }), 'My CalDAV');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
+				'My CalDAV'
+			);
 			await user.pasteInto(
 				screen.getByRole('textbox', { name: 'Username*' }),
 				'user@demo.zextras.io'
@@ -331,7 +334,7 @@ describe('AddExternalCalendarModal', () => {
 				'public.example.com'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Public CalDAV'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'public-user');
@@ -376,7 +379,7 @@ describe('AddExternalCalendarModal', () => {
 				'mailbox1.demo.zextras.io'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Fail CalDAV'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
@@ -407,7 +410,10 @@ describe('AddExternalCalendarModal', () => {
 				screen.getByRole('textbox', { name: 'Host address (calendar.example.com)*' }),
 				'invalid.example.com'
 			);
-			await user.pasteInto(screen.getByRole('textbox', { name: 'Calendars’ name*' }), 'Fail Fast');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
+				'Fail Fast'
+			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
 			await user.click(screen.getByText('This host does not require credentials'));
 			await user.click(screen.getByRole('button', { name: 'Add' }));
@@ -435,7 +441,7 @@ describe('AddExternalCalendarModal', () => {
 				'missing.example.com'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Missing Host'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
@@ -468,7 +474,7 @@ describe('AddExternalCalendarModal', () => {
 			});
 			await user.pasteInto(hostInput, 'missing.example.com');
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Missing Host'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
@@ -503,7 +509,10 @@ describe('AddExternalCalendarModal', () => {
 				screen.getByRole('textbox', { name: 'Host address (calendar.example.com)*' }),
 				'auth.example.com'
 			);
-			await user.pasteInto(screen.getByRole('textbox', { name: 'Calendars’ name*' }), 'Auth Host');
+			await user.pasteInto(
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
+				'Auth Host'
+			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
 			await user.click(screen.getByText('This host does not require credentials'));
 			await user.click(screen.getByRole('button', { name: 'Add' }));
@@ -531,7 +540,7 @@ describe('AddExternalCalendarModal', () => {
 				'down.example.com'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Server Down Host'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
@@ -559,7 +568,7 @@ describe('AddExternalCalendarModal', () => {
 				'test.com'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Code-less Error Host'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
@@ -592,7 +601,7 @@ describe('AddExternalCalendarModal', () => {
 				'test.com'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars’ name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Wrapped Error Host'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'test-user');
@@ -626,7 +635,7 @@ describe('AddExternalCalendarModal', () => {
 				'mail.zextras.com'
 			);
 			await user.pasteInto(
-				screen.getByRole('textbox', { name: 'Calendars\u2019 name*' }),
+				screen.getByRole('textbox', { name: 'Choose a representative name*' }),
 				'Illegal Char Host'
 			);
 			await user.pasteInto(screen.getByRole('textbox', { name: 'Username*' }), 'asdasd asdasdas');
@@ -830,6 +839,16 @@ describe('AddExternalCalendarModal', () => {
 				screen.getByText('Invalid URL. Please enter a valid http or https address')
 			).toBeVisible();
 			expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled();
+		});
+		test('close button is a no-op while the color picker custom-color popover is open', async () => {
+			const onClose = vi.fn();
+			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
+
+			await user.click(screen.getByTestId('icon: PlusCircleOutline'));
+			expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
+
+			await user.click(screen.getByTestId('icon: CloseOutline'));
+			expect(onClose).not.toHaveBeenCalled();
 		});
 		test('clears url when switching from ICS to CalDAV and back', async () => {
 			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);

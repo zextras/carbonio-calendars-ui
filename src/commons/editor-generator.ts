@@ -11,7 +11,7 @@ import { Dispatch } from 'redux';
 
 import { dateFnsLocalizer } from './date-fns-react-widgets-localizer';
 import { getIdentityItems } from './get-identity-items';
-import { PREFS_DEFAULTS } from '../constants';
+import { getDefaultCalendarFolder } from './utilities';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { normalizeEditor } from '../normalizations/normalize-editor';
 import { createNewEditor } from '../store/slices/editor-slice';
@@ -63,7 +63,6 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 	const {
 		zimbraPrefCalendarDefaultApptDuration,
 		zimbraPrefCalendarApptReminderWarningTime,
-		zimbraPrefDefaultCalendarId,
 		zimbraPrefCalendarApptVisibility
 	} = getPrefs();
 	const account = getUserAccount();
@@ -72,10 +71,7 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 		email: defaultOrganizerIdentity?.address ?? account?.name ?? '',
 		fullName: defaultOrganizerIdentity?.fullName
 	};
-	const defaultCalendar = find(folders, [
-		'id',
-		zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
-	]);
+	const defaultCalendar = getDefaultCalendarFolder(folders);
 	const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 	return {

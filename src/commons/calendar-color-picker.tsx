@@ -3,90 +3,53 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { FC, useMemo } from 'react';
 
-import styled from '@emotion/styled';
-import {
-	Icon,
-	Padding,
-	Row,
-	SelectItem,
-	SelectProps,
-	Text,
-	Container
-} from '@zextras/carbonio-design-system';
+import { ColorPicker } from '@zextras/carbonio-ui-commons';
+import { useTranslation } from 'react-i18next';
 
-import { ColorContainer, Square, TextUpperCase } from './styled-components';
 import { CALENDARS_STANDARD_COLORS } from 'constants/calendar';
 
-const ColorSquare = styled(Square)`
-	margin-top: 0.5rem;
-`;
+/**
+ * Resolves a folder's color into a single hex string: an `rgb` custom color takes precedence,
+ * otherwise the standard color at `color` index, defaulting to the first standard color.
+ */
+export const resolveCalendarColorHex = (
+	color: number | undefined,
+	rgb: string | undefined
+): string =>
+	rgb ?? CALENDARS_STANDARD_COLORS[color ?? 0]?.color ?? CALENDARS_STANDARD_COLORS[0].color;
 
-export const CalendarColorLabelFactory: SelectProps['LabelFactory'] = ({
-	selected,
-	label,
-	open,
-	focus
-}) => {
-	const selectedIndex = Number(selected?.[0]?.value ?? 0);
-	const selectedColor =
-		CALENDARS_STANDARD_COLORS[selectedIndex]?.color ?? CALENDARS_STANDARD_COLORS[0].color;
-
-	return (
-		<ColorContainer
-			orientation="horizontal"
-			width="fill"
-			crossAlignment="center"
-			mainAlignment="space-between"
-			borderRadius="half"
-			background={'gray5'}
-			padding={{ all: 'small' }}
-		>
-			<Row width="100%" takeAvailableSpace mainAlignment="space-between">
-				<Row
-					orientation="vertical"
-					crossAlignment="flex-start"
-					mainAlignment="flex-start"
-					padding={{ left: 'small' }}
-				>
-					<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
-						{label}
-					</Text>
-					<TextUpperCase>{selected?.[0]?.label}</TextUpperCase>
-				</Row>
-				<Padding right="small">
-					<ColorSquare $color={selectedColor} />
-				</Padding>
-			</Row>
-			<Icon
-				size="large"
-				icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
-				color={open || focus ? 'primary' : 'secondary'}
-				style={{ alignSelf: 'center' }}
-			/>
-		</ColorContainer>
-	);
+export type CalendarColorPickerProps = {
+	/** Current color, as hex. Use `resolveCalendarColorHex` to derive it from a folder. */
+	value: string;
+	onChange: (hex: string) => void;
+	/** Notified whenever the custom-color popover opens/closes, e.g. to disable sibling controls. */
+	onOpenChange?: (open: boolean) => void;
+	disabled?: boolean;
 };
 
-export const buildCalendarColorItems = (
-	getLabel: (colorLabel: string) => string = (colorLabel): string => colorLabel
-): SelectItem[] =>
-	CALENDARS_STANDARD_COLORS.map((color, index) => {
-		const label = getLabel(color.label ?? '');
-		return {
-			background: color.background,
-			label,
-			value: index.toString(),
-			customComponent: (
-				<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
-					<Padding left="small">
-						<TextUpperCase>{label}</TextUpperCase>
-					</Padding>
-					<Padding right="small">
-						<ColorSquare $color={color.color} />
-					</Padding>
-				</Container>
-			)
-		};
-	});
+/** The shared `ColorPicker`, bound to the calendar palette. */
+export const CalendarColorPicker: FC<CalendarColorPickerProps> = (props) => {
+	const [t] = useTranslation();
+
+	const colors = useMemo(
+		() =>
+			CALENDARS_STANDARD_COLORS.map((color) => ({
+				hex: color.color,
+				label: t(`colors.${color.label}`)
+			})),
+		[t]
+	);
+
+	return (
+		<ColorPicker
+			colors={colors}
+			caption={t(
+				'label.choose_color_caption',
+				'Choose a color to make this calendar easier to recognize'
+			)}
+			{...props}
+		/>
+	);
+};

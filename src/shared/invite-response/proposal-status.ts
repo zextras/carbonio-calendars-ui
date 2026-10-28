@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { find } from 'lodash';
 
 type InviteComponentTime = { d?: string; u?: number; tz?: string };
@@ -57,3 +58,11 @@ export const isProposalAlreadyApplied = ({
 		isSameTime(appliedComponent?.e?.[0], counterComponent?.e?.[0])
 	);
 };
+
+export const isProposalDismissed = ({
+	parent,
+	isSentByMe
+}: {
+	parent?: string;
+	isSentByMe?: boolean;
+}): boolean => parent === FOLDERS.TRASH && !isSentByMe;

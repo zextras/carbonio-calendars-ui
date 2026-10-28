@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { isExternalSyncFolder } from 'commons/utilities';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { EventType } from 'types/event';
+import { isOccurrenceOfSeries } from 'utils/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 	const [t] = useTranslation();
@@ -79,7 +80,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 				</Row>
 				{event.resource.class !== 'PRI' && (
 					<>
-						{event?.resource?.isRecurrent && (
+						{isOccurrenceOfSeries(event.resource) && (
 							<Tooltip label={t('label.recurrent', 'Recurrent appointment')} placement="top">
 								<Row padding={{ right: 'small' }}>
 									<Icon color="0" icon="Repeat" />

@@ -12,6 +12,8 @@ export type EditModalContextType = {
 	onClose: () => void;
 	setActiveGrant: (grant: Grant) => void;
 	roleOptions: { label: string; value: string }[];
+	isColorPickerOpen: boolean;
+	setIsColorPickerOpen: (open: boolean) => void;
 };
 
 export const EditModalContext = React.createContext<EditModalContextType | null>(null);

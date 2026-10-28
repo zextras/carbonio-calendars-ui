@@ -25,6 +25,7 @@ import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
 import { CustomEventIcon } from './custom-event-icon';
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
 import { TagIconComponent } from 'commons/tag-icon-component';
+import { getTimeOnlyToken, useIs24HourFormat } from 'commons/time-format';
 import { isExternalSyncFolder, isIcsOrCaldavExternalFolder } from 'commons/utilities';
 import { EVENT_ACTIONS } from 'constants/event-actions';
 import { CALENDAR_ROUTE } from 'constants/index';
@@ -33,6 +34,7 @@ import { useNeverSentWarningLabel } from 'hooks/use-never-sent-warning-label';
 import { StoreProvider } from 'store/redux';
 import { useAppStatusStore } from 'store/zustand/store';
 import { EventType } from 'types/event';
+import { isOccurrenceOfSeries } from 'utils/event';
 
 type CustomEventProps = {
 	event: EventType;
@@ -67,22 +69,27 @@ const CustomDate = ({
 	start: Date;
 	end: Date;
 }): React.JSX.Element => {
+	const is24h = useIs24HourFormat();
 	const timeToDisplay = useMemo(() => {
 		const sameDay = isSameDay(start, end);
 		const sameMonth = isSameMonth(start, end);
 		const sameYear = isSameYear(start, end);
+		const timeToken = getTimeOnlyToken(is24h);
 
 		if (!sameYear) {
-			return `${format(start, 'yyyy/MM/dd, p')} - ${format(end, 'yyyy/MM/dd, p')}`;
+			const dateToken = `yyyy/MM/dd, ${timeToken}`;
+			return `${format(start, dateToken)} - ${format(end, dateToken)}`;
 		}
 		if (!sameMonth) {
-			return `${format(start, 'EEE MM/dd, p')} - ${format(end, 'EEE MM/dd, p')}`;
+			const dateToken = `EEE MM/dd, ${timeToken}`;
+			return `${format(start, dateToken)} - ${format(end, dateToken)}`;
 		}
 		if (!sameDay) {
-			return `${format(start, 'EEE dd, p')} - ${format(end, 'EEE dd, p')}`;
+			const dateToken = `EEE dd, ${timeToken}`;
+			return `${format(start, dateToken)} - ${format(end, dateToken)}`;
 		}
-		return `${format(start, 'p')} - ${format(end, 'p')}`;
-	}, [end, start]);
+		return `${format(start, timeToken)} - ${format(end, timeToken)}`;
+	}, [end, is24h, start]);
 
 	return (
 		<Container crossAlignment={'flex-start'}>
@@ -105,6 +112,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { action } = useParams<{ action: string }>();
 	const [t] = useTranslation();
 	const recurrentLabel = t('label.recurrent', 'Recurrent appointment');
+	const isSeriesOccurrence = isOccurrenceOfSeries(event.resource);
 	const { replaceHistory } = useHistoryNavigation();
 
 	const eventDiff = useMemo(
@@ -125,7 +133,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, replaceHistory]);
 
 	const showPanelView = useCallback(() => {
-		if (event?.resource?.isRecurrent) {
+		if (isSeriesOccurrence) {
 			const modalId = 'modify-recurrent-appointment';
 			createModal(
 				{
@@ -151,7 +159,15 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal, replaceHistory]);
+	}, [
+		isSeriesOccurrence,
+		event,
+		createModal,
+		onEntireSeries,
+		onSingleInstance,
+		closeModal,
+		replaceHistory
+	]);
 
 	const toggleOpen = useCallback(
 		(e: React.MouseEvent): void => {
@@ -192,8 +208,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const eventIsFromIcsCalendar = isExternalSyncFolder(folder ?? {});
 
 	const textOverflow = useMemo(
-		() => (hasTags || event.resource.isRecurrent || event.allDay ? 'ellipsis' : 'visible'),
-		[event.allDay, event.resource.isRecurrent, hasTags]
+		() => (hasTags || isSeriesOccurrence || event.allDay ? 'ellipsis' : 'visible'),
+		[event.allDay, isSeriesOccurrence, hasTags]
 	);
 
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
@@ -251,11 +267,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 								crossAlignment="center"
 								mainAlignment="center"
 							>
-								{event.allDay && event.resource.isRecurrent && (
+								{event.allDay && isSeriesOccurrence && (
 									<CustomEventIcon
 										iconName={'Repeat'}
 										iconColor={'currentColor'}
-										isIconVisible={event.resource.isRecurrent}
+										isIconVisible={isSeriesOccurrence}
 										tooltipLabel={recurrentLabel}
 									/>
 								)}
@@ -294,11 +310,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												<Padding left="small" />
 												{eventDiff <= 29 && (
 													<>
-														{event.resource.isRecurrent && (
+														{isSeriesOccurrence && (
 															<CustomEventIcon
 																iconName={'Repeat'}
 																iconColor={'currentColor'}
-																isIconVisible={event.resource.isRecurrent}
+																isIconVisible={isSeriesOccurrence}
 																tooltipLabel={recurrentLabel}
 															/>
 														)}
@@ -327,11 +343,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 								<>
 									{eventDiff >= 45 && <Padding top="extrasmall" />}
 									<Row wrap="nowrap">
-										{event.resource.isRecurrent && (
+										{isSeriesOccurrence && (
 											<CustomEventIcon
 												iconName={'Repeat'}
 												iconColor={'currentColor'}
-												isIconVisible={event.resource.isRecurrent}
+												isIconVisible={isSeriesOccurrence}
 												tooltipLabel={recurrentLabel}
 											/>
 										)}

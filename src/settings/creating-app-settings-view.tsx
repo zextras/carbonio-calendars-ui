@@ -40,6 +40,7 @@ export default function CreatingAppointmentSettings({
 						});
 					}}
 					excludeTrash
+					localOnly
 				/>
 			</FormSubSection>
 			<FormSubSection label={t('label.time_zones', 'Time zones')}>

@@ -60,7 +60,7 @@ export const AddExternalCalendarModalCaldavFlow = ({
 			/>
 			<Padding top="medium" />
 			<Input
-				label={`${t('add_external_calendar.caldav.calendar_name', 'Calendars’ name')}*`}
+				label={`${t('label.choose_representative_name', 'Choose a representative name')}*`}
 				background={'gray5'}
 				hasError={isDuplicateCaldavFolderName}
 				value={caldavFolderName}

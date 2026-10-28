@@ -76,7 +76,7 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 				neverSent={event?.resource?.inviteNeverSent}
 				label={neverSentWarningLabel}
 			/>
-			<CalendarInfoRow />
+			<CalendarInfoRow event={event} />
 			{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
 			{locationData && <LocationRow locationData={locationData} showIcon />}
 			{invite && <MeetingRoomsRow invite={invite} showIcon />}

@@ -360,13 +360,26 @@ describe('calendar actions items', () => {
 				})
 			);
 		});
+		test('is not disabled when the calendar was shared with write permission', () => {
+			const item = { id: '153', absFolderPath: '/Calendar 1/shared', perm: 'rwidx' };
+			const createModal = vi.fn();
+			const closeModal = vi.fn();
+
+			const editItem = editCalendarItem({ createModal, closeModal, item });
+			expect(editItem).toStrictEqual(
+				expect.objectContaining({
+					disabled: false
+				})
+			);
+		});
 		test.each([
 			{ id: FOLDERS.TRASH },
 			{ id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
 			{ id: `153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
 			{ id: `${randomUUID}:${FOLDERS.TRASH}` },
 			{ id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
-			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH }
+			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
+			{ id: '153', absFolderPath: '/Calendar 1/shared', perm: 'r' }
 		])(genericTestTitleForEachCases, (item) => {
 			const createModal = vi.fn();
 			const closeModal = vi.fn();

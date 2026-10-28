@@ -23,3 +23,10 @@ export const useSummaryViewRef = (): MutableRefObject<HTMLDivElement | null> =>
 export const useSetRange = (): SetRange => useAppStatusStore((s: AppState) => s.setRange);
 export const useRangeStart = (): number => useAppStatusStore((s: AppState) => s.range.start);
 export const useRangeEnd = (): number => useAppStatusStore((s: AppState) => s.range.end);
+// exact boundaries of the days currently visible on the calendar board
+export const useSetVisibleRange = (): SetRange =>
+	useAppStatusStore((s: AppState) => s.setVisibleRange);
+export const useVisibleRangeStart = (): number =>
+	useAppStatusStore((s: AppState) => s.visibleRange.start);
+export const useVisibleRangeEnd = (): number =>
+	useAppStatusStore((s: AppState) => s.visibleRange.end);

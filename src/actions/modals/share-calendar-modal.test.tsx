@@ -712,6 +712,33 @@ describe('Shared Calendar modal', () => {
 						expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
 					});
 				});
+				test('shows an error snackbar when the folder action request rejects', async () => {
+					vi.spyOn(FolderAction, 'folderActionRequest').mockRejectedValue(
+						new Error('network error')
+					);
+					const closeFn = vi.fn();
+					const grant: Grant[] | undefined = [];
+
+					const { user } = setupTest(
+						<ShareCalendarModal folderId={'testId1'} closeFn={closeFn} grant={grant} />,
+						{ store }
+					);
+
+					const chipInput = screen.getByRole('textbox', {
+						name: /Recipients e-mail addresses/i
+					});
+					await user.type(chipInput, 'user1@email.it');
+					await user.tab();
+
+					const confirmButton = screen.getByRole('button', { name: /Add and close/i });
+					await act(async () => {
+						await user.click(confirmButton);
+					});
+
+					await waitFor(() => {
+						expect(screen.getByText('Something went wrong, please try again')).toBeVisible();
+					});
+				});
 			});
 			describe('if send notification about this share is checked', () => {
 				test('it will send a share notification to recipients', async () => {

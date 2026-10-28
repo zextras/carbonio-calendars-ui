@@ -501,7 +501,7 @@ describe('use calendar actions', () => {
 		});
 	});
 	describe('link folder with view permission', () => {
-		test('in main account has 4 actions', () => {
+		test('in main account has 3 actions and does not include edit and share', () => {
 			const linkItem = {
 				name: 'link folder',
 				id: `${randomUUID}:154`,
@@ -525,15 +525,14 @@ describe('use calendar actions', () => {
 				initialProps: [linkItem]
 			});
 
-			expect(result.current.length).toBe(4);
+			expect(result.current.length).toBe(3);
 			expect(result.current).toStrictEqual([
-				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.REMOVE_FROM_LIST }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO })
 			]);
 		});
-		test('link folder shared account has 3 actions', () => {
+		test('link folder shared account has 2 actions and does not include edit and share', () => {
 			const linkItem = {
 				name: 'link folder',
 				id: `${randomUUID}:154`,
@@ -556,9 +555,8 @@ describe('use calendar actions', () => {
 				initialProps: [linkItem]
 			});
 
-			expect(result.current.length).toBe(3);
+			expect(result.current.length).toBe(2);
 			expect(result.current).toStrictEqual([
-				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.REMOVE_FROM_LIST }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO })
 			]);

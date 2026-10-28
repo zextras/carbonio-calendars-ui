@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { t } from '@zextras/carbonio-shell-ui';
+import { toLower } from 'lodash';
+
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import { extractBody } from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
@@ -13,6 +16,7 @@ import { parseInviteChangesFromText } from '../../commons/invite-changes-text';
 import { ROOM_DIVIDER } from '../../constants';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { ParticipationStatus } from '../../types/store/invite';
+import { getTimeStrings } from '../../hooks/use-get-date-range-converted-to-timezone';
 import {
 	normalizeSoapMessageFromEditor,
 	setAlarmValue,
@@ -967,6 +971,80 @@ describe('normalize soap message from editor', () => {
 			expect(result).toStrictEqual(expect.objectContaining({ m: 0 }));
 		});
 	});
+	describe('the invitation text', () => {
+		const organizerAddress = getMockedAccountItem({ identity1: mainAccount }).name;
+
+		const getEditorWithNamelessOrganizer = (allDay: boolean): ReturnType<typeof generateEditor> => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: {
+					attendees: [generateAttendee({ email: 'attendee1@example.com' })],
+					optionalAttendees: [],
+					folders: {},
+					dispatch: vi.fn(),
+					title: 'Test Meeting',
+					plainText: 'Meeting description',
+					richText: 'Meeting description',
+					allDay
+				}
+			});
+
+			return {
+				...editor,
+				organizer: { email: 'zextras@carbonio.localhost' },
+				sender: { email: 'zextras@carbonio.localhost' }
+			};
+		};
+
+		test('falls back to the organizer address when the identity carries no display name', () => {
+			const editor = getEditorWithNamelessOrganizer(false);
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).not.toContain('undefined');
+			expect(result).toContain(`Organizer: ${organizerAddress}`);
+			expect(result).toContain(`${organizerAddress} invited you to a new meeting!`);
+		});
+
+		test('falls back to the organizer address in the html body too', () => {
+			const editor = getEditorWithNamelessOrganizer(false);
+
+			const result = generateHtmlBodyRequest(editor);
+
+			expect(result).not.toContain('undefined');
+			expect(result).toContain(`<p>Organizer: ${organizerAddress}</p>`);
+		});
+
+		test('asks for no all day label when the appointment is not all day', () => {
+			const editor = getEditorWithNamelessOrganizer(false);
+
+			generateBodyRequest(editor);
+
+			expect(getTimeStrings).toHaveBeenCalledWith(
+				expect.objectContaining({
+					options: expect.objectContaining({ allDay: false, allDayLabel: undefined })
+				})
+			);
+		});
+
+		test('asks for the translated all day label when the appointment is all day', () => {
+			const editor = getEditorWithNamelessOrganizer(true);
+
+			generateHtmlBodyRequest(editor);
+
+			expect(getTimeStrings).toHaveBeenCalledWith(
+				expect.objectContaining({
+					options: expect.objectContaining({
+						allDay: true,
+						allDayLabel: toLower(t('label.all_day', 'All day'))
+					})
+				})
+			);
+		});
+	});
+
 	describe('generateBodyRequest', () => {
 		test('should generate plain text message for regular meeting with attendees', () => {
 			const userAccount = getMockedAccountItem({ identity1: mainAccount });

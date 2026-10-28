@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getUserAccount } from '@zextras/carbonio-shell-ui';
+import { getUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { formatInTimeZone } from 'date-fns-tz';
-import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
+import { compact, concat, includes, isNil, map, omitBy, toLower } from 'lodash';
 
 import { formatInviteChangesText } from '../commons/invite-changes-text';
 import { Rel } from './normalizations-utils';
@@ -221,6 +221,12 @@ const getOrganizer = ({
 	};
 };
 
+const getOrganizerName = (organizer: { email?: string; name?: string }): string =>
+	organizer.name ?? organizer.email ?? '';
+
+const getAllDayLabel = (app: Editor): string | undefined =>
+	app.allDay ? toLower(t('label.all_day', 'All day')) : undefined;
+
 export function generateHtmlBodyRequest(app: Editor, changes?: InviteChanges): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
@@ -228,15 +234,16 @@ export function generateHtmlBodyRequest(app: Editor, changes?: InviteChanges): s
 		sender: app.sender,
 		organizer: app.organizer
 	});
+	const organizerName = getOrganizerName(organizer);
 	const date = getTimeStrings({
 		start: app.start ?? 0,
 		end: app.end ?? 0,
-		options: { allDay: app.allDay, allDayLabel: 'allDay' }
+		options: { allDay: app.allDay, allDayLabel: getAllDayLabel(app) }
 	});
 	const changesHtml = changes ? `<pre>${formatInviteChangesText(changes)}</pre>` : '';
-	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p>${changesHtml}<br/>${ROOM_DIVIDER}`;
+	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizerName} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizerName}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p>${changesHtml}<br/>${ROOM_DIVIDER}`;
 	const virtualRoomHtml = app?.room?.label
-		? `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a virtual meeting on Carbonio Chats.</h3><p>Join here when it's time: <a href="${app.room.link}">${app.room.label}</a></p><br/>${ROOM_DIVIDER}`
+		? `${ROOM_DIVIDER}<h3>${organizerName} invited you to a virtual meeting on Carbonio Chats.</h3><p>Join here when it's time: <a href="${app.room.link}">${app.room.label}</a></p><br/>${ROOM_DIVIDER}`
 		: '';
 	const defaultMessage =
 		app?.room && !includes(app.richText, ROOM_DIVIDER) ? virtualRoomHtml : meetingHtml;
@@ -253,27 +260,22 @@ export function generateBodyRequest(app: Editor, changes?: InviteChanges): strin
 		organizer: app.organizer
 	});
 
+	const organizerName = getOrganizerName(organizer);
 	const date = getTimeStrings({
 		start: app.start ?? 0,
 		end: app.end ?? 0,
-		options: { allDay: app.allDay, allDayLabel: 'allDay' }
+		options: { allDay: app.allDay, allDayLabel: getAllDayLabel(app) }
 	});
 
 	const virtualRoomMessage = app?.room?.label
-		? `${ROOM_DIVIDER}\n${
-				organizer.name ?? ''
-			} invited you to a virtual meeting on Carbonio Chats!\n\nJoin here when it's time: ${
+		? `${ROOM_DIVIDER}\n${organizerName} invited you to a virtual meeting on Carbonio Chats!\n\nJoin here when it's time: ${
 				app.room.label
 			}\n\n${app.room.link} \n\n${ROOM_DIVIDER}\n`
 		: '';
 
 	const changesText = changes ? `\n${formatInviteChangesText(changes)}` : '';
 
-	const meetingMessage = `${ROOM_DIVIDER}\n${
-		organizer.name ?? ''
-	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: ${
-		organizer.name
-	} \n\nTime: ${date}\n \nInvitees: ${attendees} ${changesText}\n${ROOM_DIVIDER}`;
+	const meetingMessage = `${ROOM_DIVIDER}\n${organizerName} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: ${organizerName} \n\nTime: ${date}\n \nInvitees: ${attendees} ${changesText}\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
 
 	return attendees?.length ? `${defaultMessage}\n${app.plainText}` : app.plainText;

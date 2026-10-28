@@ -20,7 +20,7 @@ import InviteHeaderPart from './parts/invite-header-part';
 import InviteReplyPart from './parts/invite-reply-part';
 import { ParticipantsList } from './parts/participants-list';
 import ProposedTimeReply from './parts/proposed-time-reply';
-import { isProposalAlreadyApplied } from './proposal-status';
+import { isProposalAlreadyApplied, isProposalDismissed } from './proposal-status';
 import { useFetchInvite } from './useFetchInvite';
 import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { MESSAGE_METHOD } from '../../constants/api';
@@ -82,6 +82,11 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		[fetchedInv, mailMsg.invite]
 	);
 
+	const proposalDismissed = useMemo(
+		() => isProposalDismissed({ parent: mailMsg.parent, isSentByMe: mailMsg.isSentByMe }),
+		[mailMsg.isSentByMe, mailMsg.parent]
+	);
+
 	const inviteId =
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
@@ -136,6 +141,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						msg={mailMsg}
 						fragment={invite?.fragment}
 						proposalApplied={proposalApplied}
+						proposalDismissed={proposalDismissed}
 					/>
 				)}
 				{method !== MESSAGE_METHOD.COUNTER && isAttendee && (

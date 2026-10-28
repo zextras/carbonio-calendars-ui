@@ -30,8 +30,16 @@ export const AccountAccordionItem: FC<AccordionItemProps> = (props) => {
 			orientation="horizontal"
 			mainAlignment="flex-start"
 			padding={{ vertical: 'extrasmall' }}
+			minWidth={0}
+			flexGrow={1}
+			flexBasis="0"
 		>
-			<Avatar label={label ?? ''} colorLabel={ZIMBRA_STANDARD_COLORS[0].hex} size="medium" />
+			<Avatar
+				label={label ?? ''}
+				colorLabel={ZIMBRA_STANDARD_COLORS[0].hex}
+				size="medium"
+				style={{ flexShrink: 0 }}
+			/>
 			<Tooltip label={label}>
 				<AccordionItem {...props} item={item} />
 			</Tooltip>

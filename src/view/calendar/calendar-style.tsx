@@ -9,7 +9,6 @@ import { Global, css } from '@emotion/react';
 import { useTheme } from '@zextras/carbonio-design-system';
 
 interface CalendarStyleProps {
-	$primaryCalendar?: { color?: { background?: string; color?: string } };
 	$summaryViewOpen?: boolean;
 	$action?: unknown;
 	$headerMinWidth?: string;
@@ -19,7 +18,6 @@ const DISABLE_EMOTION_SSR =
 	'/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
 
 const CalendarStyle: React.FC<CalendarStyleProps> = ({
-	$primaryCalendar,
 	$summaryViewOpen,
 	$action,
 	$headerMinWidth
@@ -291,12 +289,12 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 				}
 
 				.rbc-day-bg.rbc-selected-cell {
-					background-color: ${!$summaryViewOpen && !$action && $primaryCalendar?.color?.background
-						? $primaryCalendar.color.background
+					background-color: ${!$summaryViewOpen && !$action
+						? 'var(--rbc-slot-selection-background, inherit)'
 						: 'inherit'} !important;
 					border: 0.0625rem solid
-						${!$summaryViewOpen && !$action && $primaryCalendar?.color?.color
-							? $primaryCalendar.color.color
+						${!$summaryViewOpen && !$action
+							? 'var(--rbc-slot-selection-border, inherit)'
 							: 'inherit'} !important;
 				}
 
@@ -513,6 +511,7 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					align-items: flex-start;
 					overflow: hidden;
 					position: absolute;
+					z-index: 4;
 				}
 
 				.rbc-day-slot .rbc-event-label {
@@ -592,10 +591,12 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 				}
 
 				.rbc-slot-selection {
-					color: ${$primaryCalendar?.color?.color};
-					background-color: ${$primaryCalendar?.color?.background};
-					border: 0.0625rem solid ${$primaryCalendar?.color?.color} !important;
-					z-index: 10;
+					color: var(--rbc-slot-selection-border, ${theme.palette.primary.regular});
+					background-color: var(--rbc-slot-selection-background, ${theme.palette.gray5.regular});
+					border: 0.0625rem solid var(--rbc-slot-selection-border, ${theme.palette.primary.regular}) !important;
+					/* stays below events (z-index: 4 on .rbc-day-slot .rbc-event), matching
+					   month view where the selected-cell background sits behind event content */
+					z-index: 1;
 					position: absolute;
 					font-size: ${theme.sizes.font.medium};
 					width: 100%;
