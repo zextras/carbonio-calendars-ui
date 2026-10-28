@@ -27,7 +27,7 @@ export default function EndDatePicker({
 	diff,
 	onChange,
 	minDate
-}: EndDatePickerProps): ReactElement {
+}: Readonly<EndDatePickerProps>): ReactElement {
 	const onEndChange = useCallback(
 		(d: Date | null) => {
 			if (!d) return;

@@ -25,7 +25,7 @@ export default function StartDatePicker({
 	diff,
 	onChange,
 	minDate
-}: StartDatePickerProps): ReactElement {
+}: Readonly<StartDatePickerProps>): ReactElement {
 	const onStartChange = useCallback(
 		(d: Date | null) => {
 			if (!d) return;
