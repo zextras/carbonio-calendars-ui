@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
@@ -11,9 +11,24 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { getDateFnsLocale } from './date-fns-react-widgets-localizer';
 import { getDateTimeToken, getPickerTimeFormatToken, useIs24HourFormat } from './time-format';
 
-export default function StartDatePicker({ start, allDay, diff, onChange }) {
+type StartDatePickerProps = {
+	start: Date;
+	allDay?: boolean;
+	diff: number;
+	onChange: (value: { start: number; end: number }) => void;
+	minDate?: Date;
+};
+
+export default function StartDatePicker({
+	start,
+	allDay,
+	diff,
+	onChange,
+	minDate
+}: Readonly<StartDatePickerProps>): ReactElement {
 	const onStartChange = useCallback(
-		(d) => {
+		(d: Date | null) => {
+			if (!d) return;
 			const newStartValue = d.getTime();
 			const prevStartValue = start.getTime();
 			if (newStartValue !== prevStartValue) {
@@ -49,7 +64,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			dateFormat={dateFormat}
 			timeFormat={allDay ? undefined : getPickerTimeFormatToken(is24h)}
 			locale={getDateFnsLocale()}
-			includeTime={!allDay}
+			minDate={minDate}
 		/>
 	);
 }
