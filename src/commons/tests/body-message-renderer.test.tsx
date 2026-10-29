@@ -144,4 +144,30 @@ describe('BodyMessageRenderer', () => {
 		);
 		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
 	});
+
+	describe('XSS protection', () => {
+		const payload = '<img src="data:image/gif;base64,x" onerror="document.title=\'XSS-OK\'">';
+
+		it('shows the markup of a text description as text without creating elements', () => {
+			setupTest(
+				<BodyMessageRenderer htmlDescription={[]} textDescription={[{ _content: payload }]} />
+			);
+
+			expect(screen.queryByRole('img')).not.toBeInTheDocument();
+			expect(screen.getByText(payload)).toBeInTheDocument();
+		});
+
+		it('removes scripting from an HTML description', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[{ _content: `<div>Safe</div>${payload}` }]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).toContain('Safe');
+			expect(shadowRoot.innerHTML).not.toContain('onerror');
+		});
+	});
 });

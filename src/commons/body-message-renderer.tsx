@@ -7,7 +7,7 @@ import React, { useMemo } from 'react';
 
 import { Container, Text, Theme } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { replace } from 'lodash';
+import { escape, replace } from 'lodash';
 
 import { ROOM_DIVIDER } from '../constants';
 import { HtmlMessageRenderer } from './html-message-renderer';
@@ -18,7 +18,8 @@ export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER
 
 const plainTextToHTML = (str: string): string => {
 	if (str !== undefined && str !== null) {
-		return str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+		// The text is not HTML: escape any markup so it is displayed and never executed
+		return escape(str).replace(/(?:\r\n|\r|\n)/g, '<br/>');
 	}
 	return '';
 };

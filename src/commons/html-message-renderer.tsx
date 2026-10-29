@@ -7,6 +7,7 @@
 import React, { useMemo } from 'react';
 
 import { useTheme } from '@zextras/carbonio-design-system';
+import DOMPurify from 'dompurify';
 
 import { ShadowDomWrapper } from './shadow-dom-wrapper';
 import { replaceLinkToAnchor } from './utilities';
@@ -17,7 +18,10 @@ export const HtmlMessageRenderer = ({
 	htmlContent: string;
 }): React.JSX.Element => {
 	const remFontSize = useTheme().sizes.font?.small ?? '0.875rem';
-	const updatedBody = useMemo(() => replaceLinkToAnchor(htmlContent), [htmlContent]);
+	const updatedBody = useMemo(
+		() => replaceLinkToAnchor(DOMPurify.sanitize(htmlContent)),
+		[htmlContent]
+	);
 	const styledHtmlContent = useMemo(
 		() => `
 			<style>
