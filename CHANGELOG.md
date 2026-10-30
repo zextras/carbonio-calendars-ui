@@ -1,3 +1,7 @@
+## <small>1.19.4 (2026-10-30)</small>
+
+* fix(CO-4631): fix invite description rendering (#905) ([3c4b56a](https://github.com/zextras/carbonio-calendars-ui/commit/3c4b56a)), closes [#905](https://github.com/zextras/carbonio-calendars-ui/issues/905)
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
