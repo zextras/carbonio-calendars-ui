@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@zextras/carbonio-ui-soap-lib': 1.3.0
+  '@zextras/carbonio-ui-soap-lib': 1.3.2
 
 importers:
 
@@ -67,13 +67,13 @@ importers:
         version: 15.1.1(e24c49cd0e8cb233a3a160582a020b6e)
       '@zextras/carbonio-ui-commons':
         specifier: 2.6.2
-        version: 2.6.2(000a434303270c78942f87167ed88731)
+        version: 2.6.2(fb941ee26bda025175f50270eea9ccbd)
       '@zextras/carbonio-ui-preview':
         specifier: 5.0.1
         version: 5.0.1(@types/react@18.3.31)(@zextras/carbonio-design-system@12.0.4(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1))(date-fns@4.4.0)(lodash@4.18.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@zextras/carbonio-ui-soap-lib':
-        specifier: 1.3.0
-        version: 1.3.0
+        specifier: 1.3.2
+        version: 1.3.2
       core-js:
         specifier: 3.49.0
         version: 3.49.0
@@ -2888,7 +2888,7 @@ packages:
       '@mui/material': 5.18.0
       '@zextras/carbonio-design-system': '>=12.0.4'
       '@zextras/carbonio-shell-ui': '>=14.0.0'
-      '@zextras/carbonio-ui-soap-lib': 1.3.0
+      '@zextras/carbonio-ui-soap-lib': 1.3.2
       lodash: 4.18.1
       react: 18.3.1
       react-dom: 18.3.1
@@ -2913,8 +2913,8 @@ packages:
     engines: {node: v22, pnpm: '>=9'}
     hasBin: true
 
-  '@zextras/carbonio-ui-soap-lib@1.3.0':
-    resolution: {integrity: sha512-8Gu1Xrcihc4gppuWPcThRyLXysMKSz1bwfhb8rx/IDErxyvNbYPRnO061Z2nzUhGv9N30CgS3FEnX79F7lJBqg==}
+  '@zextras/carbonio-ui-soap-lib@1.3.2':
+    resolution: {integrity: sha512-hI+uAl0ewU7eSlHxn992dwuWAdvyruV3G7rCJTD6gGcVQqOQx9/U6sNt+yBm5zd3kXv7mdwd+LJfAJ0yh6oWSw==}
 
   JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -10875,7 +10875,7 @@ snapshots:
   '@zextras/carbonio-shell-ui@15.1.1(e24c49cd0e8cb233a3a160582a020b6e)':
     dependencies:
       '@fontsource/roboto': 5.2.10
-      '@zextras/carbonio-ui-soap-lib': 1.3.0
+      '@zextras/carbonio-ui-soap-lib': 1.3.2
       core-js: 3.49.0
       darkreader: 4.9.125
       date-fns: 4.4.0
@@ -10904,7 +10904,7 @@ snapshots:
   '@zextras/carbonio-shell-ui@15.3.15(2766e71763b8647b2e34ff177a2f85d9)':
     dependencies:
       '@fontsource/roboto': 5.3.0
-      '@zextras/carbonio-ui-soap-lib': 1.3.0
+      '@zextras/carbonio-ui-soap-lib': 1.3.2
       core-js: 3.50.0
       darkreader: 4.9.130
       date-fns: 4.4.0
@@ -10930,7 +10930,7 @@ snapshots:
       - preact-render-to-string
       - use-sync-external-store
 
-  '@zextras/carbonio-ui-commons@2.6.2(000a434303270c78942f87167ed88731)':
+  '@zextras/carbonio-ui-commons@2.6.2(fb941ee26bda025175f50270eea9ccbd)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.31)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1)
@@ -10938,7 +10938,7 @@ snapshots:
       '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@zextras/carbonio-design-system': 12.0.4(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(@types/react@18.3.31)(react@18.3.1))(date-fns@4.4.0)(lodash@4.18.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@zextras/carbonio-shell-ui': 15.1.1(e24c49cd0e8cb233a3a160582a020b6e)
-      '@zextras/carbonio-ui-soap-lib': 1.3.0
+      '@zextras/carbonio-ui-soap-lib': 1.3.2
       core-js: 3.47.0
       i18next: 22.5.1
       immer: 9.0.21
@@ -11042,7 +11042,7 @@ snapshots:
       - utf-8-validate
       - webpack-cli
 
-  '@zextras/carbonio-ui-soap-lib@1.3.0':
+  '@zextras/carbonio-ui-soap-lib@1.3.2':
     dependencies:
       '@types/ua-parser-js': 0.7.39
       ua-parser-js: 1.0.41
