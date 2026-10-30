@@ -1,3 +1,7 @@
+## <small>1.26.17 (2026-10-30)</small>
+
+* fix(CO-4630): fix invite description rendering (#904) ([c40d9a0](https://github.com/zextras/carbonio-calendars-ui/commit/c40d9a0)), closes [#904](https://github.com/zextras/carbonio-calendars-ui/issues/904) [#836](https://github.com/zextras/carbonio-calendars-ui/issues/836)
+
 ## <small>1.26.16 (2026-06-26)</small>
 
 * fix(deps): update dependency react-big-calendar to v1.20.0 (#783) ([5172e8f](https://github.com/zextras/carbonio-calendars-ui/commit/5172e8f)), closes [#783](https://github.com/zextras/carbonio-calendars-ui/issues/783)
