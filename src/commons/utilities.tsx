@@ -545,13 +545,19 @@ export const getFolderIcon = ({
 	return FOLDER_ICON_BY_KIND[getFolderIconKind(item)][checked ? 1 : 0];
 };
 
+// Stops a URL match at the HTML entities produced when escaping text (e.g. `<https://x>`)
+const NOT_ESCAPED_ENTITY = '(?!&(?:lt|gt|quot|#39);)';
+
 export const replaceLinkToAnchor = (content: string): string => {
 	if (content === '' || content === undefined) {
 		return '';
 	}
 
 	return content.replace(
-		/(?:https?:\/\/|www\.)+(?![^\s]*?")([\w.,@?!^=%&amp;:()/~+#-]*[\w@?!^=%&amp;()/~+#-])?/gi,
+		new RegExp(
+			`(?:https?:\\/\\/|www\\.)+(?![^\\s]*?")((?:${NOT_ESCAPED_ENTITY}[\\w.,@?!^=%&amp;:()/~+#-])*${NOT_ESCAPED_ENTITY}[\\w@?!^=%&amp;()/~+#-])?`,
+			'gi'
+		),
 		(url) => {
 			const wrap = document.createElement('div');
 			const anchor = document.createElement('a');
