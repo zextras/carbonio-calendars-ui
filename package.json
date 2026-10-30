@@ -3,9 +3,10 @@
 	"version": "1.19.3",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
+	"packageManager": "pnpm@10.32.1",
 	"engines": {
 		"node": "v22",
-		"npm": "v10"
+		"pnpm": ">=10"
 	},
 	"scripts": {
 		"build": "sdk build",
@@ -16,11 +17,11 @@
 		"prepublishOnly": "pinst --disable",
 		"postpublish": "pinst --enable",
 		"type-check": "tsc --noEmit",
-		"type-check:watch": "npm run type-check -- --watch",
+		"type-check:watch": "pnpm run type-check -- --watch",
 		"lint": "eslint --ext .js,.jsx,.ts,.tsx --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"lint-errors": "eslint --ext .js,.jsx,.ts,.tsx --quiet --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"lint-fix": "eslint --fix --ext .js,.jsx,.ts,.tsx --quiet --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs",
-		"lint-check": "npm run lint-errors; npm run type-check",
+		"lint-check": "pnpm run lint-errors; pnpm run type-check",
 		"lint-stats": "eslint --ext .js,.jsx,.ts,.tsx --format node_modules/eslint-stats/byErrorAndWarningStacked --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"test": "vitest run",
 		"test:watch": "vitest",
@@ -59,7 +60,7 @@
 		"@types/react-widgets-moment": "^4.0.3",
 		"@vitejs/plugin-react": "^5.1.3",
 		"@vitest/coverage-v8": "^4.0.8",
-		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#devel",
+		"@zextras/carbonio-search-ui": "github:zextras/carbonio-search-ui#c37aeabe0ab00320929bf15ade6a8cb148fbd71f",
 		"@zextras/carbonio-ui-configs": "^2.1.0",
 		"@zextras/carbonio-ui-sdk": "2.2.1",
 		"babel-plugin-transform-import-meta": "^2.3.3",
@@ -127,5 +128,15 @@
 		"type": "carbonio",
 		"display": "Calendars",
 		"icon": "CalendarModOutline"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@zextras/carbonio-search-ui",
+			"core-js",
+			"esbuild",
+			"msw",
+			"protobufjs",
+			"unrs-resolver"
+		]
 	}
 }
