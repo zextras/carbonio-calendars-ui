@@ -97,6 +97,7 @@
 		"core-js": "^3.39.0",
 		"darkreader": "^4.9.79",
 		"date-arithmetic": "^4.1.0",
+		"dompurify": "3.3.1",
 		"i18next": "^22.5.1",
 		"immer": "^9.0.21",
 		"lodash": "^4.17.21",
