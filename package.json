@@ -107,7 +107,7 @@
 		"@zextras/carbonio-design-system": "12.0.4",
 		"@zextras/carbonio-shell-ui": "15.1.1",
 		"@zextras/carbonio-ui-commons": "2.6.2",
-		"@zextras/carbonio-ui-preview": "5.0.1",
+		"@zextras/carbonio-ui-preview": "5.0.25",
 		"@zextras/carbonio-ui-soap-lib": "1.3.0",
 		"core-js": "3.49.0",
 		"darkreader": "4.9.128",
