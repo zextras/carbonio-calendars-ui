@@ -18,16 +18,21 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
 	}
 });
 
+/**
+ * Turns plain URLs into anchors and sanitizes the result. The sanitization must be the
+ * last step: linkifying works on the serialized string and can alter attribute values,
+ * so anything it produces has to be parsed and cleaned again.
+ */
+export const linkifyAndSanitize = (html: string): string =>
+	DOMPurify.sanitize(replaceLinkToAnchor(html), { ADD_ATTR: ['target'] });
+
 export const HtmlMessageRenderer = ({
 	htmlContent
 }: {
 	htmlContent: string;
 }): React.JSX.Element => {
 	const remFontSize = useTheme().sizes.font?.small ?? '0.875rem';
-	const updatedBody = useMemo(
-		() => replaceLinkToAnchor(DOMPurify.sanitize(htmlContent, { ADD_ATTR: ['target'] })),
-		[htmlContent]
-	);
+	const updatedBody = useMemo(() => linkifyAndSanitize(htmlContent), [htmlContent]);
 	const styledHtmlContent = useMemo(
 		() => `
 			<style>

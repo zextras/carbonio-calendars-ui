@@ -213,5 +213,32 @@ describe('BodyMessageRenderer', () => {
 
 			expect(screen.getByRole('link')).toHaveAttribute('href', href);
 		});
+
+		it('does not let linkification inject attributes through a URL inside an attribute value', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[
+						{ _content: '<div><img src="x" alt="http://a/onerror=alert(1)// x"></div>' }
+					]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).not.toMatch(/[\s"']onerror\s*=/i);
+			expect(shadowRoot.innerHTML).not.toMatch(/\/onerror="/i);
+		});
+
+		it('keeps escaped markup in a text description inert even when it contains a URL', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[]}
+					textDescription={[{ _content: '<img src=x onerror=alert(1)> http://a/b' }]}
+				/>
+			);
+
+			expect(screen.queryByRole('img')).not.toBeInTheDocument();
+			expect(screen.getByRole('link')).toHaveAttribute('href', 'http://a/b');
+		});
 	});
 });
