@@ -145,8 +145,8 @@ describe('BodyMessageRenderer', () => {
 		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
 	});
 
-	describe('XSS protection', () => {
-		const payload = '<img src="data:image/gif;base64,x" onerror="document.title=\'XSS-OK\'">';
+	describe('description markup handling', () => {
+		const payload = '<img src="data:image/gif;base64,x" onerror="document.title=\'changed\'">';
 
 		it('shows the markup of a text description as text without creating elements', () => {
 			setupTest(
@@ -157,7 +157,7 @@ describe('BodyMessageRenderer', () => {
 			expect(screen.getByText(payload)).toBeInTheDocument();
 		});
 
-		it('removes scripting from an HTML description', () => {
+		it('removes event handlers from an HTML description', () => {
 			setupTest(
 				<BodyMessageRenderer
 					htmlDescription={[{ _content: `<div>Safe</div>${payload}` }]}
@@ -214,7 +214,7 @@ describe('BodyMessageRenderer', () => {
 			expect(screen.getByRole('link')).toHaveAttribute('href', href);
 		});
 
-		it('does not let linkification inject attributes through a URL inside an attribute value', () => {
+		it('does not create attributes when a URL is inside an attribute value', () => {
 			setupTest(
 				<BodyMessageRenderer
 					htmlDescription={[
@@ -229,7 +229,7 @@ describe('BodyMessageRenderer', () => {
 			expect(shadowRoot.innerHTML).not.toMatch(/\/onerror="/i);
 		});
 
-		it('keeps escaped markup in a text description inert even when it contains a URL', () => {
+		it('shows markup of a text description as text even when it contains a URL', () => {
 			setupTest(
 				<BodyMessageRenderer
 					htmlDescription={[]}
