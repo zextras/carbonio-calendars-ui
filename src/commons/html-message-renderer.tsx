@@ -12,6 +12,12 @@ import DOMPurify from 'dompurify';
 import { ShadowDomWrapper } from './shadow-dom-wrapper';
 import { replaceLinkToAnchor } from './utilities';
 
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+	if (node.tagName === 'A' && node.hasAttribute('target')) {
+		node.setAttribute('rel', 'noopener noreferrer');
+	}
+});
+
 export const HtmlMessageRenderer = ({
 	htmlContent
 }: {
@@ -19,7 +25,7 @@ export const HtmlMessageRenderer = ({
 }): React.JSX.Element => {
 	const remFontSize = useTheme().sizes.font?.small ?? '0.875rem';
 	const updatedBody = useMemo(
-		() => replaceLinkToAnchor(DOMPurify.sanitize(htmlContent)),
+		() => replaceLinkToAnchor(DOMPurify.sanitize(htmlContent, { ADD_ATTR: ['target'] })),
 		[htmlContent]
 	);
 	const styledHtmlContent = useMemo(

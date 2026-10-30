@@ -169,5 +169,49 @@ describe('BodyMessageRenderer', () => {
 			expect(shadowRoot.innerHTML).toContain('Safe');
 			expect(shadowRoot.innerHTML).not.toContain('onerror');
 		});
+
+		it('keeps target on anchors and forces a safe rel', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[
+						{ _content: '<a href="https://example.com/a" target="_blank">link</a>' }
+					]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).toContain('target="_blank"');
+			expect(shadowRoot.innerHTML).toContain('rel="noopener noreferrer"');
+		});
+
+		it('keeps cid images and tables of an Outlook-like invite', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[
+						{
+							_content:
+								'<table><tbody><tr><td>cell</td></tr></tbody></table><img src="cid:logo@x" alt="logo">'
+						}
+					]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).toContain('<td>cell</td>');
+			expect(shadowRoot.innerHTML).toContain('src="cid:logo@x"');
+		});
+
+		it.each([
+			['<https://meet.example.com/room>', 'https://meet.example.com/room'],
+			['"https://meet.example.com/room"', 'https://meet.example.com/room']
+		])('linkifies a URL wrapped in escaped characters: %s', (text, href) => {
+			setupTest(
+				<BodyMessageRenderer htmlDescription={[]} textDescription={[{ _content: text }]} />
+			);
+
+			expect(screen.getByRole('link')).toHaveAttribute('href', href);
+		});
 	});
 });
