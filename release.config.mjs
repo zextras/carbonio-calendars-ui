@@ -8,7 +8,11 @@
  * @type {import('semantic-release').GlobalConfig}
  */
 export default {
-	branches: ['main'],
+	branches: [
+		{ name: 'release/v1.37.x', range: '1.37.x' },
+		{ name: 'release/v1.26.x', range: '1.26.x' },
+		'main'
+	],
 	plugins: [
 		[
 			'@semantic-release/commit-analyzer',
