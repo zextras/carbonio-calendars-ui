@@ -1,3 +1,15 @@
+## 1.42.0 (2026-10-30)
+
+* chore(deps): lock file maintenance (#855) ([8360c8d](https://github.com/zextras/carbonio-calendars-ui/commit/8360c8d)), closes [#855](https://github.com/zextras/carbonio-calendars-ui/issues/855)
+* chore(deps): update dependency @zextras/carbonio-search-ui to v0.1.22 (#898) ([a9dbd00](https://github.com/zextras/carbonio-calendars-ui/commit/a9dbd00)), closes [#898](https://github.com/zextras/carbonio-calendars-ui/issues/898)
+* chore(deps): update vitest to v4.1.12 (#891) ([584cd72](https://github.com/zextras/carbonio-calendars-ui/commit/584cd72)), closes [#891](https://github.com/zextras/carbonio-calendars-ui/issues/891)
+* Merge branch 'main' into co-3688-appointment-past-date ([6f9a24d](https://github.com/zextras/carbonio-calendars-ui/commit/6f9a24d))
+* Merge pull request #899 from zextras/co-3688-appointment-past-date ([a34273d](https://github.com/zextras/carbonio-calendars-ui/commit/a34273d)), closes [#899](https://github.com/zextras/carbonio-calendars-ui/issues/899)
+* refactor(CO-3688): convert start/end date pickers to typescript ([6ceb5ef](https://github.com/zextras/carbonio-calendars-ui/commit/6ceb5ef))
+* refactor(CO-3688): mark date picker props as read-only ([8c81e3e](https://github.com/zextras/carbonio-calendars-ui/commit/8c81e3e))
+* fix(test): make msw get-folder mock parsable by vite 8.3 (oxc) ([7b288e0](https://github.com/zextras/carbonio-calendars-ui/commit/7b288e0))
+* feat(CO-3688): prevent moving appointments or proposing new times to past days ([670dbf7](https://github.com/zextras/carbonio-calendars-ui/commit/670dbf7))
+
 ## <small>1.41.2 (2026-10-27)</small>
 
 * fix(CO-4528): update carbonio-ui-commons to 2.6.2 ([383182c](https://github.com/zextras/carbonio-calendars-ui/commit/383182c))
