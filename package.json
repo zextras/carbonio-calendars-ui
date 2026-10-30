@@ -25,7 +25,8 @@
 		"lint-stats": "eslint --ext .js,.jsx,.ts,.tsx --format node_modules/eslint-stats/byErrorAndWarningStacked --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"coverage": "vitest run --coverage"
+		"coverage": "vitest run --coverage",
+		"bump-version": "semantic-release"
 	},
 	"keywords": [],
 	"author": "Zextras Crab Onions Team <https://www.zextras.com/carbonio/>",
@@ -76,11 +77,18 @@
 		"jsdom": "^27.4.0",
 		"msw": "^2.7.0",
 		"pinst": "^3.0.0",
-		"sonarqube-scanner": "^4.3.2",
+		"sonarqube-scanner": "4.4.0",
 		"ts-node": "^10.9.2",
 		"typescript": "~5.7.2",
 		"vite-tsconfig-paths": "^5.1.4",
-		"vitest": "^4.0.8"
+		"vitest": "^4.0.8",
+		"@semantic-release/changelog": "6.0.3",
+		"@semantic-release/commit-analyzer": "13.0.1",
+		"@semantic-release/git": "10.0.1",
+		"@semantic-release/github": "12.0.8",
+		"@semantic-release/npm": "13.1.5",
+		"@semantic-release/release-notes-generator": "14.1.1",
+		"semantic-release": "25.0.5"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
