@@ -19,7 +19,7 @@ export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER
 const plainTextToHTML = (str: string): string => {
 	if (str !== undefined && str !== null) {
 		// The text is not HTML: escape any markup so it is displayed and never executed
-		return escape(str).replace(/(?:\r\n|\r|\n)/g, '<br/>');
+		return escape(str).replaceAll(/(?:\r\n|\r|\n)/g, '<br/>');
 	}
 	return '';
 };
