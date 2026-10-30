@@ -1,3 +1,7 @@
+## <small>1.37.2 (2026-10-30)</small>
+
+* fix(CO-4629): fix invite description rendering (#902) ([5cbe160](https://github.com/zextras/carbonio-calendars-ui/commit/5cbe160)), closes [#902](https://github.com/zextras/carbonio-calendars-ui/issues/902)
+
 ## <small>1.37.1 (2026-09-23)</small>
 
 * Merge pull request #865 from zextras/invite-response-translations-change ([19d3fe1](https://github.com/zextras/carbonio-calendars-ui/commit/19d3fe1)), closes [#865](https://github.com/zextras/carbonio-calendars-ui/issues/865)
