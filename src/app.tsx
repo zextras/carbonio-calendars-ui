@@ -36,6 +36,12 @@ import { useOnClickNewButton } from 'hooks/on-click-new-button';
 import { getSettingsSubSections } from 'settings/sub-sections';
 import { ImportAppointmentsModalComp } from 'shared/import-appointments-integration';
 import { InviteResponseComp } from 'shared/invite-response/invite-response';
+import {
+	toWidgetAction,
+	DASHBOARD_WIDGET_ACTION_TYPE,
+	type DashboardWidgetAction
+} from 'types/dashboard-widget';
+import { todayAppointmentsWidget } from 'widgets/today-appointments';
 import { getCalendarGroupsRequest } from 'soap/get-calendar-groups-request';
 import { StoreProvider } from 'store/redux';
 import { useAppDispatch } from 'store/redux/hooks';
@@ -199,6 +205,11 @@ const AppRegistrations = (): null => {
 			action: () => newAction,
 			id: 'new-appointment',
 			type: 'new'
+		});
+		registerActions<DashboardWidgetAction>({
+			id: todayAppointmentsWidget.id,
+			type: DASHBOARD_WIDGET_ACTION_TYPE,
+			action: () => toWidgetAction(todayAppointmentsWidget)
 		});
 		registerComponents({
 			id: 'invites-reply',
