@@ -1,3 +1,8 @@
+## <small>1.42.1 (2026-11-02)</small>
+
+* chore(deps): lock file maintenance (#906) ([b4caecf](https://github.com/zextras/carbonio-calendars-ui/commit/b4caecf)), closes [#906](https://github.com/zextras/carbonio-calendars-ui/issues/906)
+* fix(invite): fix invite description rendering ([e958713](https://github.com/zextras/carbonio-calendars-ui/commit/e958713))
+
 ## 1.42.0 (2026-10-30)
 
 * chore(deps): lock file maintenance (#855) ([8360c8d](https://github.com/zextras/carbonio-calendars-ui/commit/8360c8d)), closes [#855](https://github.com/zextras/carbonio-calendars-ui/issues/855)
