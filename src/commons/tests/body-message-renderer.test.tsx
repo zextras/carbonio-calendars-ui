@@ -144,4 +144,101 @@ describe('BodyMessageRenderer', () => {
 		);
 		expect(screen.getByText(/message.invite_has_no_message/i)).toBeInTheDocument();
 	});
+
+	describe('description markup handling', () => {
+		const payload = '<img src="data:image/gif;base64,x" onerror="document.title=\'changed\'">';
+
+		it('shows the markup of a text description as text without creating elements', () => {
+			setupTest(
+				<BodyMessageRenderer htmlDescription={[]} textDescription={[{ _content: payload }]} />
+			);
+
+			expect(screen.queryByRole('img')).not.toBeInTheDocument();
+			expect(screen.getByText(payload)).toBeInTheDocument();
+		});
+
+		it('removes event handlers from an HTML description', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[{ _content: `<div>Safe</div>${payload}` }]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).toContain('Safe');
+			expect(shadowRoot.innerHTML).not.toContain('onerror');
+		});
+
+		it('keeps target on anchors and forces a safe rel', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[
+						{ _content: '<a href="https://example.com/a" target="_blank">link</a>' }
+					]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).toContain('target="_blank"');
+			expect(shadowRoot.innerHTML).toContain('rel="noopener noreferrer"');
+		});
+
+		it('keeps cid images and tables of an Outlook-like invite', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[
+						{
+							_content:
+								'<table><tbody><tr><td>cell</td></tr></tbody></table><img src="cid:logo@x" alt="logo">'
+						}
+					]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).toContain('<td>cell</td>');
+			expect(shadowRoot.innerHTML).toContain('src="cid:logo@x"');
+		});
+
+		it.each([
+			['<https://meet.example.com/room>', 'https://meet.example.com/room'],
+			['"https://meet.example.com/room"', 'https://meet.example.com/room']
+		])('linkifies a URL wrapped in escaped characters: %s', (text, href) => {
+			setupTest(
+				<BodyMessageRenderer htmlDescription={[]} textDescription={[{ _content: text }]} />
+			);
+
+			expect(screen.getByRole('link')).toHaveAttribute('href', href);
+		});
+
+		it('does not create attributes when a URL is inside an attribute value', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[
+						{ _content: '<div><img src="x" alt="http://a/onerror=alert(1)// x"></div>' }
+					]}
+					textDescription={[]}
+				/>
+			);
+
+			const shadowRoot = screen.getByTestId('shadow-dom-wrapper').shadowRoot as ShadowRoot;
+			expect(shadowRoot.innerHTML).not.toMatch(/[\s"']onerror\s*=/i);
+			expect(shadowRoot.innerHTML).not.toMatch(/\/onerror="/i);
+		});
+
+		it('shows markup of a text description as text even when it contains a URL', () => {
+			setupTest(
+				<BodyMessageRenderer
+					htmlDescription={[]}
+					textDescription={[{ _content: '<img src=x onerror=alert(1)> http://a/b' }]}
+				/>
+			);
+
+			expect(screen.queryByRole('img')).not.toBeInTheDocument();
+			expect(screen.getByRole('link')).toHaveAttribute('href', 'http://a/b');
+		});
+	});
 });
