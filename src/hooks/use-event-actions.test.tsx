@@ -303,4 +303,72 @@ describe('useEventActions', () => {
 			);
 		});
 	});
+
+	describe('print action', () => {
+		const single = { resource: { calendar: { id: '55' }, isRecurrent: false } } as EventType;
+		const occurrence = { resource: { calendar: { id: '55' }, isRecurrent: true } } as EventType;
+		const trashed = { resource: { calendar: { id: '3' }, isRecurrent: false } } as EventType;
+		const gridContext = { showPrint: true };
+
+		const ids = (actions: Array<AppointmentActionsItems>): Array<string> =>
+			actions.map((action) => action.id);
+
+		it.each([
+			['single appointment', single],
+			['occurrence of a series', occurrence],
+			['appointment in trash', trashed]
+		])('should not be offered without the grid opt-in: %s', (_, event) => {
+			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
+
+			const actions = result.current as Array<AppointmentActionsItems & { items?: [] }>;
+			const all = actions.flatMap((action) => [action, ...(action.items ?? [])]);
+			expect(ids(all)).not.toContain(EVENT_ACTIONS.PRINT);
+		});
+
+		it('should follow show original for a single appointment', () => {
+			const { result } = setupHook(useEventActions, {
+				initialProps: [{ event: single, context: gridContext }]
+			});
+
+			const actionIds = ids(result.current as InstanceActionsItems);
+			expect(actionIds[actionIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) + 1]).toBe(
+				EVENT_ACTIONS.PRINT
+			);
+		});
+
+		it('should be in the instance submenu only for an occurrence of a series', () => {
+			const { result } = setupHook(useEventActions, {
+				initialProps: [{ event: occurrence, context: gridContext }]
+			});
+
+			const [instanceMenu, seriesMenu] = result.current as SeriesActionsItems;
+			const instanceIds = ids(instanceMenu.items);
+			expect(instanceIds[instanceIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) + 1]).toBe(
+				EVENT_ACTIONS.PRINT
+			);
+			expect(ids(seriesMenu.items)).not.toContain(EVENT_ACTIONS.PRINT);
+		});
+
+		it('should follow show original for an appointment in trash', () => {
+			const { result } = setupHook(useEventActions, {
+				initialProps: [{ event: trashed, context: gridContext }]
+			});
+
+			const actionIds = ids(result.current as InstanceActionsItems);
+			expect(actionIds[actionIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) + 1]).toBe(
+				EVENT_ACTIONS.PRINT
+			);
+		});
+
+		it('should be enabled and labelled print', () => {
+			const { result } = setupHook(useEventActions, {
+				initialProps: [{ event: single, context: gridContext }]
+			});
+
+			const print = getActionByName(result.current as InstanceActionsItems, EVENT_ACTIONS.PRINT);
+			expect(print).toEqual(
+				expect.objectContaining({ icon: 'PrinterOutline', label: 'action.print', disabled: false })
+			);
+		});
+	});
 });

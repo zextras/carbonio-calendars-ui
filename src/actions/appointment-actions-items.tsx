@@ -21,6 +21,7 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
+import { printAppointment } from './print-appointment/print-appointment';
 import { isExternalSyncFolder, isCaldavChild } from 'commons/utilities';
 import { PARTICIPATION_STATUS } from 'constants/api';
 import { EVENT_ACTIONS } from 'constants/event-actions';
@@ -301,6 +302,22 @@ export const showOriginal = ({ event }: { event: EventType }): AppointmentAction
 		);
 	}
 });
+
+export const printEventItem = ({
+	event,
+	context
+}: {
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems | false =>
+	!!context.showPrint && {
+		id: EVENT_ACTIONS.PRINT,
+		icon: 'PrinterOutline',
+		label: t('action.print', 'Print'),
+		disabled: false,
+		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+		onClick: printAppointment({ event, context })
+	};
 
 export const exportAppointmentICSItem = ({
 	event
