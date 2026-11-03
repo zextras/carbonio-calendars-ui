@@ -99,7 +99,7 @@ const getSuccessfulBodyByView = (
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-const getSuccessfulBody = (tr?: number, context: any): Response['Body'] => {
+const getSuccessfulBody = (tr: number | undefined, context: any): Response['Body'] => {
 	const identity = getMocksContext().identities.primary.identity.email;
 	const account = context.account._content;
 	const luuid = context.session.id;
@@ -117,7 +117,11 @@ const getSuccessfulBody = (tr?: number, context: any): Response['Body'] => {
 // todo: update return type once soap return type is created
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-const getSuccessfulBodyById = (id: string, tr?: number, context: any): Response['Body'] => {
+const getSuccessfulBodyById = (
+	id: string,
+	tr: number | undefined,
+	context: any
+): Response['Body'] => {
 	if (id === '1' && tr) {
 		return getSuccessfulBody(tr, context);
 	}

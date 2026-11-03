@@ -15,6 +15,7 @@ import {
 	Container
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { formatInTimeZone } from 'date-fns-tz';
 import { map } from 'lodash';
 
 import { WorkWeekDay } from '../utils/work-week';
@@ -43,6 +44,10 @@ export default function WorkWeekSettings({
 	toggleModal: () => void;
 }): React.JSX.Element {
 	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(), []);
+	const deviceTimezone = useMemo(() => {
+		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		return `GMT ${formatInTimeZone(new Date(), timezone, 'xxx')} ${timezone}`;
+	}, []);
 
 	return (
 		<FormSection id={sectionTitleWorkWeek.id} label={sectionTitleWorkWeek.label}>
@@ -87,14 +92,14 @@ export default function WorkWeekSettings({
 				/>
 				<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
 					<Text>
-						{t('label.timezone_pref_msg', 'The timings follow your timezone preferences.')}
+						{t('label.timezone_device_msg', 'These times follow your device’s timezone.')}
 					</Text>
 					<Text>
 						<i>
-							{t(
-								'label.your_pref_timezone_msg',
-								'Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna.'
-							)}
+							{t('label.your_device_timezone_msg', {
+								timezone: deviceTimezone,
+								defaultValue: 'Your device’s timezone: {{timezone}}'
+							})}
 						</i>
 					</Text>
 				</Row>

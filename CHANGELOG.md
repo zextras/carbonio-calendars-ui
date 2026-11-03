@@ -1,3 +1,39 @@
+## <small>1.42.2 (2026-11-03)</small>
+
+* fix(deps): update dependency @zextras/carbonio-ui-soap-lib to v1.3.3 (#911) ([e8651e8](https://github.com/zextras/carbonio-calendars-ui/commit/e8651e8)), closes [#911](https://github.com/zextras/carbonio-calendars-ui/issues/911)
+* chore(deps): update dependency zextras/jenkins-lib-common to v5.3.1 (#907) ([6ccf073](https://github.com/zextras/carbonio-calendars-ui/commit/6ccf073)), closes [#907](https://github.com/zextras/carbonio-calendars-ui/issues/907)
+
+## <small>1.42.1 (2026-11-02)</small>
+
+* chore(deps): lock file maintenance (#906) ([b4caecf](https://github.com/zextras/carbonio-calendars-ui/commit/b4caecf)), closes [#906](https://github.com/zextras/carbonio-calendars-ui/issues/906)
+* fix(invite): fix invite description rendering ([e958713](https://github.com/zextras/carbonio-calendars-ui/commit/e958713))
+
+## 1.42.0 (2026-10-30)
+
+* chore(deps): lock file maintenance (#855) ([8360c8d](https://github.com/zextras/carbonio-calendars-ui/commit/8360c8d)), closes [#855](https://github.com/zextras/carbonio-calendars-ui/issues/855)
+* chore(deps): update dependency @zextras/carbonio-search-ui to v0.1.22 (#898) ([a9dbd00](https://github.com/zextras/carbonio-calendars-ui/commit/a9dbd00)), closes [#898](https://github.com/zextras/carbonio-calendars-ui/issues/898)
+* chore(deps): update vitest to v4.1.12 (#891) ([584cd72](https://github.com/zextras/carbonio-calendars-ui/commit/584cd72)), closes [#891](https://github.com/zextras/carbonio-calendars-ui/issues/891)
+* Merge branch 'main' into co-3688-appointment-past-date ([6f9a24d](https://github.com/zextras/carbonio-calendars-ui/commit/6f9a24d))
+* Merge pull request #899 from zextras/co-3688-appointment-past-date ([a34273d](https://github.com/zextras/carbonio-calendars-ui/commit/a34273d)), closes [#899](https://github.com/zextras/carbonio-calendars-ui/issues/899)
+* refactor(CO-3688): convert start/end date pickers to typescript ([6ceb5ef](https://github.com/zextras/carbonio-calendars-ui/commit/6ceb5ef))
+* refactor(CO-3688): mark date picker props as read-only ([8c81e3e](https://github.com/zextras/carbonio-calendars-ui/commit/8c81e3e))
+* fix(test): make msw get-folder mock parsable by vite 8.3 (oxc) ([7b288e0](https://github.com/zextras/carbonio-calendars-ui/commit/7b288e0))
+* feat(CO-3688): prevent moving appointments or proposing new times to past days ([670dbf7](https://github.com/zextras/carbonio-calendars-ui/commit/670dbf7))
+
+## <small>1.41.2 (2026-10-27)</small>
+
+* fix(CO-4528): update carbonio-ui-commons to 2.6.2 ([383182c](https://github.com/zextras/carbonio-calendars-ui/commit/383182c))
+* chore(deps): update semantic-release monorepo (#889) ([ad51432](https://github.com/zextras/carbonio-calendars-ui/commit/ad51432)), closes [#889](https://github.com/zextras/carbonio-calendars-ui/issues/889)
+* chore(deps): update testing library (#890) ([57c91ad](https://github.com/zextras/carbonio-calendars-ui/commit/57c91ad)), closes [#890](https://github.com/zextras/carbonio-calendars-ui/issues/890)
+
+## <small>1.41.1 (2026-10-26)</small>
+
+* fix(CO-3866): show the device timezone in work week settings (#880) ([b1feee4](https://github.com/zextras/carbonio-calendars-ui/commit/b1feee4)), closes [#880](https://github.com/zextras/carbonio-calendars-ui/issues/880)
+* chore(deps): update dependency @babel/runtime to v7.29.10 (#885) ([68b1785](https://github.com/zextras/carbonio-calendars-ui/commit/68b1785)), closes [#885](https://github.com/zextras/carbonio-calendars-ui/issues/885)
+* chore(deps): update dependency @types/lodash to v4.17.27 (#886) ([c9c8053](https://github.com/zextras/carbonio-calendars-ui/commit/c9c8053)), closes [#886](https://github.com/zextras/carbonio-calendars-ui/issues/886)
+* chore(deps): update dependency @types/react-redux to v7.1.35 (#887) ([d26cd21](https://github.com/zextras/carbonio-calendars-ui/commit/d26cd21)), closes [#887](https://github.com/zextras/carbonio-calendars-ui/issues/887)
+* chore(deps): update dependency zextras/jenkins-lib-common to v5.1.0 (#884) ([46b160d](https://github.com/zextras/carbonio-calendars-ui/commit/46b160d)), closes [#884](https://github.com/zextras/carbonio-calendars-ui/issues/884)
+
 ## 1.41.0 (2026-10-22)
 
 * feat(CO-4382): migrate appointment editor from TinyMCE to Lexical (#873) ([28b24fd](https://github.com/zextras/carbonio-calendars-ui/commit/28b24fd)), closes [#873](https://github.com/zextras/carbonio-calendars-ui/issues/873)

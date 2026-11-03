@@ -7,18 +7,18 @@ import React, { useMemo } from 'react';
 
 import { Container, Text, Theme } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { replace } from 'lodash';
+import { escape, replace } from 'lodash';
 
 import { ROOM_DIVIDER } from '../constants';
-import { HtmlMessageRenderer } from './html-message-renderer';
-import { replaceLinkToAnchor } from './utilities';
+import { HtmlMessageRenderer, linkifyAndSanitize } from './html-message-renderer';
 import { InviteDescription } from 'types/store/invite';
 
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
 
 const plainTextToHTML = (str: string): string => {
 	if (str !== undefined && str !== null) {
-		return str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+		// The text is not HTML: escape any markup so it is displayed and never executed
+		return escape(str).replaceAll(/(?:\r\n|\r|\n)/g, '<br/>');
 	}
 	return '';
 };
@@ -48,7 +48,7 @@ const TextMessageRenderer = ({
 	text: string;
 	fontSize?: keyof typeof Theme.sizes.font;
 }): React.JSX.Element => {
-	const convertedHTML = useMemo(() => replaceLinkToAnchor(plainTextToHTML(text)), [text]);
+	const convertedHTML = useMemo(() => linkifyAndSanitize(plainTextToHTML(text)), [text]);
 	return (
 		<Text
 			dangerouslySetInnerHTML={{
