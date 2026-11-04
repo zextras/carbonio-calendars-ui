@@ -235,8 +235,8 @@ importers:
         specifier: 2.1.1
         version: 2.1.1(@testing-library/dom@10.4.2)(typescript@5.9.3)
       '@zextras/carbonio-ui-sdk':
-        specifier: 2.3.13
-        version: 2.3.13(typescript@5.9.3)
+        specifier: 2.4.0
+        version: 2.4.0(typescript@5.9.3)
       babel-plugin-transform-import-meta:
         specifier: 2.3.3
         version: 2.3.3(@babel/core@7.29.7)
@@ -2884,8 +2884,8 @@ packages:
       react: ^18.3.1
       react-dom: ^18.3.1
 
-  '@zextras/carbonio-ui-sdk@2.3.13':
-    resolution: {integrity: sha512-tArqqlu4Tx1YVRJqPlh48OBifVjlpjP4rx733SER+LVj6dyAwlwZ6/LYmkE9GXYp9NlBdjFEIEmLQnT9LlZxqQ==}
+  '@zextras/carbonio-ui-sdk@2.4.0':
+    resolution: {integrity: sha512-I73jlmzGrzo9lvKsQkqCFqkXiwj7QuF0ZAllxWr+0q2dsTky11nGUMpu7hkL0coIAT8O0M2MvFDIuGG0MDI7Ug==}
     engines: {node: v22, pnpm: '>=9'}
     hasBin: true
 
@@ -10936,7 +10936,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@zextras/carbonio-ui-sdk@2.3.13(typescript@5.9.3)':
+  '@zextras/carbonio-ui-sdk@2.4.0(typescript@5.9.3)':
     dependencies:
       '@babel/core': 7.29.6
       '@svgr/webpack': 5.5.0
@@ -11726,12 +11726,12 @@ snapshots:
 
   css-loader@6.11.0(webpack@5.108.3(postcss@8.5.10)):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.10)
-      postcss: 8.5.10
-      postcss-modules-extract-imports: 3.1.0(postcss@8.5.10)
-      postcss-modules-local-by-default: 4.2.0(postcss@8.5.10)
-      postcss-modules-scope: 3.2.1(postcss@8.5.10)
-      postcss-modules-values: 4.0.0(postcss@8.5.10)
+      icss-utils: 5.1.0(postcss@8.5.32)
+      postcss: 8.5.32
+      postcss-modules-extract-imports: 3.1.0(postcss@8.5.32)
+      postcss-modules-local-by-default: 4.2.0(postcss@8.5.32)
+      postcss-modules-scope: 3.2.1(postcss@8.5.32)
+      postcss-modules-values: 4.0.0(postcss@8.5.32)
       postcss-value-parser: 4.2.0
       semver: 7.8.5
     optionalDependencies:
@@ -13100,9 +13100,9 @@ snapshots:
       safer-buffer: 2.1.2
     optional: true
 
-  icss-utils@5.1.0(postcss@8.5.10):
+  icss-utils@5.1.0(postcss@8.5.32):
     dependencies:
-      postcss: 8.5.10
+      postcss: 8.5.32
 
   identity-obj-proxy@3.0.0:
     dependencies:
@@ -14267,26 +14267,26 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  postcss-modules-extract-imports@3.1.0(postcss@8.5.10):
+  postcss-modules-extract-imports@3.1.0(postcss@8.5.32):
     dependencies:
-      postcss: 8.5.10
+      postcss: 8.5.32
 
-  postcss-modules-local-by-default@4.2.0(postcss@8.5.10):
+  postcss-modules-local-by-default@4.2.0(postcss@8.5.32):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.10)
-      postcss: 8.5.10
+      icss-utils: 5.1.0(postcss@8.5.32)
+      postcss: 8.5.32
       postcss-selector-parser: 7.1.7
       postcss-value-parser: 4.2.0
 
-  postcss-modules-scope@3.2.1(postcss@8.5.10):
+  postcss-modules-scope@3.2.1(postcss@8.5.32):
     dependencies:
-      postcss: 8.5.10
+      postcss: 8.5.32
       postcss-selector-parser: 7.1.7
 
-  postcss-modules-values@4.0.0(postcss@8.5.10):
+  postcss-modules-values@4.0.0(postcss@8.5.32):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.10)
-      postcss: 8.5.10
+      icss-utils: 5.1.0(postcss@8.5.32)
+      postcss: 8.5.32
 
   postcss-selector-parser@7.1.7:
     dependencies:

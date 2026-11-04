@@ -1,3 +1,8 @@
+## <small>1.42.2 (2026-11-03)</small>
+
+* fix(deps): update dependency @zextras/carbonio-ui-soap-lib to v1.3.3 (#911) ([e8651e8](https://github.com/zextras/carbonio-calendars-ui/commit/e8651e8)), closes [#911](https://github.com/zextras/carbonio-calendars-ui/issues/911)
+* chore(deps): update dependency zextras/jenkins-lib-common to v5.3.1 (#907) ([6ccf073](https://github.com/zextras/carbonio-calendars-ui/commit/6ccf073)), closes [#907](https://github.com/zextras/carbonio-calendars-ui/issues/907)
+
 ## <small>1.42.1 (2026-11-02)</small>
 
 * chore(deps): lock file maintenance (#906) ([b4caecf](https://github.com/zextras/carbonio-calendars-ui/commit/b4caecf)), closes [#906](https://github.com/zextras/carbonio-calendars-ui/issues/906)
