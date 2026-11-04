@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 
 import { useBoard, useBoardHooks } from '@zextras/carbonio-shell-ui';
 
@@ -17,15 +17,13 @@ const BoardEditPanel = (): ReactElement | null => {
 	// @ts-ignore
 	const editorId: string | undefined = board?.editor?.id;
 	const isDirty = useAppSelector(selectEditorIsDirty(editorId ?? ''));
-	const isDirtyRef = useRef(isDirty);
-	isDirtyRef.current = isDirty;
-	const boardTitleRef = useRef(board?.title ?? '');
-	boardTitleRef.current = board?.title ?? '';
 
 	const { setContentStatus } = useBoardHooks();
 
 	useEffect(() => {
-		setContentStatus(isDirty ? 'dirty' : 'pristine');
+		// the shell asks for the confirmation on close: tell it whether the editor has unsaved changes.
+		// It is optional because the shell may not provide it (e.g. an older shell)
+		setContentStatus?.(isDirty ? 'dirty' : 'pristine');
 	}, [setContentStatus, isDirty]);
 
 	if (!editorId) {
