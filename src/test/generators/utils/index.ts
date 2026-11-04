@@ -167,6 +167,29 @@ export function generateSoapErrorResponseBody({
 	};
 }
 
+export function generateSendToDistributionListDeniedResponseBody({
+	invalid,
+	unsent = []
+}: {
+	invalid: Array<string>;
+	unsent?: Array<string>;
+}): ErrorSoapBodyResponse {
+	const response = generateSoapErrorResponseBody({
+		detailCode: 'mail.SEND_TO_DISTRIBUTION_LIST_DENIED',
+		reason: `Sender is not allowed to email this distribution list: ${invalid.join(', ')}`
+	});
+	const args = [
+		...invalid.map((address) => ({ n: 'invalid', t: 'STR', _content: address })),
+		...unsent.map((address) => ({ n: 'unsent', t: 'STR', _content: address }))
+	];
+	return {
+		Fault: {
+			...response.Fault,
+			Detail: { Error: { ...response.Fault.Detail.Error, a: args } }
+		}
+	} as ErrorSoapBodyResponse;
+}
+
 export default {
 	getRandomInRange,
 	getRandomCalendarFlags,

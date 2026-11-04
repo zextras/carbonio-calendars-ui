@@ -25,6 +25,7 @@ import { useAppDispatch, useAppSelector } from 'store/redux/hooks';
 import { selectInstanceInvite } from 'store/selectors/invites';
 import { ActionsContext } from 'types/actions';
 import { EventType } from 'types/event';
+import { isOccurrenceOfSeries } from 'utils/event';
 import { isSentOnBehalfOf } from 'utils/organizer';
 
 const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
@@ -134,7 +135,7 @@ const SearchListItem = ({ item }: { item: EventType }): React.ReactElement => {
 						)}
 						<Row>
 							<Container orientation="horizontal" mainAlignment="flex-end">
-								{item.resource?.isRecurrent && (
+								{isOccurrenceOfSeries(item.resource) && (
 									<Tooltip label={isRecurrentLabel}>
 										<Icon icon="Repeat" size="medium" color="gray0" />
 									</Tooltip>

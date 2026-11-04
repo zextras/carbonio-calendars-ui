@@ -12,7 +12,10 @@ import { noop } from 'lodash';
 
 import { UserEvent, setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
-import { generateSoapErrorResponseBody } from 'test/generators/utils';
+import {
+	generateSendToDistributionListDeniedResponseBody,
+	generateSoapErrorResponseBody
+} from 'test/generators/utils';
 import { EventType } from 'types/event';
 import { ForwardAppointmentRequest } from 'types/soap/soap-actions';
 import { ForwardAppointmentModal } from 'view/modals/forward-appointment/forward-appointment-modal';
@@ -120,6 +123,26 @@ describe('ForwardAppointmentModal', () => {
 			await interceptor;
 			const errorSnackbar = await screen.findByText('label.error_try_again');
 			expect(errorSnackbar).toBeVisible();
+		});
+
+		it('should show the distribution list error and stay open when a list is denied', async () => {
+			const mockOnClose = vi.fn();
+			const interceptor = createSoapAPIInterceptor(
+				'ForwardAppointment',
+				generateSendToDistributionListDeniedResponseBody({ invalid: ['devs@test.com'] })
+			);
+			const { user } = setupTest(<ForwardAppointmentModal event={event} onClose={mockOnClose} />);
+			const input = await screen.findByTestId('forward-appointment-input');
+			await inputAttendee(user, input, faker.internet.email());
+
+			const confirmButton = screen.getByRole('button', {
+				name: 'modal.buttonLabel.forward'
+			});
+			await user.click(confirmButton);
+			await interceptor;
+			const errorSnackbar = await screen.findByText('label.error_distribution_list_denied');
+			expect(errorSnackbar).toBeVisible();
+			expect(mockOnClose).not.toHaveBeenCalled();
 		});
 	});
 });

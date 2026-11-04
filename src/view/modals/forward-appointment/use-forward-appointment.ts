@@ -7,15 +7,17 @@
 import { useCallback } from 'react';
 
 import { ContactInputItem } from '@zextras/carbonio-ui-commons';
+import { SoapFault } from '@zextras/carbonio-ui-soap-lib';
 
 import { MessagePart } from './message-parts-builder';
+import { getDeniedDistributionLists } from 'soap/errors/send-to-distribution-list-denied';
 import { forwardAppointmentRequest } from 'soap/forward-appointment-request';
 
 type UseForwardAppointmentParams = {
 	eventId: string;
 	subject: string;
 	onSuccess: () => void;
-	onError: () => void;
+	onError: (fault?: SoapFault) => void;
 	onComplete: () => void;
 };
 
@@ -42,16 +44,19 @@ export const useForwardAppointment = ({
 				});
 
 				if (!response || 'Fault' in response) {
-					onError();
-					return;
+					const fault = response?.Fault;
+					onError(fault);
+					// keep the modal open so the user can remove the denied lists and retry
+					if (getDeniedDistributionLists(fault)) {
+						return;
+					}
+				} else {
+					onSuccess();
 				}
-
-				onSuccess();
 			} catch {
 				onError();
-			} finally {
-				onComplete();
 			}
+			onComplete();
 		},
 		[eventId, subject, onSuccess, onError, onComplete]
 	);

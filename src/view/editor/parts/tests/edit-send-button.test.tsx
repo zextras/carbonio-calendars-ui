@@ -8,6 +8,7 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
+import { closeBoard, useBoard } from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 import { Mock } from 'vitest';
 
@@ -17,6 +18,10 @@ import { reducers } from '../../../../store/redux';
 import { editEditorAttendees, editEditorTitle } from '../../../../store/slices/editor-slice';
 import { EditorSendButton } from '../editor-send-button';
 import { setupTest } from '@test-setup';
+import {
+	generateSendToDistributionListDeniedResponseBody,
+	generateSoapErrorResponseBody
+} from 'test/generators/utils';
 
 vi.mock('../../../../commons/editor-save-send-fns', () => ({
 	onSend: vi.fn()
@@ -81,6 +86,61 @@ describe('EditorSendButton', () => {
 			expect(onSend).toHaveBeenCalled();
 		});
 	});
+	describe('send failure', () => {
+		const setupNewEditorSendButton = (): ReturnType<typeof setupTest> => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					title: 'Team Meeting',
+					attendees: [DEFAULT_ATTENDEE]
+				}
+			});
+			return setupTest(<EditorSendButton editorId={editor.id} />, { store });
+		};
+
+		it('shows which distribution list was denied and keeps the editor open', async () => {
+			(useBoard as Mock).mockReturnValue({ id: 'board-1' });
+			const { Fault } = generateSendToDistributionListDeniedResponseBody({
+				invalid: ['Devs <devs@test.com>'],
+				unsent: [DEFAULT_ATTENDEE.email]
+			});
+			(onSend as Mock).mockResolvedValue({ ...Fault, error: true });
+			const { user } = setupNewEditorSendButton();
+			await user.click(screen.getByRole('button', { name: /send/i }));
+
+			expect(
+				await screen.findByText("You can't invite devs@test.com. Remove it and try again.")
+			).toBeVisible();
+			expect(closeBoard).not.toHaveBeenCalled();
+		});
+
+		it('counts the denied distribution lists when more than one was denied', async () => {
+			const { Fault } = generateSendToDistributionListDeniedResponseBody({
+				invalid: ['devs@test.com', 'sales@test.com']
+			});
+			(onSend as Mock).mockResolvedValue({ ...Fault, error: true });
+			const { user } = setupNewEditorSendButton();
+			await user.click(screen.getByRole('button', { name: /send/i }));
+
+			expect(
+				await screen.findByText("You can't invite 2 distribution lists. Remove them and try again.")
+			).toBeVisible();
+		});
+
+		it('shows the generic error for other faults', async () => {
+			(onSend as Mock).mockResolvedValue({
+				...generateSoapErrorResponseBody({ detailCode: 'mail.SEND_ABORTED_ADDRESS_FAILURE' }).Fault,
+				error: true
+			});
+			const { user } = setupNewEditorSendButton();
+			await user.click(screen.getByRole('button', { name: /send/i }));
+
+			expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
+		});
+	});
+
 	it('should show disabled tooltip when sendButton is disabled', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 

@@ -86,6 +86,13 @@ describe('title-row', () => {
 
 			expect(screen.getByTestId('icon: Repeat')).toBeVisible();
 		});
+		test('if the event is an exception of a recurrence it will have a recurrent icon', async () => {
+			const event = mockedData.getEvent({ resource: { isRecurrent: false, isException: true } });
+
+			setupTest(<TitleRow event={event} />);
+
+			expect(screen.getByTestId('icon: Repeat')).toBeVisible();
+		});
 	});
 
 	describe('need action icon', () => {

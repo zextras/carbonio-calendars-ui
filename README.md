@@ -34,7 +34,7 @@ pnpm run sdk-setup
 #### Watch Mode
 
 ```
-pnpm run start -- -h <host>
+pnpm run start -h <host>
 ```
 
 The host parameter is required to proxy requests and content from an existing Carbonio installation.

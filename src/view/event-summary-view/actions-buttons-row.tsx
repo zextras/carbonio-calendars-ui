@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { SeriesActionsItems } from '../../types/actions';
 import { EventType } from '../../types/event';
+import { isOccurrenceOfSeries } from '../../utils/event';
 
 export const ActionsButtonsRow = ({
 	onClose,
@@ -28,10 +29,11 @@ export const ActionsButtonsRow = ({
 	if (!actions) {
 		return null;
 	}
+	const isSeriesOccurrence = isOccurrenceOfSeries(event.resource);
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			<Padding right="small" style={{ display: 'flex' }}>
-				{event.resource.isRecurrent && (actions as SeriesActionsItems)?.[1]?.items?.length > 0 && (
+				{isSeriesOccurrence && (actions as SeriesActionsItems)?.[1]?.items?.length > 0 && (
 					<Dropdown
 						data-testid={`series-options`}
 						items={(actions as SeriesActionsItems)?.[1]?.items}

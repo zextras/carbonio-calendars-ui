@@ -42,6 +42,7 @@ import {
 	SeriesActionsItems
 } from '../types/actions';
 import { EventType } from '../types/event';
+import { isOccurrenceOfSeries, toSeriesEvent } from '../utils/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
 const getExportICSItem = ({
@@ -78,7 +79,9 @@ const getInstanceActionsItems = ({ event, invite, context }: ActionsProps): Inst
 	]);
 
 const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): SeriesActionsItems => {
-	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as EventType;
+	const seriesEvent = toSeriesEvent(event);
+	// the invite of an exception is not the series one: let the series actions fetch it
+	const seriesInvite = event.resource.isException ? undefined : invite;
 	const contextOverride = { ...context, isInstance: true };
 	return [
 		{
@@ -104,7 +107,6 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				forwardEventItem({ event, context }),
 				emailAttendeesEventItem({ event, invite, context }),
 				showOriginal({ event }),
-				applyTag({ event, context }),
 				answerToEventItem({ event, invite, context: contextOverride })
 			])
 		},
@@ -125,14 +127,15 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 					event: seriesEvent,
 					context
 				}),
-				editEventItem({ event: seriesEvent, invite, context }),
-				deleteEventItem({ event: seriesEvent, invite, context }),
+				editEventItem({ event: seriesEvent, invite: seriesInvite, context }),
+				deleteEventItem({ event: seriesEvent, invite: seriesInvite, context }),
 				moveEventItem({ event: seriesEvent, context }),
-				copyEventItem({ event: seriesEvent, invite, context }),
+				copyEventItem({ event: seriesEvent, invite: seriesInvite, context }),
 				forwardEventItem({ event, context }),
 				showOriginal({ event }),
-				applyTag({ event, context }),
-				answerToEventItem({ event: seriesEvent, invite, context }),
+				// tags belong to the whole appointment: the server cannot tag a single occurrence
+				applyTag({ event: seriesEvent, context }),
+				answerToEventItem({ event: seriesEvent, invite: seriesInvite, context }),
 				getExportICSItem({ event: seriesEvent, context })
 			])
 		}
@@ -204,12 +207,10 @@ export const useEventActions = ({
 	return useMemo(() => {
 		if (!event) return undefined;
 
-		const { isRecurrent, calendar } = event.resource;
-
-		if (calendar.id === FOLDERS.TRASH) {
+		if (event.resource.calendar.id === FOLDERS.TRASH) {
 			return getTrashActions({ event, invite, context: _context });
 		}
-		return isRecurrent
+		return isOccurrenceOfSeries(event.resource)
 			? getRecurrentActionsItems({ event, invite, context: _context })
 			: getInstanceActionsItems({ event, invite, context: _context });
 	}, [_context, event, invite]);

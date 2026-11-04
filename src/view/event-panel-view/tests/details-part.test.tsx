@@ -87,6 +87,35 @@ describe('title-row', () => {
 		);
 		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
 	});
+	test('if the event is an exception of a recurrence it will have a recurrent icon', async () => {
+		setupFoldersStore();
+		const event = mockedData.getEvent({
+			resource: { isRecurrent: false, isException: true }
+		});
+		const invite = mockedData.getInvite({ event });
+		const mockedInviteSlice = {
+			invites: {
+				[invite.id]: invite
+			}
+		};
+		const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+
+		setupTest(
+			<DetailsPart
+				event={event}
+				invite={invite}
+				inviteNeverSent={invite.neverSent}
+				isPrivate={event.resource.class === 'PRI'}
+				subject={event.title}
+			/>,
+			{ store }
+		);
+		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
+	});
 	test('the calendar icon tooltip shows only the calendar name for a non-linked calendar', async () => {
 		setupFoldersStore();
 		const event = mockedData.getEvent();
