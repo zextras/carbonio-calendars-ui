@@ -11,17 +11,23 @@ import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
-import { CALENDAR_BOARD_ID, CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
+import {
+	CALENDAR_BOARD_ICON,
+	CALENDAR_BOARD_ID,
+	CALENDAR_DIRTY_BOARD_ICON,
+	CALENDAR_ROUTE,
+	PANEL_VIEW
+} from '../constants';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
+import { buildMessagePart } from '../store/actions/move-appointment-to-trash';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { AppDispatch, StoreProvider } from '../store/redux';
 import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import { getInstanceExceptionId } from '../utils/event';
-import { buildMessagePart } from '../store/actions/move-appointment-to-trash';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { openProposeNewTimeModal } from '../view/modals/propose-new-time-modal';
@@ -156,6 +162,8 @@ export const createCopy =
 			addBoard({
 				boardViewId: CALENDAR_BOARD_ID,
 				title: editor?.title ?? '',
+				icon: CALENDAR_BOARD_ICON,
+				dirtyIcon: CALENDAR_DIRTY_BOARD_ICON,
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				editor
@@ -188,6 +196,8 @@ export const editAppointment =
 			addBoard({
 				boardViewId: CALENDAR_BOARD_ID,
 				title: editor?.title ?? '',
+				icon: CALENDAR_BOARD_ICON,
+				dirtyIcon: CALENDAR_DIRTY_BOARD_ICON,
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				editor

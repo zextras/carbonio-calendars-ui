@@ -10,7 +10,7 @@ import { addBoard, t } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { CALENDAR_BOARD_ID } from '../../constants';
+import { CALENDAR_BOARD_ICON, CALENDAR_BOARD_ID, CALENDAR_DIRTY_BOARD_ICON } from '../../constants';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectEditor } from '../../store/selectors/editor';
 
@@ -45,6 +45,8 @@ export const EditorCloseConfirmationModal = ({
 			addBoard({
 				boardViewId: CALENDAR_BOARD_ID,
 				title: boardTitle || editor.title || '',
+				icon: CALENDAR_BOARD_ICON,
+				dirtyIcon: CALENDAR_DIRTY_BOARD_ICON,
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				editor

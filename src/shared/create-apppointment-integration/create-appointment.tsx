@@ -9,7 +9,7 @@ import { pick } from 'lodash';
 import { Dispatch } from 'redux';
 
 import { generateEditor } from '../../commons/editor-generator';
-import { CALENDAR_BOARD_ID } from '../../constants';
+import { CALENDAR_BOARD_ICON, CALENDAR_BOARD_ID, CALENDAR_DIRTY_BOARD_ICON } from '../../constants';
 import { Editor } from '../../types/editor';
 
 // todo: enable the possibility to include attachments
@@ -77,6 +77,8 @@ const createAppointmentIntegration =
 		addBoard({
 			boardViewId: CALENDAR_BOARD_ID,
 			title: editor?.title ?? '',
+			icon: CALENDAR_BOARD_ICON,
+			dirtyIcon: CALENDAR_DIRTY_BOARD_ICON,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			editor
