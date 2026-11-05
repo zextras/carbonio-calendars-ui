@@ -325,13 +325,13 @@ describe('useEventActions', () => {
 			expect(ids(all)).not.toContain(EVENT_ACTIONS.PRINT);
 		});
 
-		it('should follow show original for a single appointment', () => {
+		it('should come before show original for a single appointment', () => {
 			const { result } = setupHook(useEventActions, {
 				initialProps: [{ event: single, context: gridContext }]
 			});
 
 			const actionIds = ids(result.current as InstanceActionsItems);
-			expect(actionIds[actionIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) + 1]).toBe(
+			expect(actionIds[actionIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) - 1]).toBe(
 				EVENT_ACTIONS.PRINT
 			);
 		});
@@ -343,19 +343,19 @@ describe('useEventActions', () => {
 
 			const [instanceMenu, seriesMenu] = result.current as SeriesActionsItems;
 			const instanceIds = ids(instanceMenu.items);
-			expect(instanceIds[instanceIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) + 1]).toBe(
+			expect(instanceIds[instanceIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) - 1]).toBe(
 				EVENT_ACTIONS.PRINT
 			);
 			expect(ids(seriesMenu.items)).not.toContain(EVENT_ACTIONS.PRINT);
 		});
 
-		it('should follow show original for an appointment in trash', () => {
+		it('should come before show original for an appointment in trash', () => {
 			const { result } = setupHook(useEventActions, {
 				initialProps: [{ event: trashed, context: gridContext }]
 			});
 
 			const actionIds = ids(result.current as InstanceActionsItems);
-			expect(actionIds[actionIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) + 1]).toBe(
+			expect(actionIds[actionIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) - 1]).toBe(
 				EVENT_ACTIONS.PRINT
 			);
 		});

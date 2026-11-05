@@ -73,8 +73,8 @@ const getInstanceActionsItems = ({ event, invite, context }: ActionsProps): Inst
 		copyEventItem({ event, invite, context }),
 		forwardEventItem({ event, context }),
 		emailAttendeesEventItem({ event, invite, context }),
-		showOriginal({ event }),
 		printEventItem({ event, context }),
+		showOriginal({ event }),
 		applyTag({ event, context }),
 		answerToEventItem({ event, invite, context }),
 		getExportICSItem({ event, context })
@@ -108,8 +108,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				forwardEventItem({ event, context }),
 				emailAttendeesEventItem({ event, invite, context }),
-				showOriginal({ event }),
 				printEventItem({ event, context }),
+				showOriginal({ event }),
 				answerToEventItem({ event, invite, context: contextOverride })
 			])
 		},
@@ -156,9 +156,9 @@ const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActi
 		deleteEventItem({ event: seriesEvent, invite, context }),
 		moveEventItem({ event: seriesEvent, context }),
 		copyEventItem({ event: seriesEvent, invite, context }),
-		showOriginal({ event }),
 		// the occurrence dates, not the series ones
 		printEventItem({ event, context }),
+		showOriginal({ event }),
 		applyTag({ event, context }),
 		getExportICSItem({ event: seriesEvent, context })
 	]);
