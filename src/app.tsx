@@ -36,19 +36,20 @@ import { useOnClickNewButton } from 'hooks/on-click-new-button';
 import { getSettingsSubSections } from 'settings/sub-sections';
 import { ImportAppointmentsModalComp } from 'shared/import-appointments-integration';
 import { InviteResponseComp } from 'shared/invite-response/invite-response';
+import { getCalendarGroupsRequest } from 'soap/get-calendar-groups-request';
+import { StoreProvider } from 'store/redux';
+import { useAppDispatch } from 'store/redux/hooks';
+import { updateCalendarGroupsStore } from 'store/zustand/calendar-group-store';
 import {
 	toWidgetAction,
 	DASHBOARD_WIDGET_ACTION_TYPE,
 	type DashboardWidgetAction
 } from 'types/dashboard-widget';
-import { todayAppointmentsWidget } from 'widgets/today-appointments';
-import { getCalendarGroupsRequest } from 'soap/get-calendar-groups-request';
-import { StoreProvider } from 'store/redux';
-import { useAppDispatch } from 'store/redux/hooks';
-import { updateCalendarGroupsStore } from 'store/zustand/calendar-group-store';
 import { GlobalModalManager } from 'view/global-modal-manager';
 import { AppointmentReminder } from 'view/reminder/appointment-reminder';
 import { InitializeTags } from 'view/tags/initialize-tags';
+import { meetingRoomsAvailabilityWidget } from 'widgets/meeting-rooms-availability';
+import { todayAppointmentsWidget } from 'widgets/today-appointments';
 
 const LazyCalendarView = lazy(
 	() => import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -210,6 +211,11 @@ const AppRegistrations = (): null => {
 			id: todayAppointmentsWidget.id,
 			type: DASHBOARD_WIDGET_ACTION_TYPE,
 			action: () => toWidgetAction(todayAppointmentsWidget)
+		});
+		registerActions<DashboardWidgetAction>({
+			id: meetingRoomsAvailabilityWidget.id,
+			type: DASHBOARD_WIDGET_ACTION_TYPE,
+			action: () => toWidgetAction(meetingRoomsAvailabilityWidget)
 		});
 		registerComponents({
 			id: 'invites-reply',
