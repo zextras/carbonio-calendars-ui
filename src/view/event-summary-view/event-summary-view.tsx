@@ -61,7 +61,6 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 	const neverSentWarningLabel = useNeverSentWarningLabel(invite?.attendees);
 
 	useEffect(() => onClose, [onClose]);
-	
 
 	if (!event) {
 		return null;
