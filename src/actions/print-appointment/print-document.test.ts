@@ -75,7 +75,7 @@ describe('renderPrintDocument', () => {
 
 	it('drops bidi controls from the tab title but keeps them, isolated, in the page', () => {
 		const doc = newDocument();
-		const spoofed = 'invoice‮fdp.exe⁦x⁩';
+		const spoofed = 'invoice\u202Efdp.exe\u2066x\u2069';
 		renderPrintDocument(doc, { ...hostileModel(), title: spoofed });
 
 		expect(doc.title).toBe('invoicefdp.exex');

@@ -28,7 +28,7 @@ export type PrintModel = {
 const CONTROL_CHARS = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F]/g;
 
 export const sanitizeText = (value: string | undefined | null): string =>
-	(value ?? '').replace(/\r\n?/g, '\n').replace(CONTROL_CHARS, '').trim();
+	(value ?? '').replaceAll(/\r\n?/g, '\n').replaceAll(CONTROL_CHARS, '').trim();
 
 const BLOCK_ELEMENTS =
 	'address, blockquote, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, li, p, pre, tr';
@@ -43,7 +43,7 @@ export const htmlToText = (html: string | undefined): string => {
 		node.before('\n');
 		node.append('\n');
 	});
-	return (doc.body?.textContent ?? '').replace(/\n{2,}/g, '\n').trim();
+	return (doc.body?.textContent ?? '').replaceAll(/\n{2,}/g, '\n').trim();
 };
 
 export const formatParticipant = (name?: string, email?: string): string => {

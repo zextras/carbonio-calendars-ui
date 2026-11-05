@@ -36,7 +36,7 @@ li { overflow-wrap: anywhere; }
 `;
 
 // LRE, RLE, PDF, LRO, RLO and the isolates LRI, RLI, FSI, PDI
-const BIDI_CONTROLS = /[‪-‮⁦-⁩]/g;
+const BIDI_CONTROLS = /[\u202A-\u202E\u2066-\u2069]/g;
 
 const createTextElement = <K extends keyof HTMLElementTagNameMap>(
 	doc: Document,
@@ -65,7 +65,7 @@ const resetDocument = (doc: Document, title: string, lang: string): HTMLElement 
 	head.append(referrer);
 
 	// tab titles are not bidi-isolated
-	head.append(createTextElement(doc, 'title', title.replace(BIDI_CONTROLS, '')));
+	head.append(createTextElement(doc, 'title', title.replaceAll(BIDI_CONTROLS, '')));
 
 	const style = doc.createElement('style');
 	style.textContent = PRINT_PAGE_STYLE;
