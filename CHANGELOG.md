@@ -1,3 +1,7 @@
+## <small>1.43.1 (2026-11-06)</small>
+
+* fix: prevent crash on refresh with collapsed secondary bar ([345a8f1](https://github.com/zextras/carbonio-calendars-ui/commit/345a8f1)), closes [#878](https://github.com/zextras/carbonio-calendars-ui/issues/878)
+
 ## 1.43.0 (2026-11-05)
 
 * feat(board): notify the shell about unsaved changes of the edit board (#913) ([7234480](https://github.com/zextras/carbonio-calendars-ui/commit/7234480)), closes [#913](https://github.com/zextras/carbonio-calendars-ui/issues/913)
