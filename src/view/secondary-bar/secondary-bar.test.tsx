@@ -6,6 +6,7 @@
 import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import SecondaryBar from './secondary-bar';
@@ -37,6 +38,23 @@ describe('SecondaryBar', () => {
 			reducer: combineReducers(reducers)
 		});
 		setupTest(<SecondaryBar expanded={false} />, { store });
+
+		expect(screen.getByTestId('collapsed-secondary-bar')).toBeVisible();
+		expect(screen.queryByTestId('expanded-secondary-bar')).not.toBeInTheDocument();
+	});
+
+	it('should render without crashing when collapsed and folders are not loaded yet', () => {
+		useFolderStore.setState(
+			{ linksIdMap: {}, folders: {}, searches: {}, updateFolder: vi.fn() },
+			true
+		);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+
+		expect(() => {
+			setupTest(<SecondaryBar expanded={false} />, { store });
+		}).not.toThrow();
 
 		expect(screen.getByTestId('collapsed-secondary-bar')).toBeVisible();
 		expect(screen.queryByTestId('expanded-secondary-bar')).not.toBeInTheDocument();
