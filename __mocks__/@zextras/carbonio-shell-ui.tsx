@@ -40,6 +40,7 @@ export const useBoardHooks = vi.fn().mockReturnValue({
 	closeBoard: vi.fn(),
 	updateBoard: vi.fn(),
 	setCurrentBoard: vi.fn(),
+	setContentStatus: vi.fn(),
 	getBoardContext: vi.fn(),
 	getBoard: vi.fn()
 });

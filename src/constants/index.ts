@@ -7,6 +7,8 @@ export const CALENDAR_APP_ID = 'carbonio-calendars-ui';
 
 export const CALENDAR_ROUTE = 'calendars';
 export const CALENDAR_BOARD_ID = 'calendar-board';
+export const CALENDAR_BOARD_ICON = 'CalendarModOutline';
+export const CALENDAR_DIRTY_BOARD_ICON = 'CalendarEditingOutline';
 
 export const PANEL_VIEW = {
 	APP: 'app',

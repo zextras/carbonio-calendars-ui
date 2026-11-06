@@ -6,25 +6,18 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
 
 import { defaultEditor } from './common';
 import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../../../constants';
-import { reducers } from '../../../store/redux';
+import { AppDispatch, reducers } from '../../../store/redux';
 import { editEditorTitle, updateEditor } from '../../../store/slices/editor-slice';
 import { Editor } from '../../../types/editor';
 import BoardEditPanel from '../editor-board-wrapper';
 import { setupTest } from '@test-setup';
-
-const mockCreateModal = vi.fn();
-const mockCloseModal = vi.fn();
-
-vi.mock('../../global-modal-manager', () => ({
-	useGlobalModal: vi.fn(() => ({ createModal: mockCreateModal, closeModal: mockCloseModal }))
-}));
 
 const initBoard = ({
 	editorId,
@@ -69,145 +62,76 @@ describe('Editor board wrapper', () => {
 		});
 	});
 
-	describe('close confirmation', () => {
-		it('calls updateBoard with an onClose handler when mounted', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const mockBoardHooks = shell.useBoardHooks();
-
+	describe('content status', () => {
+		const setupEditor = (dispatch: AppDispatch): Editor => {
 			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			generateEditor({
-				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
-			});
+			return generateEditor({ context: { folders: {}, dispatch, ...defaultEditor } });
+		};
+
+		it('notifies the shell that the board is pristine when the editor is clean', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupEditor(store.dispatch);
+			const { setContentStatus } = shell.useBoardHooks();
 
 			setupTest(<BoardEditPanel />, { store });
 
-			expect(mockBoardHooks.updateBoard).toHaveBeenCalledWith(
-				expect.objectContaining({ onClose: expect.any(Function) })
-			);
+			expect(setContentStatus).toHaveBeenCalledWith('pristine');
+			expect(setContentStatus).not.toHaveBeenCalledWith('dirty');
 		});
 
-		it('opens close confirmation modal when onClose fires with dirty editor', () => {
+		it('notifies the shell that the board is dirty when the editor has unsaved changes', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			const mockBoardHooks = shell.useBoardHooks();
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			generateEditor({
-				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
-			});
-
-			// Mark the editor as dirty
+			setupEditor(store.dispatch);
+			const { setContentStatus } = shell.useBoardHooks();
 			store.dispatch(editEditorTitle({ id: defaultEditor.id, title: 'Changed title' }));
 
 			setupTest(<BoardEditPanel />, { store });
 
-			// Simulate the board X button click by calling onClose
-			const updateBoardCalls = mockBoardHooks.updateBoard.mock.calls;
-			const lastCall = updateBoardCalls[updateBoardCalls.length - 1];
-			const { onClose } = lastCall[0];
-			onClose();
-
-			expect(mockCreateModal).toHaveBeenCalledWith(
-				expect.objectContaining({ id: 'editor-close-confirmation-1' }),
-				true
-			);
+			expect(setContentStatus).toHaveBeenLastCalledWith('dirty');
 		});
 
-		it('calls closeModal when the modal outer onClose is triggered', () => {
+		it('notifies the shell when the editor becomes dirty after the first render', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			const mockBoardHooks = shell.useBoardHooks();
+			setupEditor(store.dispatch);
+			const { setContentStatus } = shell.useBoardHooks();
+			setupTest(<BoardEditPanel />, { store });
+			expect(setContentStatus).toHaveBeenLastCalledWith('pristine');
 
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			generateEditor({
-				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
+			act(() => {
+				store.dispatch(editEditorTitle({ id: defaultEditor.id, title: 'Changed title' }));
 			});
-			store.dispatch(editEditorTitle({ id: defaultEditor.id, title: 'Changed title' }));
+
+			expect(setContentStatus).toHaveBeenLastCalledWith('dirty');
+		});
+
+		it('notifies the shell that the board is pristine again after a successful save', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = setupEditor(store.dispatch);
+			const { setContentStatus } = shell.useBoardHooks();
+			setupTest(<BoardEditPanel />, { store });
+			act(() => {
+				store.dispatch(editEditorTitle({ id: defaultEditor.id, title: 'Changed title' }));
+			});
+			expect(setContentStatus).toHaveBeenLastCalledWith('dirty');
+
+			act(() => {
+				store.dispatch(
+					updateEditor({ id: defaultEditor.id, editor: { ...editor, title: 'Changed title' } })
+				);
+			});
+
+			expect(setContentStatus).toHaveBeenLastCalledWith('pristine');
+		});
+
+		it('does not crash when the shell does not provide setContentStatus', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupEditor(store.dispatch);
+			const hooks = shell.useBoardHooks();
+			shell.useBoardHooks.mockReturnValueOnce({ ...hooks, setContentStatus: undefined });
 
 			setupTest(<BoardEditPanel />, { store });
 
-			const updateBoardCalls = mockBoardHooks.updateBoard.mock.calls;
-			const { onClose } = updateBoardCalls[updateBoardCalls.length - 1][0];
-			onClose();
-
-			const modalArgs = mockCreateModal.mock.calls[0][0];
-			modalArgs.onClose();
-
-			expect(mockCloseModal).toHaveBeenCalledWith('editor-close-confirmation-1');
-		});
-
-		it('uses a distinct modal id per editor so multiple dirty boards do not collide', () => {
-			const storeA = configureStore({ reducer: combineReducers(reducers) });
-			const storeB = configureStore({ reducer: combineReducers(reducers) });
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			generateEditor({
-				context: { folders: {}, dispatch: storeA.dispatch, ...defaultEditor, id: '1' }
-			});
-			storeA.dispatch(editEditorTitle({ id: '1', title: 'Changed title A' }));
-			const mockBoardHooksA = shell.useBoardHooks();
-			setupTest(<BoardEditPanel />, { store: storeA });
-			const updateBoardCallsA = mockBoardHooksA.updateBoard.mock.calls;
-			updateBoardCallsA[updateBoardCallsA.length - 1][0].onClose();
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '2', isNew: true }));
-			generateEditor({
-				context: { folders: {}, dispatch: storeB.dispatch, ...defaultEditor, id: '2' }
-			});
-			storeB.dispatch(editEditorTitle({ id: '2', title: 'Changed title B' }));
-			const mockBoardHooksB = shell.useBoardHooks();
-			setupTest(<BoardEditPanel />, { store: storeB });
-			const updateBoardCallsB = mockBoardHooksB.updateBoard.mock.calls;
-			updateBoardCallsB[updateBoardCallsB.length - 1][0].onClose();
-
-			const modalIds = mockCreateModal.mock.calls.map((call) => call[0].id);
-			expect(modalIds).toEqual(
-				expect.arrayContaining(['editor-close-confirmation-1', 'editor-close-confirmation-2'])
-			);
-			expect(new Set(modalIds).size).toBe(modalIds.length);
-		});
-
-		it('does not open close confirmation modal when onClose fires with clean editor', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const mockBoardHooks = shell.useBoardHooks();
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			generateEditor({
-				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
-			});
-
-			setupTest(<BoardEditPanel />, { store });
-
-			// Simulate the board X button click without editing
-			const updateBoardCalls = mockBoardHooks.updateBoard.mock.calls;
-			const lastCall = updateBoardCalls[updateBoardCalls.length - 1];
-			const { onClose } = lastCall[0];
-			onClose();
-
-			expect(mockCreateModal).not.toHaveBeenCalled();
-		});
-
-		it('does not open close confirmation modal when onClose fires after a successful save', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const mockBoardHooks = shell.useBoardHooks();
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			const editor = generateEditor({
-				context: { folders: {}, dispatch: store.dispatch, ...defaultEditor }
-			});
-
-			// Make dirty, then simulate a successful save (isDirty resets to false)
-			store.dispatch(editEditorTitle({ id: defaultEditor.id, title: 'Changed title' }));
-			store.dispatch(
-				updateEditor({ id: defaultEditor.id, editor: { ...editor, title: 'Changed title' } })
-			);
-
-			setupTest(<BoardEditPanel />, { store });
-
-			const updateBoardCalls = mockBoardHooks.updateBoard.mock.calls;
-			const lastCall = updateBoardCalls[updateBoardCalls.length - 1];
-			const { onClose } = lastCall[0];
-			onClose();
-
-			expect(mockCreateModal).not.toHaveBeenCalled();
+			expect(await screen.findByTestId('EditorPanel')).toBeInTheDocument();
 		});
 	});
 });

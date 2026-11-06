@@ -1,3 +1,8 @@
+## 1.43.0 (2026-11-05)
+
+* feat(board): notify the shell about unsaved changes of the edit board (#913) ([7234480](https://github.com/zextras/carbonio-calendars-ui/commit/7234480)), closes [#913](https://github.com/zextras/carbonio-calendars-ui/issues/913)
+* chore(deps): update dependency @zextras/carbonio-ui-sdk to v2.4.0 (#908) ([7289322](https://github.com/zextras/carbonio-calendars-ui/commit/7289322)), closes [#908](https://github.com/zextras/carbonio-calendars-ui/issues/908)
+
 ## <small>1.42.2 (2026-11-03)</small>
 
 * fix(deps): update dependency @zextras/carbonio-ui-soap-lib to v1.3.3 (#911) ([e8651e8](https://github.com/zextras/carbonio-calendars-ui/commit/e8651e8)), closes [#911](https://github.com/zextras/carbonio-calendars-ui/issues/911)
