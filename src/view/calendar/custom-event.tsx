@@ -36,6 +36,9 @@ import { useAppStatusStore } from 'store/zustand/store';
 import { EventType } from 'types/event';
 import { isOccurrenceOfSeries } from 'utils/event';
 
+// stable reference: the hook memoizes on it
+const GRID_ACTIONS_CONTEXT = { showPrint: true } as const;
+
 type CustomEventProps = {
 	event: EventType;
 	title: string;
@@ -185,7 +188,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	const actions = useEventActions({
 		event,
-		onClose
+		onClose,
+		context: GRID_ACTIONS_CONTEXT
 	});
 
 	useEffect(() => {

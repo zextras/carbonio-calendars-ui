@@ -26,6 +26,7 @@ import {
 	forwardEventItem,
 	moveEventItem,
 	openEventItem,
+	printEventItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
 import { isLinkChild } from '../commons/utilities';
@@ -72,6 +73,7 @@ const getInstanceActionsItems = ({ event, invite, context }: ActionsProps): Inst
 		copyEventItem({ event, invite, context }),
 		forwardEventItem({ event, context }),
 		emailAttendeesEventItem({ event, invite, context }),
+		printEventItem({ event, context }),
 		showOriginal({ event }),
 		applyTag({ event, context }),
 		answerToEventItem({ event, invite, context }),
@@ -106,6 +108,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				forwardEventItem({ event, context }),
 				emailAttendeesEventItem({ event, invite, context }),
+				printEventItem({ event, context }),
 				showOriginal({ event }),
 				answerToEventItem({ event, invite, context: contextOverride })
 			])
@@ -153,6 +156,8 @@ const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActi
 		deleteEventItem({ event: seriesEvent, invite, context }),
 		moveEventItem({ event: seriesEvent, context }),
 		copyEventItem({ event: seriesEvent, invite, context }),
+		// the occurrence dates, not the series ones
+		printEventItem({ event, context }),
 		showOriginal({ event }),
 		applyTag({ event, context }),
 		getExportICSItem({ event: seriesEvent, context })
@@ -166,7 +171,7 @@ export const useEventActions = ({
 }: {
 	onClose?: () => void;
 	event?: EventType;
-	context?: { panelView: PanelView };
+	context?: { panelView?: PanelView; showPrint?: boolean };
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const [t] = useTranslation();
 	const { replaceHistory } = useHistoryNavigation();
