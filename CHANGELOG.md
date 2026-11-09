@@ -1,3 +1,7 @@
+## <small>1.43.2 (2026-11-09)</small>
+
+* fix(deps): update carbonio-shell-ui to v15.5.1 and remove the soap-lib override (#916) ([37efca7](https://github.com/zextras/carbonio-calendars-ui/commit/37efca7)), closes [#916](https://github.com/zextras/carbonio-calendars-ui/issues/916)
+
 ## <small>1.43.1 (2026-11-06)</small>
 
 * fix: prevent crash on refresh with collapsed secondary bar ([345a8f1](https://github.com/zextras/carbonio-calendars-ui/commit/345a8f1)), closes [#878](https://github.com/zextras/carbonio-calendars-ui/issues/878)
