@@ -98,7 +98,11 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 			eventLocation: value,
 			eventAllDay: allDay,
 			eventTimezone: timezone,
-			onConfirm: (newLocation: string) => {
+			onConfirm: (newLocation: unknown) => {
+				// the provider is another module: ignore what is not a location
+				if (typeof newLocation !== 'string') {
+					return;
+				}
 				setValue(newLocation);
 				debounceInput(newLocation);
 			}

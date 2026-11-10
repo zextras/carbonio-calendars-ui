@@ -132,4 +132,22 @@ describe('EditorLocation', () => {
 		expect(screen.getByRole('textbox')).toHaveValue(NEW_LOCATION);
 		expect(store.getState().editor.editors[editorId].location).toBe(NEW_LOCATION);
 	});
+
+	test('a location confirmed by the provider that is not a string leaves the location as it was', async () => {
+		const execute = mockLocationProvider();
+		const { store, editorId } = setupEditor();
+
+		const { user } = setupTest(<EditorLocation editorId={editorId} />, { store });
+		await user.click(screen.getByTestId(PROVIDER_BUTTON));
+		const { onConfirm } = execute.mock.calls[0][0];
+		act(() => {
+			onConfirm(undefined);
+			vi.advanceTimersByTime(500);
+		});
+		await user.click(screen.getByTestId(PROVIDER_BUTTON));
+
+		expect(execute).toHaveBeenLastCalledWith(expect.objectContaining({ eventLocation: LOCATION }));
+		expect(screen.getByRole('textbox')).toHaveValue(LOCATION);
+		expect(store.getState().editor.editors[editorId].location).toBe(LOCATION);
+	});
 });
