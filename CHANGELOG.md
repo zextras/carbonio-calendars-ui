@@ -1,3 +1,7 @@
+## <small>1.43.3 (2026-11-10)</small>
+
+* fix(deps): update carbonio-shell-ui to v15.5.2 and carbonio-search-ui to v0.1.26 (#917) ([e4ccf1e](https://github.com/zextras/carbonio-calendars-ui/commit/e4ccf1e)), closes [#917](https://github.com/zextras/carbonio-calendars-ui/issues/917)
+
 ## <small>1.43.2 (2026-11-09)</small>
 
 * fix(deps): update carbonio-shell-ui to v15.5.1 and remove the soap-lib override (#916) ([37efca7](https://github.com/zextras/carbonio-calendars-ui/commit/37efca7)), closes [#916](https://github.com/zextras/carbonio-calendars-ui/issues/916)
