@@ -12,19 +12,37 @@ import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
+	selectEditorAllDay,
 	selectEditorDisabled,
+	selectEditorEnd,
 	selectEditorLocation,
+	selectEditorStart,
+	selectEditorTimezone,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { editEditorLocation } from '../../../store/slices/editor-slice';
 
+interface EditorLocationExtensionOptions {
+	eventTitle?: string;
+	eventStartAt?: Date;
+	eventEndAt?: Date;
+	eventLocation: string;
+	eventAllDay?: boolean;
+	eventTimezone?: string;
+	onConfirm: (newLocation: string) => void;
+}
+
 interface EditorLocationExtension extends Action {
-	execute: (options: { eventTitle?: string; onConfirm: (newLocation: string) => void }) => void;
+	execute: (options: EditorLocationExtensionOptions) => void;
 }
 
 export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
 	const eventTitle = useAppSelector(selectEditorTitle(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
@@ -74,12 +92,18 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 
 		extension.execute({
 			eventTitle,
+			eventStartAt: isNil(start) ? undefined : new Date(start),
+			eventEndAt: isNil(end) ? undefined : new Date(end),
+			// the input value: the store gets it only after the 500 ms debounce
+			eventLocation: value,
+			eventAllDay: allDay,
+			eventTimezone: timezone,
 			onConfirm: (newLocation: string) => {
 				setValue(newLocation);
 				debounceInput(newLocation);
 			}
 		});
-	}, [debounceInput, eventTitle, extension]);
+	}, [allDay, debounceInput, end, eventTitle, extension, start, timezone, value]);
 
 	return !isNil(location) ? (
 		<Container
