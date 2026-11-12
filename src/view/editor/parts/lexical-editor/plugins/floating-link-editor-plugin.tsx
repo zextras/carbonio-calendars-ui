@@ -6,15 +6,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { $isAutoLinkNode, $isLinkNode } from '@lexical/link';
+import { $createAutoLinkNode, $isAutoLinkNode, $isLinkNode } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, $unwrapNode } from '@lexical/utils';
 import { Button, Link, Row } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { $getNearestNodeFromDOMNode, $getNodeByKey, $isTextNode } from 'lexical';
+import { $getNearestNodeFromDOMNode, $getNodeByKey, $isTextNode, type TextNode } from 'lexical';
 import { createPortal } from 'react-dom';
 
-import { matchWholeAutoLink } from './auto-link-plugin';
+import { findFirstAutoLink, matchWholeAutoLink } from './auto-link-plugin';
 import { LinkModal } from './link-modal';
 
 type LinkInfo = {
@@ -57,6 +57,28 @@ const UrlLink = styled(Link)`
 	text-overflow: ellipsis;
 	white-space: nowrap;
 `;
+
+/**
+ * Wraps every URL-like run of `textNode` into an unlinked auto-link, so the
+ * auto-link plugin does not turn it into a link again once the link around it
+ * has been removed. Must run inside an editor update.
+ */
+function $keepUrlsUnlinked(textNode: TextNode): void {
+	let remaining: TextNode | undefined = textNode;
+	while (remaining?.isAttached() && remaining.isSimpleText()) {
+		const match = findFirstAutoLink(remaining.getTextContent());
+		if (!match) {
+			return;
+		}
+		const start = match.index;
+		const parts: Array<TextNode> = remaining.splitText(start, start + match.length);
+		const urlNode = start === 0 ? parts[0] : parts[1];
+		remaining = start === 0 ? parts[1] : parts[2];
+		const autoLink = $createAutoLinkNode(match.url, { isUnlinked: true });
+		urlNode.replace(autoLink);
+		autoLink.append(urlNode);
+	}
+}
 
 /**
  * Floating editor for links, mirroring the Lexical playground affordance. The
@@ -240,7 +262,11 @@ export const FloatingLinkEditorPlugin = (): React.JSX.Element | null => {
 	// Unwraps the link by moving its children out and removing the now-empty node,
 	// preserving the text and any inline formatting it carried. An auto-detected
 	// link is flagged as unlinked instead: once unwrapped, the auto-link plugin
-	// would immediately turn its URL-like text into a link again.
+	// would immediately turn its URL-like text into a link again. The same goes for
+	// the URLs in the text of a plain link: a link whose whole text is a URL (e.g.
+	// `<a href="x">x</a>` from Outlook or Gmail invites) is replaced by an unlinked
+	// auto-link keeping its children; otherwise each URL in the unwrapped text is
+	// wrapped into one.
 	const removeLink = useCallback((): void => {
 		const key = linkInfo?.key;
 		if (key !== undefined) {
@@ -249,7 +275,14 @@ export const FloatingLinkEditorPlugin = (): React.JSX.Element | null => {
 				if ($isAutoLinkNode(node)) {
 					node.setIsUnlinked(true);
 				} else if ($isLinkNode(node)) {
-					$unwrapNode(node);
+					const match = matchWholeAutoLink(node.getTextContent());
+					if (match) {
+						node.replace($createAutoLinkNode(match.url, { isUnlinked: true }), true);
+					} else {
+						const textNodes = node.getAllTextNodes();
+						$unwrapNode(node);
+						textNodes.forEach((textNode) => $keepUrlsUnlinked(textNode));
+					}
 				}
 			});
 		}

@@ -25,15 +25,18 @@ const MATCHERS = [
 ];
 
 /**
- * Returns the auto-link match of `text` only when the whole text is that link: the
- * first matcher that matches decides, as in the auto-link plugin, which keeps an
- * existing auto-link only under the same condition.
+ * Returns the first auto-link match found in `text`: the first matcher that
+ * matches decides, as in the auto-link plugin.
+ */
+export const findFirstAutoLink = (text: string): ReturnType<LinkMatcher> =>
+	MATCHERS.reduce<ReturnType<LinkMatcher>>((found, matcher) => found ?? matcher(text), null);
+
+/**
+ * Returns the auto-link match of `text` only when the whole text is that link, the
+ * condition under which the auto-link plugin keeps an existing auto-link.
  */
 export const matchWholeAutoLink = (text: string): ReturnType<LinkMatcher> => {
-	const match = MATCHERS.reduce<ReturnType<LinkMatcher>>(
-		(found, matcher) => found ?? matcher(text),
-		null
-	);
+	const match = findFirstAutoLink(text);
 	return match?.text === text ? match : null;
 };
 

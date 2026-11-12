@@ -214,6 +214,37 @@ describe('FloatingLinkEditorPlugin', () => {
 		expect(richTextOf(store)).toContain(LINK_TEXT);
 	});
 
+	it('removes a link whose text is itself a URL', async () => {
+		const { store, user, editorElement } = setupEditor(
+			`<p><a href="${LINK_URL}">${LINK_URL}</a></p>`
+		);
+
+		await user.click(await within(editorElement).findByRole('link', { name: LINK_URL }));
+		await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+
+		await waitFor(() => {
+			expect(richTextOf(store)).not.toContain('<a');
+		});
+		expect(richTextOf(store)).toContain(LINK_URL);
+	});
+
+	it('removes a link whose text contains a URL without the URL being auto-linked again', async () => {
+		const linkText = `Visit ${LINK_URL}`;
+		const { store, user, editorElement } = setupEditor(
+			`<p><a href="https://other-link.com">${linkText}</a></p>`
+		);
+
+		await user.click(await within(editorElement).findByRole('link', { name: linkText }));
+		await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+
+		await waitFor(() => {
+			expect(richTextOf(store)).toContain(UNLINKED_AUTO_LINK_CLASS);
+		});
+		expect(richTextOf(store)).not.toContain('<a');
+		expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
+		expect(editorElement).toHaveTextContent(linkText);
+	});
+
 	it('opens the edit modal pre-filled when the edit action is clicked', async () => {
 		const { user, link } = await setupWithLink(
 			`<p><a href="${LINK_URL}" target="_blank" title="My title">${LINK_TEXT}</a></p>`
