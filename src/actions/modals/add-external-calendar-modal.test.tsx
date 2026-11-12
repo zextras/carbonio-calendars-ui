@@ -24,6 +24,20 @@ const TYPE_LABEL = 'Type*';
 const URL_LABEL = 'Calendar URL*';
 const CALENDAR_NAME_LABEL = 'Choose a representative name*';
 const VALID_ICS_URL = 'https://a/1.ics';
+const ICS_FOLDER_RESPONSE: CreateFolderResponse = {
+	_jsns: JSNS.mail,
+	folder: [
+		{
+			id: '123',
+			uuid: 'abc-123',
+			name: 'x',
+			activesyncdisabled: false,
+			recursive: false,
+			deletable: false
+		}
+	]
+};
+const EXCLUDE_FREE_BUSY_LABEL = 'Exclude this calendar when reporting the free/busy times';
 const VALID_CALDAV_HOST = 'https://caldav.example.com';
 
 describe('AddExternalCalendarModal', () => {
@@ -76,19 +90,7 @@ describe('AddExternalCalendarModal', () => {
 		test('submits CreateFolderRequest with ICS URL payload on add', async () => {
 			const createFolderRequestSpy = vi
 				.spyOn(createFolderApi, 'createFolderRequest')
-				.mockResolvedValue({
-					_jsns: 'urn:zimbraMail',
-					folder: [
-						{
-							id: '123',
-							uuid: 'abc-123',
-							name: 'x',
-							activesyncdisabled: false,
-							recursive: false,
-							deletable: false
-						}
-					]
-				});
+				.mockResolvedValue(ICS_FOLDER_RESPONSE);
 			const onClose = vi.fn();
 			const { user } = setupTest(<AddExternalCalendarModal onClose={onClose} />);
 			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
@@ -107,6 +109,26 @@ describe('AddExternalCalendarModal', () => {
 			});
 			await waitFor(() => {
 				expect(onClose).toHaveBeenCalledTimes(1);
+			});
+		});
+		test('shows the exclude from free/busy checkbox unchecked by default', () => {
+			setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			expect(screen.getByText(EXCLUDE_FREE_BUSY_LABEL)).toBeVisible();
+			expect(screen.getByTestId('icon: Square')).toBeVisible();
+		});
+		test('creates the folder excluded from free/busy when the checkbox is checked', async () => {
+			const createFolderRequestSpy = vi
+				.spyOn(createFolderApi, 'createFolderRequest')
+				.mockResolvedValue(ICS_FOLDER_RESPONSE);
+			const { user } = setupTest(<AddExternalCalendarModal onClose={vi.fn()} />);
+			await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), VALID_ICS_URL);
+			await user.pasteInto(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL }), 'x');
+			await user.click(screen.getByText(EXCLUDE_FREE_BUSY_LABEL));
+			await user.click(screen.getByRole('button', { name: 'Add' }));
+			await waitFor(() => {
+				expect(createFolderRequestSpy).toHaveBeenCalledWith(
+					expect.objectContaining({ url: VALID_ICS_URL, f: '#b' })
+				);
 			});
 		});
 	});

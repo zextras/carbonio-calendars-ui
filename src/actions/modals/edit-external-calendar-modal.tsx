@@ -7,6 +7,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 
 import {
 	Button,
+	Checkbox,
 	Container,
 	Input,
 	Padding,
@@ -54,6 +55,9 @@ export const EditExternalCalendarModal = ({
 		[folder?.color, folder?.rgb]
 	);
 	const [selectedColorHex, setSelectedColorHex] = useState(defaultColorHex);
+	const defaultExcludeFreeBusy = /b/.test(folder?.f ?? '');
+	const [excludeFreeBusy, setExcludeFreeBusy] = useState(defaultExcludeFreeBusy);
+	const toggleExcludeFreeBusy = useCallback(() => setExcludeFreeBusy((c) => !c), []);
 	const genericErrorLabel = t('label.error_try_again', 'Something went wrong, please try again');
 
 	const appointmentFolderNames = useMemo(
@@ -108,6 +112,7 @@ export const EditExternalCalendarModal = ({
 
 		const hasNameChanged = calendarName.trim() !== folder.name;
 		const hasColorChanged = selectedColorHex !== defaultColorHex;
+		const hasFreeBusyChanged = excludeFreeBusy !== defaultExcludeFreeBusy;
 
 		function successSnackbar(): void {
 			createSnackbar({
@@ -120,7 +125,7 @@ export const EditExternalCalendarModal = ({
 			});
 		}
 
-		if (!hasNameChanged && !hasColorChanged) {
+		if (!hasNameChanged && !hasColorChanged && !hasFreeBusyChanged) {
 			onClose();
 			successSnackbar();
 			return;
@@ -134,6 +139,9 @@ export const EditExternalCalendarModal = ({
 				: undefined,
 			hasColorChanged
 				? { op: FOLDER_OPERATIONS.COLOR, rgb: selectedColorHex, id: folderId }
+				: undefined,
+			hasFreeBusyChanged
+				? { op: FOLDER_OPERATIONS.FREE_BUSY, excludeFreeBusy, id: folderId }
 				: undefined
 		]);
 
@@ -174,6 +182,8 @@ export const EditExternalCalendarModal = ({
 		calendarName,
 		selectedColorHex,
 		defaultColorHex,
+		excludeFreeBusy,
+		defaultExcludeFreeBusy,
 		genericErrorLabel,
 		folderId,
 		onClose,
@@ -242,6 +252,16 @@ export const EditExternalCalendarModal = ({
 				onChange={setSelectedColorHex}
 				onOpenChange={setIsColorPickerOpen}
 				disabled={isSubmitting}
+			/>
+			<Padding top="medium" />
+			<Checkbox
+				value={excludeFreeBusy}
+				onClick={toggleExcludeFreeBusy}
+				disabled={isSubmitting || isColorPickerOpen}
+				label={t(
+					'label.exclude_free_busy',
+					'Exclude this calendar when reporting the free/busy times'
+				)}
 			/>
 			<Padding top="medium" />
 			<ModalFooter

@@ -5,7 +5,7 @@
  */
 import React, { RefObject } from 'react';
 
-import { Input, Padding } from '@zextras/carbonio-design-system';
+import { Checkbox, Input, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarColorPicker } from 'commons/calendar-color-picker';
@@ -20,10 +20,12 @@ type AddExternalCalendarModalIcsFlowProps = {
 	calendarName: string;
 	isDuplicateCalendarName: boolean;
 	selectedColorHex: string;
+	excludeFreeBusy: boolean;
 	onCalendarUrlChange: (value: string) => void;
 	onCalendarNameChange: (value: string) => void;
 	onSelectedColorHexChange: (value: string) => void;
 	onColorPickerOpenChange?: (open: boolean) => void;
+	onExcludeFreeBusyChange: (value: boolean) => void;
 	calendarUrlInputRef?: RefObject<HTMLInputElement>;
 };
 
@@ -37,10 +39,12 @@ export const AddExternalCalendarModalIcsFlow = ({
 	calendarName,
 	isDuplicateCalendarName,
 	selectedColorHex,
+	excludeFreeBusy,
 	onCalendarUrlChange,
 	onCalendarNameChange,
 	onSelectedColorHexChange,
 	onColorPickerOpenChange,
+	onExcludeFreeBusyChange,
 	calendarUrlInputRef
 }: AddExternalCalendarModalIcsFlowProps): JSX.Element => {
 	const [t] = useTranslation();
@@ -86,6 +90,16 @@ export const AddExternalCalendarModalIcsFlow = ({
 				onChange={onSelectedColorHexChange}
 				onOpenChange={onColorPickerOpenChange}
 				disabled={isSubmitting}
+			/>
+			<Padding top="medium" />
+			<Checkbox
+				value={excludeFreeBusy}
+				onClick={(): void => onExcludeFreeBusyChange(!excludeFreeBusy)}
+				disabled={isSubmitting || isColorPickerOpen}
+				label={t(
+					'label.exclude_free_busy',
+					'Exclude this calendar when reporting the free/busy times'
+				)}
 			/>
 		</>
 	);
