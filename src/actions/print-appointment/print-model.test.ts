@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { buildPrintModel, formatParticipant, htmlToText, sanitizeText } from './print-model';
+import { ROOM_DIVIDER } from '../../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from 'constants/api';
 import mockedData from 'test/generators';
 import { Attendee } from 'types/store/invite';
@@ -26,6 +27,12 @@ describe('sanitizeText', () => {
 		expect(sanitizeText('a\u0000b\u0007c\u001bd\u007fe\u0085f\u009fg')).toBe('abcdefg');
 	});
 
+	it('removes bidi embedding, override and isolate characters', () => {
+		expect(sanitizeText('a\u202Ab\u202Bc\u202Cd\u202De\u202Ef\u2066g\u2067h\u2068i\u2069j')).toBe(
+			'abcdefghij'
+		);
+	});
+
 	it('returns an empty string for missing values', () => {
 		expect(sanitizeText(undefined)).toBe('');
 		expect(sanitizeText(null)).toBe('');
@@ -33,6 +40,10 @@ describe('sanitizeText', () => {
 });
 
 describe('htmlToText', () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
 	it('keeps only the text, never the markup', () => {
 		expect(htmlToText('<p>Hello <b>team</b></p><img src="https://evil.example/x.png">')).toBe(
 			'Hello team'
@@ -48,7 +59,7 @@ describe('htmlToText', () => {
 
 	it('does not run any script or event handler of the description', () => {
 		const pwned = vi.fn();
-		Object.assign(window, { pwned });
+		vi.stubGlobal('pwned', pwned);
 		htmlToText('<img src="x" onerror="window.pwned()"><svg onload="window.pwned()"></svg>');
 		expect(pwned).not.toHaveBeenCalled();
 	});
@@ -68,7 +79,8 @@ describe('formatParticipant', () => {
 		['', 'mario@example.com', 'mario@example.com'],
 		['mario@example.com', 'mario@example.com', 'mario@example.com'],
 		['Mario', undefined, 'Mario'],
-		[undefined, undefined, '']
+		[undefined, undefined, ''],
+		['\u202Eoiram', 'mario@example.com', 'oiram <mario@example.com>']
 	])('formats %s / %s as %s', (name, email, expected) => {
 		expect(formatParticipant(name, email)).toBe(expected);
 	});
@@ -142,6 +154,31 @@ describe('buildPrintModel', () => {
 		const model = buildPrintModel({ event: mockedData.getEvent(), invite });
 
 		expect(model.description).toBe('From html');
+	});
+
+	it('drops the invitation block between the room dividers', () => {
+		const block = `${ROOM_DIVIDER}\nMario invited you to a new meeting\nTime: series dates\n${ROOM_DIVIDER}`;
+		const invite = mockedData.getInvite({
+			context: { textDescription: [{ _content: `${block}\nAgenda` }] }
+		});
+
+		const model = buildPrintModel({ event: mockedData.getEvent(), invite });
+
+		expect(model.description).toBe('Agenda');
+	});
+
+	it('drops the invitation block from the html description too', () => {
+		const block = `${ROOM_DIVIDER}<p>Mario invited you to a new meeting</p>${ROOM_DIVIDER}`;
+		const invite = mockedData.getInvite({
+			context: {
+				textDescription: [],
+				htmlDescription: [{ _content: `<html><body>${block}<p>Agenda</p></body></html>` }]
+			}
+		});
+
+		const model = buildPrintModel({ event: mockedData.getEvent(), invite });
+
+		expect(model.description).toBe('Agenda');
 	});
 
 	it('leaves out fields without a value', () => {

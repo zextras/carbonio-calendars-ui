@@ -29,7 +29,8 @@ export const printAppointment =
 					'message.print_popup_blocked',
 					'Allow pop-ups for this site to print the appointment'
 				),
-				autoHideTimeout: 5000
+				autoHideTimeout: 5000,
+				hideButton: true
 			});
 			return;
 		}

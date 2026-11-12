@@ -27,6 +27,10 @@ const attr = (element: Element, name: string): string | null => element.getAttri
 const text = (node: Node): string | null => node.textContent;
 
 describe('renderPrintDocument', () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
 	it('puts the restrictive CSP first in the head, before any content', () => {
 		const doc = newDocument();
 		renderPrintDocument(doc, hostileModel());
@@ -57,7 +61,7 @@ describe('renderPrintDocument', () => {
 
 	it('does not run any script from the data', () => {
 		const pwned = vi.fn();
-		Object.assign(window, { pwned });
+		vi.stubGlobal('pwned', pwned);
 		const doc = newDocument();
 
 		renderPrintDocument(doc, hostileModel());

@@ -69,6 +69,10 @@ const setup = ({
 const event = mockedData.getEvent({ resource: { inviteId: '321-320', ridZ: '20261201T130000Z' } });
 
 describe('printAppointment', () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
 	it('opens the tab synchronously, cuts the opener and fetches the clicked occurrence', () => {
 		const win = fakeWindow();
 		const open = vi.spyOn(window, 'open').mockReturnValue(win as unknown as Window);
@@ -84,7 +88,7 @@ describe('printAppointment', () => {
 
 	it('renders the appointment as text and prints it', async () => {
 		const pwned = vi.fn();
-		Object.assign(window, { pwned });
+		vi.stubGlobal('pwned', pwned);
 		const win = fakeWindow();
 		vi.spyOn(window, 'open').mockReturnValue(win as unknown as Window);
 		const arg = { inviteId: '321-320' };
@@ -133,11 +137,13 @@ describe('printAppointment', () => {
 			})
 		});
 
+		// reading closed proves the guard ran, so the assertions below are not vacuous
+		const closedRead = vi.fn(() => true);
+		Object.defineProperty(win, 'closed', { get: closedRead });
+
 		printAppointment({ event, context })();
-		win.closed = true;
 		resolveDispatch(getInvite.fulfilled({ m: [message] }, 'request', { inviteId: '321-320' }));
-		await Promise.resolve();
-		await Promise.resolve();
+		await vi.waitFor(() => expect(closedRead).toHaveBeenCalled());
 
 		expect(win.document.querySelector('h1')).toBeNull();
 		expect(win.print).not.toHaveBeenCalled();

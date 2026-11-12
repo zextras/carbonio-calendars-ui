@@ -6,6 +6,7 @@
 import { getUserSettings, t } from '@zextras/carbonio-shell-ui';
 import { toLower } from 'lodash';
 
+import { extractBody, extractHtmlBody } from 'commons/body-message-renderer';
 import { TIME_FORMAT_PREF_NAME, toHour12Option } from 'commons/time-format';
 import { PARTICIPANT_ROLE } from 'constants/api';
 import { getTimeStrings } from 'hooks/use-get-date-range-converted-to-timezone';
@@ -27,8 +28,16 @@ export type PrintModel = {
 // eslint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F]/g;
 
+// LRE, RLE, PDF, LRO, RLO and the isolates LRI, RLI, FSI, PDI: an override in a sender-controlled
+// value would reorder the text printed after it in the same element
+export const BIDI_CONTROLS = /[\u202A-\u202E\u2066-\u2069]/g;
+
 export const sanitizeText = (value: string | undefined | null): string =>
-	(value ?? '').replaceAll(/\r\n?/g, '\n').replaceAll(CONTROL_CHARS, '').trim();
+	(value ?? '')
+		.replaceAll(/\r\n?/g, '\n')
+		.replaceAll(CONTROL_CHARS, '')
+		.replaceAll(BIDI_CONTROLS, '')
+		.trim();
 
 const BLOCK_ELEMENTS =
 	'address, blockquote, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, li, p, pre, tr';
@@ -71,7 +80,7 @@ const getTitle = (event: EventType, invite: Invite): string => {
 const getWhen = (event: EventType): string => {
 	const { prefs } = getUserSettings();
 	return getTimeStrings({
-		// the invite only has the series dates
+		// the event carries the dates of the clicked occurrence
 		start: event.start,
 		end: event.end,
 		options: {
@@ -84,9 +93,12 @@ const getWhen = (event: EventType): string => {
 	});
 };
 
+// drops the invitation block the editor wraps in ROOM_DIVIDER lines, as the event panel does
 const getDescription = (invite: Invite): string => {
-	const text = invite.textDescription?.[0]?._content;
-	return sanitizeText(text || htmlToText(invite.htmlDescription?.[0]?._content));
+	const text = extractBody(invite.textDescription?.[0]?._content ?? '');
+	return sanitizeText(
+		text || htmlToText(extractHtmlBody(invite.htmlDescription?.[0]?._content ?? ''))
+	);
 };
 
 export const buildPrintModel = ({

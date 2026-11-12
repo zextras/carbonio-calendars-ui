@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { PrintModel } from './print-model';
+import { BIDI_CONTROLS, PrintModel } from './print-model';
 
 // Appointment data is untrusted: it is written only as text, the CSP is a second line of defence.
 export const PRINT_PAGE_CSP = [
@@ -34,9 +34,6 @@ li { overflow-wrap: anywhere; }
 	li { break-inside: avoid; }
 }
 `;
-
-// LRE, RLE, PDF, LRO, RLO and the isolates LRI, RLI, FSI, PDI
-const BIDI_CONTROLS = /[\u202A-\u202E\u2066-\u2069]/g;
 
 const createTextElement = <K extends keyof HTMLElementTagNameMap>(
 	doc: Document,
