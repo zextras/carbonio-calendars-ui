@@ -15,9 +15,9 @@ export const CollapsedSecondaryBar = (): React.JSX.Element => {
 
 	return (
 		<Container data-testid="collapsed-secondary-bar" width="fill" height="fit">
-			{folders[0].children.map((folder) => (
+			{folders[0]?.children?.map((folder) => (
 				<CollapsedSidebarItem key={folder.id} item={folder} />
-			))}
+			)) ?? null}
 		</Container>
 	);
 };

@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { getFolders } from '@zextras/carbonio-ui-commons';
+import { getFolders, useFolderStore } from '@zextras/carbonio-ui-commons';
 
 import { CollapsedSecondaryBar } from './collapsed-secondary-bar';
 import { populateFoldersStore } from '../../__test__/mocks/store/folders';
@@ -14,6 +14,21 @@ import { setupTest, screen } from '../../__test__/test-setup';
 import { reducers } from '../../store/redux';
 
 describe('CollapsedSecondaryBar', () => {
+	it('should render without crashing when folders are not loaded yet', () => {
+		useFolderStore.setState(
+			{ linksIdMap: {}, folders: {}, searches: {}, updateFolder: vi.fn() },
+			true
+		);
+		const store = configureStore({
+			reducer: combineReducers(reducers)
+		});
+
+		expect(() => {
+			setupTest(<CollapsedSecondaryBar />, { store });
+		}).not.toThrow();
+		expect(screen.queryAllByRole('button')).toHaveLength(0);
+	});
+
 	it('should render an icon for each calendar of the primary account', () => {
 		populateFoldersStore();
 		const store = configureStore({
