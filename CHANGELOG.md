@@ -1,3 +1,8 @@
+## 1.44.0 (2026-11-12)
+
+* feat(CO-3690): pass event dates, location, all day and timezone to the location provider (#918) ([8b090c7](https://github.com/zextras/carbonio-calendars-ui/commit/8b090c7)), closes [#918](https://github.com/zextras/carbonio-calendars-ui/issues/918)
+* chore(deps): lock file maintenance (#915) ([694281c](https://github.com/zextras/carbonio-calendars-ui/commit/694281c)), closes [#915](https://github.com/zextras/carbonio-calendars-ui/issues/915)
+
 ## <small>1.43.3 (2026-11-10)</small>
 
 * fix(deps): update carbonio-shell-ui to v15.5.2 and carbonio-search-ui to v0.1.26 (#917) ([e4ccf1e](https://github.com/zextras/carbonio-calendars-ui/commit/e4ccf1e)), closes [#917](https://github.com/zextras/carbonio-calendars-ui/issues/917)
