@@ -151,6 +151,7 @@ export const AddExternalCalendarModal = ({
 	const [calendarUrl, setCalendarUrl] = useState('');
 	const [calendarName, setCalendarName] = useState('');
 	const [selectedColorHex, setSelectedColorHex] = useState(resolveCalendarColorHex(0, undefined));
+	const [excludeFreeBusy, setExcludeFreeBusy] = useState(false);
 
 	// ── CalDAV state ───────────────────────────────────────────────────────────
 	const [caldavHost, setCaldavHost] = useState('');
@@ -262,7 +263,7 @@ export const AddExternalCalendarModal = ({
 				name: calendarName.trim(),
 				url: calendarUrl.trim(),
 				rgb: selectedColorHex,
-				f: '#',
+				f: excludeFreeBusy ? '#b' : '#',
 				view: 'appointment',
 				sync: 0 // do not sync at the same time – for big calendars the notify handling takes time
 			})
@@ -458,10 +459,12 @@ export const AddExternalCalendarModal = ({
 					calendarName={calendarName}
 					isDuplicateCalendarName={isDuplicateCalendarName}
 					selectedColorHex={selectedColorHex}
+					excludeFreeBusy={excludeFreeBusy}
 					onCalendarUrlChange={setCalendarUrl}
 					onCalendarNameChange={setCalendarName}
 					onSelectedColorHexChange={setSelectedColorHex}
 					onColorPickerOpenChange={setIsColorPickerOpen}
+					onExcludeFreeBusyChange={setExcludeFreeBusy}
 					calendarUrlInputRef={calendarUrlInputRef}
 				/>
 			) : (
