@@ -349,15 +349,14 @@ describe('useEventActions', () => {
 			expect(ids(seriesMenu.items)).not.toContain(EVENT_ACTIONS.PRINT);
 		});
 
-		it('should come before show original for an appointment in trash', () => {
+		it('should not be offered for an appointment in trash, as in mails', () => {
 			const { result } = setupHook(useEventActions, {
 				initialProps: [{ event: trashed, context: gridContext }]
 			});
 
 			const actionIds = ids(result.current as InstanceActionsItems);
-			expect(actionIds[actionIds.indexOf(EVENT_ACTIONS.SHOW_ORIGINAL) - 1]).toBe(
-				EVENT_ACTIONS.PRINT
-			);
+			expect(actionIds).toContain(EVENT_ACTIONS.SHOW_ORIGINAL);
+			expect(actionIds).not.toContain(EVENT_ACTIONS.PRINT);
 		});
 
 		it('should be enabled and labelled print', () => {

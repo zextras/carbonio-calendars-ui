@@ -156,8 +156,7 @@ const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActi
 		deleteEventItem({ event: seriesEvent, invite, context }),
 		moveEventItem({ event: seriesEvent, context }),
 		copyEventItem({ event: seriesEvent, invite, context }),
-		// the occurrence dates, not the series ones
-		printEventItem({ event, context }),
+		// no print in trash, as in mails
 		showOriginal({ event }),
 		applyTag({ event, context }),
 		getExportICSItem({ event: seriesEvent, context })
