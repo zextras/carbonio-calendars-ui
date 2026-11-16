@@ -5,6 +5,27 @@
  */
 import DOMPurify from 'dompurify';
 
+import { UNLINKED_AUTO_LINK_CLASS } from './unlinked-auto-link-html';
+
+/**
+ * A dedicated instance, so the hook below doesn't affect other DOMPurify users.
+ * `class` is kept only for the marker of a removed auto-link (see
+ * `unlinked-auto-link-html.ts`); every other class value is dropped.
+ */
+const purifier = DOMPurify(window);
+purifier.addHook('uponSanitizeAttribute', (_node, data) => {
+	if (data.attrName !== 'class') {
+		return;
+	}
+	if (data.attrValue.split(/\s+/).includes(UNLINKED_AUTO_LINK_CLASS)) {
+		// eslint-disable-next-line no-param-reassign -- DOMPurify hooks rewrite the attribute through `data`
+		data.attrValue = UNLINKED_AUTO_LINK_CLASS;
+	} else {
+		// eslint-disable-next-line no-param-reassign -- see above
+		data.keepAttr = false;
+	}
+});
+
 const ALLOWED_TAGS = [
 	'p',
 	'div',
@@ -57,7 +78,8 @@ const ALLOWED_ATTR = [
 	'color',
 	'face',
 	'colspan',
-	'rowspan'
+	'rowspan',
+	'class'
 ];
 
 /**
@@ -69,7 +91,7 @@ const ALLOWED_ATTR = [
  * bypasses them.
  */
 export const sanitizeEditorHtml = (html: string): string =>
-	DOMPurify.sanitize(html, {
+	purifier.sanitize(html, {
 		ALLOWED_TAGS,
 		ALLOWED_ATTR,
 		ALLOW_DATA_ATTR: false
