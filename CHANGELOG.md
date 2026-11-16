@@ -1,3 +1,7 @@
+## 1.46.0 (2026-11-16)
+
+* feat(CO-4660): let subscribed ICS calendars be excluded from free/busy (#920) ([682eb32](https://github.com/zextras/carbonio-calendars-ui/commit/682eb32)), closes [#920](https://github.com/zextras/carbonio-calendars-ui/issues/920)
+
 ## 1.45.0 (2026-11-16)
 
 * feat(CO-4572): add print action to the calendar grid card (#912) ([943e9e4](https://github.com/zextras/carbonio-calendars-ui/commit/943e9e4)), closes [#912](https://github.com/zextras/carbonio-calendars-ui/issues/912)
