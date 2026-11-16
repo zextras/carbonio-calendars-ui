@@ -41,6 +41,16 @@ describe('sanitizeEditorHtml', () => {
 		expect(result).toContain('title="My title"');
 	});
 
+	it('keeps the class marking a removed auto-detected link, dropping any other class', () => {
+		const result = sanitizeEditorHtml(
+			'<span class="other cal-unlinked-auto-link">a</span><span class="evil">b</span>'
+		);
+		expect(result).toContain('<span class="cal-unlinked-auto-link">a</span>');
+		expect(result).not.toContain('other');
+		expect(result).not.toContain('evil');
+		expect(result).toContain('<span>b</span>');
+	});
+
 	it('keeps tables and images with allowed attributes', () => {
 		const html =
 			'<table><tr><td colspan="2">cell</td></tr></table><img src="https://example.com/a.png" alt="a" width="10" height="10">';

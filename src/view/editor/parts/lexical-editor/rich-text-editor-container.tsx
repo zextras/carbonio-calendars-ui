@@ -33,6 +33,10 @@ import { RichToolbarPlugin } from './plugins/rich-toolbar-plugin';
 import { TableActionMenuPlugin } from './plugins/table-action-menu-plugin';
 import { TableCellResizerPlugin } from './plugins/table-cell-resizer-plugin';
 import { TableHoverActionsPlugin } from './plugins/table-hover-actions-plugin';
+import {
+	UNLINKED_AUTO_LINK_HTML_EXPORT,
+	withUnlinkedAutoLinkImport
+} from './plugins/unlinked-auto-link-html';
 import { useAppSelector } from '../../../../store/redux/hooks';
 import { selectEditorDisabled } from '../../../../store/selectors/editor';
 
@@ -369,7 +373,10 @@ export const RichTextEditorContainer = ({
 				image: 'cal-lexical-image',
 				list: { nested: { listitem: 'cal-lexical-nested-listitem' } }
 			},
-			html: { import: STYLE_PRESERVING_HTML_IMPORT },
+			html: {
+				import: withUnlinkedAutoLinkImport(STYLE_PRESERVING_HTML_IMPORT),
+				export: UNLINKED_AUTO_LINK_HTML_EXPORT
+			},
 			onError: (error: Error): void => {
 				throw error;
 			}
