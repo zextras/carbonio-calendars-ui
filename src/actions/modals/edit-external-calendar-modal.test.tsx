@@ -19,6 +19,7 @@ const CALENDAR_NAME_LABEL = 'Choose a representative name*';
 const SAVE_CHANGES_LABEL = 'Save Changes';
 const DEFAULT_FOLDER_ID = '123';
 const DEFAULT_FOLDER_URL = 'https://example.com/ext.ics';
+const EXCLUDE_FREE_BUSY_LABEL = 'Exclude this calendar when reporting the free/busy times';
 
 type FolderSetupOptions = {
 	folderId?: string;
@@ -26,6 +27,7 @@ type FolderSetupOptions = {
 	folderUrl?: string | undefined;
 	color?: number | undefined;
 	rgb?: string | undefined;
+	flags?: string;
 	extraFolders?: Array<{ id: string; name: string }>;
 };
 
@@ -35,13 +37,14 @@ const setupFolders = (options: FolderSetupOptions = {}): void => {
 		folderName = 'External calendar',
 		folderUrl = DEFAULT_FOLDER_URL,
 		rgb,
+		flags = '#y',
 		extraFolders = [{ id: '124', name: 'Team calendar' }]
 	} = options;
 	const externalFolder = generateFolder({
 		id: folderId,
 		name: folderName,
 		view: 'appointment',
-		f: '#y'
+		f: flags
 	});
 
 	externalFolder.url = folderUrl;
@@ -259,5 +262,85 @@ describe('EditExternalCalendarModal', () => {
 		expect(onClose).not.toHaveBeenCalled();
 		expect(screen.getByRole('button', { name: SAVE_CHANGES_LABEL })).toBeEnabled();
 		expect(screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL })).toBeEnabled();
+	});
+
+	describe('free/busy', () => {
+		test('shows the exclude from free/busy checkbox unchecked when the folder has no b flag', () => {
+			setupFolders();
+			setupTest(<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={vi.fn()} />);
+
+			expect(screen.getByText(EXCLUDE_FREE_BUSY_LABEL)).toBeVisible();
+			expect(screen.getByTestId('icon: Square')).toBeVisible();
+		});
+
+		test('shows the checkbox checked when the folder is excluded from free/busy', () => {
+			setupFolders({ flags: '#yb' });
+			setupTest(<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={vi.fn()} />);
+
+			expect(screen.getByTestId('icon: CheckmarkSquare')).toBeVisible();
+		});
+
+		test('excludes the calendar from free/busy when the checkbox is checked and saved', async () => {
+			setupFolders();
+			const onClose = vi.fn();
+			const folderActionSpy = vi.spyOn(calendarActions, 'folderAction').mockResolvedValue({});
+			const { user } = setupTest(
+				<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={onClose} />
+			);
+
+			await user.click(screen.getByText(EXCLUDE_FREE_BUSY_LABEL));
+			await user.click(screen.getByRole('button', { name: SAVE_CHANGES_LABEL }));
+
+			await waitFor(() => {
+				expect(folderActionSpy).toHaveBeenCalledWith({
+					op: FOLDER_OPERATIONS.FREE_BUSY,
+					excludeFreeBusy: true,
+					id: DEFAULT_FOLDER_ID
+				});
+			});
+			await waitFor(() => {
+				expect(onClose).toHaveBeenCalledTimes(1);
+			});
+		});
+
+		test('includes the calendar in free/busy again when the checkbox is unchecked and saved', async () => {
+			setupFolders({ flags: '#yb' });
+			const folderActionSpy = vi.spyOn(calendarActions, 'folderAction').mockResolvedValue({});
+			const { user } = setupTest(
+				<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={vi.fn()} />
+			);
+
+			await user.click(screen.getByText(EXCLUDE_FREE_BUSY_LABEL));
+			await user.click(screen.getByRole('button', { name: SAVE_CHANGES_LABEL }));
+
+			await waitFor(() => {
+				expect(folderActionSpy).toHaveBeenCalledWith({
+					op: FOLDER_OPERATIONS.FREE_BUSY,
+					excludeFreeBusy: false,
+					id: DEFAULT_FOLDER_ID
+				});
+			});
+		});
+
+		test('sends rename and free/busy together when both change', async () => {
+			setupFolders();
+			const folderActionSpy = vi.spyOn(calendarActions, 'folderAction').mockResolvedValue({});
+			const { user } = setupTest(
+				<EditExternalCalendarModal folderId={DEFAULT_FOLDER_ID} onClose={vi.fn()} />
+			);
+
+			const nameInput = screen.getByRole('textbox', { name: CALENDAR_NAME_LABEL });
+			await user.clear(nameInput);
+			await user.pasteInto(nameInput, 'Holidays');
+			await user.click(screen.getByText(EXCLUDE_FREE_BUSY_LABEL));
+			await user.click(screen.getByRole('button', { name: SAVE_CHANGES_LABEL }));
+
+			await waitFor(() => {
+				expect(folderActionSpy).toHaveBeenCalledWith([
+					{ op: FOLDER_OPERATIONS.RENAME, name: 'Holidays', id: DEFAULT_FOLDER_ID },
+					{ op: FOLDER_OPERATIONS.FREE_BUSY, excludeFreeBusy: true, id: DEFAULT_FOLDER_ID }
+				]);
+			});
+		});
 	});
 });
