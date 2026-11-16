@@ -1,3 +1,7 @@
+## 1.45.0 (2026-11-16)
+
+* feat(CO-4572): add print action to the calendar grid card (#912) ([943e9e4](https://github.com/zextras/carbonio-calendars-ui/commit/943e9e4)), closes [#912](https://github.com/zextras/carbonio-calendars-ui/issues/912)
+
 ## <small>1.44.1 (2026-11-12)</small>
 
 * fix(CO-4684): html composer the remove link trash button does nothing… (#919) ([965a5ac](https://github.com/zextras/carbonio-calendars-ui/commit/965a5ac)), closes [#919](https://github.com/zextras/carbonio-calendars-ui/issues/919)
