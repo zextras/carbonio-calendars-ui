@@ -36,7 +36,7 @@ async function setupWithImage(): Promise<{
 }
 
 describe('ImageComponent', () => {
-	it('commits the new size to the document when a resize handle is released', async () => {
+	it('commits the new size, keeping the ratio, when a resize handle is released', async () => {
 		vi.spyOn(HTMLImageElement.prototype, 'getBoundingClientRect').mockReturnValue({
 			width: 100,
 			height: 50
@@ -46,13 +46,56 @@ describe('ImageComponent', () => {
 		await user.click(image);
 		const handle = await screen.findByTestId(RESIZE_HANDLE_TESTID);
 
+		// The pointer moves the height the most (50 -> 80), so the width follows it (100 -> 160)
 		fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 });
-		fireEvent.mouseUp(document, { clientX: 20, clientY: 10 });
+		fireEvent.mouseUp(document, { clientX: 20, clientY: 30 });
 
 		await waitFor(() => {
-			expect(richTextOf(store)).toContain('width: 120px');
+			expect(richTextOf(store)).toContain('width: 160px');
 		});
-		expect(richTextOf(store)).toContain('height: 60px');
+		expect(richTextOf(store)).toContain('height: 80px');
+	});
+
+	it('renders an image with both sizes set with the height following their ratio', async () => {
+		const store = createEditorStore({
+			richText:
+				'<p><img src="https://example.com/inline.png" alt="pic" style="width: 300px; height: 150px;" /></p>'
+		});
+		renderRichTextEditor(store);
+
+		const image = await within(screen.getByTestId(EDITOR_TESTID)).findByRole('img');
+
+		expect(image).toHaveStyle({ width: '300px', height: 'auto', maxWidth: '100%' });
+		// eslint-disable-next-line jest-dom/prefer-to-have-style -- jsdom's CSS parser drops aspect-ratio, so toHaveStyle can't see it
+		expect(image.style.aspectRatio).toBe('300 / 150');
+		// The exported HTML keeps both sizes
+		await waitFor(() => {
+			expect(richTextOf(store)).toContain('width: 300px');
+		});
+		expect(richTextOf(store)).toContain('height: 150px');
+	});
+
+	it('stops following the pointer when the image is deleted while resizing', async () => {
+		const { store, user, image } = await setupWithImage();
+		await user.click(image);
+		const handle = await screen.findByTestId(RESIZE_HANDLE_TESTID);
+		const addListener = vi.spyOn(document, 'addEventListener');
+		const removeListener = vi.spyOn(document, 'removeEventListener');
+
+		fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 });
+		const dragListeners = addListener.mock.calls.filter(
+			([type]) => type === 'mousemove' || type === 'mouseup'
+		);
+		expect(dragListeners).toHaveLength(2);
+
+		await user.keyboard('{Delete}');
+
+		await waitFor(() => {
+			expect(richTextOf(store)).not.toContain('<img ');
+		});
+		dragListeners.forEach(([type, listener]) => {
+			expect(removeListener).toHaveBeenCalledWith(type, listener);
+		});
 	});
 
 	it('toggles the selection when the image is shift-clicked', async () => {
