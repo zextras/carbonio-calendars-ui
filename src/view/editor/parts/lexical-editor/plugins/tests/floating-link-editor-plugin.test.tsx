@@ -20,6 +20,11 @@ import { defaultEditor } from 'view/editor/tests/common';
 const LINK_URL = 'https://custom-link.com';
 const LINK_TEXT = 'lexical';
 const LINK_EMAIL = 'someone@custom-link.com';
+const OTHER_LINK_URL = 'https://other-link.com';
+// jsdom reports colors as `rgb(...)`.
+const RED_RGB = 'rgb(255, 0, 0)';
+// `LINK_URL` with only its first part in bold.
+const PARTLY_BOLD_URL = '<b>https://custom</b>-link.com';
 const EDITOR_TESTID = 'editor-composer';
 const EDIT_LINK_LABEL = 'lexical-label.edit_link';
 const REMOVE_LINK_LABEL = 'lexical-label.remove_link';
@@ -30,6 +35,7 @@ const TEXT_TO_DISPLAY_LABEL = 'lexical-label.text_to_display';
 const SAVE_LABEL = 'label.save';
 const NEW_LINK_TEXT = 'test';
 const UNLINKED_AUTO_LINK_CLASS = 'cal-unlinked-auto-link';
+const BOLD_CLASS = 'cal-lexical-bold';
 // Built at runtime so the source holds no script URL literal.
 const SCRIPT_URL = ['javascript', 'void(0)//'].join(':');
 const UNSAFE_URL_REPLACEMENT = 'about:blank';
@@ -88,6 +94,21 @@ async function editLinkText(user: TestUser, link: HTMLElement, text: string): Pr
 	await user.clear(textInput);
 	await user.type(textInput, text);
 	await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+}
+
+/** Renders the editor on a link with the given content and changes its text from the edit modal. */
+async function setupWithRenamedLink(innerHtml: string): Promise<EditorSetup> {
+	const setup = setupEditor(`<p><a href="${LINK_URL}">${innerHtml}</a></p>`);
+	const { store, user, editorElement } = setup;
+	await editLinkText(
+		user,
+		await within(editorElement).findByRole('link', { name: LINK_TEXT }),
+		NEW_LINK_TEXT
+	);
+	await waitFor(() => {
+		expect(linksOf(store)).toEqual([{ href: LINK_URL, text: NEW_LINK_TEXT }]);
+	});
+	return setup;
 }
 
 /** Renders the editor on a paragraph whose text is auto-detected as a link, and removes the link. */
@@ -298,6 +319,84 @@ describe('FloatingLinkEditorPlugin', () => {
 		expect(html).toContain('rel="noopener noreferrer"');
 	});
 
+	it('keeps the bold of a link when its text is changed', async () => {
+		const { editorElement } = await setupWithRenamedLink(`<b>${LINK_TEXT}</b>`);
+
+		expect(within(editorElement).getByText(NEW_LINK_TEXT)).toHaveClass(BOLD_CLASS);
+	});
+
+	it('keeps the colour of a link when its text is changed', async () => {
+		const { editorElement } = await setupWithRenamedLink(
+			`<span style="color: ${RED_RGB};">${LINK_TEXT}</span>`
+		);
+
+		expect(within(editorElement).getByText(NEW_LINK_TEXT)).toHaveStyle({ color: RED_RGB });
+	});
+
+	describe('removing a link from text holding URLs or email addresses', () => {
+		it.each([
+			['a URL partly in bold', `<a href="${OTHER_LINK_URL}">Visit ${PARTLY_BOLD_URL}</a>`],
+			[
+				'a URL whose scheme sits before the link',
+				`https://<a href="${OTHER_LINK_URL}">custom-link.com</a>`
+			],
+			[
+				'a whole URL whose scheme sits before the link',
+				`https://<a href="${OTHER_LINK_URL}">www.custom-link.com</a>`
+			],
+			['an email address before a URL', `<a href="${OTHER_LINK_URL}">${LINK_EMAIL} ${LINK_URL}</a>`]
+		])('does not link again %s', async (_case, innerHtml) => {
+			const { store, user, editorElement } = setupEditor(`<p>${innerHtml}</p>`);
+			// Each paragraph holds a single link, the one removed.
+			const link = await within(editorElement).findByRole('link');
+			const paragraphText = editorElement.textContent;
+
+			await user.click(link);
+			await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+
+			// The removed link is the only one holding this URL.
+			await waitFor(() => {
+				expect(richTextOf(store)).not.toContain(OTHER_LINK_URL);
+			});
+			expect(richTextOf(store)).not.toContain('<a');
+			expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
+			expect(editorElement).toHaveTextContent(paragraphText ?? '');
+		});
+
+		it('keeps the bold part of a URL that is no longer linked', async () => {
+			const { user, editorElement } = setupEditor(
+				`<p><a href="${OTHER_LINK_URL}">Visit ${PARTLY_BOLD_URL}</a></p>`
+			);
+
+			await user.click(await within(editorElement).findByRole('link'));
+			await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+
+			await waitFor(() => {
+				expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
+			});
+			expect(within(editorElement).getByText('https://custom')).toHaveClass(BOLD_CLASS);
+		});
+
+		it('offers to restore the link of a URL whose scheme sat before the removed link', async () => {
+			const { store, user, editorElement } = setupEditor(
+				`<p>https://<a href="${OTHER_LINK_URL}">custom-link.com</a></p>`
+			);
+
+			await user.click(await within(editorElement).findByRole('link', { name: 'custom-link.com' }));
+			await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+			await waitFor(() => {
+				expect(richTextOf(store)).toContain(UNLINKED_AUTO_LINK_CLASS);
+			});
+
+			await user.hover(within(editorElement).getByText(LINK_URL));
+			await user.click(await screen.findByRole('button', { name: RESTORE_LINK_LABEL }));
+
+			await waitFor(() => {
+				expect(linksOf(store)).toEqual([{ href: LINK_URL, text: LINK_URL }]);
+			});
+		});
+	});
+
 	describe('auto-detected links', () => {
 		it.each([
 			['URL', LINK_URL],
@@ -323,7 +422,7 @@ describe('FloatingLinkEditorPlugin', () => {
 			const { store: reloadedStore, editorElement } = setupEditor(savedHtml);
 			const text = await within(editorElement).findByText(LINK_URL);
 			expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
-			expect(text).toHaveClass('cal-lexical-bold');
+			expect(text).toHaveClass(BOLD_CLASS);
 			expect(richTextOf(reloadedStore)).not.toContain('<a');
 		});
 
