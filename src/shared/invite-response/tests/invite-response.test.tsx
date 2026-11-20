@@ -1369,6 +1369,35 @@ describe('invite response component', () => {
 							expect(screen.queryByRole('button', { name: /Decline/i })).not.toBeInTheDocument();
 							expect(screen.getByText('You accepted the proposed new time.')).toBeVisible();
 						});
+						test('a success snackbar confirms that the proposed new time was accepted', async () => {
+							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
+							setupFoldersStore();
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
+							await act(async () => {
+								await user.click(acceptProposedTimeButton);
+							});
+
+							const snackbar = await screen.findByTestId('snackbar');
+							expect(
+								within(snackbar).getByText('You accepted the proposed new time')
+							).toBeVisible();
+							expect(within(snackbar).getByTestId('icon: CheckmarkOutline')).toBeVisible();
+						});
 						test('stays accepted when the panel is re-created after the counter mail is trashed', async () => {
 							setupServerSingleEventResponse(singleAppointmentResponse, singleGetMsgResponse);
 							setupFoldersStore();
@@ -1983,6 +2012,35 @@ describe('invite response component', () => {
 							});
 							expect(screen.queryByRole('button', { name: /Accept/i })).not.toBeInTheDocument();
 							expect(screen.getByText('You declined the proposed new time.')).toBeVisible();
+						});
+						test('a success snackbar confirms that the proposed new time was declined', async () => {
+							setupFoldersStore();
+							createAPIInterceptor('post', declineCounterUrl, declineCounterSuccess());
+							const mailMsg = buildMailMessageType(
+								MESSAGE_METHOD.COUNTER,
+								MESSAGE_TYPE.SINGLE,
+								false
+							);
+							const store = configureStore({ reducer: combineReducers(reducers) });
+							const { user } = setupTest(
+								<InviteResponse mailMsg={mailMsg} moveToTrash={vi.fn()} />,
+								{
+									store
+								}
+							);
+
+							const decline = await screen.findByRole('button', {
+								name: /decline/i
+							});
+							await act(async () => {
+								await user.click(decline);
+							});
+
+							const snackbar = await screen.findByTestId('snackbar');
+							expect(
+								within(snackbar).getByText('You declined the proposed new time')
+							).toBeVisible();
+							expect(within(snackbar).getByTestId('icon: CheckmarkOutline')).toBeVisible();
 						});
 						test('stays declined when the panel is re-created after the counter mail is trashed', async () => {
 							setupFoldersStore();
