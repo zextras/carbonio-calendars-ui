@@ -39,12 +39,12 @@ function isStrayFileDrag(event: DragEvent<HTMLElement>): boolean {
 	if (event.isDefaultPrevented() || !dataTransfer) {
 		return false;
 	}
-	const types = Array.from(dataTransfer.types);
+	const types = new Set(dataTransfer.types);
 	// An inline image dragged out of the text: there is no file to open
-	if (types.includes(INLINE_IMAGE_DRAG_TYPE)) {
+	if (types.has(INLINE_IMAGE_DRAG_TYPE)) {
 		return false;
 	}
-	if (!types.includes('Files') && dataTransfer.files.length === 0) {
+	if (!types.has('Files') && dataTransfer.files.length === 0) {
 		return false;
 	}
 	return !(target instanceof Element && target.closest('[contenteditable="true"]'));
