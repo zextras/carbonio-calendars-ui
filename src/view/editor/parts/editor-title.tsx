@@ -61,6 +61,7 @@ export const EditorTitle = ({ editorId }: { editorId: string }): ReactElement | 
 			onChange={onChange}
 			disabled={disabled?.title}
 			background="gray5"
+			className="carbonio-bypass-context-menu"
 			data-testid="editor-title"
 			// eslint-disable-next-line jsx-a11y/no-autofocus
 			autoFocus
