@@ -186,7 +186,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 			replace: true,
 			severity: 'success',
 			hideButton: true,
-			label: t('snackbar.proposed_time_accepted', 'You accepted the proposed new time'),
+			label: t('snackbar.proposed_new_time_accepted', 'You accepted the proposed new time'),
 			autoHideTimeout: 3000
 		});
 		leaveCounterMail();
@@ -233,7 +233,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 					replace: true,
 					severity: 'success',
 					hideButton: true,
-					label: t('snackbar.proposed_time_declined', 'You declined the proposed new time'),
+					label: t('snackbar.proposed_new_time_declined', 'You declined the proposed new time'),
 					autoHideTimeout: 3000
 				});
 				leaveCounterMail();
