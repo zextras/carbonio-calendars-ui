@@ -67,6 +67,22 @@ describe('EditorComposer', () => {
 		expect(screen.getByTestId('editor-textArea')).toBeDisabled();
 	});
 
+	it('opts the rich-text editor out of the shell context menu blocker', async () => {
+		const store = createStore({ isRichText: true, richText: '<p>Hello</p>' });
+		setupTest(<EditorComposer editorId={defaultEditor.id} />, { store });
+
+		expect(await screen.findByTestId('editor-composer')).toHaveClass(
+			'carbonio-bypass-context-menu'
+		);
+	});
+
+	it('opts the plain textarea out of the shell context menu blocker', () => {
+		const store = createStore({ isRichText: false, plainText: 'Hello' });
+		setupTest(<EditorComposer editorId={defaultEditor.id} />, { store });
+
+		expect(screen.getByTestId('editor-textArea')).toHaveClass('carbonio-bypass-context-menu');
+	});
+
 	it('makes the rich-text editor non-editable when disabled.composer is set', async () => {
 		const store = createStore({
 			isRichText: true,

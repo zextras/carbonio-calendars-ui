@@ -1,3 +1,8 @@
+## 1.47.0 (2026-11-23)
+
+* feat(CO-4739): enable native context menu on appointment editor title and description (#927) ([ca19474](https://github.com/zextras/carbonio-calendars-ui/commit/ca19474)), closes [#927](https://github.com/zextras/carbonio-calendars-ui/issues/927)
+* chore(deps): lock file maintenance (#921) ([63af719](https://github.com/zextras/carbonio-calendars-ui/commit/63af719)), closes [#921](https://github.com/zextras/carbonio-calendars-ui/issues/921)
+
 ## 1.46.0 (2026-11-16)
 
 * feat(CO-4660): let subscribed ICS calendars be excluded from free/busy (#920) ([682eb32](https://github.com/zextras/carbonio-calendars-ui/commit/682eb32)), closes [#920](https://github.com/zextras/carbonio-calendars-ui/issues/920)

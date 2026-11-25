@@ -78,6 +78,7 @@ const PlainComposer = ({ editorId }: { editorId: string }): JSX.Element => {
 			value={plainTextValue}
 			onChange={onPlainTextChange}
 			disabled={disabled?.composer}
+			className="carbonio-bypass-context-menu"
 			data-testid="editor-textArea"
 		/>
 	);
