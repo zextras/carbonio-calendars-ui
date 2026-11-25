@@ -1,3 +1,9 @@
+## <small>1.47.1 (2026-11-25)</small>
+
+* fix(CO-4735): keep link formatting on rename and stop removed links from coming back (#922) ([b53269b](https://github.com/zextras/carbonio-calendars-ui/commit/b53269b)), closes [#922](https://github.com/zextras/carbonio-calendars-ui/issues/922)
+* fix(CO-4801): keep the image ratio on resize and highlight the edit image button (#924) ([fb79e63](https://github.com/zextras/carbonio-calendars-ui/commit/fb79e63)), closes [#924](https://github.com/zextras/carbonio-calendars-ui/issues/924)
+* chore(deps): lock file maintenance (#926) ([909b8b2](https://github.com/zextras/carbonio-calendars-ui/commit/909b8b2)), closes [#926](https://github.com/zextras/carbonio-calendars-ui/issues/926)
+
 ## 1.47.0 (2026-11-23)
 
 * feat(CO-4739): enable native context menu on appointment editor title and description (#927) ([ca19474](https://github.com/zextras/carbonio-calendars-ui/commit/ca19474)), closes [#927](https://github.com/zextras/carbonio-calendars-ui/issues/927)
