@@ -358,7 +358,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			permissions
 		};
 
-		return saveSettings(newValue).then((res) => {
+		return saveSettings(newValue).then(async (res) => {
 			if ('Fault' in res) {
 				createSnackbar({
 					key: `new`,
@@ -389,7 +389,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			}
 			if (newFreeBusy || newInviteRight) {
 				// reload the saved ACEs so the "current" baseline (contacts, zids) matches the server
-				void getUserRights();
+				await getUserRights();
 			}
 			return [{ status: 'fulfilled' as const, value: res }] as PromiseSettledResult<unknown>[];
 		});
