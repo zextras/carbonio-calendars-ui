@@ -14,6 +14,7 @@ import { screen, within } from '@test-setup';
 
 const EDITOR_TESTID = 'editor-composer';
 const INSERT_IMAGE_LABEL = 'lexical-label.insert_image_url';
+const EDIT_IMAGE_LABEL = 'lexical-label.edit_image';
 const IMAGE_URL = 'https://example.com/picture.png';
 
 describe('RichToolbarPlugin - image', () => {
@@ -98,6 +99,34 @@ describe('RichToolbarPlugin - image', () => {
 		await waitFor(() => {
 			expect(richTextOf(store)).toContain('alt="updated alt"');
 		});
+	});
+
+	it('highlights the image dialog button, labelled as edit, only while a single image is selected', async () => {
+		const store = createEditorStore({
+			richText:
+				'<p><img src="https://example.com/a.png" alt="first" />' +
+				'<img src="https://example.com/b.png" alt="second" /></p>'
+		});
+		const { user } = renderRichTextEditor(store);
+		const editorElement = screen.getByTestId(EDITOR_TESTID);
+		const first = await within(editorElement).findByRole('img', { name: 'first' });
+
+		expect(screen.getByRole('button', { name: INSERT_IMAGE_LABEL, pressed: false })).toBeVisible();
+
+		await user.click(first);
+
+		expect(
+			await screen.findByRole('button', { name: EDIT_IMAGE_LABEL, pressed: true })
+		).toBeVisible();
+
+		// With two images selected the dialog would insert a new image, not edit one
+		await user.keyboard('{Shift>}');
+		await user.click(within(editorElement).getByRole('img', { name: 'second' }));
+		await user.keyboard('{/Shift}');
+
+		expect(
+			await screen.findByRole('button', { name: INSERT_IMAGE_LABEL, pressed: false })
+		).toBeVisible();
 	});
 
 	it('round-trips a description that already contains a plain <img> tag from another client on load', async () => {

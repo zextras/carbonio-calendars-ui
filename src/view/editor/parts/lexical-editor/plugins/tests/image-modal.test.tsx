@@ -16,11 +16,17 @@ const IMAGE_URL = 'https://example.com/picture.png';
 // 1x1 transparent PNG
 const EMBEDDED_IMAGE_SRC =
 	'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-const SOURCE_LABEL = 'lexical-label.image_source';
 const EMBEDDED_SOURCE_HINT = 'lexical-label.image_source_embedded';
 const EDITOR_TESTID = 'editor-composer';
-const SAVE_LABEL = 'label.save';
 const INSERT_IMAGE_LABEL = 'lexical-label.insert_image_url';
+const EDIT_IMAGE_LABEL = 'lexical-label.edit_image';
+const ALT_LABEL = 'lexical-label.image_alt';
+const SAVE_LABEL = 'label.save';
+const SOURCE_LABEL = 'lexical-label.image_source';
+const UNLOCK_LABEL = 'lexical-label.unlock_aspect_ratio';
+const WIDTH_100PX = 'width: 100px';
+/** An image without explicit size, which the browser sizes on its own. */
+const AUTO_SIZED_IMAGE_HTML = '<p><img src="https://example.com/inline.png" alt="pic" /></p>';
 const MODAL_TITLE = 'lexical-label.insert_edit_image';
 const WIDTH_LABEL = 'lexical-label.width';
 const HEIGHT_LABEL = 'lexical-label.height';
@@ -51,10 +57,7 @@ async function openInsertModalWithSource(): Promise<{
 	const { user } = renderRichTextEditor(store);
 	await user.click(screen.getByRole('button', { name: INSERT_IMAGE_LABEL }));
 	expect(await screen.findByText(MODAL_TITLE)).toBeInTheDocument();
-	await user.pasteInto(
-		screen.getByRole('textbox', { name: 'lexical-label.image_source' }),
-		IMAGE_URL
-	);
+	await user.pasteInto(screen.getByRole('textbox', { name: SOURCE_LABEL }), IMAGE_URL);
 	return { store, user };
 }
 
@@ -70,6 +73,27 @@ async function openEditModalOfEmbeddedImage(): Promise<{
 	await user.dblClick(await within(editorElement).findByRole('img'));
 	expect(await screen.findByText(MODAL_TITLE)).toBeInTheDocument();
 	return { store, user };
+}
+
+function imageTagOf(store: ReturnType<typeof createEditorStore>): string {
+	return /<img [^>]*>/.exec(richTextOf(store))?.[0] ?? '';
+}
+
+/**
+ * Renders the editor and gives its image, since jsdom has no layout, the size
+ * the browser renders it with.
+ */
+async function setupWithRenderedImage(
+	richText: string,
+	width: number,
+	height: number
+): Promise<{ store: ReturnType<typeof createEditorStore>; user: TestUser; image: HTMLElement }> {
+	const store = createEditorStore({ richText });
+	const { user } = renderRichTextEditor(store);
+	const image = await within(screen.getByTestId(EDITOR_TESTID)).findByRole('img');
+	Object.defineProperty(image, 'clientWidth', { configurable: true, value: width });
+	Object.defineProperty(image, 'clientHeight', { configurable: true, value: height });
+	return { store, user, image };
 }
 
 async function replaceValue(user: TestUser, input: HTMLElement, value: string): Promise<void> {
@@ -121,7 +145,7 @@ describe('ImageModal', () => {
 		const heightInput = screen.getByRole('spinbutton', { name: HEIGHT_LABEL });
 		await waitFor(() => expect(widthInput).toHaveValue(400));
 
-		await user.click(screen.getByRole('button', { name: 'lexical-label.unlock_aspect_ratio' }));
+		await user.click(screen.getByRole('button', { name: UNLOCK_LABEL }));
 		expect(screen.getByRole('button', { name: 'lexical-label.lock_aspect_ratio' })).toHaveAttribute(
 			'aria-pressed',
 			'false'
@@ -146,7 +170,7 @@ describe('ImageModal', () => {
 		await waitFor(() => {
 			expect(richTextOf(store)).toContain(`src="${IMAGE_URL}"`);
 		});
-		expect(richTextOf(store)).toContain('width: 100px');
+		expect(richTextOf(store)).toContain(WIDTH_100PX);
 		expect(richTextOf(store)).toContain('height: 50px');
 	});
 
@@ -188,6 +212,66 @@ describe('ImageModal', () => {
 		expect(richTextOf(store)).toContain('height: 25px');
 	});
 
+	it('opens from the toolbar to edit the selected image, pre-filled with its rendered size', async () => {
+		const { user, image } = await setupWithRenderedImage(AUTO_SIZED_IMAGE_HTML, 320, 160);
+
+		await user.click(image);
+		await user.click(await screen.findByRole('button', { name: EDIT_IMAGE_LABEL }));
+
+		expect(await screen.findByText(MODAL_TITLE)).toBeInTheDocument();
+		expect(screen.getByRole('textbox', { name: SOURCE_LABEL })).toHaveValue(
+			'https://example.com/inline.png'
+		);
+		expect(screen.getByRole('textbox', { name: ALT_LABEL })).toHaveValue('pic');
+		expect(screen.getByRole('spinbutton', { name: WIDTH_LABEL })).toHaveValue(320);
+		expect(screen.getByRole('spinbutton', { name: HEIGHT_LABEL })).toHaveValue(160);
+	});
+
+	it('keeps the size of an image without explicit size when only its other properties change', async () => {
+		const { store, user, image } = await setupWithRenderedImage(AUTO_SIZED_IMAGE_HTML, 320, 160);
+
+		await user.dblClick(image);
+		await replaceValue(user, await screen.findByRole('textbox', { name: ALT_LABEL }), 'new alt');
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+
+		await waitFor(() => {
+			expect(imageTagOf(store)).toContain('alt="new alt"');
+		});
+		expect(imageTagOf(store)).not.toMatch(/width|height/);
+	});
+
+	it('saves the size entered for an image without explicit size, keeping its natural ratio', async () => {
+		stubImageWithNaturalSize();
+		const { store, user, image } = await setupWithRenderedImage(AUTO_SIZED_IMAGE_HTML, 320, 160);
+
+		await user.dblClick(image);
+		await replaceValue(user, await screen.findByRole('spinbutton', { name: WIDTH_LABEL }), '100');
+
+		expect(screen.getByRole('spinbutton', { name: HEIGHT_LABEL })).toHaveValue(50);
+
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+
+		await waitFor(() => {
+			expect(imageTagOf(store)).toContain(WIDTH_100PX);
+		});
+		expect(imageTagOf(store)).toContain('height: 50px');
+	});
+
+	it('saves the side left untouched after unlocking the ratio as shown in the dialog', async () => {
+		const { store, user, image } = await setupWithRenderedImage(AUTO_SIZED_IMAGE_HTML, 320, 160);
+
+		await user.dblClick(image);
+		await user.click(await screen.findByRole('button', { name: UNLOCK_LABEL }));
+		await replaceValue(user, screen.getByRole('spinbutton', { name: WIDTH_LABEL }), '100');
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+
+		// The height shown (160) is saved, not left to the browser (which would make it 50)
+		await waitFor(() => {
+			expect(imageTagOf(store)).toContain(WIDTH_100PX);
+		});
+		expect(imageTagOf(store)).toContain('height: 160px');
+	});
+
 	it('keeps the new proportions after unlocking, resizing and locking again', async () => {
 		const store = createEditorStore({
 			richText: `<p><img src="${IMAGE_URL}" alt="pic" width="200" height="100" /></p>`
@@ -200,7 +284,7 @@ describe('ImageModal', () => {
 		const widthInput = screen.getByRole('spinbutton', { name: WIDTH_LABEL });
 		const heightInput = screen.getByRole('spinbutton', { name: HEIGHT_LABEL });
 
-		await user.click(screen.getByRole('button', { name: 'lexical-label.unlock_aspect_ratio' }));
+		await user.click(screen.getByRole('button', { name: UNLOCK_LABEL }));
 		await replaceValue(user, heightInput, '50');
 		expect(widthInput).toHaveValue(200);
 
@@ -218,11 +302,7 @@ describe('ImageModal', () => {
 		expect(screen.getByText(EMBEDDED_SOURCE_HINT)).toBeVisible();
 		expect(screen.getByRole('button', { name: SAVE_LABEL })).toBeEnabled();
 
-		await replaceValue(
-			user,
-			screen.getByRole('textbox', { name: 'lexical-label.image_alt' }),
-			'new description'
-		);
+		await replaceValue(user, screen.getByRole('textbox', { name: ALT_LABEL }), 'new description');
 		await replaceValue(user, screen.getByRole('spinbutton', { name: WIDTH_LABEL }), '50');
 		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
 
