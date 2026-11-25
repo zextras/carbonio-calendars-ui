@@ -63,18 +63,22 @@ async function removeAutoLink(
 }
 
 /**
- * Types `text` with the caret at the end of the removed link, through the same
- * selection insertion the editor runs for typed text (jsdom cannot place the caret
- * there with the pointer).
+ * Types `text` with the caret at the start or at the end of the removed link, through
+ * the same selection insertion the editor runs for typed text (jsdom cannot place the
+ * caret there with the pointer).
  */
-function typeRightAfterRemovedLink(editor: LexicalEditor, text: string): void {
+function typeNextToRemovedLink(editor: LexicalEditor, edge: 'start' | 'end', text: string): void {
 	act(() => {
 		editor.update(
 			() => {
-				$dfs()
+				const removedLink = $dfs()
 					.map(({ node }) => node)
-					.find((node): node is AutoLinkNode => $isAutoLinkNode(node) && node.getIsUnlinked())
-					?.selectEnd();
+					.find((node): node is AutoLinkNode => $isAutoLinkNode(node) && node.getIsUnlinked());
+				if (edge === 'start') {
+					removedLink?.selectStart();
+				} else {
+					removedLink?.selectEnd();
+				}
 				$getSelection()?.insertText(text);
 			},
 			{ discrete: true }
@@ -175,27 +179,28 @@ describe('AutoLinkPlugin', () => {
 
 	describe('a removed auto-detected link', () => {
 		it.each([
-			['a path typed right after a URL', LINK_URL, '/docs'],
-			['a letter typed right after an email address', LINK_EMAIL, 'x']
-		])(
+			['a path typed right after a URL', LINK_URL, 'end', '/docs', `${LINK_URL}/docs`],
+			['a letter typed right after an email address', LINK_EMAIL, 'end', 'x', `${LINK_EMAIL}x`],
+			['a letter typed right before an email address', LINK_EMAIL, 'start', 'x', `x${LINK_EMAIL}`]
+		] as const)(
 			'stays plain text with %s, also once the saved HTML is loaded again',
-			async (_case, linkText, typed) => {
+			async (_case, linkText, edge, typed, expectedText) => {
 				const { store, user, unmount, editorElement, lexicalEditor } = setupEditor(
 					`<p>See ${linkText}</p>`
 				);
 				await removeAutoLink(user, editorElement, linkText);
 
-				typeRightAfterRemovedLink(lexicalEditor, typed);
+				typeNextToRemovedLink(lexicalEditor, edge, typed);
 
 				await waitFor(() => {
-					expect(richTextOf(store)).toContain(typed);
+					expect(richTextOf(store)).toContain(expectedText);
 				});
 				expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
 				const savedHtml = richTextOf(store);
 				unmount();
 
 				const { editorElement: reloadedEditor } = setupEditor(savedHtml);
-				expect(await within(reloadedEditor).findByText(`${linkText}${typed}`)).toBeVisible();
+				expect(await within(reloadedEditor).findByText(expectedText)).toBeVisible();
 				expect(within(reloadedEditor).queryByRole('link')).not.toBeInTheDocument();
 			}
 		);
@@ -203,7 +208,7 @@ describe('AutoLinkPlugin', () => {
 		it('stays plain text when the text typed right after it is formatted', async () => {
 			const { user, editorElement, lexicalEditor } = setupEditor(`<p>See ${LINK_URL}</p>`);
 			await removeAutoLink(user, editorElement, LINK_URL);
-			typeRightAfterRemovedLink(lexicalEditor, '/docs');
+			typeNextToRemovedLink(lexicalEditor, 'end', '/docs');
 
 			await user.click(editorElement);
 			await user.keyboard('{Control>}a{/Control}');
@@ -216,18 +221,42 @@ describe('AutoLinkPlugin', () => {
 		});
 
 		it.each([
-			['text glued to it', `<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_URL}</span>/docs`],
+			['text glued after it', `<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_URL}</span>/docs`],
 			[
-				'text in two formats glued to it',
+				'text in two formats glued after it',
 				`<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_URL}</span>/do<b>cs</b>`
 			],
 			[
-				'an email address glued to it',
+				'an email address glued after it',
 				`<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_URL}</span>b@custom-link.com`
 			],
 			[
-				'another removed link glued to it',
+				'text glued after a removed email',
+				`<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_EMAIL}</span>x`
+			],
+			[
+				'another removed link glued after it',
 				`<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_URL}</span><span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_EMAIL}</span>`
+			],
+			[
+				'text glued before a removed email',
+				`x<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_EMAIL}</span>`
+			],
+			[
+				'text glued before a removed email, after other text',
+				`See x<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_EMAIL}</span>`
+			],
+			[
+				'text in two formats glued before a removed email',
+				`<b>a</b>x<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_EMAIL}</span>`
+			],
+			[
+				'text glued before a removed URL that completes it',
+				`https://<span class="${UNLINKED_AUTO_LINK_CLASS}">www.zextras.com</span>`
+			],
+			[
+				'text glued before and after a removed email',
+				`x<span class="${UNLINKED_AUTO_LINK_CLASS}">${LINK_EMAIL}</span>y`
 			]
 		])('stays plain text when it is loaded from HTML with %s', async (_case, html) => {
 			const { editorElement } = setupEditor(`<p>${html} and ${OTHER_URL}</p>`);

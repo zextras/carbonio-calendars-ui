@@ -60,8 +60,25 @@ export const matchWholeAutoLink = (text: string): ReturnType<LinkMatcher> => {
 	return match?.text === text ? match : null;
 };
 
+/**
+ * Returns the auto-link match that starts at the beginning of `text`: the first matcher
+ * that matches there decides. Unlike `findFirstAutoLink`, a link that an earlier matcher
+ * finds further on (e.g. a URL after an email address) does not hide it.
+ */
+const findAutoLinkAtStart = (text: string): ReturnType<LinkMatcher> =>
+	MATCHERS.map((matcher) => matcher(text)).find((match) => match?.index === 0) ?? null;
+
 // The characters the auto-link plugin wants around a link (its default `separatorRegex`).
 const SEPARATOR_REGEX = /[.,;\s]/;
+
+/** Returns where the text after the last separator of `text` starts. */
+const startAfterLastSeparator = (text: string): number => {
+	let start = text.length;
+	while (start > 0 && !SEPARATOR_REGEX.test(text.charAt(start - 1))) {
+		start -= 1;
+	}
+	return start;
+};
 
 const $isRemovedAutoLink = (node: LexicalNode | null): node is AutoLinkNode =>
 	$isAutoLinkNode(node) && node.getIsUnlinked();
@@ -71,15 +88,15 @@ const $isRemovedAutoLink = (node: LexicalNode | null): node is AutoLinkNode =>
  * separator in between and the auto-link matchers would make that start part of the
  * same link. Returns whether the content after it may be glued as well.
  */
-function $absorbGluedContent(removedLink: AutoLinkNode): boolean {
+function $absorbGluedContentAfter(removedLink: AutoLinkNode): boolean {
 	const next = removedLink.getNextSibling();
 	if (!(($isTextNode(next) && next.isSimpleText()) || $isRemovedAutoLink(next))) {
 		return false;
 	}
 	const removedText = removedLink.getTextContent();
 	const nextText = next.getTextContent();
-	const match = findFirstAutoLink(removedText + nextText);
-	const gluedLength = match?.index === 0 ? match.length - removedText.length : 0;
+	const match = findAutoLinkAtStart(removedText + nextText);
+	const gluedLength = match ? match.length - removedText.length : 0;
 	if (SEPARATOR_REGEX.test(nextText.charAt(0)) || gluedLength <= 0) {
 		return false;
 	}
@@ -97,8 +114,46 @@ function $absorbGluedContent(removedLink: AutoLinkNode): boolean {
 }
 
 /**
- * Keeps a removed auto-link plain when content is glued right after it: text typed
- * with no separator in between (e.g. a path added to a URL), or another removed link.
+ * Moves into `removedLink` the end of the text right before it, when there is no
+ * separator in between and the auto-link matchers would make that end and the removed
+ * link a single link. Returns whether the text before it may be glued as well.
+ *
+ * A link starts only after a separator, so only the text after the last one can be
+ * glued: an email address takes it in (`x` + `someone@domain.com`), a URL does not
+ * (`x` + `https://domain.com`), unless it completes the URL (`https://` + `www.domain.com`).
+ */
+function $absorbGluedTextBefore(removedLink: AutoLinkNode): boolean {
+	const previous = removedLink.getPreviousSibling();
+	if (!$isTextNode(previous) || !previous.isSimpleText()) {
+		return false;
+	}
+	const previousText = previous.getTextContent();
+	const gluedStart = startAfterLastSeparator(previousText);
+	const gluedText = previousText.slice(gluedStart);
+	const linkText = gluedText + removedLink.getTextContent();
+	const match = findFirstAutoLink(linkText);
+	if (gluedText === '' || match?.index !== 0 || match.text !== linkText) {
+		return false;
+	}
+	const glued = gluedStart > 0 ? previous.splitText(gluedStart)[1] : previous;
+	removedLink.splice(0, 0, [glued]);
+	return gluedStart === 0;
+}
+
+function $absorbGluedContentAround(removedLink: AutoLinkNode): void {
+	while ($absorbGluedContentAfter(removedLink)) {
+		// Each pass moves one node: the content after it may be glued too.
+	}
+	while ($absorbGluedTextBefore(removedLink)) {
+		// Each pass moves one node: the text before it may be glued too.
+	}
+}
+
+/**
+ * Keeps a removed auto-link plain when content is glued to it with no separator in
+ * between: text typed right after it (e.g. a path added to a URL), another removed
+ * link right after it, or text right before it (e.g. a letter typed before an email
+ * address).
  *
  * The auto-link plugin wants a separator around a removed link too. When it checks
  * the removed link again (on an edit of its text, and on every HTML load, such as
@@ -108,17 +163,18 @@ function $absorbGluedContent(removedLink: AutoLinkNode): boolean {
  */
 function $keepGluedTextInRemovedAutoLink(textNode: TextNode): void {
 	const parent = textNode.getParent();
-	const previous = textNode.getPreviousSibling();
-	let removedLink: AutoLinkNode | null = null;
 	if ($isRemovedAutoLink(parent)) {
-		removedLink = parent;
-	} else if ($isRemovedAutoLink(previous)) {
-		removedLink = previous;
+		$absorbGluedContentAround(parent);
+		return;
 	}
-	if (removedLink) {
-		while ($absorbGluedContent(removedLink)) {
-			// Each pass moves one node: the content after it may be glued too.
-		}
+	const previous = textNode.getPreviousSibling();
+	if ($isRemovedAutoLink(previous)) {
+		$absorbGluedContentAround(previous);
+	}
+	// Read after the previous link took in what it could: the text may be in it now.
+	const next = textNode.getNextSibling();
+	if ($isRemovedAutoLink(next)) {
+		$absorbGluedContentAround(next);
 	}
 }
 
