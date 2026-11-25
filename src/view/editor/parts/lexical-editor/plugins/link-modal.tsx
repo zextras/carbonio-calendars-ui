@@ -35,11 +35,12 @@ type LinkModalProps = {
 type LinkTarget = 'self' | 'blank';
 
 /**
- * Updates an existing link node, replacing its text only when changed. An auto-link
- * is first turned into a regular link: the auto-link plugin keeps an auto-link in
- * sync with its text, so it would reset the URL or unwrap the link once the text no
- * longer looks like one, and an auto-link whose link was removed is shown as plain
- * text. Saving it from the modal makes it a link again.
+ * Updates an existing link node, replacing its text only when changed (keeping its
+ * formatting). An auto-link is first turned into a regular link: the auto-link
+ * plugin keeps an auto-link in sync with its text, so it would reset the URL or
+ * unwrap the link once the text no longer looks like one, and an auto-link whose
+ * link was removed is shown as plain text. Saving it from the modal makes it a link
+ * again.
  */
 function $updateLinkNode(
 	node: LinkNode,
@@ -53,9 +54,16 @@ function $updateLinkNode(
 	linkNode.setRel(attributes.rel ?? null);
 	linkNode.setTitle(attributes.title ?? null);
 	if (text && text !== linkNode.getTextContent()) {
+		// The new text takes the formatting of the link's first text (e.g. bold or a
+		// colour), as Lexical does when it turns typed text into a link.
+		const [firstText] = linkNode.getAllTextNodes();
+		const textNode = $createTextNode(text);
+		if (firstText) {
+			textNode.setFormat(firstText.getFormat()).setStyle(firstText.getStyle());
+		}
 		// Swap the children in a single splice: removing them one by one would also
 		// remove the link itself, since a link cannot be left empty.
-		linkNode.splice(0, linkNode.getChildrenSize(), [$createTextNode(text)]);
+		linkNode.splice(0, linkNode.getChildrenSize(), [textNode]);
 	}
 }
 
