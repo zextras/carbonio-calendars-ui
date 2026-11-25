@@ -389,7 +389,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			}
 			if (newFreeBusy || newInviteRight) {
 				// reload the saved ACEs so the "current" baseline (contacts, zids) matches the server
-				getUserRights();
+				void getUserRights();
 			}
 			return [{ status: 'fulfilled' as const, value: res }] as PromiseSettledResult<unknown>[];
 		});
