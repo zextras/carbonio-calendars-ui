@@ -116,7 +116,8 @@ export const LinkModal = ({ editor, open, onClose }: LinkModalProps): React.JSX.
 	const [url, setUrl] = useState('');
 	const [text, setText] = useState('');
 	const [title, setTitle] = useState('');
-	const [target, setTarget] = useState<LinkTarget>('self');
+	// A new link opens in a new window by default, as auto-detected links do.
+	const [target, setTarget] = useState<LinkTarget>('blank');
 	// Key of the link node being edited (caret inside an existing link), if any.
 	const editLinkKey = useRef<string | null>(null);
 
@@ -133,7 +134,7 @@ export const LinkModal = ({ editor, open, onClose }: LinkModalProps): React.JSX.
 			let nextUrl = '';
 			let nextText = '';
 			let nextTitle = '';
-			let nextTarget: LinkTarget = 'self';
+			let nextTarget: LinkTarget = 'blank';
 
 			if ($isRangeSelection(selection)) {
 				const linkNode = $findMatchingParent(selection.anchor.getNode(), $isLinkNode);
@@ -157,8 +158,8 @@ export const LinkModal = ({ editor, open, onClose }: LinkModalProps): React.JSX.
 
 	const targetItems = useMemo<Array<SelectItem>>(
 		() => [
-			{ label: t('lexical-label.current_window', 'Current window'), value: 'self' },
-			{ label: t('lexical-label.new_window', 'New window'), value: 'blank' }
+			{ label: t('lexical-label.new_window', 'New window'), value: 'blank' },
+			{ label: t('lexical-label.current_window', 'Current window'), value: 'self' }
 		],
 		[]
 	);

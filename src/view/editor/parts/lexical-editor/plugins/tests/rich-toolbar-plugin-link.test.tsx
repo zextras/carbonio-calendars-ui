@@ -16,6 +16,9 @@ import { screen, within } from '@test-setup';
 const EDITOR_TESTID = 'editor-composer';
 const SELECTED_TEXT = 'hello world';
 const LINK_LABEL = 'lexical-label.insert_link';
+const URL_LABEL = 'lexical-label.url';
+const SAVE_LABEL = 'label.save';
+const EXAMPLE_URL = 'https://example.com';
 
 async function setupWithSelectedContent(): Promise<{
 	store: ReturnType<typeof createEditorStore>;
@@ -53,15 +56,12 @@ describe('RichToolbarPlugin - link', () => {
 		await user.click(screen.getByRole('button', { name: LINK_LABEL }));
 
 		expect(await screen.findByText('lexical-label.insert_edit_link')).toBeInTheDocument();
-		await user.pasteInto(
-			screen.getByRole('textbox', { name: 'lexical-label.url' }),
-			'https://example.com'
-		);
-		await user.click(screen.getByRole('button', { name: 'label.save' }));
+		await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), EXAMPLE_URL);
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
 
 		expect(await within(editorElement).findByRole('link')).toBeInTheDocument();
 		await waitFor(() => {
-			expect(richTextOf(store)).toContain('href="https://example.com"');
+			expect(richTextOf(store)).toContain(`href="${EXAMPLE_URL}"`);
 		});
 	});
 
@@ -75,23 +75,36 @@ describe('RichToolbarPlugin - link', () => {
 		).toHaveValue(SELECTED_TEXT);
 	});
 
-	it('opens the link in a new window when selected', async () => {
+	it('opens a new link in a new window by default', async () => {
 		const { store, user } = await setupWithSelectedContent();
 
 		await user.click(screen.getByRole('button', { name: LINK_LABEL }));
-		await user.pasteInto(
-			screen.getByRole('textbox', { name: 'lexical-label.url' }),
-			'https://example.com'
-		);
+		await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), EXAMPLE_URL);
 
-		await user.click(screen.getByText('lexical-label.current_window'));
-		await user.click(
-			within(screen.getByTestId('dropdown-popper-list')).getByText('lexical-label.new_window')
-		);
-		await user.click(screen.getByRole('button', { name: 'label.save' }));
+		expect(screen.getByText('lexical-label.new_window')).toBeInTheDocument();
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
 
 		await waitFor(() => {
 			expect(richTextOf(store)).toContain('target="_blank"');
 		});
+		expect(richTextOf(store)).toContain('rel="noopener noreferrer"');
+	});
+
+	it('opens the link in the current window when selected', async () => {
+		const { store, user } = await setupWithSelectedContent();
+
+		await user.click(screen.getByRole('button', { name: LINK_LABEL }));
+		await user.pasteInto(screen.getByRole('textbox', { name: URL_LABEL }), EXAMPLE_URL);
+
+		await user.click(screen.getByText('lexical-label.new_window'));
+		await user.click(
+			within(screen.getByTestId('dropdown-popper-list')).getByText('lexical-label.current_window')
+		);
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+
+		await waitFor(() => {
+			expect(richTextOf(store)).toContain(`href="${EXAMPLE_URL}"`);
+		});
+		expect(richTextOf(store)).not.toContain('target="_blank"');
 	});
 });
