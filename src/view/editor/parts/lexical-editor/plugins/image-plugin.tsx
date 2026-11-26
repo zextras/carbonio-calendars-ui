@@ -9,8 +9,11 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { mergeRegister } from '@lexical/utils';
 import { $insertNodes, COMMAND_PRIORITY_EDITOR, createCommand, type LexicalCommand } from 'lexical';
 
+import { registerImageDragAndDrop } from './image-drag-drop';
+import { registerImageFileInsertion } from './image-file-insert';
 import { $createImageNode } from './nodes/image-node';
 import { type ImageDimension } from './nodes/image-types';
+import { useReportUnsupportedFileDrop } from './unsupported-file-drop';
 
 export { OPEN_IMAGE_MODAL_COMMAND } from './nodes/image-types';
 
@@ -27,12 +30,15 @@ export const INSERT_INLINE_IMAGE_COMMAND: LexicalCommand<InsertInlineImagePayloa
 
 /**
  * Registers the command that inserts an image ({@link ImageNode}) at the
- * current selection. Calendars-ui only supports inserting an image by URL (no
- * device upload), so the payload only carries the src to display, the alt text
- * and the dimensions.
+ * current selection, used by the Insert/Edit Image dialog (image by URL).
+ *
+ * It also lets an image file be inserted directly, by dropping or pasting it
+ * into the editor ({@link registerImageFileInsertion}), and an inline image be
+ * moved inside the editor by drag and drop ({@link registerImageDragAndDrop}).
  */
 export const ImagePlugin = (): null => {
 	const [editor] = useLexicalComposerContext();
+	const reportUnsupportedFileDrop = useReportUnsupportedFileDrop();
 
 	useEffect(
 		() =>
@@ -46,9 +52,15 @@ export const ImagePlugin = (): null => {
 						return true;
 					},
 					COMMAND_PRIORITY_EDITOR
-				)
+				),
+				registerImageDragAndDrop(editor)
 			),
 		[editor]
+	);
+
+	useEffect(
+		() => registerImageFileInsertion(editor, reportUnsupportedFileDrop),
+		[editor, reportUnsupportedFileDrop]
 	);
 
 	return null;

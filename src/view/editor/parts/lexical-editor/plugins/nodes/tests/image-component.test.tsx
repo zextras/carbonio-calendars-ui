@@ -12,7 +12,9 @@ import {
 	renderRichTextEditor,
 	richTextOf
 } from '../../../tests/lexical-editor-test-utils';
+import { INLINE_IMAGE_DRAG_TYPE } from '../image-types';
 import { screen, within } from '@test-setup';
+import { defaultEditor } from 'view/editor/tests/common';
 
 const EDITOR_TESTID = 'editor-composer';
 const IMAGE_HTML = '<p><img src="https://example.com/inline.png" alt="pic" /></p>';
@@ -113,11 +115,27 @@ describe('ImageComponent', () => {
 		});
 	});
 
-	it('prevents the native drag of the image', async () => {
+	it('lets the image be dragged while the editor is editable', async () => {
 		const { image } = await setupWithImage();
+		const setData = vi.fn();
 
+		expect(image).toHaveAttribute('draggable', 'true');
 		// fireEvent returns false when a handler called preventDefault().
-		expect(fireEvent.dragStart(image)).toBe(false);
+		expect(fireEvent.dragStart(image, { dataTransfer: { setData, types: [] } })).toBe(true);
+		expect(setData).toHaveBeenCalledWith(INLINE_IMAGE_DRAG_TYPE, expect.any(String));
+	});
+
+	it('does not let the image be dragged while the editor is read-only', async () => {
+		const store = createEditorStore({
+			richText: IMAGE_HTML,
+			disabled: { ...defaultEditor.disabled, composer: true }
+		});
+		renderRichTextEditor(store);
+		const image = await within(screen.getByTestId(EDITOR_TESTID)).findByRole('img');
+
+		await waitFor(() => {
+			expect(image).toHaveAttribute('draggable', 'false');
+		});
 	});
 
 	it('does not remove the image on Delete when it is not selected', async () => {

@@ -37,6 +37,7 @@ import {
 	UNLINKED_AUTO_LINK_HTML_EXPORT,
 	withUnlinkedAutoLinkImport
 } from './plugins/unlinked-auto-link-html';
+import { useFileDropGuard } from './plugins/unsupported-file-drop';
 import { useAppSelector } from '../../../../store/redux/hooks';
 import { selectEditorDisabled } from '../../../../store/selectors/editor';
 
@@ -338,6 +339,7 @@ export const RichTextEditorContainer = ({
 	const { prefs } = useUserSettings();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [showBlocks, setShowBlocks] = useState(false);
+	const fileDropGuard = useFileDropGuard();
 
 	const fontFamily =
 		(prefs?.zimbraPrefHtmlEditorDefaultFontFamily as string) || DEFAULT_FONT_FAMILY;
@@ -386,7 +388,13 @@ export const RichTextEditorContainer = ({
 
 	return (
 		<LexicalComposer initialConfig={initialConfig}>
-			<LexicalWrapper $fontFamily={fontFamily} $fontSize={fontSize} $color={color}>
+			<LexicalWrapper
+				$fontFamily={fontFamily}
+				$fontSize={fontSize}
+				$color={color}
+				onDragOver={fileDropGuard.onDragOver}
+				onDrop={fileDropGuard.onDrop}
+			>
 				{!disabled?.composer && (
 					<div className="cal-lexical-toolbar">
 						<RichToolbarPlugin
