@@ -74,6 +74,7 @@ export const RichToolbarPlugin = ({
 	const { tableItems, tableLabel, tableMenuOpen, setTableMenuOpen } = useTableInsert(editor);
 
 	const {
+		isSingleImageSelected,
 		currentBlock,
 		activeFormatting,
 		currentFont,
@@ -335,11 +336,16 @@ export const RichToolbarPlugin = ({
 					</Dropdown>
 				</Tooltip>
 
-				{/* Image */}
+				{/* Image: the same dialog inserts an image from a URL or edits the selected one */}
 				<ToolbarIconButton
 					icon={editorIcon('image')}
-					label={t('lexical-label.insert_image_url', 'Insert image')}
+					label={
+						isSingleImageSelected
+							? t('lexical-label.edit_image', 'Edit image')
+							: t('lexical-label.insert_image_url', 'Insert image')
+					}
 					onClick={openImageModal}
+					active={isSingleImageSelected}
 				/>
 
 				<ToolbarDivider />

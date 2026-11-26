@@ -1,3 +1,15 @@
+## <small>1.47.2 (2026-11-26)</small>
+
+* fix(CO-4788): keep removed auto-links plain when text is glued after them (#923) ([5cf98df](https://github.com/zextras/carbonio-calendars-ui/commit/5cf98df)), closes [#923](https://github.com/zextras/carbonio-calendars-ui/issues/923)
+* chore(deps): update babel (#931) ([f837994](https://github.com/zextras/carbonio-calendars-ui/commit/f837994)), closes [#931](https://github.com/zextras/carbonio-calendars-ui/issues/931)
+* chore(deps): update dependency @testing-library/user-event to v14.6.13 (#933) ([c2d5ee6](https://github.com/zextras/carbonio-calendars-ui/commit/c2d5ee6)), closes [#933](https://github.com/zextras/carbonio-calendars-ui/issues/933)
+
+## <small>1.47.1 (2026-11-25)</small>
+
+* fix(CO-4735): keep link formatting on rename and stop removed links from coming back (#922) ([b53269b](https://github.com/zextras/carbonio-calendars-ui/commit/b53269b)), closes [#922](https://github.com/zextras/carbonio-calendars-ui/issues/922)
+* fix(CO-4801): keep the image ratio on resize and highlight the edit image button (#924) ([fb79e63](https://github.com/zextras/carbonio-calendars-ui/commit/fb79e63)), closes [#924](https://github.com/zextras/carbonio-calendars-ui/issues/924)
+* chore(deps): lock file maintenance (#926) ([909b8b2](https://github.com/zextras/carbonio-calendars-ui/commit/909b8b2)), closes [#926](https://github.com/zextras/carbonio-calendars-ui/issues/926)
+
 ## 1.47.0 (2026-11-23)
 
 * feat(CO-4739): enable native context menu on appointment editor title and description (#927) ([ca19474](https://github.com/zextras/carbonio-calendars-ui/commit/ca19474)), closes [#927](https://github.com/zextras/carbonio-calendars-ui/issues/927)

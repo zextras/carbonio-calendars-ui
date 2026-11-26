@@ -20,6 +20,11 @@ import { defaultEditor } from 'view/editor/tests/common';
 const LINK_URL = 'https://custom-link.com';
 const LINK_TEXT = 'lexical';
 const LINK_EMAIL = 'someone@custom-link.com';
+const OTHER_LINK_URL = 'https://other-link.com';
+// jsdom reports colors as `rgb(...)`.
+const RED_RGB = 'rgb(255, 0, 0)';
+// `LINK_URL` with only its first part in bold.
+const PARTLY_BOLD_URL = '<b>https://custom</b>-link.com';
 const EDITOR_TESTID = 'editor-composer';
 const EDIT_LINK_LABEL = 'lexical-label.edit_link';
 const REMOVE_LINK_LABEL = 'lexical-label.remove_link';
@@ -28,13 +33,28 @@ const INSERT_LINK_LABEL = 'lexical-label.insert_link';
 const URL_LABEL = 'lexical-label.url';
 const TEXT_TO_DISPLAY_LABEL = 'lexical-label.text_to_display';
 const SAVE_LABEL = 'label.save';
+const NEW_WINDOW_LABEL = 'lexical-label.new_window';
+const CURRENT_WINDOW_LABEL = 'lexical-label.current_window';
 const NEW_LINK_TEXT = 'test';
 const UNLINKED_AUTO_LINK_CLASS = 'cal-unlinked-auto-link';
+const BOLD_CLASS = 'cal-lexical-bold';
 // Built at runtime so the source holds no script URL literal.
 const SCRIPT_URL = ['javascript', 'void(0)//'].join(':');
 const UNSAFE_URL_REPLACEMENT = 'about:blank';
 // Attributes the saved HTML can do without: the import relies only on these three.
 const ATTRIBUTES_OTHER_THAN_CLASS_STYLE_HREF = /\s(?!(?:class|style|href)=)[\w-]+="[^"]*"/g;
+// Body of a saved appointment as it comes back from the server: the removed links
+// are marked spans, one with text glued after the URL and one with an
+// entity-encoded `@`, next to a link that was never removed.
+const REOPENED_APPOINTMENT_HTML =
+	'<html><body><p style="margin:0;padding:0"><span style="white-space:pre-wrap">Docs at </span>' +
+	`<span class="${UNLINKED_AUTO_LINK_CLASS}"><span style="white-space:pre-wrap">https://custom-link.com/docs</span></span>` +
+	'<span style="white-space:pre-wrap">, mail </span>' +
+	`<span class="${UNLINKED_AUTO_LINK_CLASS}"><span style="white-space:pre-wrap">someone&#64;custom-link.com</span></span>` +
+	'<span style="white-space:pre-wrap">, and </span>' +
+	'<a href="https://still-linked.com" rel="noopener noreferrer nofollow" style="color:#2b73d2;text-decoration:underline" target="_blank">' +
+	'<span style="white-space:pre-wrap">https://still-linked.com</span></a>' +
+	'<span style="white-space:pre-wrap"> stays linked.</span></p></body></html>';
 
 type TestUser = ReturnType<typeof renderRichTextEditor>['user'];
 type Store = ReturnType<typeof createEditorStore>;
@@ -88,6 +108,21 @@ async function editLinkText(user: TestUser, link: HTMLElement, text: string): Pr
 	await user.clear(textInput);
 	await user.type(textInput, text);
 	await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+}
+
+/** Renders the editor on a link with the given content and changes its text from the edit modal. */
+async function setupWithRenamedLink(innerHtml: string): Promise<EditorSetup> {
+	const setup = setupEditor(`<p><a href="${LINK_URL}">${innerHtml}</a></p>`);
+	const { store, user, editorElement } = setup;
+	await editLinkText(
+		user,
+		await within(editorElement).findByRole('link', { name: LINK_TEXT }),
+		NEW_LINK_TEXT
+	);
+	await waitFor(() => {
+		expect(linksOf(store)).toEqual([{ href: LINK_URL, text: NEW_LINK_TEXT }]);
+	});
+	return setup;
 }
 
 /** Renders the editor on a paragraph whose text is auto-detected as a link, and removes the link. */
@@ -261,7 +296,7 @@ describe('FloatingLinkEditorPlugin', () => {
 		expect(screen.getByRole('textbox', { name: 'lexical-label.link_title' })).toHaveValue(
 			'My title'
 		);
-		expect(screen.getByText('lexical-label.new_window')).toBeInTheDocument();
+		expect(screen.getByText(NEW_WINDOW_LABEL)).toBeInTheDocument();
 	});
 
 	it('updates the existing link in place when the edit modal is saved', async () => {
@@ -281,9 +316,9 @@ describe('FloatingLinkEditorPlugin', () => {
 			screen.getByRole('textbox', { name: 'lexical-label.link_title' }),
 			'Updated title'
 		);
-		await user.click(screen.getByText('lexical-label.current_window'));
+		await user.click(screen.getByText(CURRENT_WINDOW_LABEL));
 		await user.click(
-			within(screen.getByTestId('dropdown-popper-list')).getByText('lexical-label.new_window')
+			within(screen.getByTestId('dropdown-popper-list')).getByText(NEW_WINDOW_LABEL)
 		);
 		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
 
@@ -296,6 +331,84 @@ describe('FloatingLinkEditorPlugin', () => {
 		expect(html).toContain('title="Updated title"');
 		expect(html).toContain('target="_blank"');
 		expect(html).toContain('rel="noopener noreferrer"');
+	});
+
+	it('keeps the bold of a link when its text is changed', async () => {
+		const { editorElement } = await setupWithRenamedLink(`<b>${LINK_TEXT}</b>`);
+
+		expect(within(editorElement).getByText(NEW_LINK_TEXT)).toHaveClass(BOLD_CLASS);
+	});
+
+	it('keeps the colour of a link when its text is changed', async () => {
+		const { editorElement } = await setupWithRenamedLink(
+			`<span style="color: ${RED_RGB};">${LINK_TEXT}</span>`
+		);
+
+		expect(within(editorElement).getByText(NEW_LINK_TEXT)).toHaveStyle({ color: RED_RGB });
+	});
+
+	describe('removing a link from text holding URLs or email addresses', () => {
+		it.each([
+			['a URL partly in bold', `<a href="${OTHER_LINK_URL}">Visit ${PARTLY_BOLD_URL}</a>`],
+			[
+				'a URL whose scheme sits before the link',
+				`https://<a href="${OTHER_LINK_URL}">custom-link.com</a>`
+			],
+			[
+				'a whole URL whose scheme sits before the link',
+				`https://<a href="${OTHER_LINK_URL}">www.custom-link.com</a>`
+			],
+			['an email address before a URL', `<a href="${OTHER_LINK_URL}">${LINK_EMAIL} ${LINK_URL}</a>`]
+		])('does not link again %s', async (_case, innerHtml) => {
+			const { store, user, editorElement } = setupEditor(`<p>${innerHtml}</p>`);
+			// Each paragraph holds a single link, the one removed.
+			const link = await within(editorElement).findByRole('link');
+			const paragraphText = editorElement.textContent;
+
+			await user.click(link);
+			await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+
+			// The removed link is the only one holding this URL.
+			await waitFor(() => {
+				expect(richTextOf(store)).not.toContain(OTHER_LINK_URL);
+			});
+			expect(richTextOf(store)).not.toContain('<a');
+			expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
+			expect(editorElement).toHaveTextContent(paragraphText ?? '');
+		});
+
+		it('keeps the bold part of a URL that is no longer linked', async () => {
+			const { user, editorElement } = setupEditor(
+				`<p><a href="${OTHER_LINK_URL}">Visit ${PARTLY_BOLD_URL}</a></p>`
+			);
+
+			await user.click(await within(editorElement).findByRole('link'));
+			await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+
+			await waitFor(() => {
+				expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
+			});
+			expect(within(editorElement).getByText('https://custom')).toHaveClass(BOLD_CLASS);
+		});
+
+		it('offers to restore the link of a URL whose scheme sat before the removed link', async () => {
+			const { store, user, editorElement } = setupEditor(
+				`<p>https://<a href="${OTHER_LINK_URL}">custom-link.com</a></p>`
+			);
+
+			await user.click(await within(editorElement).findByRole('link', { name: 'custom-link.com' }));
+			await user.click(await screen.findByRole('button', { name: REMOVE_LINK_LABEL }));
+			await waitFor(() => {
+				expect(richTextOf(store)).toContain(UNLINKED_AUTO_LINK_CLASS);
+			});
+
+			await user.hover(within(editorElement).getByText(LINK_URL));
+			await user.click(await screen.findByRole('button', { name: RESTORE_LINK_LABEL }));
+
+			await waitFor(() => {
+				expect(linksOf(store)).toEqual([{ href: LINK_URL, text: LINK_URL }]);
+			});
+		});
 	});
 
 	describe('auto-detected links', () => {
@@ -314,17 +427,45 @@ describe('FloatingLinkEditorPlugin', () => {
 			}
 		);
 
-		it('keeps an auto-detected link removed, with its formatting, after the saved HTML is loaded again', async () => {
-			const { store, unmount } = await setupWithRemovedAutoLink(`<b>${LINK_URL}</b>`, LINK_URL);
-			const savedHtml = richTextOf(store).replaceAll(ATTRIBUTES_OTHER_THAN_CLASS_STYLE_HREF, '');
-			expect(savedHtml).toContain(UNLINKED_AUTO_LINK_CLASS);
-			unmount();
+		it.each([
+			['URL', LINK_URL],
+			['email address', LINK_EMAIL]
+		])(
+			'keeps an auto-detected %s removed, with its formatting, after the saved HTML is loaded again',
+			async (_case, linkText) => {
+				const { store, unmount } = await setupWithRemovedAutoLink(`<b>${linkText}</b>`, linkText);
+				const savedHtml = richTextOf(store).replaceAll(ATTRIBUTES_OTHER_THAN_CLASS_STYLE_HREF, '');
+				expect(savedHtml).toContain(UNLINKED_AUTO_LINK_CLASS);
+				unmount();
 
-			const { store: reloadedStore, editorElement } = setupEditor(savedHtml);
-			const text = await within(editorElement).findByText(LINK_URL);
-			expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
-			expect(text).toHaveClass('cal-lexical-bold');
-			expect(richTextOf(reloadedStore)).not.toContain('<a');
+				const { store: reloadedStore, editorElement } = setupEditor(savedHtml);
+				const text = await within(editorElement).findByText(linkText);
+				expect(within(editorElement).queryByRole('link')).not.toBeInTheDocument();
+				expect(text).toHaveClass(BOLD_CLASS);
+				expect(richTextOf(reloadedStore)).not.toContain('<a');
+			}
+		);
+
+		it('keeps the removed links removed when an appointment is reopened from its saved body', async () => {
+			const { editorElement } = setupEditor(REOPENED_APPOINTMENT_HTML);
+
+			const keptLink = await within(editorElement).findByRole('link', {
+				name: 'https://still-linked.com'
+			});
+			expect(within(editorElement).getAllByRole('link')).toEqual([keptLink]);
+			expect(within(editorElement).getByText('https://custom-link.com/docs')).toBeVisible();
+			expect(within(editorElement).getByText(LINK_EMAIL)).toBeVisible();
+		});
+
+		it('opens the edit modal of an auto-detected link with the new window option selected', async () => {
+			const { user, editorElement } = setupEditor(`<p>${LINK_URL}</p>`);
+			const link = await within(editorElement).findByRole('link', { name: LINK_URL });
+
+			await user.click(link);
+			await user.click(await screen.findByRole('button', { name: EDIT_LINK_LABEL }));
+
+			expect(await screen.findByText(NEW_WINDOW_LABEL)).toBeInTheDocument();
+			expect(screen.queryByText(CURRENT_WINDOW_LABEL)).not.toBeInTheDocument();
 		});
 
 		it('restores the link of an auto-detected URL that was removed', async () => {
@@ -344,6 +485,8 @@ describe('FloatingLinkEditorPlugin', () => {
 				expect(richTextOf(store)).toContain(`href="${LINK_URL}"`);
 			});
 			expect(richTextOf(store)).not.toContain(UNLINKED_AUTO_LINK_CLASS);
+			expect(richTextOf(store)).toContain('target="_blank"');
+			expect(richTextOf(store)).toContain('rel="noopener noreferrer"');
 		});
 
 		it('shows the restore card while the pointer hovers the text of a removed auto-detected link', async () => {
@@ -365,6 +508,9 @@ describe('FloatingLinkEditorPlugin', () => {
 
 			const link = await within(editorElement).findByRole('link', { name: linkText });
 			expect(link).toHaveAttribute('href', `https://${linkText}`);
+			// Like any auto-detected link, it opens in a new window.
+			expect(link).toHaveAttribute('target', '_blank');
+			expect(link).toHaveAttribute('rel', 'noopener noreferrer');
 		});
 
 		it('imports a marked span whose text is not a link without the removed-link wrapper', async () => {
