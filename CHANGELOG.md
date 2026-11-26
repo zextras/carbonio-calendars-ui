@@ -1,3 +1,9 @@
+## <small>1.47.2 (2026-11-26)</small>
+
+* fix(CO-4788): keep removed auto-links plain when text is glued after them (#923) ([5cf98df](https://github.com/zextras/carbonio-calendars-ui/commit/5cf98df)), closes [#923](https://github.com/zextras/carbonio-calendars-ui/issues/923)
+* chore(deps): update babel (#931) ([f837994](https://github.com/zextras/carbonio-calendars-ui/commit/f837994)), closes [#931](https://github.com/zextras/carbonio-calendars-ui/issues/931)
+* chore(deps): update dependency @testing-library/user-event to v14.6.13 (#933) ([c2d5ee6](https://github.com/zextras/carbonio-calendars-ui/commit/c2d5ee6)), closes [#933](https://github.com/zextras/carbonio-calendars-ui/issues/933)
+
 ## <small>1.47.1 (2026-11-25)</small>
 
 * fix(CO-4735): keep link formatting on rename and stop removed links from coming back (#922) ([b53269b](https://github.com/zextras/carbonio-calendars-ui/commit/b53269b)), closes [#922](https://github.com/zextras/carbonio-calendars-ui/issues/922)
