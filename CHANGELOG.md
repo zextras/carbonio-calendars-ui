@@ -1,3 +1,7 @@
+## <small>1.48.1 (2026-11-27)</small>
+
+* fix: reset permissions dirty state after save and discard ([72ad1e7](https://github.com/zextras/carbonio-calendars-ui/commit/72ad1e7))
+
 ## 1.48.0 (2026-11-27)
 
 * Merge branch 'main' into feat/CO-4349 ([00f896c](https://github.com/zextras/carbonio-calendars-ui/commit/00f896c))
