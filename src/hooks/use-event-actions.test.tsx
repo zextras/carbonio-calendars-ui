@@ -308,26 +308,13 @@ describe('useEventActions', () => {
 		const single = { resource: { calendar: { id: '55' }, isRecurrent: false } } as EventType;
 		const occurrence = { resource: { calendar: { id: '55' }, isRecurrent: true } } as EventType;
 		const trashed = { resource: { calendar: { id: '3' }, isRecurrent: false } } as EventType;
-		const gridContext = { showPrint: true };
 
 		const ids = (actions: Array<AppointmentActionsItems>): Array<string> =>
 			actions.map((action) => action.id);
 
-		it.each([
-			['single appointment', single],
-			['occurrence of a series', occurrence],
-			['appointment in trash', trashed]
-		])('should not be offered without the grid opt-in: %s', (_, event) => {
-			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
-
-			const actions = result.current as Array<AppointmentActionsItems & { items?: [] }>;
-			const all = actions.flatMap((action) => [action, ...(action.items ?? [])]);
-			expect(ids(all)).not.toContain(EVENT_ACTIONS.PRINT);
-		});
-
 		it('should come before show original for a single appointment', () => {
 			const { result } = setupHook(useEventActions, {
-				initialProps: [{ event: single, context: gridContext }]
+				initialProps: [{ event: single }]
 			});
 
 			const actionIds = ids(result.current as InstanceActionsItems);
@@ -338,7 +325,7 @@ describe('useEventActions', () => {
 
 		it('should be in the instance submenu only for an occurrence of a series', () => {
 			const { result } = setupHook(useEventActions, {
-				initialProps: [{ event: occurrence, context: gridContext }]
+				initialProps: [{ event: occurrence }]
 			});
 
 			const [instanceMenu, seriesMenu] = result.current as SeriesActionsItems;
@@ -351,7 +338,7 @@ describe('useEventActions', () => {
 
 		it('should not be offered for an appointment in trash, as in mails', () => {
 			const { result } = setupHook(useEventActions, {
-				initialProps: [{ event: trashed, context: gridContext }]
+				initialProps: [{ event: trashed }]
 			});
 
 			const actionIds = ids(result.current as InstanceActionsItems);
@@ -361,7 +348,7 @@ describe('useEventActions', () => {
 
 		it('should be enabled and labelled print', () => {
 			const { result } = setupHook(useEventActions, {
-				initialProps: [{ event: single, context: gridContext }]
+				initialProps: [{ event: single }]
 			});
 
 			const print = getActionByName(result.current as InstanceActionsItems, EVENT_ACTIONS.PRINT);

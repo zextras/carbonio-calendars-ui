@@ -169,7 +169,7 @@ export const useEventActions = ({
 }: {
 	onClose?: () => void;
 	event?: EventType;
-	context?: { panelView?: PanelView; showPrint?: boolean };
+	context?: { panelView?: PanelView };
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const [t] = useTranslation();
 	const { replaceHistory } = useHistoryNavigation();

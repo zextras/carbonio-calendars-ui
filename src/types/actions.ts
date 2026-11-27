@@ -33,7 +33,6 @@ export type ActionsContext = {
 	panel?: boolean;
 	searchPanel?: boolean;
 	panelView?: PanelView;
-	showPrint?: boolean;
 	folders: Folders;
 };
 
