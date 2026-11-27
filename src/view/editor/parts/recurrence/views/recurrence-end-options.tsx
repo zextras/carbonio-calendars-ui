@@ -15,7 +15,7 @@ import {
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import { isNaN, isNil, isNumber } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -29,6 +29,7 @@ import {
 	selectEditorStart
 } from 'store/selectors/editor';
 import { Count } from 'types/editor';
+import { parseRecurrenceUntil } from 'view/editor/parts/recurrence/views/recurrence-until-utils';
 
 dateFnsLocalizer();
 
@@ -57,7 +58,7 @@ export const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactE
 	const initialPickerValue = useMemo(
 		() =>
 			// Use editor value or start date
-			until ? parse(until, 'yyyyMMdd', new Date()) : new Date(start ?? 0),
+			parseRecurrenceUntil(until, new Date(start ?? 0)),
 		[start, until]
 	);
 
