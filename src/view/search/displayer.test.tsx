@@ -74,6 +74,30 @@ describe('Displayer', () => {
 
 			expect(screen.getByText('Important Meeting')).toBeInTheDocument();
 		});
+
+		it('should list print right above show original in the more actions menu', async () => {
+			const store = configureStore({
+				reducer: combineReducers(reducers),
+				preloadedState: {
+					invites: {
+						status: 'idle',
+						invites: {
+							'invite-123': mockedData.getInvite()
+						}
+					}
+				}
+			});
+			const event = mockedData.getEvent({ resource: { inviteId: 'invite-123' } });
+
+			const { user } = setupTest(<Displayer event={event} />, { store });
+			await user.click(screen.getByTestId('icon: MoreVertical'));
+
+			const labels = screen
+				.getAllByText(/^action\./)
+				.map((node) => node.textContent)
+				.filter((label) => label === 'action.print' || label === 'action.show_original');
+			expect(labels).toEqual(['action.print', 'action.show_original']);
+		});
 	});
 
 	describe('DetailsPart', () => {

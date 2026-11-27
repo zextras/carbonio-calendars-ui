@@ -309,15 +309,14 @@ export const printEventItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): AppointmentActionsItems | false =>
-	!!context.showPrint && {
-		id: EVENT_ACTIONS.PRINT,
-		icon: 'PrinterOutline',
-		label: t('action.print', 'Print'),
-		disabled: false,
-		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-		onClick: printAppointment({ event, context })
-	};
+}): AppointmentActionsItems => ({
+	id: EVENT_ACTIONS.PRINT,
+	icon: 'PrinterOutline',
+	label: t('action.print', 'Print'),
+	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	onClick: printAppointment({ event, context })
+});
 
 export const exportAppointmentICSItem = ({
 	event
