@@ -199,6 +199,40 @@ describe('CustomRecurrenceModal', () => {
 		});
 	});
 
+	describe('Initialization', () => {
+		it.each(['20260204', '20260204T090000Z'])(
+			'should render without crashing when the saved recurrence ends on until %s',
+			async (untilDate) => {
+				const { store, editor } = createStoreWithEditor();
+				store.dispatch({
+					type: 'editor/editEditorRecurrence',
+					payload: {
+						id: editor.id,
+						recur: [
+							{
+								add: [
+									{
+										rule: [
+											{
+												freq: RECURRENCE_FREQUENCY.DAILY,
+												interval: [{ ival: 1 }],
+												until: [{ d: untilDate }]
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				});
+
+				setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={vi.fn()} />, { store });
+
+				expect(await screen.findByText('End on')).toBeVisible();
+			}
+		);
+	});
+
 	describe('User Interactions', () => {
 		it('should call onClose when cancel button is clicked', async () => {
 			const { store, editor } = createStoreWithEditor();
