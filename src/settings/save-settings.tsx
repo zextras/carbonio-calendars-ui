@@ -51,28 +51,29 @@ function getRequestForPrefs(prefs: Mods['prefs'] | undefined): string {
 }
 
 function getRevokeAces(right: 'viewFreeBusy' | 'invite', current: Array<AccountACEInfo>): string {
-	return map(current, (ace) => {
-		if (ace.gt === 'all' && ace.deny)
-			return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" deny="1"/>`;
-		if (ace.gt === 'usr' || (right === 'viewFreeBusy' && ace.gt === 'dom'))
-			return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" d="${ace.d}"/>`;
-		return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" />`;
-	}).join('');
+	return current
+		.map((ace) => {
+			if (ace.gt === 'all' && ace.deny)
+				return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" deny="1"/>`;
+			if (ace.gt === 'usr' || (right === 'viewFreeBusy' && ace.gt === 'dom'))
+				return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" d="${ace.d}"/>`;
+			return `<ace right="${right}" gt="${ace.gt}" zid="${ace.zid}" />`;
+		})
+		.join('');
 }
 
 function getGrantAces(right: 'viewFreeBusy' | 'invite', change: PermissionChange | null): string {
 	if (!change) return '';
 	if (change.gt === 'dom' && right === 'viewFreeBusy') {
-		return `<ace right="${right}" gt="${change.gt}" d="${change.d}"/>`;
+		return `<ace right="${right}" gt="${change.gt}" d="${change.d as string}"/>`;
 	}
 	if (change.gt === 'all' && change.deny) {
 		return `<ace right="${right}" gt="${change.gt}" deny="1"/>`;
 	}
 	if (change.gt === 'usr') {
-		return map(
-			change.d as Array<{ email: string }>,
-			(u) => `<ace right="${right}" gt="${change.gt}" d="${u.email}"/>`
-		).join('');
+		return (change.d as Array<{ email: string }>)
+			.map((u) => `<ace right="${right}" gt="${change.gt}" d="${u.email}"/>`)
+			.join('');
 	}
 	return `<ace right="${right}" gt="${change.gt}" />`;
 }
