@@ -13,6 +13,10 @@ import {
 import { screen, within } from '@test-setup';
 
 const IMAGE_URL = 'https://example.com/picture.png';
+// 1x1 transparent PNG
+const EMBEDDED_IMAGE_SRC =
+	'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+const EMBEDDED_SOURCE_HINT = 'lexical-label.image_source_embedded';
 const EDITOR_TESTID = 'editor-composer';
 const INSERT_IMAGE_LABEL = 'lexical-label.insert_image_url';
 const EDIT_IMAGE_LABEL = 'lexical-label.edit_image';
@@ -54,6 +58,20 @@ async function openInsertModalWithSource(): Promise<{
 	await user.click(screen.getByRole('button', { name: INSERT_IMAGE_LABEL }));
 	expect(await screen.findByText(MODAL_TITLE)).toBeInTheDocument();
 	await user.pasteInto(screen.getByRole('textbox', { name: SOURCE_LABEL }), IMAGE_URL);
+	return { store, user };
+}
+
+async function openEditModalOfEmbeddedImage(): Promise<{
+	store: ReturnType<typeof createEditorStore>;
+	user: TestUser;
+}> {
+	const store = createEditorStore({
+		richText: `<p><img src="${EMBEDDED_IMAGE_SRC}" alt="pic" width="200" height="100" /></p>`
+	});
+	const { user } = renderRichTextEditor(store);
+	const editorElement = screen.getByTestId(EDITOR_TESTID);
+	await user.dblClick(await within(editorElement).findByRole('img'));
+	expect(await screen.findByText(MODAL_TITLE)).toBeInTheDocument();
 	return { store, user };
 }
 
@@ -275,5 +293,48 @@ describe('ImageModal', () => {
 		await replaceValue(user, widthInput, '100');
 
 		expect(heightInput).toHaveValue(25);
+	});
+
+	it('does not show the source of an embedded image, and keeps the image on save', async () => {
+		const { store, user } = await openEditModalOfEmbeddedImage();
+
+		expect(screen.getByRole('textbox', { name: SOURCE_LABEL })).toHaveValue('');
+		expect(screen.getByText(EMBEDDED_SOURCE_HINT)).toBeVisible();
+		expect(screen.getByRole('button', { name: SAVE_LABEL })).toBeEnabled();
+
+		await replaceValue(user, screen.getByRole('textbox', { name: ALT_LABEL }), 'new description');
+		await replaceValue(user, screen.getByRole('spinbutton', { name: WIDTH_LABEL }), '50');
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+
+		await waitFor(() => {
+			expect(richTextOf(store)).toContain('alt="new description"');
+		});
+		expect(richTextOf(store)).toContain(`src="${EMBEDDED_IMAGE_SRC}"`);
+		expect(richTextOf(store)).toContain('width: 50px');
+	});
+
+	it('replaces an embedded image with the entered address', async () => {
+		const { store, user } = await openEditModalOfEmbeddedImage();
+
+		await user.pasteInto(screen.getByRole('textbox', { name: SOURCE_LABEL }), IMAGE_URL);
+		expect(screen.queryByText(EMBEDDED_SOURCE_HINT)).not.toBeInTheDocument();
+		await user.click(screen.getByRole('button', { name: SAVE_LABEL }));
+
+		await waitFor(() => {
+			expect(richTextOf(store)).toContain(`src="${IMAGE_URL}"`);
+		});
+		expect(richTextOf(store)).not.toContain('data:');
+	});
+
+	it('shows the source of an image given by address', async () => {
+		const store = createEditorStore({
+			richText: `<p><img src="${IMAGE_URL}" alt="pic" /></p>`
+		});
+		const { user } = renderRichTextEditor(store);
+
+		await user.dblClick(await within(screen.getByTestId(EDITOR_TESTID)).findByRole('img'));
+
+		expect(await screen.findByRole('textbox', { name: SOURCE_LABEL })).toHaveValue(IMAGE_URL);
+		expect(screen.queryByText(EMBEDDED_SOURCE_HINT)).not.toBeInTheDocument();
 	});
 });

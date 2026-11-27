@@ -1,3 +1,7 @@
+## <small>1.47.3 (2026-11-26)</small>
+
+* fix(CO-4725): insert dropped or pasted image files in the description editor (#925) ([e942a2a](https://github.com/zextras/carbonio-calendars-ui/commit/e942a2a)), closes [#925](https://github.com/zextras/carbonio-calendars-ui/issues/925)
+
 ## <small>1.47.2 (2026-11-26)</small>
 
 * fix(CO-4788): keep removed auto-links plain when text is glued after them (#923) ([5cf98df](https://github.com/zextras/carbonio-calendars-ui/commit/5cf98df)), closes [#923](https://github.com/zextras/carbonio-calendars-ui/issues/923)

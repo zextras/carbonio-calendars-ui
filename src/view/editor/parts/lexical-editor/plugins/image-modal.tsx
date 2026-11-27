@@ -67,6 +67,11 @@ function inputToDimension(value: string): ImageDimension {
 	return Number.isFinite(parsed) && parsed > 0 ? parsed : 'inherit';
 }
 
+/** Whether the source embeds the image data (a dropped or pasted image file). */
+function isEmbeddedSource(src: string): boolean {
+	return src.startsWith('data:');
+}
+
 /**
  * Dimensions saved for the inputs. While both inputs still hold their pre-filled
  * text the image keeps its own dimensions: saving the dialog (e.g. to change the
@@ -106,9 +111,14 @@ function ratioOf(width: string, height: string): number | null {
  * ratio captured when the dialog opened or the lock was last engaged. The
  * fallback is captured rather than recomputed per keystroke, otherwise clearing
  * or partially typing a value would make the ratio drift.
+ *
+ * The source of an embedded image (a `data:` URI, as big as the image itself)
+ * is not shown: the source field stays empty, which keeps the image, unless an
+ * address is entered to replace it.
  */
 export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JSX.Element => {
 	const [src, setSrc] = useState('');
+	const [embeddedSrc, setEmbeddedSrc] = useState<string | null>(null);
 	const [altText, setAltText] = useState('');
 	const [width, setWidth] = useState('');
 	const [height, setHeight] = useState('');
@@ -129,7 +139,10 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 			initialDimensions.current = imageNode ? readInitialDimensions(editor, imageNode) : null;
 			const nextWidth = initialDimensions.current?.width.input ?? '';
 			const nextHeight = initialDimensions.current?.height.input ?? '';
-			setSrc(imageNode?.getSrc() ?? '');
+			const nextSrc = imageNode?.getSrc() ?? '';
+			const isEmbedded = isEmbeddedSource(nextSrc);
+			setSrc(isEmbedded ? '' : nextSrc);
+			setEmbeddedSrc(isEmbedded ? nextSrc : null);
 			setAltText(imageNode?.getAltText() ?? '');
 			setWidth(nextWidth);
 			setHeight(nextHeight);
@@ -138,8 +151,11 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 		setLocked(true);
 	}, [editor, open]);
 
+	// The source applied on save: the embedded one is kept while no other is entered
+	const effectiveSrc = src || embeddedSrc || '';
+
 	useEffect(() => {
-		if (!open || !src) {
+		if (!open || !effectiveSrc) {
 			return undefined;
 		}
 		let cancelled = false;
@@ -154,11 +170,11 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 				setHeight((prev) => (prev === '' ? String(image.naturalHeight) : prev));
 			}
 		};
-		image.src = src;
+		image.src = effectiveSrc;
 		return (): void => {
 			cancelled = true;
 		};
-	}, [open, src]);
+	}, [open, effectiveSrc]);
 
 	const currentRatio = useCallback(
 		(): number | null => naturalRatio.current ?? fallbackRatio.current,
@@ -205,7 +221,7 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 	);
 
 	const onConfirm = useCallback(() => {
-		if (!src) {
+		if (!effectiveSrc) {
 			return;
 		}
 		const { width: nextWidth, height: nextHeight } = toDimensions(
@@ -218,21 +234,21 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 			editor.update(() => {
 				const node = $getNodeByKey(key);
 				if ($isImageNode(node)) {
-					node.setSrc(src);
+					node.setSrc(effectiveSrc);
 					node.setAltText(altText);
 					node.setWidthAndHeight(nextWidth, nextHeight);
 				}
 			});
 		} else {
 			editor.dispatchCommand(INSERT_INLINE_IMAGE_COMMAND, {
-				src,
+				src: effectiveSrc,
 				altText,
 				width: nextWidth,
 				height: nextHeight
 			});
 		}
 		onClose();
-	}, [altText, editor, height, onClose, src, width]);
+	}, [altText, editor, effectiveSrc, height, onClose, width]);
 
 	const lockLabel = locked
 		? t('lexical-label.unlock_aspect_ratio', 'Unlock aspect ratio')
@@ -246,7 +262,7 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 			onClose={onClose}
 			onConfirm={onConfirm}
 			confirmLabel={t('label.save', 'Save')}
-			confirmDisabled={!src}
+			confirmDisabled={!effectiveSrc}
 			onSecondaryAction={onClose}
 			secondaryActionLabel={t('label.cancel', 'Cancel')}
 			showCloseIcon
@@ -261,6 +277,14 @@ export const ImageModal = ({ editor, open, onClose }: ImageModalProps): React.JS
 					label={t('lexical-label.image_source', 'Source')}
 					value={src}
 					onChange={(ev: React.ChangeEvent<HTMLInputElement>): void => setSrc(ev.target.value)}
+					description={
+						embeddedSrc && !src
+							? t(
+									'lexical-label.image_source_embedded',
+									'Embedded image: enter an address to replace it'
+								)
+							: undefined
+					}
 					background="gray5"
 				/>
 				<Input
