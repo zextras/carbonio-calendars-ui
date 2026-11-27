@@ -1,3 +1,13 @@
+## 1.48.0 (2026-11-27)
+
+* Merge branch 'main' into feat/CO-4349 ([00f896c](https://github.com/zextras/carbonio-calendars-ui/commit/00f896c))
+* Merge branch 'main' into feat/CO-4349 ([0cdad66](https://github.com/zextras/carbonio-calendars-ui/commit/0cdad66))
+* Merge branch 'main' into feat/CO-4349 ([eba5b03](https://github.com/zextras/carbonio-calendars-ui/commit/eba5b03))
+* Merge pull request #928 from zextras/feat/CO-4349 ([b0000ea](https://github.com/zextras/carbonio-calendars-ui/commit/b0000ea)), closes [#928](https://github.com/zextras/carbonio-calendars-ui/issues/928)
+* chore(deps): update dependency zextras/jenkins-lib-common to v5.5.5 (#930) ([ca71ba2](https://github.com/zextras/carbonio-calendars-ui/commit/ca71ba2)), closes [#930](https://github.com/zextras/carbonio-calendars-ui/issues/930)
+* feat(CO-4349): align confirmation snackbars for proposed new time replies ([7a397d2](https://github.com/zextras/carbonio-calendars-ui/commit/7a397d2))
+* feat(CO-4349): use new translation keys for the proposed new time snackbars ([90830cd](https://github.com/zextras/carbonio-calendars-ui/commit/90830cd))
+
 ## <small>1.47.3 (2026-11-26)</small>
 
 * fix(CO-4725): insert dropped or pasted image files in the description editor (#925) ([e942a2a](https://github.com/zextras/carbonio-calendars-ui/commit/e942a2a)), closes [#925](https://github.com/zextras/carbonio-calendars-ui/issues/925)
