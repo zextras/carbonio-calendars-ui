@@ -263,5 +263,30 @@ describe('Settings view', () => {
 
 			await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeDisabled());
 		});
+
+		it.each([
+			['freeBusy', 'viewFreeBusy', /free_busy_opts.allow_following/i],
+			['inviteRight', 'invite', /invt_opts.allow_following/i]
+		] as const)(
+			'should revoke the current %s grants without granting anything when the selected option is unchecked',
+			async (permission, right, optionLabel) => {
+				const oldContact = buildAce(right, 'old@demo.com');
+				mockGetRights([oldContact], []);
+				const { user } = setupTest(<CalendarSettingsView />);
+
+				const option = await screen.findByText(optionLabel);
+				await screen.findByRole('button', { name: /add contact/i });
+				await user.click(option);
+				expect(screen.queryByRole('button', { name: /add contact/i })).not.toBeInTheDocument();
+				await user.click(screen.getByRole('button', { name: /save/i }));
+
+				expect(saveSettings).toHaveBeenCalledWith({
+					permissions: {
+						[permission]: { current: [expect.objectContaining({ d: 'old@demo.com' })], new: null }
+					}
+				});
+				await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeDisabled());
+			}
+		);
 	});
 });

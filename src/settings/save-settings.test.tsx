@@ -70,4 +70,21 @@ describe('saveSettings', () => {
 			`<GrantRightsRequest xmlns="urn:zimbraAccount" requestId="1"><ace right="viewFreeBusy" gt="${mods.permissions.freeBusy.new.gt}" deny="1"/></GrantRightsRequest>`
 		);
 	});
+	test('if the new permission is null, the old one is revoked and nothing is granted', async () => {
+		const mods = {
+			permissions: {
+				inviteRight: {
+					current: [{ right: 'invite', gt: 'pub', zid: '012', d: '' } as const],
+					new: null
+				}
+			}
+		};
+		const BatchRequestInterceptor = createSoapAPIInterceptor('Batch');
+		await saveSettings(mods);
+		const request = await BatchRequestInterceptor;
+		expect(request).toContain(
+			'<RevokeRightsRequest xmlns="urn:zimbraAccount" requestId="0"><ace right="invite" gt="pub" zid="012" /></RevokeRightsRequest>'
+		);
+		expect(request).not.toContain('GrantRightsRequest');
+	});
 });
