@@ -114,8 +114,8 @@ importers:
         specifier: 1.20.0
         version: 1.20.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-colorful:
-        specifier: 5.8.0
-        version: 5.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 5.8.2
+        version: 5.8.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
@@ -6162,6 +6162,12 @@ packages:
 
   react-colorful@5.8.0:
     resolution: {integrity: sha512-Wy9OzPfjSN9bF12OB8N7UQvlsZ0I+7wHxpN+bV5BjNQGxOj6IiwkRjevJK9yOBjJWGQvAaf1OXtn8rUeEatAng==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+
+  react-colorful@5.8.2:
+    resolution: {integrity: sha512-gZ35jg1OQ71cwpHK74WoIFU4poCy9EjjjYqUGP1C04hn9gH7CD4cd2fGgLT2G/m8oAoxG2bJXjTVP+bBUzonKQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -14186,6 +14192,11 @@ snapshots:
       uncontrollable: 7.2.1(react@18.3.1)
 
   react-colorful@5.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  react-colorful@5.8.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
